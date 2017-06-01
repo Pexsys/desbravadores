@@ -330,7 +330,7 @@ function setAttr( $parameters ) {
 	$id = $parameters["id"];
 	$fd = $parameters["fd"];
 	$vl = $parameters["vl"];
-	$qt = 0;
+	$qt = array( "qt" => 0 );
 	
 	fConnDB();
 	$result = $GLOBALS['conn']->Execute("
@@ -343,11 +343,11 @@ function setAttr( $parameters ) {
 		$qt = updateEstoque( $result->fields, $fd, $vl );
 	endif;
 
-	return array( "result" => true, "qt_est" => $qt );
+	return array( "result" => true, "est" => $qt );
 }
 
 function updateEstoque( $ln, $fd, $vl ){
-	$qt = $ln["QT_EST"];
+	$arr = array( "qt" => $ln["QT_EST"] );
 
 	$update = true;
 	if ($fd == "fg_compra"):
@@ -362,13 +362,13 @@ function updateEstoque( $ln, $fd, $vl ){
 			 WHERE ID = ?
 		", array( $ln["ID"]) );
 		if (!$re->EOF):
-			$qt = $re->fields["QT_EST"];
+			$arr["qt"] = $re->fields["QT_EST"];
 		endif;
 
-		if ($qt > 0 || $movEstoque > 0):
+		if ($arr["qt"] > 0 || $movEstoque > 0):
 			$GLOBALS['conn']->Execute("UPDATE TAB_MATERIAIS SET QT_EST = ? WHERE ID = ?
-			", array( $qt + $movEstoque, $ln["ID_TAB_MATERIAIS"] ) );
-			$qt += $movEstoque;
+			", array( $arr["qt"] + $movEstoque, $ln["ID_TAB_MATERIAIS"] ) );
+			$arr["qt"] += $movEstoque;
 			$update = true;
 		endif;
 	endif;
@@ -382,6 +382,7 @@ function updateEstoque( $ln, $fd, $vl ){
 		    //INSERE LOG DE ENTREGA DE MATERIAIS
 		    $materiais = new MATERIAIS();
 		    $materiais->forceInsert( array( $ln["ID_CAD_PESSOA"], $ln["ID_TAB_MATERIAIS"], date("Y-m-d") ) );
+		    $arr["close"] = "S";
 		
 	    else:
     		$GLOBALS['conn']->Execute("
@@ -392,7 +393,7 @@ function updateEstoque( $ln, $fd, $vl ){
     	endif;
 		
 	endif;
-	return $qt;
+	return $arr;
 }
 
 function distribuirEstoque(){

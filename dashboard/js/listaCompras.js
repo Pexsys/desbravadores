@@ -105,11 +105,14 @@ $(document).ready(function(){
 					fd: field,
 					vl: value
 				};
-				jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/listaCompras.php", { MethodName : 'setAttr', data : parameters } );
+				var attr = jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/listaCompras.php", { MethodName : 'setAttr', data : parameters }, 'RETURN' );
 				if (field == 'fg_entregue' && value == 'S' && !$("#fgCompra").prop('checked') ){
 					$("#fgCompra").prop('checked', true).triggerHandler('change');
 				} else if (field == 'fg_compra' && value == 'N' && $("#fgEntregue").prop('checked') ){
 					$("#fgEntregue").prop('checked', false).triggerHandler('change');
+				}
+				if ( attr.est.close ) {
+				    $("#comprasModal").modal('hide');
 				}
 			}
 		})
