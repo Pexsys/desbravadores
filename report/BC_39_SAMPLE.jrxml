@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Listagem Alfabética de Membros Ativos" columnCount="2" printOrder="Horizontal" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="278" columnSpacing="1" leftMargin="19" rightMargin="19" topMargin="19" bottomMargin="19">
+	<property name="ireport.zoom" value="1.771561000000008"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Detalhe" mode="Opaque">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue() % 2 == 0)]]></conditionExpression>
+			<style mode="Opaque" backcolor="#ECECEC"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="dsIdent" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["Clube de Desbravadores Pioneiros - IASD Capão Redondo - 6ª Região - APS - UCB - DSA"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="dtReport" class="java.util.Date" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new Date()]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT * FROM CON_ATIVOS ORDER BY NM]]>
+	</queryString>
+	<field name="ID" class="java.lang.Long"/>
+	<field name="NM" class="java.lang.String"/>
+	<field name="TP_SEXO" class="java.lang.String"/>
+	<field name="DT_NASC" class="java.sql.Date"/>
+	<field name="NR_DOC" class="java.lang.String"/>
+	<field name="NR_CPF" class="java.lang.String"/>
+	<field name="NM_ESCOLA" class="java.lang.String"/>
+	<field name="DS_RELIG" class="java.lang.String"/>
+	<field name="DT_BAT" class="java.sql.Date"/>
+	<field name="LOGRADOURO" class="java.lang.String"/>
+	<field name="NR_LOGR" class="java.lang.String"/>
+	<field name="COMPLEMENTO" class="java.lang.String"/>
+	<field name="BAIRRO" class="java.lang.String"/>
+	<field name="CIDADE" class="java.lang.String"/>
+	<field name="UF" class="java.lang.String"/>
+	<field name="CEP" class="java.lang.String"/>
+	<field name="FONE_RES" class="java.lang.String"/>
+	<field name="FONE_CEL" class="java.lang.String"/>
+	<field name="EMAIL" class="java.lang.String"/>
+	<field name="TP_SEXO_RESP" class="java.lang.String"/>
+	<field name="DS_RESP" class="java.lang.String"/>
+	<field name="NM_RESP" class="java.lang.String"/>
+	<field name="DOC_RESP" class="java.lang.String"/>
+	<field name="CPF_RESP" class="java.lang.String"/>
+	<field name="TEL_RESP" class="java.lang.String"/>
+	<field name="ANO_DIR" class="java.lang.Integer"/>
+	<field name="ESTR_ATUAL" class="java.lang.Integer"/>
+	<field name="QT_UNIFORMES" class="java.lang.Integer"/>
+	<field name="NR_ANO" class="java.lang.Integer"/>
+	<field name="CD_FANFARRA" class="java.lang.String"/>
+	<field name="ID_UNIDADE" class="java.lang.Integer"/>
+	<field name="DS_UNIDADE" class="java.lang.String"/>
+	<field name="CD_CARGO" class="java.lang.String"/>
+	<field name="DS_CARGO" class="java.lang.String"/>
+	<field name="CD_CARGO2" class="java.lang.String"/>
+	<field name="TP_CAMISETA" class="java.lang.String"/>
+	<field name="FG_REU_SEM" class="java.lang.String"/>
+	<field name="IDADE_ANO" class="java.lang.Integer"/>
+	<field name="IDADE_HOJE" class="java.lang.Integer"/>
+	<variable name="BARCODE" class="java.lang.String" resetType="None">
+		<variableExpression><![CDATA["PA01"+$F{ID}]]></variableExpression>
+	</variable>
+	<detail>
+		<band height="73" splitType="Stretch">
+			<componentElement>
+				<reportElement isPrintRepeatedValues="false" mode="Opaque" x="115" y="30" width="157" height="25"/>
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="3of9" drawText="false" checksumRequired="false">
+					<jr:codeExpression><![CDATA[$V{BARCODE}]]></jr:codeExpression>
+				</jr:barbecue>
+			</componentElement>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="74" y="5" width="200" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NM}]]></textFieldExpression>
+			</textField>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement x="13" y="5" width="47" height="50"/>
+				<imageExpression><![CDATA["logo.jpg"]]></imageExpression>
+			</image>
+			<textField pattern="">
+				<reportElement isPrintRepeatedValues="false" mode="Opaque" x="154" y="55" width="44" height="8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="false"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{BARCODE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

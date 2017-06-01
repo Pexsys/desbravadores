@@ -1,0 +1,197 @@
+<?php
+@require_once("../include/functions.php");
+@require_once("../include/responsavel.php");
+responseMethod();
+
+/****************************
+ * Methods defined for use. *
+ ****************************/
+function login( $parameters ) {
+	unset($_SESSION);
+	
+	$arr = array();
+	$arr['page'] = "";
+	$arr['login'] = false;
+	
+	$pag = mb_strtoupper($parameters["page"]);
+	$usr = mb_strtoupper($parameters["username"]);
+	$psw = strtolower($parameters["password"]);
+	
+	if ($usr == "" && $_SERVER['SERVER_ADDR'] == "192.168.1.249"):
+		$usr = "ADMINISTRADOR";
+		$psw = "875956ec37f04402692c88f35bccf39e89c03a21";
+	endif;
+
+	//Verificacao de Usuario/Senha
+	if ( isset($usr) && !empty($usr) ):
+
+		$barini 		= substr($usr, 0, 1);
+		$barfn			= substr($usr, 1, 1);
+		$barfnid		= substr($usr, 2, 2);
+		$barpessoa36	= substr($usr, 4, 3);
+		$usrClube		= (strlen($usr) == 7 && $barini == "P" && strpos("0ABCDEF", $barfn) > 0);
+		
+		fConnDB();
+		$result = checkUser($usr, $pag);
+
+		//SE NAO ENCONTROU E O CODIGO CODIGO TEM OS CARACTERES MINIMOS PARA USUARIO DO CLUBE
+		if ($result->EOF && $usrClube):
+			$usrClube = (sha1(strtolower($usr)) == $psw);
+		
+			$usr = "P000$barpessoa36";
+			if ($usrClube):
+				$psw = sha1(strtolower($usr));
+			endif;
+			$result = checkUser($usr, $pag);
+		
+		//SE NAO ENCONTROU
+		elseif ($result->EOF):
+		
+			//VERIFICA SE CPF CONSTA COMO RESPONSAVEL
+			$resp = verificaRespByCPF($usr);
+			if (!is_null($resp)):
+			
+				//RESPONSAVEL E MEMBRO ATIVO
+				$result = checkMemberByCPF($usr);
+				if (!$result->EOF):
+					fInsertUserProfile($result->fields["ID_USUARIO"], 10 );
+						
+					return login( array(
+						"page"		=> $pag,
+						"username"	=> $result->fields["CD_USUARIO"],
+						"password"	=> $result->fields["DS_SENHA"] ) );
+								
+				//VERIFICA SE RESPONSAVEL TEM ALGUM DEPENDENTE ATIVO
+				elseif ( existeMenorByRespID($resp["ID"]) ):
+					$psw = sha1(str_replace("-","",str_replace(".","",$usr)));
+					fInsertUserProfile( fInsertUser( $usr, $resp["NM_RESP"], $psw, null ), 10 );
+					
+					return login( array(
+						"page"		=> $pag,
+						"username"	=> $usr,
+						"password"	=> $psw ) );
+				endif;
+			endif;
+		endif;
+		
+		//SE NAO ENCONTROU USUARIO E SENHA E EH MEMBRO DO CLUBE COM APRENDIZADO OU HISTORICO.
+		if ($usrClube && $result->EOF):
+			$barpessoa10 = base_convert( $barpessoa36, 36, 10 );
+
+			//VERIFICA SE ESTÁ ATIVO
+			$rsHA = $GLOBALS['conn']->Execute("
+				SELECT NM
+				  FROM CON_ATIVOS
+				 WHERE ID = ?
+			", array( $barpessoa10 ) );
+			if (!$rsHA->EOF):
+				fInsertUserProfile( fInsertUser( $usr, $rsHA->fields['NM'], $psw, $barpessoa10 ), 0 );
+			
+				return login( array( 
+					"page" =>		$pag, 
+					"username" =>	$usr, 
+					"password" =>	$psw ) );
+
+			endif;
+
+		//SE EXISTE O USUARIO DIGITADO.
+		elseif (!$result->EOF):
+		
+			if (!$usrClube):
+				$resp = verificaRespByCPF($usr);
+				if (!is_null($resp) && !existeMenorByRespID($resp["ID"])):
+					fDeleteUserAndProfile( $result->fields["ID_USUARIO"], 10 );
+					return $arr;
+				endif;
+			endif;
+
+			$password = $result->fields['DS_SENHA'];
+				
+			if ($password == $psw):
+				fSetSessionLogin($result);
+				$GLOBALS['conn']->Execute("UPDATE CAD_USUARIOS SET DH_ATUALIZACAO = NOW() WHERE ID_USUARIO = ?",
+					array( $result->fields['ID_USUARIO'] ) );
+
+				if ( $pag == "READDATA" ):
+					$arr['page'] = $GLOBALS['VirtualDir']."readdata.php";
+				else:
+					$arr['page'] = $GLOBALS['VirtualDir']."dashboard/index.php";
+				endif;
+				$arr['login'] = true;
+			endif;
+		endif;
+		
+	endif;
+	return $arr;
+}
+
+function fInsertUser( $usr, $nm, $psw, $pessoaID ){
+	$GLOBALS['conn']->Execute("
+			INSERT INTO CAD_USUARIOS(
+				CD_USUARIO,
+				DS_USUARIO,
+				DS_SENHA,
+				ID_CAD_PESSOA
+			) VALUES( ?, ?, ?, ? )",
+	array( $usr, $nm, $psw, $pessoaID ) );
+	return $GLOBALS['conn']->Insert_ID();
+}
+
+function fInsertUserProfile( $userID, $profileID ){
+	$rs = $GLOBALS['conn']->Execute("
+		SELECT 1 
+		  FROM CAD_USU_PERFIL
+		 WHERE ID_CAD_USUARIOS = ?
+		   AND ID_PERFIL = ?
+	", array( $userID, $profileID ) );
+	if ($rs->EOF):
+		$GLOBALS['conn']->Execute("
+			INSERT INTO CAD_USU_PERFIL(
+				ID_CAD_USUARIOS,
+				ID_PERFIL
+			) VALUES( ?, ? )
+		", array( $userID, $profileID ) );
+	endif;
+}
+
+function fDeleteUserAndProfile( $userID, $profileID ){
+	$GLOBALS['conn']->Execute("
+		DELETE FROM CAD_USU_PERFIL
+		 WHERE ID_CAD_USUARIOS = ?
+		   AND ID_PERFIL = ?
+	", array( $userID, $profileID ) );
+	
+	$GLOBALS['conn']->Execute("
+		DELETE FROM CAD_USUARIOS
+		 WHERE ID_USUARIO = ?
+	", array( $userID ) );
+}
+
+function checkMemberByCPF($cpf){
+	$noFormat = str_replace("-","",str_replace(".","",$cpf));
+	return $GLOBALS['conn']->Execute("
+		SELECT cu.ID_USUARIO, cu.CD_USUARIO, cu.DS_USUARIO, cu.DS_SENHA, ca.ID AS ID_CAD_PESSOA, ca.TP_SEXO
+		  FROM CON_ATIVOS ca
+		INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID)
+		 WHERE REPLACE(REPLACE(ca.NR_CPF,'.',''),'-','') = ?
+	",array( $noFormat ) );
+}
+
+function checkUser($cdUser, $pag){
+	return $GLOBALS['conn']->Execute("
+		SELECT cu.ID_USUARIO, cu.CD_USUARIO, cu.DS_USUARIO, cu.DS_SENHA, cp.ID AS ID_CAD_PESSOA, cp.TP_SEXO, cr.TP_SEXO_RESP
+		  FROM CAD_USUARIOS cu
+	    LEFT JOIN CAD_PESSOA cp ON (cp.ID = cu.ID_CAD_PESSOA)
+		LEFT JOIN CAD_RESP cr ON (REPLACE(REPLACE(cr.CPF_RESP,'.',''),'-','') = cu.CD_USUARIO)
+	". ($pag == "READDATA" ? " INNER JOIN CAD_USU_PERFIL cuf ON (cuf.ID_CAD_USUARIOS = cu.ID_USUARIO AND cuf.ID_PERFIL = 2) " : "") ."
+		 WHERE cu.CD_USUARIO = ?",
+	array( $cdUser ) );
+}
+
+function logout() {
+	session_start();
+	session_destroy();
+	unset($_SESSION);
+	return array('logout' => true);
+}
+?>

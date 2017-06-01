@@ -1,0 +1,192 @@
+var dataTable = undefined;
+var dataTable = undefined;
+var dataTable = undefined;
+
+$(document).ready(function(){
+	
+	dataTable = $('#acompDatatable').DataTable({
+		lengthChange: false,
+		ordering: true,
+		paging: false,
+		scrollY: 300,
+		searching: true,
+		processing: true,
+		language: {
+			info: "_END_ itens",
+			search: "",
+			searchPlaceholder: "Procurar...",
+			infoFiltered: " de _MAX_",
+			loadingRecords: "Aguarde - carregando...",
+			zeroRecords: "Dados indispon&iacute;veis para esta sele&ccedil;&atilde;o",
+			infoEmpty: "0 encontrados"
+		},
+		ajax: {
+			type	: "POST",
+			url	: jsLIB.rootDir+"rules/acompanhamento.php",
+			data	: function (d) {
+					d.MethodName = "getData",
+					d.data = { 
+							 filtro: 'T',
+							 filters: jsFilter.jSON()
+						}
+				},
+			dataSrc: "acomp"
+		},
+		columns: [
+			{	data: "ip",
+				visible: false
+			},
+			{	data: "ia",
+				visible: false
+			},
+			{	data: "nm",
+				type: 'ptbr-string',
+				width: "50%"
+			},
+			{	data: "tp",
+				width: "32%"
+			},
+			{	data: "yi",
+				width: "8%"
+			},
+			{	data: "pg",
+				width: "10%"
+			}
+		],
+		fnRowCallback: function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
+			var row = nRow.cells[3];
+			if ( aData.pg < 51 ) {
+				$(row).css('color', '#cc0000').css('font-weight', 'bold');
+			} else if ( aData.pg < 85 ) {
+				$(row).css('color', '#ccaa00');
+			} else if ( aData.pg == 100 ) {
+				$('td', nRow).css('background-color', '#b3ffb3');
+			}
+        },
+		select: {
+			style: 'multi',
+			selector: 'td:first-child'
+		}
+	}).order( [ 4, 'asc' ], [ 5, 'asc' ], [ 3, 'asc' ] );
+	
+	$('#acompDatatable tbody').on('click', 'tr', function () {
+		$(this).toggleClass('selected');
+	});
+	
+	$("#cadAcompForm")
+		.on('init.field.fv', function(e, data) {
+			var $parent = data.element.parents('.form-group'),
+			$icon   = $parent.find('.form-control-feedback[data-fv-icon-for="' + data.field + '"]');
+			$icon.on('click.clearing', function() {
+				if ( $icon.hasClass('glyphicon-remove') ) {
+					data.fv.resetField(data.element);
+				}
+			});
+		})
+		.on('success.validator.fv', function(e, data) {
+			e.preventDefault();
+		})
+		.on('success.field.fv', function(e, data) {
+			e.preventDefault();
+			
+			var parameter = {
+				brdt : $("#cdBar").val(),
+				frm: jsLIB.getJSONFields( $('#cadAcompForm') )
+			};
+			sendBarCode( parameter,
+				function(data,fx){
+					$("#divResultado").html(data.result);
+					var checkbox = $("#divResultado").find("input[type=checkbox]");
+					if (checkbox.length > 0){
+						checkbox.change(function(){
+							var atf = $(this).attr("for");
+							if ( $(this).prop('checked') ) {
+								$('[field='+atf+']').val( new Date().toFormattedDate() ).visible(true);
+							} else {
+								$('[field='+atf+']').val('').visible(false);
+							}
+						});
+						checkbox.bootstrapToggle();
+						$("#divResultado").find('[name=dt_assinatura]').datetimepicker({
+							locale: 'pt-br',
+							language: 'pt-BR',
+							format: 'DD/MM/YYYY',
+							maskInput: true,
+							pickDate: true,
+							pickTime: false,
+							pickSeconds: false,
+							useCurrent: false
+						});
+						$("#divResultado").show();
+						$('#btnGravar').visible(true);
+					 }
+				},
+				function(data,fx){
+					$("#divResultado").empty().hide();
+				}
+			);
+		})
+		.formValidation({
+			framework: 'bootstrap',
+			fields: {
+				cdBar: {
+					validators: {
+						stringLength: {
+							min: 7,
+							max: 7,
+							message: 'O c&oacute;digo deve conter 7 caracteres'
+						},
+						notEmpty: {
+                            message: 'Informe o pr&oacute;ximo c&oacute;digo'
+                        },
+						regexp: {
+							regexp: /^[Pp]{1}[AEae]{1}[a-zA-Z0-9]{5}$/,
+							message: 'C&oacute;digo inv&aacute;lido'
+						}
+					}
+				}
+			}
+		})
+		.on('success.form.fv', function(e) {
+			e.preventDefault();
+		})
+	;
+	
+	$('#cadAcompForm')
+		.submit( function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+		})
+	;
+
+	$('#btnNovo').click(function(){
+		jsLIB.resetForm( $('#cadAcompForm') );
+		$("#barOp").val('ACOMPANHAMENTO');
+		$('#btnGravar').visible(false);
+		$("#divResultado").visible(false);
+		$("#acompModal").modal();
+		$("#cdBar").focus();
+	});
+	
+	$('#btnGravar').click(function(e){
+		e.preventDefault();
+		e.stopPropagation();
+		update();
+	});
+
+	$(".date").mask('00/00/0000');
+});
+
+function update(){
+	
+	var parameter = {
+		frm: jsLIB.getJSONFields( $('#cadAcompForm') )
+	};
+	
+	jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/acompanhamento.php", { MethodName : 'setRequisito', data : parameter } );
+
+	$("#divResultado").empty().hide();
+	$("#cdBar").val('').change().focus();
+	$('#btnGravar').visible(false);
+	dataTable.ajax.reload();
+}
