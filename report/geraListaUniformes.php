@@ -2,19 +2,18 @@
 @require_once('../include/functions.php');
 @require_once('../include/_core/lib/tcpdf/tcpdf.php');
 
-class LISTAATIVOSALFA extends TCPDF {
+class LISTAMATERIAIS extends TCPDF {
 	
 	//lines styles
 	private $stLine;
-	private $stLine2;
 	private $posY;
 	private $lineAlt;
+	public $tipoUniforme;
 	
 	function __construct() {
 		parent::__construct(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 		
 		$this->stLine = array('width' => 1, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0));
-		$this->stLine2 = array('width' => 0.3, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0));
 		$this->stLine3 = array(
 		    'position' => '',
 		    'align' => 'C',
@@ -34,10 +33,14 @@ class LISTAATIVOSALFA extends TCPDF {
 
 		$this->SetCreator(PDF_CREATOR);
 		$this->SetAuthor('Ricardo J. Cesar');
-		$this->SetTitle('Listagem de Membros não Batizados');
+		$this->SetTitle('Listagem Alfabética de Materiais');
 		$this->SetSubject('Clube Pioneiros');
 		$this->SetKeywords('Desbravadores, Especialidades, Pioneiros, Capão Redondo');
 		$this->setImageScale(PDF_IMAGE_SCALE_RATIO);
+	}
+	
+	public function setTipoUniforme($tipoUniforme){
+	    $this->tipoUniforme = $tipoUniforme;
 	}
 
 	public function Footer() {
@@ -57,8 +60,8 @@ class LISTAATIVOSALFA extends TCPDF {
 		$this->Image("img/logo.jpg", 5, 5, 14, 16, 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
 		
 		$this->setXY(20,5);
-		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 25);
-		$this->Cell(185, 9, "Listagem de Membros não Batizados", 0, false, 'C', false, false, false, false, 'T', 'M');
+		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 15.5);
+		$this->Cell(185, 9, "Listagem Alfabética de Uniformes: _____________________________", 0, false, 'C', false, false, false, false, 'T', 'M');
 		$this->setXY(20,15);
 		$this->SetTextColor(80,80,80);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 7);
@@ -69,70 +72,52 @@ class LISTAATIVOSALFA extends TCPDF {
 		$this->SetFillColor(80,80,80);
 		$this->setCellPaddings(1,0,1,0);
 		$this->setXY(5, 22);
-		$this->Cell(85, 6, "Nome Completo", 0, false, 'L', true);
-		$this->setXY(90, 22);
-		$this->Cell(50, 6, "Cargo", 0, false, 'L', true);
+		$this->Cell(135, 6, "Nome Completo", 0, false, 'L', true);
 		$this->setXY(140, 22);
-		$this->Cell(30, 6, "Idade/Nasc.", 0, false, 'C', true);
-		$this->setXY(170, 22);
-		$this->Cell(35, 6, "Telefones", 0, false, 'L', true);
-		$this->posY = 28;
+		$this->Cell(25, 6, "Utiliza Nº", 0, false, 'C', true);
+		$this->setXY(165, 22);
+		$this->Cell(20, 6, "Nº Retirada", 0, false, 'L', true);
+		$this->setXY(185, 22);
+		$this->Cell(20, 6, "Nº Devolução", 0, false, 'L', true);
+		$this->posY = 29;
 	}
 
-	public function addLine($f){
-		$this->setCellPaddings(1,1,1,1);
+	public function addLineUniforme($f){
+		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 10);
+		$this->setCellPaddings(1,0,1,0);
 		if ($this->lineAlt):
 			$this->SetFillColor(240,240,240);
 		else:
 			$this->SetFillColor(255,255,255);
 		endif;
-		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 7);
-		$this->setXY(5, $this->posY);
-		$this->Cell(85, 5, utf8_encode($f["NM"]), 0, false, 'L', true, false, 1);
-		$this->setX(90);
-
-		$colorR = base_convert(substr($f["CD_COR_GENERO"],1,2),16,10);
-		$colorG = base_convert(substr($f["CD_COR_GENERO"],3,2),16,10);
-		$colorB = base_convert(substr($f["CD_COR_GENERO"],5,2),16,10);
-		$this->SetTextColor($colorR,$colorG,$colorB);
-
-		$this->Cell(56, 5, utf8_encode($f["DS_CARGO"]), 0, false, 'L', true, false, 1);
-		$this->setX(146);
-		$this->Cell(5, 5, $f["IDADE_HOJE"], 0, false, 'L', true, false, 1);
 		$this->SetTextColor(0,0,0);
-		$this->setX(150);
-		$this->Cell(20, 5, strftime("%d/%m/%Y",strtotime($f["DT_NASC"])), 0, false, 'L', true, false, 1);
-		$this->setX(170);
-		$this->Cell(35, 5, trim($f["FONE_RES"]."   ".$f["FONE_CEL"]), 0, false, 'L', true, false, 1);
-		$this->posY += 5;
-		$this->setXY(5, $this->posY);
+		$this->setXY(80, $this->posY);
+		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 12);
+		$this->Cell(30, 8, is_null($f["TP"]) ? "-" : $f["TP"], 0, false, 'L', true, false, 1);
+		$this->setX(110);
+		$this->Cell(25, 8, $f["QTD"], 0, false, 'C', true, false, 1);
+		$this->posY+=9;
+		$this->lineAlt = !$this->lineAlt;
+	}
 
-		$endereco = trim($f["LOGRADOURO"]);
-		if (!empty($endereco) && !empty(trim($f["NR_LOGR"])) ):
-			$endereco .= ", ".trim($f["NR_LOGR"]);
+	public function addLine($f){
+		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 10);
+		$this->setCellPaddings(1,0,1,0);
+		if ($this->lineAlt):
+			$this->SetFillColor(240,240,240);
+		else:
+			$this->SetFillColor(255,255,255);
 		endif;
-		if (!empty($endereco) && !empty(trim($f["COMPLEMENTO"])) ):
-			$endereco .= " - ".trim($f["COMPLEMENTO"]);
-		endif;
-		if (!empty($endereco) && !empty(trim($f["BAIRRO"])) ):
-			$endereco .= " - ".trim($f["BAIRRO"]);
-		endif;
-		if (!empty($endereco) && !empty(trim($f["CIDADE"])) ):
-			$endereco .= " - ".trim($f["CIDADE"]);
-			if (!empty(trim($f["UF"])) ):
-				$endereco .= "/".trim($f["UF"]);
-			endif;
-		endif;
-		if (!empty($endereco) && !empty(trim($f["CEP"])) ):
-			$endereco .= " - ".trim($f["CEP"]);
-		endif;
-		
-		$this->Cell(200, 5, strtoupper(utf8_encode($endereco)), 0, false, 'R', true, false, 1);
-		$this->posY += 5;
-		
-		$this->Line(5, $this->posY, 205, $this->posY, $this->stLine3);
-		$this->posY += 1;
-		
+		$this->setXY(5, $this->posY);
+		$this->Cell(135, 8, utf8_encode($f["NM"]), 0, false, 'L', true, false, 1);
+		$this->setX(140);
+		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 11);
+		$this->Cell(25, 8, $f["TP"], 0, false, 'C', true, false, 1);
+		$this->setX(165);
+		$this->Cell(19, 8, "", 1, false, 'L', true, false, 1);
+		$this->setX(186);
+		$this->Cell(19, 8, "", 1, false, 'L', true, false, 1);
+		$this->posY+=9;
 		$this->lineAlt = !$this->lineAlt;
 	}
 	
@@ -143,7 +128,8 @@ class LISTAATIVOSALFA extends TCPDF {
 		$this->SetFillColor(80,80,80);
 		$this->setCellPaddings(1,0,1,0);
 		$this->setXY(5, $this->posY);
-		$this->Cell(200, 6, "Total de Membros não Batizados: ".$result->RecordCount(), 0, false, 'C', true);
+		$this->Cell(200, 6, "Total de Membros Ativos: ".$result->RecordCount(), 0, false, 'C', true);
+		$this->posY+=9;
 	}
 	
 	public function newPage() {
@@ -155,7 +141,7 @@ class LISTAATIVOSALFA extends TCPDF {
 
 	public function download() {
 		$this->lastPage();
-		$this->Output("ListagemNaoBatizados_".date('Y-m-d_H:i:s').".pdf", "I");
+		$this->Output("ListagemCamisetas_".date('Y-m-d_H:i:s').".pdf", "I");
 	}
 }
 
@@ -170,18 +156,15 @@ if ( !isset($aU) || count($aU) == 0 ):
 	exit("SELECIONE AS UNIDADES QUE DESEJA IMPRIMIR AS FICHAS DE CHAMADA!");
 endif;
 */
-$pdf = new LISTAATIVOSALFA();
+$pdf = new LISTAMATERIAIS();
+$pdf->setTipoUniforme(fRequest("filter"));
 
 fConnDB();
 $pdf->newPage();
 $result = $GLOBALS['conn']->Execute("
-	 SELECT ca.NM, ca.CD_CARGO, ca.DS_CARGO, ca.DT_NASC, ca.FONE_RES, ca.FONE_CEL, ca.IDADE_HOJE,
-			ca.LOGRADOURO, ca.NR_LOGR, ca.COMPLEMENTO, ca.BAIRRO, ca.CIDADE, ca.UF, ca.CEP,
-			ta.CD_COR_GENERO
-	   FROM CON_ATIVOS ca
- INNER JOIN TAB_UNIDADE ta ON (ta.ID = ca.ID_UNIDADE)
-	  WHERE ca.DT_BAT IS NULL
-   ORDER BY ca.CEP, ca.NR_LOGR, ca.NM
+	SELECT ca.NM, ". ($pdf->tipoUniforme == "C" ? " ca.TP_CAMISETA" : "ca.TP_AGASALHO") ." AS TP
+	FROM CON_ATIVOS ca
+	ORDER BY ca.NM
 ");
 foreach ( $result as $ra => $f ):
 	$pdf->startTransaction();
@@ -206,6 +189,37 @@ if  ($pdf->getNumPages() != $start_page):
 else:
 	$pdf->commitTransaction();     
 endif;
+
+if ($pdf->tipoUniforme == "C"):
+    $result = $GLOBALS['conn']->Execute("
+    	SELECT ca.TP_CAMISETA AS TP, COUNT(*) AS QTD
+    	FROM CON_ATIVOS ca
+    	LEFT JOIN TAB_TAMANHOS tt ON (tt.TP = 'C' AND tt.CD = ca.TP_CAMISETA)
+    	GROUP BY ca.TP_CAMISETA
+    	ORDER BY tt.ORD
+    ");
+else:
+    $result = $GLOBALS['conn']->Execute("
+    	SELECT ca.TP_AGASALHO AS TP, COUNT(*) AS QTD
+    	FROM CON_ATIVOS ca
+    	LEFT JOIN TAB_TAMANHOS tt ON (tt.TP = 'A' AND tt.CD = ca.TP_AGASALHO)
+    	GROUP BY ca.TP_AGASALHO
+    	ORDER BY tt.ORD
+    ");
+endif;
+
+foreach ( $result as $ra => $f ):
+	$pdf->startTransaction();
+	$start_page = $pdf->getPage();
+	$pdf->addLineUniforme($f);
+	if  ($pdf->getNumPages() != $start_page):
+		$pdf->rollbackTransaction(true);
+		$pdf->newPage();
+		$pdf->addLineUniforme($f);
+	else:
+		$pdf->commitTransaction();     
+	endif;
+endforeach;
 
 $pdf->download();
 exit;

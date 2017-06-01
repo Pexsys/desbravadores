@@ -9,6 +9,7 @@ class ESPCR extends TCPDF {
 	private $stLine2;
 	private $stLine3;
 	private $line;
+	private $dsCargo;
 	public $campori;
 	public $SEQ;
 	
@@ -55,6 +56,8 @@ class ESPCR extends TCPDF {
 	public function setLine($line){
 	    $this->line = $line;
 	    $this->campori = ($this->line["FG_CAMPORI"] == "S");
+	    $arr = explode(' ',utf8_encode(strtolower($this->line["DS_CARGO"])));
+        $this->dsCargo = $arr[0];
 	}
 
  	public function Header() {
@@ -162,7 +165,7 @@ class ESPCR extends TCPDF {
 		$this->SetTextColor(0,0,0);
 		$this->SetFont(PDF_FONT_NAME_MAIN, '', 9);
 		$html = "<p align=\"justify\">Através dos poderes legais a mim atribuídos, autorizo ".
-			($this->line["TP_SEXO"] == "F" ? "a desbravadora" : "o desbravador")." <b><u>".trim(utf8_encode($line["NM"]))."</u></b>, ".
+			($this->line["TP_SEXO"] == "F" ? "a " : "o "). $this->dsCargo ." <b><u>".trim(utf8_encode($this->line["NM"]))."</u></b>, ".
 			utf8_encode($this->line["NR_DOC"])." a participar juntamente com o Clube Pioneiros, dirigido e representado por ".trim(utf8_encode($this->line["NOME_DIRETOR"])).", ".
 			utf8_encode($this->line["IDENT_DIRETOR"]).", do evento: ".trim(utf8_encode($this->line["DS"])). (!empty($this->line["DS_DEST"]) ? "/".trim(utf8_encode($this->line["DS_DEST"])) : "").", ".
 			(strftime("%Y-%m-%d",$dtS) == strftime("%Y-%m-%d",$dtR)
@@ -200,7 +203,7 @@ class ESPCR extends TCPDF {
 		$this->SetY(85);
 		$this->SetFont(PDF_FONT_NAME_MAIN, '', 10);
 		$html = "<p align=\"justify\">Eu, ". utf8_encode(trim($this->line["NM_RESP"])) .", autorizo ".
-				($line["TP_SEXO"] == "F" ? "a desbravadora" : "o desbravador")." <b><u>".trim(utf8_encode($this->line["NM"]))."</u></b>, ".
+				($this->line["TP_SEXO"] == "F" ? "a " : "o "). $this->dsCargo ." <b><u>".trim(utf8_encode($this->line["NM"]))."</u></b>, ".
 				utf8_encode($this->line["NR_DOC"])." a se deslocar e participar juntamente com o Clube de Desbravadores Pioneiros do ". trim(utf8_encode($this->line["DS"])) .", \"". trim(utf8_encode($this->line["DS_TEMA"])) ."\"".
 				", promovido pela ".trim(utf8_encode($this->line["DS_ORG"])) . 
 				" da Igreja Adventista do Sétimo Dia, que se realizará entre ".utf8_encode(strftime("%e de %B de %Y &agrave;s %Hh". (strftime("%M",$dtS)>0?"%M":""),$dtS)) . 
@@ -250,6 +253,7 @@ class ESPCR extends TCPDF {
 }
 
 $list = false;
+$pID = fRequest("pid");
 $eventoID = fRequest("list");
 if ( isset($eventoID) && strlen($eventoID) > 0 ):
 	$pID = fRequest("pid");
@@ -261,12 +265,36 @@ if ( isset($eventoID) && strlen($eventoID) > 0 ):
 else:
 	$eventoID = fRequest("id");
 endif;
-if ( !isset($eventoID) || empty($eventoID) || stristr($eventoID, "indispon") ):
+if ( ( !isset($eventoID) || empty($eventoID) || stristr($eventoID, "indispon") ) && ( !isset($pID) || empty($pID) ) ):
 	echo "AUTORIZA&Ccedil;&Atilde;O N&Atilde;O ENCONTRADA!";
 	exit;
 endif;
 
 fConnDB();
+
+//SE EVENTO NULO, E PESSOA NAO NULA, SETA TODOS OS EVENTOS DA PESSOA.
+if ( (!isset($eventoID) || empty($eventoID)) && (isset($pID) || !empty($pID)) ):
+   $result = $GLOBALS['conn']->Execute("
+        SELECT es.ID
+    	  FROM EVE_SAIDA es
+    INNER JOIN EVE_SAIDA_PESSOA esp ON (esp.ID_EVE_SAIDA = es.ID AND esp.FG_AUTORIZ = 'S')
+         WHERE es.DH_R > NOW() 
+           AND es.FG_IMPRIMIR = 'S' 
+    	   AND esp.ID_CAD_PESSOA IN ($pID)
+      ORDER BY 1
+    ");
+    $eventoID = "";
+    foreach ($result as $k => $f):
+        $eventoID .= ",".$f["ID"];
+    endforeach;
+    $eventoID = substr($eventoID,1);
+    $list = true;
+endif;
+
+if ( ( !isset($eventoID) || empty($eventoID) || stristr($eventoID, "indispon") ) ):
+	echo "AUTORIZA&Ccedil;&Atilde;O N&Atilde;O ENCONTRADA!";
+	exit;
+endif;
 
 $pdf = new ESPCR();
 
@@ -281,7 +309,7 @@ $query = "
 ";
 $result = $GLOBALS['conn']->Execute($query);
 $i = 0;
-$ant = $line["ID_EVE_SAIDA"];
+$ant = $result->fields["ID_EVE_SAIDA"];
 foreach ($result as $k => $line):
     if ($ant !== $line["ID_EVE_SAIDA"]):
         $ant = $line["ID_EVE_SAIDA"];
@@ -293,7 +321,8 @@ endforeach;
 $aP = 0;
 $query = "
 	SELECT es.ID, es.DS, es.DH_S, es.DH_R, es.DS_TEMA, es.DS_ORG, es.DS_DEST, es.DS_ORIG, es.FG_CAMPORI,
-	       esp.ID_CAD_PESSOA, ca.NM, ca.TP_SEXO, ca.NR_DOC, ca.NR_CPF, ca.TP_SEXO_RESP, ca.DS_RESP, ca.NM_RESP, ca.DOC_RESP, ca.CPF_RESP, ca.TEL_RESP,
+	       esp.ID_CAD_PESSOA, 
+	       ca.NM, ca.TP_SEXO, ca.NR_DOC, ca.NR_CPF, ca.TP_SEXO_RESP, ca.DS_RESP, ca.NM_RESP, ca.DOC_RESP, ca.CPF_RESP, ca.TEL_RESP, ca.DS_CARGO,
 	       cd.NOME_DIRETOR, cd.IDENT_DIRETOR
 	  FROM EVE_SAIDA es,
 	       EVE_SAIDA_PESSOA esp,

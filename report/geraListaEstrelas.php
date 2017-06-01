@@ -118,15 +118,12 @@ $pdf->setCellHeightRatio(2);
 $pdf->writeHTMLCell(0,0,20,$pdf->posY,$html,0,0,false,true,"",false);
 
 $result = $GLOBALS['conn']->Execute("
-	SELECT * FROM (
-		SELECT NM, ((YEAR(NOW())-ANO_DIR)+1) AS CALC_ATUAL, ESTR_ATUAL, QT_UNIFORMES
-		  FROM CON_ATIVOS 
-		 WHERE ANO_DIR IS NOT NULL
-		   AND QT_UNIFORMES > 0
-	) X
-	WHERE X.CALC_ATUAL >= 2
-	  AND ( X.ESTR_ATUAL IS NULL OR X.CALC_ATUAL > ESTR_ATUAL )
-	ORDER BY CALC_ATUAL, NM
+	SELECT CD, NM, COUNT(*) AS QTD
+	  FROM CON_COMPRAS
+	 WHERE CD LIKE '03-01-%'
+	   AND FG_COMPRA = 'N'
+	 GROUP BY CD, NM
+	 ORDER BY CD, NM
 ");
 if (!$result->EOF):
 	$pdf->SetFont(PDF_FONT_NAME_MAIN, '', 10);
@@ -153,9 +150,9 @@ if (!$result->EOF):
 		$pdf->setXY(20, $pdf->posY);
 		$pdf->Cell(120, 5, utf8_encode($f["NM"]), 0, false, 'L', true);
 		$pdf->setXY(140, $pdf->posY);
-		$pdf->Cell(30, 5,  $f["CALC_ATUAL"], 0, false, 'C', true);
+		$pdf->Cell(30, 5, (substr($f["CD"],-2) * 1), 0, false, 'C', true);
 		$pdf->setXY(170, $pdf->posY);
-		$pdf->Cell(30, 5, $f["QT_UNIFORMES"], 0, false, 'C', true);
+		$pdf->Cell(30, 5, $f["QTD"], 0, false, 'C', true);
 		$pdf->posY += 5;
 		$pdf->lineAlt = !$pdf->lineAlt;
 	endforeach;

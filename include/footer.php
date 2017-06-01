@@ -13,7 +13,7 @@
 				<!-- FINAL FORMULARIO BOTAO PAGSEGURO -->
 			</center>
 			<hr>
-			<p class="text-center">Copyright &copy; <?php echo date("Y");?> - Clube de Desbravadores Pioneiros<br/>6&ordf; Regi&atilde;o - IASD Cap&atilde;o Redondo - APS - UCB - DSA</p>
+			<p class="text-center">Copyright &copy; <?php echo date("Y");?> - Clube de Desbravadores Pioneiros - 1959<br/>6&ordf; Regi&atilde;o - IASD Cap&atilde;o Redondo - APS - UCB - DSA</p>
 		</div>
 	</div>
 </footer>

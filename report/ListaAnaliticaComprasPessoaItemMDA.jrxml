@@ -16,12 +16,12 @@
 		<defaultValueExpression><![CDATA[new Date()]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT DISTINCT ca.NM, ta.TP_ITEM, ta.NR_PG_ASS, ta.CD_ITEM_INTERNO, ta.DS_ITEM
-FROM CAD_COMPRAS_PESSOA ccp
-INNER JOIN CON_ATIVOS ca ON (ca.ID = ccp.ID_CAD_PESSOA)
-INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ccp.ID_TAB_APREND)
+		<![CDATA[SELECT DISTINCT cc.NM, ta.TP_ITEM, cc.NR_PG_ASS, ta.CD_ITEM_INTERNO, ta.DS_ITEM
+FROM CON_COMPRAS cc
+INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = cc.ID_TAB_APREND)
 WHERE ta.TP_ITEM IN ('CL','ES')
   AND ta.ID_DSA IS NOT NULL
+  AND cc.CD NOT LIKE '03-01%'
 ORDER BY 1, 2, 3, 4]]>
 	</queryString>
 	<field name="NM" class="java.lang.String"/>

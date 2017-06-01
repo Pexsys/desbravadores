@@ -1,6 +1,7 @@
 <?php
 @require_once("../include/functions.php");
 @require_once("../include/responsavel.php");
+@require_once("../include/compras.php");
 responseMethod();
 
 /****************************
@@ -188,6 +189,7 @@ function updateMember( $parameters ) {
 				$cargo	= null;
 				$cargo2 = null;
 				$tpCami = null;
+				$tpAgas = null;
 				$instr	= null;
 				$reun	= "S";
 
@@ -197,6 +199,7 @@ function updateMember( $parameters ) {
 							a.CD_CARGO,
 							a.CD_CARGO2,
 							a.TP_CAMISETA,
+							a.TP_AGASALHO,
 							a.CD_FANFARRA,
 							a.FG_REU_SEM,
 							a.NR_ANO,
@@ -212,6 +215,7 @@ function updateMember( $parameters ) {
 						$cargo	= $result->fields['CD_CARGO'];
 						$cargo2 = $result->fields['CD_CARGO2'];
 						$tpCami = $result->fields['TP_CAMISETA'];
+						$tpAgas = $result->fields['TP_AGASALHO'];
 						$instr	= $result->fields['CD_FANFARRA'];
 						$reun	= $result->fields['FG_REU_SEM'];
 					endif;
@@ -226,6 +230,7 @@ function updateMember( $parameters ) {
 						CD_CARGO,
 						CD_CARGO2,
 						TP_CAMISETA,
+						TP_AGASALHO,
 						CD_FANFARRA,
 						FG_REU_SEM
 					) VALUES (
@@ -237,8 +242,9 @@ function updateMember( $parameters ) {
 						?,
 						?,
 						?,
+						?,
 						?
-					)", array( $id, $unid, $cargo, $cargo2, $tpCami, $instr, $reun ) );
+					)", array( $id, $unid, $cargo, $cargo2, $tpCami, $tpAgas, $instr, $reun ) );
 					
 				return getMember( array( "id" => $id ) );
 			endif;
@@ -264,6 +270,38 @@ function updateMember( $parameters ) {
 		
 		//$arr["query"] = array( $str, $vl, $id );
 		$GLOBALS['conn']->Execute( $str, array( fReturnStringNull( $vl ), $id ) );
+		
+		//REGRA PARA CALCULO DA ESTRELA DE TEMPO DE SERVICO
+		if ( $field == "ANO_DIR" || $field == "ESTR_DEVOL" || $field == "QT_UNIFORMES"):
+		    
+		    //EXCLUI ESTRELAS DA LISTA DE COMPRAS
+		    $GLOBALS['conn']->Execute( "DELETE FROM CAD_COMPRAS_PESSOA WHERE ID_CAD_PESSOA = ? AND ID_TAB_MATERIAIS IN (SELECT ID FROM TAB_MATERIAIS WHERE CD LIKE '03-01%')", array( $id ) );
+		    
+		    //CALCULAR E INCLUIR ESTRELAS
+		    $rs = $GLOBALS['conn']->Execute("
+        		SELECT (YEAR(NOW())-ANO_DIR) AS CALC_ATUAL, ESTR_DEVOL, QT_UNIFORMES
+        		  FROM CON_ATIVOS 
+        		 WHERE ANO_DIR IS NOT NULL
+        		   AND QT_UNIFORMES > 0
+        		   AND ID = ?
+            ", array($id) );
+            if (!$rs->EOF):
+                $calcAtual = $rs->fields["CALC_ATUAL"];
+                if ( $calcAtual <= max( 1, $rs->fields["ESTR_DEVOL"]) ):
+                    $compras = new COMPRAS();
+                    
+                    $code = "03-01-".str_pad( $calcAtual+1, 2, "0", STR_PAD_LEFT);
+                    $qtItens = $rs->fields["QT_UNIFORMES"];
+                    for ($qtd=1;$qtd<=$qtItens;$qtd++):
+						if ($qtItens>1):
+							$compl = "$qtd/$qtItens";
+						endif;
+						$compras->insertItemCompra( $code, $id, "A", $compl );
+					endfor;
+                endif;
+            endif;
+		    
+		endif;
 		
 		$arr["result"] = true;
 	endif;
@@ -375,6 +413,7 @@ function getMember( $parameters ) {
 				a.CD_CARGO,
 				a.CD_CARGO2,
 				a.TP_CAMISETA,
+				a.TP_AGASALHO,
 				a.CD_FANFARRA,
 				a.FG_REU_SEM
 		  FROM CAD_PESSOA p
@@ -386,36 +425,37 @@ function getMember( $parameters ) {
 		$idadeAtual = fIdadeAtual($result->fields['DT_NASC']);
 		
 		$arr["membro"] = array( 
-			"cad_pessoa-id"			=> str_pad($result->fields['ID'], $qtdZeros, "0", STR_PAD_LEFT),
-			"cad_pessoa-nm"			=> utf8_encode(trim($result->fields['NM'])),
-			"cad_pessoa-email"		=> utf8_encode(trim($result->fields['EMAIL'])),
+			"cad_pessoa-id"			    => str_pad($result->fields['ID'], $qtdZeros, "0", STR_PAD_LEFT),
+			"cad_pessoa-nm"			    => utf8_encode(trim($result->fields['NM'])),
+			"cad_pessoa-email"		    => utf8_encode(trim($result->fields['EMAIL'])),
 			"cad_pessoa-nm_escola"		=> utf8_encode(trim($result->fields['NM_ESCOLA'])),
 			"cad_pessoa-ds_relig"		=> utf8_encode(trim($result->fields['DS_RELIG'])),
-			"cad_pessoa-dt_bat"		=> is_null($result->fields['DT_BAT']) ? "" : date( 'd/m/Y', strtotime($result->fields['DT_BAT']) ),
+			"cad_pessoa-dt_bat"		    => is_null($result->fields['DT_BAT']) ? "" : date( 'd/m/Y', strtotime($result->fields['DT_BAT']) ),
 			"cad_pessoa-tp_sexo"		=> $result->fields['TP_SEXO'],
 			"cad_pessoa-dt_nasc"		=> is_null($result->fields['DT_NASC']) ? "" : date( 'd/m/Y', strtotime($result->fields['DT_NASC']) ),
-			"cad_pessoa-nr_doc"		=> trim($result->fields['NR_DOC']),
-			"cad_pessoa-nr_cpf"		=> $result->fields['NR_CPF'],
+			"cad_pessoa-nr_doc"		    => trim($result->fields['NR_DOC']),
+			"cad_pessoa-nr_cpf"		    => $result->fields['NR_CPF'],
 			"cad_pessoa-logradouro"		=> utf8_encode(trim($result->fields['LOGRADOURO'])),
 			"cad_pessoa-nr_logr"		=> utf8_encode(trim($result->fields['NR_LOGR'])),
 			"cad_pessoa-complemento"	=> utf8_encode(trim($result->fields['COMPLEMENTO'])),
-			"cad_pessoa-bairro"		=> utf8_encode(trim($result->fields['BAIRRO'])),
-			"cad_pessoa-cidade"		=> utf8_encode(trim($result->fields['CIDADE'])),
-			"cad_pessoa-uf"			=> $result->fields['UF'],
-			"cad_pessoa-cep"		=> $result->fields['CEP'],
+			"cad_pessoa-bairro"		    => utf8_encode(trim($result->fields['BAIRRO'])),
+			"cad_pessoa-cidade"		    => utf8_encode(trim($result->fields['CIDADE'])),
+			"cad_pessoa-uf"			    => $result->fields['UF'],
+			"cad_pessoa-cep"		    => $result->fields['CEP'],
 			"cad_pessoa-fone_res"		=> $result->fields['FONE_RES'],
 			"cad_pessoa-fone_cel"		=> $result->fields['FONE_CEL'],
 			"cad_pessoa-ano_dir"		=> $result->fields['ANO_DIR'],
-			"cad_pessoa-estr_atual"		=> $result->fields['ESTR_ATUAL'],
+			"cad_pessoa-estr_devol"		=> $result->fields['ESTR_DEVOL'],
 			"cad_pessoa-qt_uniformes"	=> $result->fields['QT_UNIFORMES'],
 			"cad_ativos-id_unidade"		=> $result->fields['ID_UNIDADE'],
 			"cad_ativos-cd_cargo"		=> $result->fields['CD_CARGO'],
 			"cad_ativos-cd_cargo2"		=> $result->fields['CD_CARGO2'],
 			"cad_ativos-tp_camiseta"	=> $result->fields['TP_CAMISETA'],
+			"cad_ativos-tp_agasalho"	=> $result->fields['TP_AGASALHO'],
 			"cad_ativos-cd_fanfarra"	=> $result->fields['CD_FANFARRA'],
 			"cad_ativos-fg_reu_sem"		=> $result->fields['FG_REU_SEM'],
-			"nr_idade"			=> $idadeAtual,
-			"fg_ativo"			=> isset($result->fields['ID_ATIVO']) ? "S" : "N"
+			"nr_idade"			        => $idadeAtual,
+			"fg_ativo"                  => isset($result->fields['ID_ATIVO']) ? "S" : "N"
 		);
 		
 		if ($idadeAtual < 18):

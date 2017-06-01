@@ -203,10 +203,16 @@
 									</div>
 								</div>
 								<div class="row">
-									<div class="form-group col-xs-4">
-										<label for="cmCamiseta" class="control-label">Tamanho Camiseta</label>
+									<div class="form-group col-xs-2">
+										<label for="cmCamiseta" class="control-label">Camiseta</label>
 										<select field="cad_ativos-tp_camiseta" name="cmCamiseta" id="cmCamiseta" class="form-control input-sm">
-											<?php fDomainStatic( array( "table" => "TAB_CAMISETA", "id" => "CD", "order" => "CD" ) );?>
+											<?php fDomainStatic( array( "table" => "TAB_TAMANHOS", "where" => "TP = 'C'", "id" => "CD", "order" => "ORD" ) );?>
+										</select>
+									</div>
+									<div class="form-group col-xs-2">
+										<label for="cmAgasalho" class="control-label">Agasalho</label>
+										<select field="cad_ativos-tp_agasalho" name="cmAgasalho" id="cmAgasalho" class="form-control input-sm">
+											<?php fDomainStatic( array( "table" => "TAB_TAMANHOS", "where" => "TP = 'A'", "id" => "CD", "order" => "ORD" ) );?>
 										</select>
 									</div>
 									<div class="form-group col-xs-4">
@@ -215,7 +221,7 @@
 									</div>
 									<div class="form-group col-xs-4">
 										<label for="fgReuniao" class="control-label">Reuni&atilde;o Semanal</label>
-										<input type="checkbox" name="fgReuniao" id="fgReuniao" field="cad_ativos-fg_reu_sem" value-on="S" value-off="N" data-toggle="toggle" data-width="70" data-onstyle="info" data-offstyle="default" data-size="small" data-on="SIM" data-off="N&Atilde;O"/>
+										<input type="checkbox" name="fgReuniao" id="fgReuniao" field="cad_ativos-fg_reu_sem" value-on="S" value-off="N" data-toggle="toggle" data-width="120" data-onstyle="info" data-offstyle="default" data-size="small" data-on="SIM" data-off="N&Atilde;O"/>
 									</div>
 								</div>
 								<div class="row" id="divDiretoria">
@@ -226,11 +232,11 @@
 										</select>
 									</div>
 									<div class="form-group col-xs-4">
-										<label for="nrUltEstrela" class="control-label"><i class="fa fa-star-o"></i> (&Uacute;ltima recebida)</label>
-										<input type="text" name="nrUltEstrela" id="nrUltEstrela" field="cad_pessoa-estr_atual" class="form-control" placeholder="&Uacute;ltima Estrela" data-min="2"/>
+										<label for="nrUltEstrela" class="control-label"><i class="fa fa-star-o"></i> (&Uacute;ltima devolvida)</label>
+										<input type="text" name="nrUltEstrela" id="nrUltEstrela" field="cad_pessoa-estr_devol" class="form-control" placeholder="&Uacute;ltima Estrela" data-min="2"/>
 									</div>
 									<div class="form-group col-xs-4">
-										<label for="nrUniformes" class="control-label">Qtd.Uniformes Gala</label>
+										<label for="nrUniformes" class="control-label">Qtd. Uniformes</label>
 										<input type="text" name="nrUniformes" id="nrUniformes" field="cad_pessoa-qt_uniformes" class="form-control" placeholder="Uniformes" data-min="0" data-max="3"/>
 									</div>
 								</div>

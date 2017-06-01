@@ -11,7 +11,7 @@
 					<th>C&oacute;digo</th>
 					<th>Idade</th>
 					<th>Nome</th>
-					<th>Tipo</th>
+					<th>G&ecirc;nero</th>
 					<th>Cor</th>
 					<th>Ativa</th>
 				</tr>

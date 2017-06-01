@@ -1,7 +1,8 @@
 <?php
-if (session_id() == ""):
-	session_start();
-endif;
+if (session_id () == "") :
+	session_start ();
+
+	endif;
 require_once ("../include/header_simples.php");
 require_once ("../include/_variables.php");
 include ("../include/functions.php");
@@ -41,7 +42,7 @@ if ($_POST ["pagina"] == "CONEXAO") :
 		<p>
 			<br> <br>
 		        
-	<?php endif;
+	<?phpendif;
 	echo "<a href=" . $o->PHPDomain . $VirtualDir . "agenda/index.php>Sair</a>";
 	exit ();
 

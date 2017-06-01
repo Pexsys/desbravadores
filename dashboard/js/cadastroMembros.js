@@ -202,6 +202,11 @@ $(document).ready(function(){
 						message: 'Selecione a camiseta'
 					}
 				}},
+				cmAgasalho:		{validators: {
+					notEmpty: {
+						message: 'Selecione o agasalho'
+					}
+				}},
 				dsEmail:		{validators: {
 					regexp: {
 						regexp: '^[^@\\s]+@([^@\\s]+\\.)+[^@\\s]+$',

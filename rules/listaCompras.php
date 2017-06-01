@@ -1,6 +1,7 @@
 <?php
 @require_once("../include/functions.php");
 @require_once("../include/compras.php");
+@require_once("../include/materiais.php");
 responseMethod();
 
 /****************************
@@ -358,7 +359,7 @@ function updateEstoque( $ln, $fd, $vl ){
 		$re = $GLOBALS['conn']->Execute("
 			SELECT QT_EST
 			  FROM CON_COMPRAS
-			WHERE ID = ?
+			 WHERE ID = ?
 		", array( $ln["ID"]) );
 		if (!$re->EOF):
 			$qt = $re->fields["QT_EST"];
@@ -373,11 +374,23 @@ function updateEstoque( $ln, $fd, $vl ){
 	endif;
 
 	if ($update):
-		$GLOBALS['conn']->Execute("
-			UPDATE CAD_COMPRAS_PESSOA 
-			   SET $fd = ?
-			 WHERE ID = ?
-		", array( $vl, $ln["ID"] ));
+	    
+	    //SE ESTRELA FOI ENTREGUE, EXCLUIR DA LISTA DE COMPRAS
+		if ( $fd == "fg_entregue" && $vl == "S" && fStrStartWith($ln["CD"],"03-01") ):
+		    $GLOBALS['conn']->Execute("DELETE FROM CAD_COMPRAS_PESSOA WHERE ID = ?", array( $ln["ID"] ) );
+		    
+		    //INSERE LOG DE ENTREGA DE MATERIAIS
+		    $materiais = new MATERIAIS();
+		    $materiais->forceInsert( array( $ln["ID_CAD_PESSOA"], $ln["ID_TAB_MATERIAIS"], date("Y-m-d") ) );
+		
+	    else:
+    		$GLOBALS['conn']->Execute("
+    			UPDATE CAD_COMPRAS_PESSOA 
+    			   SET $fd = ?
+    			 WHERE ID = ?
+    		", array( $vl, $ln["ID"] ) );
+    	endif;
+		
 	endif;
 	return $qt;
 }

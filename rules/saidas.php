@@ -140,10 +140,10 @@ function getNames(){
 		$rs = $GLOBALS['conn']->Execute("
 			SELECT 1 
 			FROM EVE_SAIDA_PESSOA esp
-	 	  INNER JOIN EVE_SAIDA es ON (es.ID = esp.ID_EVE_SAIDA AND es.DH_R > NOW())
-		       WHERE esp.ID_CAD_PESSOA = ?
-		         AND esp.FG_AUTORIZ = ?
-		", array($membroID, "S") );
+	  INNER JOIN EVE_SAIDA es ON (es.ID = esp.ID_EVE_SAIDA AND es.DH_R > NOW() AND es.FG_IMPRIMIR = ?)
+		   WHERE esp.ID_CAD_PESSOA = ?
+		     AND esp.FG_AUTORIZ = ?
+		", array( "S", $membroID, "S" ) );
 		if ($result->fields["IDADE_HOJE"] < 18 && !$rs->EOF):
 			$arr[] = array( "id" => $membroID, "ds" => "<<mim>> - $membroNM");
 		endif;
@@ -171,11 +171,12 @@ function getNames(){
 			  FROM CON_APR_PESSOA cap
 		    INNER JOIN CON_ATIVOS ca ON (ca.ID = cap.ID_CAD_PESSOA)
 	            INNER JOIN EVE_SAIDA_PESSOA esp ON (esp.ID_CAD_PESSOA = ca.ID AND esp.FG_AUTORIZ = ?)
-	            INNER JOIN EVE_SAIDA es ON (es.ID = esp.ID_EVE_SAIDA AND es.DH_R > NOW())
+	            INNER JOIN EVE_SAIDA es ON (es.ID = esp.ID_EVE_SAIDA AND es.DH_R > NOW() AND es.FG_IMPRIMIR = ?)
 			 WHERE cap.CD_ITEM_INTERNO LIKE '$classe%'
 			   AND cap.DT_CONCLUSAO IS NULL
 			   AND ca.ID <> ?
 			   AND ca.IDADE_HOJE < ?";
+		$aQuery["binds"][] = "S";
 		$aQuery["binds"][] = "S";
 		$aQuery["binds"][] = $membroID;
 		$aQuery["binds"][] = 18;
@@ -187,9 +188,10 @@ function getNames(){
 	           SELECT ca.NM, ca.ID 
 	           FROM CON_ATIVOS ca
 	     INNER JOIN EVE_SAIDA_PESSOA esp ON (esp.ID_CAD_PESSOA = ca.ID AND esp.FG_AUTORIZ = ?)
-	     INNER JOIN EVE_SAIDA es ON (es.ID = esp.ID_EVE_SAIDA AND es.DH_R > NOW())
+	     INNER JOIN EVE_SAIDA es ON (es.ID = esp.ID_EVE_SAIDA AND es.DH_R > NOW() AND es.FG_IMPRIMIR = ?)
 	           WHERE ca.ID <> ? 
 	             AND ca.IDADE_HOJE < ?";
+		$aQuery["binds"][] = "S";
 		$aQuery["binds"][] = "S";
 		$aQuery["binds"][] = $membroID;
 		$aQuery["binds"][] = 18;
@@ -202,10 +204,10 @@ function getNames(){
 		INNER JOIN CAD_RESP cr ON (REPLACE(REPLACE(cr.CPF_RESP,'.',''),'-','') = cu.CD_USUARIO)
 		INNER JOIN CON_ATIVOS ca ON (ca.ID_RESP = cr.ID)
 	        INNER JOIN EVE_SAIDA_PESSOA esp ON (esp.ID_CAD_PESSOA = ca.ID AND esp.FG_AUTORIZ = ?)
-	        INNER JOIN EVE_SAIDA es ON (es.ID = esp.ID_EVE_SAIDA AND es.DH_R > NOW())
+	        INNER JOIN EVE_SAIDA es ON (es.ID = esp.ID_EVE_SAIDA AND es.DH_R > NOW() AND es.FG_IMPRIMIR = ?)
 		WHERE cu.ID_USUARIO = ?
 	          AND ca.IDADE_HOJE < ?
-	", array("S", $usuarioID, 18) );
+	", array("S", "S", $usuarioID, 18) );
 	foreach ($rd as $k => $l):
 		$arr[] = array( "id" => $l["ID"], "ds" =>utf8_encode($l["NM"]) );
 		
@@ -217,7 +219,7 @@ function getNames(){
 		$rs = $GLOBALS['conn']->Execute( substr($aQuery["query"], 7)." ORDER BY 1", $aQuery["binds"] );
 		if (!$rs->EOF):
 			foreach ($rs as $k => $line):
-				$arr[] = array( "id" => $line["ID"], "ds" =>utf8_encode($line["NM"]) );
+				$arr[] = array( "id" => $line["ID"], "ds" => utf8_encode($line["NM"]) );
 			endforeach;
 		endif;
 	endif;
@@ -230,11 +232,12 @@ function getUnionByUnidade($aQuery, $unidadeID, $membroID){
 		$aQuery["query"] .=" UNION 
 		SELECT ca.NM, ca.ID 
 		FROM CON_ATIVOS ca 
-          INNER JOIN EVE_SAIDA_PESSOA esp ON (esp.ID_CAD_PESSOA = ca.ID AND esp.FG_AUTORIZ = ?)
-	  INNER JOIN EVE_SAIDA es ON (es.ID = esp.ID_EVE_SAIDA AND es.DH_R > NOW())
+      INNER JOIN EVE_SAIDA_PESSOA esp ON (esp.ID_CAD_PESSOA = ca.ID AND esp.FG_AUTORIZ = ?)
+	  INNER JOIN EVE_SAIDA es ON (es.ID = esp.ID_EVE_SAIDA AND es.DH_R > NOW() AND es.FG_IMPRIMIR = ?)
 		WHERE ca.ID_UNIDADE = ? 
 		  AND ca.ID <> ? 
 		  AND ca.IDADE_HOJE < ?";
+		$aQuery["binds"][] = "S";
 		$aQuery["binds"][] = "S";
 		$aQuery["binds"][] = $unidadeID;
 		$aQuery["binds"][] = $membroID;
@@ -248,13 +251,14 @@ function getUnionByClasses($aQuery, $membroID){
 		$aQuery["query"] .= " UNION 
 		SELECT DISTINCT ca.NM, ca.ID
 		  FROM CON_APR_PESSOA cap
-	    INNER JOIN CON_ATIVOS ca ON (ca.ID = cap.ID_CAD_PESSOA)
-            INNER JOIN EVE_SAIDA_PESSOA esp ON (esp.ID_CAD_PESSOA = ca.ID AND esp.FG_AUTORIZ = ?)
-	    INNER JOIN EVE_SAIDA es ON (es.ID = esp.ID_EVE_SAIDA AND es.DH_R > NOW())
+	INNER JOIN CON_ATIVOS ca ON (ca.ID = cap.ID_CAD_PESSOA)
+    INNER JOIN EVE_SAIDA_PESSOA esp ON (esp.ID_CAD_PESSOA = ca.ID AND esp.FG_AUTORIZ = ?)
+	INNER JOIN EVE_SAIDA es ON (es.ID = esp.ID_EVE_SAIDA AND es.DH_R > NOW() AND es.FG_IMPRIMIR = ?)
 		 WHERE cap.CD_ITEM_INTERNO IN (SELECT DISTINCT CD_ITEM_INTERNO FROM CON_APR_PESSOA WHERE ID_CAD_PESSOA = ? AND TP_ITEM = ? AND DT_CONCLUSAO IS NULL)
 		   AND cap.DT_CONCLUSAO IS NULL
 		   AND ca.ID <> ?
 		   AND ca.IDADE_HOJE < ?";
+		$aQuery["binds"][] = "S";
 		$aQuery["binds"][] = "S";
 		$aQuery["binds"][] = $membroID;
 		$aQuery["binds"][] = "CL";
@@ -447,13 +451,30 @@ function getMembrosFilter( $parameters ) {
 
 function getSaidas( $parameters ) {
 	$arr = array();
+	
+	session_start();
+	$usuarioID = $_SESSION['USER']['id_usuario'];	
+	
 	fConnDB();
 	
 	$query = "SELECT es.ID, es.DS, es.DH_S, es.DH_R FROM EVE_SAIDA es";
 	if ( $parameters["filter"] == "Y" ):
 		$query .= " WHERE YEAR(es.DH_R) = YEAR(NOW())";
 	elseif ( $parameters["filter"] == "P" ):
-		$query .= " WHERE es.DH_R > NOW() AND es.FG_IMPRIMIR = 'S' AND EXISTS (SELECT 1 FROM EVE_SAIDA_PESSOA WHERE ID_EVE_SAIDA = es.ID AND FG_AUTORIZ = 'S')";
+		$query .= " WHERE es.DH_R > NOW() AND es.FG_IMPRIMIR = 'S' AND EXISTS (SELECT 1 FROM EVE_SAIDA_PESSOA WHERE ID_EVE_SAIDA = es.ID AND FG_AUTORIZ = 'S' ";
+    
+    	//MEMBRO LOGADO
+    	$result = $GLOBALS['conn']->Execute("
+    		SELECT cu.ID_CAD_PESSOA, ca.ID_UNIDADE, ca.CD_CARGO, ca.CD_CARGO2, ca.NM, ca.IDADE_HOJE
+    		  FROM CON_ATIVOS ca
+    	INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID)
+    	     WHERE cu.ID_USUARIO = ? 
+    	", array( $usuarioID ) );
+    	if ( !$result->EOF && fStrStartWith($result->fields["CD_CARGO"], "1") ):
+    	    $query .= " AND ID_CAD_PESSOA = ".$result->fields["ID_CAD_PESSOA"];
+    	endif;
+		 $query .= "  )";
+		 
 	endif;
 	$query .= " ORDER BY es.DH_S DESC";
 	

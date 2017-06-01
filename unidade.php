@@ -61,7 +61,7 @@ endforeach;
                 <h3>Atributos da Unidade</h3>
                 <ul>
                     <li><b>Idade</b>:&nbsp;<?php echo $result->fields["IDADE"];?> anos</li>
-                    <li><b>G&ecirc;nero</b>:&nbsp;<?php echo ( $result->fields["TP"] == "F" ? "Feminina" : "Masculina" );?></li>
+                    <li><b>G&ecirc;nero</b>:&nbsp;<?php echo ( $result->fields["TP"] == "F" ? "Feminino" : "Masculino" );?></li>
                     <li><b>Cor do g&ecirc;nero</b>:&nbsp;<i class="fa fa-stop" aria-hidden="true" style="color:<?php echo $result->fields["CD_COR_GENERO"];?>"></i></li>
                     <li><b>Cor da unidade</b>:&nbsp;<i class="fa fa-stop" aria-hidden="true" style="color:<?php echo $result->fields["CD_COR"];?>"></i></li>
                     <li><b>Grito de Guerra</b>:<br/><i><?php echo utf8_encode($result->fields["GRITO"]);?></i></li>

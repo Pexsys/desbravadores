@@ -1,17 +1,18 @@
+var opt = '';
+
 $(document).ready(function(){
 
 	$("#btnGerar").click( function(e) {
-		var opt = $("#cbListagem").val();
-		if (opt != ''){
+		if (opt !== ''){
 			var url = jsLIB.rootDir+'report/';
 			if (opt == "LST_ATIVOS"){
 				url += 'geraListaAtivos.php?';
-			} else if (opt == "LST_NAO_BATIZADOS"){
-				url += 'geraListaNaoBatizados.php?';
+			} else if (opt == "LST_BATISMO"){
+				url += 'geraListaBatismos.php?filter='+$("#cbBatismo").val();
 			} else if (opt == "LST_CLASSE"){
 				url += 'geraListaClasse.php?';
-			} else if (opt == "LST_CAMISETAS"){
-				url += 'geraListaCamisetas.php?';
+			} else if (opt == "LST_UNIFORMES"){
+				url += 'geraListaUniformes.php?filter='+$("#cbUniformes").val();
 			} else if (opt == "LST_ESTRELATS"){
 				url += 'geraListaEstrelas.php?';
 			}
@@ -20,11 +21,14 @@ $(document).ready(function(){
 	});
 
 	$("#cbListagem").change(function(){
-		ruleBotaoGerar();
+	    opt = $(this).val();
+		rulesGeracao();
 	});
 	
 });
 
-function ruleBotaoGerar(){
-	$("#btnGerar").visible( $("#cbListagem").val() !== ''  );
+function rulesGeracao(){
+    $("#batismo").visible( opt == 'LST_BATISMO'  );
+    $("#uniformes").visible( opt == 'LST_UNIFORMES'  );
+	$("#btnGerar").visible( $("#cbListagem").val() !== '' );
 }

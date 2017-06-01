@@ -794,6 +794,7 @@ function fDomain($a){
 		$ds = $a['id'];
 	endif;
 	$query .= " FROM ".$a['table'];
+	$query .= isset( $a['where'] ) ? " WHERE ".$a['where'] : "";
 	$query .= isset( $a['order'] ) ? " ORDER BY ".$a['order'] : "";
 	$dom = $GLOBALS['conn']->Execute($query);
 	while (!$dom->EOF):

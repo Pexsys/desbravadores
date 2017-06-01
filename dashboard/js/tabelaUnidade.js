@@ -48,7 +48,7 @@ $(document).ready(function(){
 					if (data == 'A')
 						return "AMBOS";
 					else {
-						return (data == 'M' ? "MASCUL" : "FEMIN") + "INA";
+						return (data == 'M' ? "MASCUL" : "FEMIN") + "INO";
 					}
 				}
 			},

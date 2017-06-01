@@ -253,7 +253,7 @@ class COMPRAS_LST extends TCPDF {
 		$this->SetCreator(PDF_CREATOR);
 		$this->SetAuthor('Ricardo J. Cesar');
 		$this->SetSubject('Clube Pioneiros');
-		$this->SetKeywords('Desbravadores, Autoriza��es, Pioneiros, Cap�o Redondo');
+		$this->SetKeywords('Desbravadores, Autorizações, Pioneiros, Capão Redondo');
 		$this->SetTitle('Lista de Compras');
 		$this->setImageScale(PDF_IMAGE_SCALE_RATIO);
 		$this->setPrintHeader(false);

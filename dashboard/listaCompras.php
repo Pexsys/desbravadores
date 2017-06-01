@@ -84,6 +84,7 @@
 											<option value="LC-ALM">LISTA DE COMPRAS - ALMOXARIFADO DA ASSOCIA&Ccedil;&Atilde;O</option>
 											<option value="LC-MDA">LISTA DE COMPRAS - SECRETARIA MDA ASSOCIA&Ccedil;&Atilde;O</option>
 											<option value="LC-DSA">LISTA DE INVESTIDURAS - CADASTRO DSA</option>
+											<option value="LC-SEC">LISTA DE INVESTIDURAS - SECRETARIA DO CLUBE</option>
 										</select>
 									</div>
 								</div>
