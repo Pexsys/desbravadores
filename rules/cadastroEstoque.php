@@ -1,0 +1,106 @@
+<?php
+@require_once("../include/functions.php");
+@require_once("../include/materiais.php");
+responseMethod();
+
+/****************************
+ * Methods defined for use. *
+ ****************************/
+function getQueryByFilter( $parameters ) {
+	$where = "";
+	$aWhere = array();
+	if ( isset($parameters["filters"]) ):
+		$keyAnt = "";
+		foreach ($parameters["filters"] as $key => $v):
+			$not = false;
+			if ( isset($parameters["filters"][$key]["fg"]) ):
+				$not = strtolower($parameters["filters"][$key]["fg"]) == "true";
+			endif;
+			$notStr = ( $not ? "NOT " : "" );
+			if ( $key == "HT" ):
+				$where .= " AND tm.TP ".$notStr."IN";
+			else:
+				$where .= " AND";
+			endif;
+
+			$prim = true;
+			$where .= " (";
+			if ( is_array( $parameters["filters"][$key]["vl"] ) ):
+				foreach ($parameters["filters"][$key]["vl"] as $value):
+					if ( empty($value) ):
+						$aWhere[] = "NULL";
+						$where .= (!$prim ? "," : "" )."?";
+					else:
+						$aWhere[] = $value;
+						$where .= (!$prim ? "," : "" )."?";
+					endif;				
+					$prim = false;
+				endforeach;
+			else:
+				$aWhere[] = "$notStr"."NULL";
+				$where .= "?";
+			endif;
+			$where .= ")";
+		endforeach;
+	endif;	
+
+//echo $where;
+//exit;
+
+	$query = "
+		SELECT
+			tm.ID,
+			tm.TP,
+			tm.DS,
+			tm.QT_EST,
+			tm.FUNDO,
+			ta.CD_ITEM_INTERNO,
+			ta.DS_ITEM
+		FROM TAB_MATERIAIS tm
+   LEFT JOIN TAB_APRENDIZADO ta ON (ta.ID = tm.ID_TAB_APREND AND ta.TP_ITEM = 'ES')
+		WHERE QT_EST > 0 $where
+	 ORDER BY tm.TP, tm.DS
+	";
+	//echo $query;
+	return $GLOBALS['conn']->Execute( $query, $aWhere );
+}
+
+function getEstoque( $parameters ) {
+	$arr = array();
+	
+	fConnDB();
+	$result = getQueryByFilter($parameters);
+	if (!is_null($result)):
+		foreach ($result as $k => $fields):
+		    $ds = $fields['DS'];
+		    $ds .= (!is_null($fields['DS_ITEM'])? " - ".$fields['CD_ITEM_INTERNO']."-".$fields['DS_ITEM'] : "");
+    		if ( !empty($fields['FUNDO']) ):
+    			$ds .= " - FUNDO ". ($fields['FUNDO'] == "BR" ?  "BRANCO" : "CAQUI");
+    		endif;
+    		
+			$arr[] = array( 
+				"id" => $fields['ID'],
+				"tp" => utf8_encode($fields['TP']),
+				"ds" => utf8_encode($ds),
+				"qt" => $fields['QT_EST']
+			);
+		endforeach;
+	endif;
+	
+	return array( "result" => true, "est" => $arr );
+}
+
+function addEstoque( $parameters ) {
+	$frm = $parameters["frm"];
+	$qtItens = max( $frm["qt_itens"], 1 );
+	
+	if ( isset($frm["id"]) ):
+		fConnDB();
+		$materiais = new MATERIAIS();
+		$materiais->addItemEstoque( $frm["id"], $qtItens );
+	endif;
+	
+	return array("result" => true);
+}
+
+?>
