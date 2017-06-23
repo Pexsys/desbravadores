@@ -1,0 +1,4 @@
+[21-Jun-2017 14:11:13 America/Sao_Paulo] PHP Warning:  Invalid argument supplied for foreach() in /home/capao/public_html/clubepioneiros/report/geraListaFanfarra.php on line 218
+[21-Jun-2017 14:38:56 America/Sao_Paulo] PHP Parse error:  syntax error, unexpected '$result' (T_VARIABLE) in /home/capao/public_html/clubepioneiros/report/geraListaFanfarra.php on line 196
+[21-Jun-2017 14:58:44 America/Sao_Paulo] PHP Parse error:  syntax error, unexpected '"' in /home/capao/public_html/clubepioneiros/report/geraListaFanfarra.php on line 97
+[21-Jun-2017 15:00:43 America/Sao_Paulo] PHP Fatal error:  Call to a member function RecordCount() on boolean in /home/capao/public_html/clubepioneiros/report/geraListaFanfarra.php on line 97
