@@ -3,6 +3,7 @@ var dataTable = undefined;
 var dataTable = undefined;
 
 $(document).ready(function(){
+	$.fn.dataTable.moment( 'DD/MM/YYYY' );
 	
 	dataTable = $('#acompDatatable').DataTable({
 		lengthChange: false,
@@ -41,16 +42,22 @@ $(document).ready(function(){
 			},
 			{	data: "nm",
 				type: 'ptbr-string',
-				width: "50%"
+				width: "45%"
 			},
 			{	data: "tp",
-				width: "32%"
+				width: "26%"
 			},
-			{	data: "yi",
+			{	data: "di",
+				width: "8%"
+			},
+			{	data: "dc",
+				width: "8%"
+			},
+			{	data: "da",
 				width: "8%"
 			},
 			{	data: "pg",
-				width: "10%"
+				width: "5%"
 			}
 		],
 		fnRowCallback: function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
@@ -67,7 +74,7 @@ $(document).ready(function(){
 			style: 'multi',
 			selector: 'td:first-child'
 		}
-	}).order( [ 4, 'asc' ], [ 5, 'asc' ], [ 3, 'asc' ] );
+	});
 	
 	$('#acompDatatable tbody').on('click', 'tr', function () {
 		$(this).toggleClass('selected');

@@ -198,11 +198,15 @@ $pdf->newPage();
 fConnDB();
 
 $result = $GLOBALS['conn']->Execute("
-    SELECT DISTINCT cc.NM, ta.TP_ITEM, cc.NR_PG_ASS, ta.CD_ITEM_INTERNO, ta.DS_ITEM
-    FROM CON_COMPRAS cc
-    INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = cc.ID_TAB_APREND)
-    WHERE ta.TP_ITEM IN ('CL','ES')
-      AND ta.ID_DSA IS NOT NULL
+	SELECT DISTINCT
+		at.NM,
+		cap.TP_ITEM,
+		tm.NR_PG_ASS,
+		cap.CD_ITEM_INTERNO,
+		cap.DS_ITEM
+	FROM CON_ATIVOS at
+	INNER JOIN CON_APR_PESSOA cap ON (cap.ID_CAD_PESSOA = at.ID AND cap.DT_AVALIACAO IS NOT NULL AND cap.DT_INVESTIDURA IS NULL)
+	 LEFT JOIN TAB_MATERIAIS tm ON (tm.ID_TAB_APREND = cap.ID_TAB_APREND)
     ORDER BY 1, 2, 3, 4
 ");
 foreach ( $result as $ra => $f ):

@@ -2,7 +2,7 @@
 @require_once('../include/functions.php');
 @require_once('../include/_core/lib/tcpdf/tcpdf.php');
 
-class LISTAINVESTIDURADSA extends TCPDF {
+class LISTACOMPRASALM extends TCPDF {
 	
 	//lines styles
 	public $finalHTML;
@@ -10,9 +10,8 @@ class LISTAINVESTIDURADSA extends TCPDF {
 	private $stLine;
 	private $stLine2;
 	private $lineAlt;
-	private $dsItemAtu;
-	private $dsItemAnt;
-	private $seq;
+	private $dsGavetaAPSAtu;
+	private $dsGavetaAPSAnt;
 	private $titleColor;
 	private $widthColumn;
 	private $heightHeader;
@@ -41,7 +40,7 @@ class LISTAINVESTIDURADSA extends TCPDF {
 
 		$this->SetCreator(PDF_CREATOR);
 		$this->SetAuthor('Ricardo J. Cesar');
-		$this->SetTitle('Listagem de Investidura - DSA');
+		$this->SetTitle('Listagem de Compras por Gaveta');
 		$this->SetSubject('Clube Pioneiros');
 		$this->SetKeywords('Desbravadores, Especialidades, Pioneiros, Capão Redondo');
 		$this->setImageScale(PDF_IMAGE_SCALE_RATIO);
@@ -50,8 +49,8 @@ class LISTAINVESTIDURADSA extends TCPDF {
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 6);
 		$this->SetAutoPageBreak(true, 10);
 		
-        $this->titleColor = "#009999";
-        $this->dsItemAnt = null;
+        $this->titleColor = "#006699";
+        $this->dsGavetaAPSAnt = null;
         $this->finalHTML = "";
 		$this->lineAlt = false;
 	}
@@ -74,11 +73,28 @@ class LISTAINVESTIDURADSA extends TCPDF {
 		
 		$this->setXY(20,5);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 20);
-		$this->Cell(185, 9, "Listagem de Pessoas por Item - DSA", 0, false, 'C', false, false, false, false, 'T', 'M');
+		$this->Cell(185, 9, "Listagem de Compras Sintética por Gaveta/Itens", 0, false, 'C', false, false, false, false, 'T', 'M');
 		$this->setXY(20,15);
 		$this->SetTextColor(80,80,80);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 9);
 		$this->Cell(185, 5, fClubeID(), 0, false, 'C', false, false, false, false, false, false, 'T', 'M');
+	}
+	
+	private function getGaveta($nr_gaveta_aps){
+	    if ( is_null($nr_gaveta_aps) || $nr_gaveta_aps == 0 ):
+	         $this->dsGavetaAPSAtu = "GAVETA NÃO DEFINIDA";
+        elseif ($nr_gaveta_aps == 9999):
+            $this->dsGavetaAPSAtu = "RESUMO CONSOLIDADO POR TIPO";
+        else:
+            $this->dsGavetaAPSAtu = "GAVETA $nr_gaveta_aps";
+        endif;
+	}
+	
+	private function getFundo($fundo){
+	    if ( !is_null($fundo) && !empty($fundo) ):
+	        return $fundo == "BR" ? "BRANCO" : "CAQUI";
+        endif;
+        return "";
 	}
 	
 	public function add($str){
@@ -132,23 +148,22 @@ class LISTAINVESTIDURADSA extends TCPDF {
 	}
 	
 	public function addGroupHeader(){
-        if ($this->dsItemAtu !== $this->dsItemAnt):
-            if (!is_null($this->dsItemAnt)):
+        if ($this->dsGavetaAPSAtu !== $this->dsGavetaAPSAnt):
+            if (!is_null($this->dsGavetaAPSAnt)):
                 $this->writeGroupTable();
             endif;
-            $this->seq = 0;
             $this->add("
                 <table cellpadding=\"3\" border=\"0\" cellspacing=\"0\">
                     <tr>
-                        <td width=\"100%\" colspan=\"2\" style=\"border:1px solid black;font-size:12px;font-weight:bold;color:#FFFFFF;background-color:".$this->titleColor."\">". $this->dsItemAtu ."</td>
+                        <td width=\"100%\" colspan=\"2\" style=\"border:1px solid black;font-size:12px;font-weight:bold;color:#FFFFFF;background-color:".$this->titleColor."\">". $this->dsGavetaAPSAtu ."</td>
                     </tr>
                     <tr>
-                        <td width=\"7%\" style=\"border-left:1px solid black;border-bottom:1px solid black;text-align:center;font-weight:bold;color:#000000;background-color:#C2C2C2\">Seq.</td>
-                        <td width=\"93%\" style=\"border-left:1px solid black;border-bottom:1px solid black;border-right:1px solid black;color:#000000;font-weight:bold;background-color:#C2C2C2\">Nome</td>
+                        <td width=\"7%\" style=\"border-left:1px solid black;border-bottom:1px solid black;text-align:center;font-weight:bold;color:#000000;background-color:#C2C2C2\">Qtd.</td>
+                        <td width=\"93%\" style=\"border-left:1px solid black;border-bottom:1px solid black;border-right:1px solid black;color:#000000;font-weight:bold;background-color:#C2C2C2\">Descrição</td>
                     </tr>
             ");
             
-            $this->dsItemAnt = $this->dsItemAtu;
+            $this->dsGavetaAPSAnt = $this->dsGavetaAPSAtu;
         endif;	    
 	}
 	
@@ -157,17 +172,19 @@ class LISTAINVESTIDURADSA extends TCPDF {
 		if ($this->lineAlt):
 			$color = "#f0f0f0";
 		endif;
+	    $fundo = $this->getFundo($f["FUNDO"]);
+	    $desc = utf8_encode($f["TP"] ." DE ". $f["DS"]. ($f["CMPL"] == "S" && $f["FG_IM"] =="N" ? " - ".$f["DS_ITEM"] : "") . ( !empty($fundo) ? " - FUNDO $fundo" : "" ));
 	    $this->add("
             <tr>
-                <td style=\"border-left:1px solid black;text-align:center;color:#000000;background-color:$color\">".(++$this->seq)."</td>
-                <td style=\"border-left:1px solid black;border-right:1px solid black;color:#000000;background-color:$color\">".utf8_encode($f["NM"])."</td>
+                <td style=\"border-left:1px solid black;text-align:center;color:#000000;background-color:$color\">".$f["QT_ITENS"]."</td>
+                <td style=\"border-left:1px solid black;border-right:1px solid black;color:#000000;background-color:$color\">$desc</td>
             </tr>	        
 	    ");
 	    $this->lineAlt = !$this->lineAlt;	    
 	}
 
 	public function addLine($f){
-	    $this->dsItemAtu = utf8_encode($f["DS_ITEM"]);
+	    $this->getGaveta($f["NR_GAVETA_APS"]);
         $this->addGroupHeader();
         $this->addTableDetail($f);
 	}
@@ -185,59 +202,38 @@ class LISTAINVESTIDURADSA extends TCPDF {
 
 	public function download() {
 		$this->lastPage();
-		$this->Output("ListagemInvestiduraDSA_".date('Y-m-d_H:i:s').".pdf", "I");
+		$this->Output("ListagemComprasAlmGaveta_".date('Y-m-d_H:i:s').".pdf", "I");
 	}
 }
 
-$pdf = new LISTAINVESTIDURADSA();
+$pdf = new LISTACOMPRASALM();
 $pdf->newPage();
 
 fConnDB();
 
 $result = $GLOBALS['conn']->Execute("
-	SELECT DISTINCT 
-		1 AS ORD,
-		cap.TP_ITEM,
-		cap.CD_ITEM_INTERNO,
-		cap.DS_ITEM AS X,
-		at.NM,
-		cap.DS_ITEM
-	FROM CON_ATIVOS at
-	INNER JOIN CON_APR_PESSOA cap ON (cap.ID_CAD_PESSOA = at.ID AND cap.DT_AVALIACAO IS NOT NULL AND cap.DT_INVESTIDURA IS NULL)
-	 LEFT JOIN TAB_MATERIAIS tm ON (tm.ID_TAB_APREND = cap.ID_TAB_APREND)
-	  WHERE cap.TP_ITEM = 'CL'
-
-    UNION ALL
-
-	SELECT DISTINCT 
-		2 AS ORD,
-		cap.TP_ITEM,
-		cap.CD_ITEM_INTERNO,
-		cap.DS_ITEM AS X,
-		at.NM,
-		cap.DS_ITEM
-	FROM CON_ATIVOS at
-	INNER JOIN CON_APR_PESSOA cap ON (cap.ID_CAD_PESSOA = at.ID AND cap.DT_AVALIACAO IS NOT NULL AND cap.DT_INVESTIDURA IS NULL)
-	 LEFT JOIN TAB_MATERIAIS tm ON (tm.ID_TAB_APREND = cap.ID_TAB_APREND)
-	  WHERE cap.TP_ITEM = 'ES'
-	    AND SUBSTR(cap.CD_ITEM_INTERNO,1,2) <> 'ME'
-    
-    UNION ALL
-    
-	SELECT DISTINCT 
-		2 AS ORD,
-		cap.TP_ITEM,
-		cap.CD_ITEM_INTERNO,
-		cap.DS_ITEM AS X,
-		at.NM,
-		cap.DS_ITEM
-	FROM CON_ATIVOS at
-	INNER JOIN CON_APR_PESSOA cap ON (cap.ID_CAD_PESSOA = at.ID AND cap.DT_AVALIACAO IS NOT NULL AND cap.DT_INVESTIDURA IS NULL)
-	 LEFT JOIN TAB_MATERIAIS tm ON (tm.ID_TAB_APREND = cap.ID_TAB_APREND)
-	  WHERE cap.TP_ITEM = 'ES'
-	    AND SUBSTR(cap.CD_ITEM_INTERNO,1,2) = 'ME'
-    
-    ORDER BY 1, 2, 3, 4, 5
+	
+	SELECT * FROM (
+		SELECT NR_GAVETA_APS, TP_ITEM, TP, DS, DS_ITEM, FUNDO, CMPL, FG_IM, (COUNT(*)-QT_EST) AS QT_ITENS
+		 FROM CON_COMPRAS
+		WHERE FG_ALMOX = 'S'
+		GROUP BY NR_GAVETA_APS, TP_ITEM, TP, DS, DS_ITEM, FUNDO, CMPL, FG_IM
+		) X WHERE X.QT_ITENS > 0
+		
+	UNION ALL
+	
+	SELECT 9999 AS NR_GAVETA_APS, NULL AS TP_ITEM, TP_GRP AS TP, DS_GRP AS DS, NULL AS DS_ITEM, NULL AS FUNDO, NULL AS CMPL, NULL AS FG_IM, SUM(QT_ITENS) AS QT_ITENS
+	FROM (
+		SELECT * FROM (
+			SELECT NR_GAVETA_APS, TP_ITEM, TP_GRP, DS_GRP, DS_ITEM, FUNDO, CMPL, FG_IM, (COUNT(*)-QT_EST) AS QT_ITENS
+			 FROM CON_COMPRAS
+			WHERE FG_ALMOX = 'S'
+			GROUP BY NR_GAVETA_APS, TP_ITEM, TP, DS, DS_ITEM, FUNDO, CMPL, FG_IM
+			) X WHERE X.QT_ITENS > 0
+		) Y 
+	GROUP BY 1, 2, 3, 4, 5, 6
+	
+	ORDER BY 1, 2, 3, 4, 5, 6 DESC
 ");
 foreach ( $result as $ra => $f ):
 	$pdf->addLine($f);

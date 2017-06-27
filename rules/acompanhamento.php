@@ -56,6 +56,20 @@ function getQueryByFilter( $parameters ) {
 						else:
 							$where .= (!$prim ? " OR " : "") ."at.CD_CARGO ". ( empty($value) ? "IS ".$notStr."NULL" : $notStr."LIKE '$value%'");
 						endif;
+					elseif ( $key == "HA" ):
+						if ( $value == "0" ):
+							$where .= (!$prim ? " OR " : "") ."cap.DT_CONCLUSAO IS ".( !$not ? "NULL" : "NOT NULL");
+						elseif ( $value == "1" ):
+							$where .= (!$prim ? " OR " : "") ."cap.DT_CONCLUSAO IS NOT NULL AND cap.DT_AVALIACAO IS ".( !$not ? "NULL" : "NOT NULL");
+						elseif ( $value == "2" ):
+							$where .= (!$prim ? " OR " : "") ."YEAR(cap.DT_AVALIACAO) ".( !$not ? " = " : " <> ")." YEAR(NOW())";
+						elseif ( $value == "3" ):
+							$where .= (!$prim ? " OR " : "") ."cap.DT_CONCLUSAO IS NOT NULL AND cap.DT_AVALIACAO IS NOT NULL AND cap.DT_INVESTIDURA IS ".( !$not ? "NULL" : "NOT NULL");
+						elseif ( $value == "4" ):
+							$where .= (!$prim ? " OR " : "") ."YEAR(cap.DT_INVESTIDURA) ".( !$not ? " = " : " <> ")." YEAR(NOW())";
+						elseif ( $value == "5" ):
+							$where .= (!$prim ? " OR " : "") ."YEAR(cap.DT_AVALIACAO) ".( !$not ? " < " : " <> ")." YEAR(NOW())";
+						endif;
 					elseif ( empty($value) ):
 						$aWhere[] = "NULL";
 						$where .= (!$prim ? "," : "" )."?";
@@ -84,13 +98,15 @@ function getQueryByFilter( $parameters ) {
 			cap.CD_ITEM_INTERNO,			
 			cap.DS_ITEM,
 			cap.DT_INICIO,
+			cap.DT_CONCLUSAO,
+			cap.DT_AVALIACAO,
 			cai.QTD AS QT_TOTAL,
 			COUNT(*) AS QTD
 		FROM CON_APR_PESSOA cap
 		INNER JOIN CON_APR_ITEM cai ON (cai.ID = cap.ID_TAB_APREND)
 		INNER JOIN CON_ATIVOS at ON (at.ID = cap.ID_CAD_PESSOA)
 		WHERE cap.DT_ASSINATURA IS NOT NULL $where
-	 GROUP BY at.NM, cap.ID_CAD_PESSOA, cap.TP_ITEM, cap.CD_ITEM_INTERNO, cap.DS_ITEM, cap.DT_INICIO, cai.QTD
+	 GROUP BY at.NM, cap.ID_CAD_PESSOA, cap.TP_ITEM, cap.CD_ITEM_INTERNO, cap.DS_ITEM, cap.DT_INICIO, cap.DT_CONCLUSAO, cap.DT_AVALIACAO, cai.QTD
 	 ORDER BY at.NM, cap.DT_INICIO, cap.CD_ITEM_INTERNO
 	";
 
@@ -106,7 +122,9 @@ function getData( $parameters ) {
 		$arr[] = array( 
 			"ip" => utf8_encode($fields['ID_CAD_PESSOA']),
 			"ia" => utf8_encode($fields['ID_TAB_APREND']),
-			"yi" => strftime("%Y",strtotime($fields['DT_INICIO'])),
+			"di" => is_null($fields['DT_INICIO']) ? "" : strftime("%d/%m/%Y",strtotime($fields['DT_INICIO'])),
+			"dc" => is_null($fields['DT_CONCLUSAO']) ? "" : strftime("%d/%m/%Y",strtotime($fields['DT_CONCLUSAO'])),
+			"da" => is_null($fields['DT_AVALIACAO']) ? "" : strftime("%d/%m/%Y",strtotime($fields['DT_AVALIACAO'])),
 			"nm" => utf8_encode($fields['NM']),
 			"tp" => utf8_encode($fields['DS_ITEM']),
 			"pg" => floor(($fields['QTD'] / $fields['QT_TOTAL'])*100)

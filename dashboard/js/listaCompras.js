@@ -204,13 +204,23 @@ $(document).ready(function(){
 			}
 		})
 		.submit( function(event) {
-			var parameter = {
-				frm: jsLIB.getJSONFields( $('#printForm') ),
-				filtro: 'T',
-				filters: jsFilter.jSON()
-			};
-			jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/listaCompras.php", { MethodName : 'gerarPDF', data : parameter } );
-			$("#printModal").modal('hide');
+			event.preventDefault();
+			var opt = $("#cmLista").val();
+			if (opt !== ''){
+				var url = jsLIB.rootDir+'report/';
+				if (opt == "LC-ALM-AREA"){
+					url += 'geraListaComprasAlmArea.php?';
+				} else if (opt == "LC-ALM-GAVETA"){
+					url += 'geraListaComprasAlmGaveta.php?';
+				} else if (opt == "LC-MDA"){
+					url += 'geraListaComprasMDA.php?';
+				} else if (opt == "LC-DSA"){
+					url += 'geraListaInvestDSA.php?';
+				} else if (opt == "LC-SEC"){
+					url += 'geraListaInvestSec.php?';
+				}
+				window.open(url,'_blank','top=50,left=50,height=750,width=550,menubar=no,status=no,titlebar=no',true);
+			}
 		})
 	;
 
@@ -262,6 +272,7 @@ $(document).ready(function(){
 			jsLIB.populateOptions( $("#cmItem"), cg.itens );
 		}
 		$('#divItem').visible(visible);
+		$('#cmItem').change();
 	});
 	
 	$('#cmItem').change(function(){

@@ -80,8 +80,10 @@
 							<div>
 								<div class="row">
 									<div class="form-group col-xs-12">
-										<select field="cd_lista" name="cmLista" id="cmLista" opt-value="cd" opt-label="ds" class="selectpicker form-control input-sm" multiple data-selected-text-format="count > 1" data-container="body" data-width="100%">
-											<option value="LC-ALM">LISTA DE COMPRAS - ALMOXARIFADO DA ASSOCIA&Ccedil;&Atilde;O</option>
+										<select field="cd_lista" name="cmLista" id="cmLista" opt-value="cd" opt-label="ds" class="selectpicker form-control input-sm" data-container="body" data-width="100%">
+										    <option value=""></option>
+											<option value="LC-ALM-AREA">LISTA DE COMPRAS - ALMOXARIFADO DA ASSOCIA&Ccedil;&Atilde;O - POR &Aacute;REA</option>
+											<option value="LC-ALM-GAVETA">LISTA DE COMPRAS - ALMOXARIFADO DA ASSOCIA&Ccedil;&Atilde;O - POR GAVETA</option>
 											<option value="LC-MDA">LISTA DE COMPRAS - SECRETARIA MDA ASSOCIA&Ccedil;&Atilde;O</option>
 											<option value="LC-DSA">LISTA DE INVESTIDURAS - CADASTRO DSA</option>
 											<option value="LC-SEC">LISTA DE INVESTIDURAS - SECRETARIA DO CLUBE</option>
@@ -129,8 +131,7 @@
 			</div>
 		</div>
 	</form>
-</div>	
-
+</div>
 
 <div class="modal fade" id="listaModal" role="dialog" data-backdrop="static">
 	<form method="post" id="cadListaForm">

@@ -20,6 +20,7 @@
 			"filterTo" => "#acompDatatable",
 			"filters" => 
 				array( 
+					array( "value" => "HA", "label" => "Avaliações" ),
 					array( "value" => "X", "label" => "Sexo" ),
 					array( "value" => "C", "label" => "Classe" ),
 					array( "value" => "G", "label" => "Grupo" ),
@@ -37,7 +38,9 @@
 					<th>Nome Completo</th>
 					<th>Classe</th>
 					<th>In&iacute;cio</th>
-					<th>% Progresso</th>
+					<th>Conclus&atilde;o</th>
+					<th>Avalia&ccedil;&atilde;o</th>
+					<th>%</th>
 				</tr>
 			</thead>
 		</table>
@@ -82,5 +85,5 @@
 		</div>
 	</div>
 </div>	
-<script src="<?php echo $GLOBALS['VirtualDir'];?>js/readdata.lib.js"></script>
+<script src="<?php echo $GLOBALS['VirtualDir'];?>js/readdata.lib.js<?php echo "?".microtime();?>"></script>
 <script src="<?php echo $GLOBALS['VirtualDir'];?>dashboard/js/cadastroAcompanhamento.js<?php echo "?".microtime();?>"></script>
