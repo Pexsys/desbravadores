@@ -167,8 +167,7 @@ class LISTAINVESTIDURASEC extends TCPDF {
 			$color = "#f0f0f0";
 		endif;
 	    $fundo = $this->getFundo($f["FUNDO"]);
-	    $desc = utf8_encode($f["TP"] ." DE ". $f["DS"]. ($f["CMPL"] == "S" && $f["FG_IM"] =="N" ? " - ".$f["DS_ITEM"] : "") . ( !empty($fundo) ? " - FUNDO $fundo" : "" )) .
-            	   (!is_null($f["CM"]) ? " [".$f["CM"]."]" : "" );
+	    $desc = utf8_encode($f["TP"] ." DE ". $f["DS"]. ($f["CMPL"] == "S" && $f["FG_IM"] =="N" ? " - ".$f["DS_ITEM"] : "") . ( !empty($fundo) ? " - FUNDO $fundo" : "" ));
 	    $this->add("
             <tr>
                 <td style=\"border-left:1px solid black;text-align:center;color:#000000;background-color:$color\">".$f["QT_ITENS"]."</td>
@@ -208,19 +207,19 @@ $pdf->newPage();
 fConnDB();
 
 $result = $GLOBALS['conn']->Execute("
-    SELECT NM, TP_ITEM, CD, DS_ITEM, TP, DS, FUNDO, CMPL, FG_IM, NULL AS CM, COUNT(*) AS QT_ITENS
+    SELECT NM, TP_ITEM, CD, DS_ITEM, TP, DS, FUNDO, FG_IM, COUNT(*) AS QT_ITENS
     FROM CON_COMPRAS
     WHERE FG_IM = 'N'
       AND FG_COMPRA = 'S'
-    GROUP BY NM, TP_ITEM, CD, DS_ITEM, TP, DS, FUNDO, CMPL, FG_IM
+    GROUP BY NM, TP_ITEM, CD, DS_ITEM, TP, DS, FUNDO, FG_IM
     
     UNION ALL
     
-    SELECT NM, TP_ITEM, CD, DS_ITEM, TP, DS, FUNDO, CMPL, FG_IM, CM, COUNT(*) AS QT_ITENS
+    SELECT NM, TP_ITEM, CD, DS_ITEM, TP, DS, FUNDO, FG_IM, COUNT(*) AS QT_ITENS
     FROM CON_COMPRAS
     WHERE FG_IM = 'S'
       AND FG_COMPRA = 'S'
-    GROUP BY NM, TP_ITEM, CD, DS_ITEM, TP, DS, FUNDO, CMPL, FG_IM, CM
+    GROUP BY NM, TP_ITEM, CD, DS_ITEM, TP, DS, FUNDO, FG_IM
     
     ORDER BY 1, 2, 3, 4
 ");

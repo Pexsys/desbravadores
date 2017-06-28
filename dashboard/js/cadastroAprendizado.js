@@ -105,21 +105,7 @@ $(document).ready(function(){
 		.on('success.field.fv', function(e, data) {
 			e.preventDefault();
 			
-			var parameter = {
-				brdt : $("#cdBar").val(),
-				frm: jsLIB.getJSONFields( $('#cadAprendBarForm') )
-			};
-			sendBarCode( parameter,
-				function(data,fx){
-					$("#strResultado").html(data.result);
-					$("#divResultado").show();			
-					$("#cdBar").val('').change().focus();
-				},
-				function(data,fx){
-					$("#strResultado").hide();
-					$("#cdBar").val('').change().focus();
-				}
-			);
+			 onscan( $("#cdBar").val() );
 		})
 		.formValidation({
 			framework: 'bootstrap',
@@ -248,6 +234,24 @@ $(document).ready(function(){
 	$(".date").mask('00/00/0000');
 	ruleBtnDelete(false);
 });
+
+function onscan( bardata ) {
+	var parameter = {
+		brdt : bardata,
+		frm: jsLIB.getJSONFields( $('#cadAprendBarForm') )
+	};
+	sendBarCode( parameter,
+		function(data,fx){
+			$("#strResultado").html(data.result);
+			$("#divResultado").show();			
+			$("#cdBar").val('').change().focus();
+		},
+		function(data,fx){
+			$("#strResultado").hide();
+			$("#cdBar").val('').change().focus();
+		}
+	);
+}
 
 function ruleBtnDelete( force ){
 	$("#btnDelAprend").visible( force != undefined ? force : dataTable.rows('.selected').data().length > 0 );
