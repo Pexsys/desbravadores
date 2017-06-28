@@ -8,15 +8,15 @@ function fMontaMenu( $perfil ) {
 		
 		$urlEmpty = empty($url);
 		$class = "";
-		if ( $value["active"] ):
-			$class = " class=\"".( $urlEmpty ? "open active" : "" )."\"";
+		if ( $value["active"] == "S" ):
+			$class = " class=\"". ( $urlEmpty ? "open " : "" ) ."active\"";
 			if (!$urlEmpty):
 				$retorno =  array( "opt" => $opt, "url" => $url );
 			endif;
 		endif;
 		echo "<li$class>";
 		if ( !$urlEmpty ):
-			echo "<a href=\"".$GLOBALS['VirtualDir']."dashboard/index.php?id=$key\" class=\"$class\">";
+			echo "<a href=\"".$GLOBALS['VirtualDir']."dashboard/index.php?id=$key\"$class>";
 		else:
 			echo "<a href=\"#\">";
 		endif;
@@ -35,7 +35,6 @@ function fMontaMenu( $perfil ) {
 				$retorno = $ax;
 			endif;
 			echo "</ul>";
-			
 		endif;
 		echo "</li>";
 	endforeach;
@@ -44,23 +43,23 @@ function fMontaMenu( $perfil ) {
 
 function fSetActive( $perfil, $id = NULL ) {
 	foreach ( $perfil as $key => $value ):
-		if ( count( $value["child"] ) == 0 && ( empty($id) || $key == $id ) ):
-			$perfil[$key]["active"] = true;
+		if ( count( $value["child"] ) == 0 && ( is_null($id) || empty($id) || $key == $id ) ):
+			$perfil[$key]["active"] = "S";
 			return $perfil;
 		elseif ( count( $value["child"] ) > 0 ):
 			$active = false;
 			$aux = fSetActive( $value["child"], $id );
 			foreach ( $aux as $k => $v ):
-				if ( $aux[$k]["active"] ):
-					$perfil[$key]["active"] = true;
+				if ( $aux[$k]["active"] == "S" ):
+					$perfil[$key]["active"] = "S";
 					$active = true;
 					break;
 				endif;
 			endforeach;
-			$perfil[$key]["child"] = $aux;
 			if ($active):
+			    $perfil[$key]["child"] = $aux;
 				return $perfil;
-			endif;
+		    endif;
 		endif;
 	endforeach;
 	return $perfil;
@@ -82,5 +81,6 @@ $perfil = fSetActive( fGetPerfil(), fRequest("id") );
 				</div>
 			</li>
 			<?php $activeOpt = fMontaMenu( $perfil );?>
+		</ul>
 	</div>
 </div>

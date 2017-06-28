@@ -287,7 +287,7 @@ function updateMember( $parameters ) {
             ", array($id) );
             if (!$rs->EOF):
                 $calcAtual = $rs->fields["CALC_ATUAL"];
-                if ( $calcAtual <= max( 1, $rs->fields["ESTR_DEVOL"]) ):
+                if ( $calcAtual > max( 1, $rs->fields["ESTR_DEVOL"]) ):
                     $compras = new COMPRAS();
                     
                     $code = "03-01-".str_pad( $calcAtual+1, 2, "0", STR_PAD_LEFT);
