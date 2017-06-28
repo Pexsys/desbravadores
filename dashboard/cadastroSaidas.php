@@ -32,8 +32,8 @@
 		<a role="button" class="btn btn-primary-outline pull-right" name="filtro" id="btnTodos" tp-filtro="T"><i class="fa fa-globe"></i>&nbsp;Todos</a>
 	</div>
 </div>
-<div class="modal fade" id="saidasModal" role="dialog" data-backdrop="static"><!---->
-	<div class="modal-dialog"><!---->
+<div class="modal fade" id="saidasModal" role="dialog" data-backdrop="static">
+	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-body">
 				<form method="post" id="cadSaidasForm">
@@ -133,15 +133,20 @@
 						</div>
 					</div>
                     <div class="row">
-						<div class="col-lg-12">
+						<div class="col-lg-3 form-group">
 							<?php if (true): //PODE EXCLUIR?>
 							<a role="button" class="btn btn-danger pull-left" data-toggle="modal" id="btnDel"><i class="glyphicon glyphicon-trash"></i>&nbsp;Excluir</a>
 							<?php endif;?>
+						</div>	
+						<div class="col-lg-6 form-group">
+							<?php if (true): //PODE GERAR?>
+							<a role="button" class="btn btn-default" id="btnBus"><i class="fa fa-bus"></i>&nbsp;&Ocirc;nibus</a>
+							<a role="button" class="btn btn-default" id="btnPrint"><i class="fa fa-print"></i>&nbsp;Imprimir</a>
+							<?php endif;?>
+						</div>	
+						<div class="col-lg-3 form-group">
 							<?php if (true): //PODE INSERIR/ALTERAR?>
 							<button type="submit" class="btn btn-success pull-right"><i class="glyphicon glyphicon-floppy-save"></i>&nbsp;Gravar</button>
-							<?php endif;?>
-							<?php if (true): //PODE GERAR?>
-							<a role="button" class="btn btn-info pull-right" data-toggle="modal" id="btnPrint"><i class="glyphicon glyphicon-print"></i>&nbsp;Gerar Autoriza&ccedil;&otilde;es</a>
 							<?php endif;?>
 						</div>	
 					</div>	
@@ -150,4 +155,62 @@
 		</div>
 	</div>
 </div>
+
+<div class="modal fade" id="printModal" role="dialog" data-backdrop="static"> <!---->
+	<form method="post" id="printForm">
+		<div class="modal-dialog"> <!---->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button aria-hidden="true" data-dismiss="modal" class="close" type="button" id="btnX">&times;</button>
+				</div>			
+				<div class="modal-body">
+					<div class="panel panel-warning">
+						<div class="panel-heading" style="padding:4px 10px 0px">
+							<label>O qu&ecirc;?</label>
+						</div>
+						<div class="panel-body" style="padding:4px 10px 0px">
+							<div>
+								<div class="row">
+									<div class="form-group col-xs-12">
+										<select field="cd_lista" name="cmLista" id="cmLista" opt-value="cd" opt-label="ds" class="selectpicker form-control input-sm" data-container="body" data-width="100%">
+											<option value="LE-AUTORIZ">AUTORIZA&Ccedil;&Otilde;ES</option>
+											<option value="LE-MEMBROS">LISTA DE PARTICIPANTES</option>
+											<option value="LE-PASSAGE">LISTA DE PASSAGEIROS</option>
+										</select>
+									</div>
+								</div>
+							</div>
+						</div>	
+					</div>
+					<div class="panel panel-warning" id="divFilter" style="display:none">
+						<div class="panel-heading" style="padding:4px 10px 0px">
+							<label>Filtros</label>
+						</div>
+						<div class="panel-body" style="padding:4px 10px 0px">
+							<div>
+								<div class="row" id="rowFilterMembros" style="display:none">
+									<div class="form-group col-xs-12">
+										<select field="cd_lista" name="cmMembros" id="cmMembros" opt-value="cd" opt-label="ds" class="selectpicker form-control input-sm" data-container="body" data-width="100%">
+											<option value="LE-AUTORIZ">AUTORIZA&Ccedil;&Otilde;ES</option>
+											<option value="LE-MEMBROS">LISTA DE PARTICIPANTES</option>
+											<option value="LE-PASSAGE">LISTA DE PASSAGEIROS</option>
+										</select>
+									</div>
+								</div>
+							</div>
+						</div>	
+					</div>
+				</div>
+				<div class="panel-footer">
+					<div class="row">
+						<div class="col-lg-12">
+							<button type="submit" class="btn btn-success pull-right"><i class="fa fa-file-pdf-o"></i>&nbsp;Gerar PDF</button>
+						</div>	
+					</div>	
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+
 <script src="<?php echo $GLOBALS['VirtualDir'];?>dashboard/js/cadastroSaidas.js<?php echo "?".microtime();?>"></script>

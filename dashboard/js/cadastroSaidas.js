@@ -136,6 +136,53 @@ $(document).ready(function(){
 		})
 	;
 	
+	$("#printForm")
+		.on('init.field.fv', function(e, data) {
+			var $parent = data.element.parents('.form-group'),
+			$icon   = $parent.find('.form-control-feedback[data-fv-icon-for="' + data.field + '"]');
+			$icon.on('click.clearing', function() {
+				if ( $icon.hasClass('glyphicon-remove') ) {
+					data.fv.resetField(data.element);
+				}
+			});
+		})
+		.on('success.form.fv', function(e) {
+			e.preventDefault();
+		})	
+		.formValidation({
+			framework: 'bootstrap',
+			icon: {
+				valid: 'glyphicon glyphicon-ok',
+				invalid: 'glyphicon glyphicon-remove',
+				validating: 'glyphicon glyphicon-refresh'
+			}
+		})
+		.submit( function(event) {
+			event.preventDefault();
+			var opt = $("#cmLista").val();
+			if (opt !== ''){
+				var url = jsLIB.rootDir+'report/';
+				if (opt == "LE-AUTORIZ"){
+					url += 'geraAutorizacao.php?id='+$("#saidaID").val();
+				} else if (opt == "LE-MEMBROS"){
+					url += 'geraListaEvento.php?id='+$("#saidaID").val();
+				} else if (opt == "LE-PASSAGE"){
+					url += 'geraListaPassageiros.php?id='+$("#saidaID").val();
+				}
+				window.open(url,'_blank','top=50,left=50,height=750,width=550,menubar=no,status=no,titlebar=no',true);
+			}
+		})
+	;
+	
+	$("#cmLista").change(function(){
+		rulesGeracao( $(this).val() );
+	});	
+	
+	$('#btnPrint').click(function(){
+		jsLIB.resetForm( $('#printForm') );
+		$("#printModal").modal();
+	});
+	
 	$("#saidasModal").on('show.bs.modal', function(event){
 		buttons();
 	});
@@ -184,20 +231,19 @@ $(document).ready(function(){
 		});
 	});
 
-	$('#btnPrint').click(function(){
-		window.open(
-				jsLIB.rootDir+'report/geraAutorizacao.php?id='+$("#saidaID").val(),
-				'_blank',
-				'top=50,left=50,height=750,width=550,menubar=no,status=no,titlebar=no',
-				true
-			);
-	});
-
 	$("#cbParticip").on("reload.options.bs.select", function(event){
 		populateMembers();
 	});
 	
 });
+
+function rulesGeracao(opt){
+	$("#divFilter").visible( opt == 'LE-MEMBROS' );
+	
+    $("#rowFilterMembros").visible( opt == 'LE-MEMBROS'  );
+}
+
+
 
 function ruleButtonSelection( filtro ){
 	if ( filtro == 'Y' && !$('#btnAtivos').hasClass("btn-primary") ) {
