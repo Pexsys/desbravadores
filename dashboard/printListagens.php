@@ -24,6 +24,7 @@ $eventos= getDomainFilter( array( "type" => "EV" ) );
 			<option data-divider="true"></option>
 			<option value="LST_EVE_ALFA">LISTAGEM DE SAIDA - ALFAB&Eacute;TICA</option>
 			<option value="LST_EVE_CTRL">LISTAGEM DE SAIDA - CONTROLE DE AUTORIZA&Ccedil;&Otilde;ES</option>
+			<option value="LST_EVE_PASS">LISTAGEM DE SAIDA - PASSAGEIROS</option>
 		</select>
 	</div>
 </div>
