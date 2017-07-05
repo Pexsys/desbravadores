@@ -78,13 +78,13 @@ class LISTAEVENTOALFA extends TCPDF {
 		$this->SetTextColor(255,255,255);
 		$this->SetFillColor(80,80,80);
 		$this->setCellPaddings(1,0,1,0);
-		$this->setXY(5, $this->posY);
+		$this->setY(5);
 		$this->Cell(85, 6, "Nome Completo", 0, false, 'L', true);
-		$this->setXY(90, $this->posY);
+		$this->setY(90);
 		$this->Cell(50, 6, "Cargo", 0, false, 'L', true);
-		$this->setXY(140, $this->posY);
+		$this->setY(140);
 		$this->Cell(30, 6, "Idade/Nasc.", 0, false, 'C', true);
-		$this->setXY(170, $this->posY);
+		$this->setY(170);
 		$this->Cell(35, 6, "Telefones", 0, false, 'L', true);
 		$this->posY += 6;
 	}

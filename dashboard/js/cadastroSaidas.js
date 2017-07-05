@@ -172,7 +172,7 @@ $(document).ready(function(){
 						url += 'geraListaEventoAutoriz.php?id='+$("#saidaID").val();
 					}
 				} else if (opt == "LE-PASSAGE"){
-					url += 'geraListaPassageiros.php?id='+$("#saidaID").val();
+					url += 'geraListaEventoBus.php?id='+$("#saidaID").val();
 				}
 				window.open(url,'_blank','top=50,left=50,height=750,width=550,menubar=no,status=no,titlebar=no',true);
 			}
