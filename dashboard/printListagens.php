@@ -1,6 +1,9 @@
 <?php
 @require_once("../include/filters.php");
+@require_once("../include/domains.php");
+
 $batismo = getDomainFilter( array( "type" => "B" ) );
+$eventos= getDomainFilter( array( "type" => "EV" ) );
 ?>
 <div class="row">
 	<div class="col-lg-12">
@@ -14,20 +17,26 @@ $batismo = getDomainFilter( array( "type" => "B" ) );
 			<option value="LST_BATISMO">LISTAGEM DE MEMBROS - SITUACAO DE BATISMO</option>
 			<option value="LST_CLASSE">LISTAGEM DE MEMBROS POR CLASSE</option>
 			<option value="LST_UNIFORMES">LISTAGEM DE MEMBROS/UNIFORMES</option>
+			<option data-divider="true"></option>
+			<option value="LST_PRESPAIS">LISTAGEM DE PRESENÇA - REUNIÃO DE PAIS</option>
+			<option data-divider="true"></option>
 			<option value="LST_ESTRELATS">REQUISI&Ccedil;&Atilde;O DE ESTRELAS DE TEMPO DE SERVI&Ccedil;O</option>
+			<option data-divider="true"></option>
+			<option value="LST_EVE_ALFA">LISTAGEM DE SAIDA - ALFAB&Eacute;TICA</option>
+			<option value="LST_EVE_CTRL">LISTAGEM DE SAIDA - CONTROLE DE AUTORIZA&Ccedil;&Otilde;ES</option>
 		</select>
 	</div>
 </div>
 <br/>
 <div class="row">
-	<div class="col-lg-4" id="uniformes" style="display:none;">
+	<div class="col-lg-8" id="uniformes" style="display:none;">
     	<label for="cbUniformes" class="control-label">Uniformes:</label>
     	<select name="cbUniformes" id="cbUniformes" class="selectpicker form-control input-sm" title="Escolha o tipo de Uniforme" data-width="100%" data-container="body" data-actions-box="false">
     		<option value="A">AGASALHOS</option>
     		<option value="C" selected>CAMISETAS</option>
     	</select>
     </div>
-	<div class="col-lg-4" id="batismo" style="display:none;">
+	<div class="col-lg-8" id="batismo" style="display:none;">
     	<label for="cbBatismo" class="control-label">Batizados:</label>
     	<select name="cbBatismo" id="cbBatismo" class="selectpicker form-control input-sm" title="Escolha a situação de batismo" data-width="100%" data-container="body" data-actions-box="false">
     	    <?php
@@ -38,10 +47,22 @@ $batismo = getDomainFilter( array( "type" => "B" ) );
     	    ?>
     	</select>
     </div>
+	<div class="col-lg-8" id="eventos" style="display:none;">
+    	<label for="cbEventos" class="control-label">Eventos:</label>
+    	<select name="cbEventos" id="cbEventos" class="selectpicker form-control input-sm" title="Escolha o Evento" data-width="100%" data-container="body" data-actions-box="false">
+    	    <?php
+    	   		$s = false;
+    	        foreach ($eventos["domain"] as $k => $o):
+    	        	echo "<option value=\"". $o["value"] ."\"". (!$s ? " selected":"") .">". $o["label"] ."</option>";
+    	        	$s = true;
+                endforeach;
+    	    ?>
+    	</select>
+    </div>
 </div>
 <br/>
 <div class="row">
-	<div class="col-lg-5">
+	<div class="col-lg-8">
 		<button id="btnGerar" class="btn btn-success pull-right"><i class="fa fa-print"></i>&nbsp;Gerar</button>
 	</div>
 </div>

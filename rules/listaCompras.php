@@ -376,7 +376,7 @@ function updateEstoque( $ln, $fd, $vl ){
 	if ($update):
 	    
 	    //SE ESTRELA FOI ENTREGUE, EXCLUIR DA LISTA DE COMPRAS
-		if ( $fd == "fg_entregue" && $vl == "S" && fStrStartWith($ln["CD"],"03-01") ):
+		if ( $fd == "fg_entregue" && $vl == "S" && $ln["FG_LOG_MATERIAL"] == "S" ):
 		    $GLOBALS['conn']->Execute("DELETE FROM CAD_COMPRAS_PESSOA WHERE ID = ?", array( $ln["ID"] ) );
 		    
 		    //INSERE LOG DE ENTREGA DE MATERIAIS

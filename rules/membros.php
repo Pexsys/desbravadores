@@ -275,7 +275,7 @@ function updateMember( $parameters ) {
 		if ( $field == "ANO_DIR" || $field == "ESTR_DEVOL" || $field == "QT_UNIFORMES"):
 		    
 		    //EXCLUI ESTRELAS DA LISTA DE COMPRAS
-		    $GLOBALS['conn']->Execute( "DELETE FROM CAD_COMPRAS_PESSOA WHERE ID_CAD_PESSOA = ? AND ID_TAB_MATERIAIS IN (SELECT ID FROM TAB_MATERIAIS WHERE CD LIKE '03-01%')", array( $id ) );
+		    $GLOBALS['conn']->Execute( "DELETE FROM CAD_COMPRAS_PESSOA WHERE ID_CAD_PESSOA = ? AND ID_TAB_MATERIAIS IN (SELECT ID FROM TAB_MATERIAIS WHERE TP = 'ESTRELA')", array( $id ) );
 		    
 		    //CALCULAR E INCLUIR ESTRELAS
 		    $rs = $GLOBALS['conn']->Execute("

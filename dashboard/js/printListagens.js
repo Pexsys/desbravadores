@@ -15,6 +15,12 @@ $(document).ready(function(){
 				url += 'geraListaUniformes.php?filter='+$("#cbUniformes").val();
 			} else if (opt == "LST_ESTRELATS"){
 				url += 'geraListaEstrelas.php?';
+			} else if (opt == "LST_PRESPAIS") {
+				url += 'geraListaPresencaPais.php?';
+			} else if (opt == "LST_EVE_ALFA") {
+				url += 'geraListaEvento.php?id='+$("#cbEventos").val();
+			} else if (opt == "LST_EVE_CTRL") {
+				url += 'geraListaEventoAutoriz.php?id='+$("#cbEventos").val();
 			}
 			window.open(url,'_blank','top=50,left=50,height=750,width=550,menubar=no,status=no,titlebar=no',true);
 		}
@@ -28,7 +34,8 @@ $(document).ready(function(){
 });
 
 function rulesGeracao(){
-    $("#batismo").visible( opt == 'LST_BATISMO'  );
-    $("#uniformes").visible( opt == 'LST_UNIFORMES'  );
+    $("#batismo").visible( opt == 'LST_BATISMO' );
+    $("#uniformes").visible( opt == 'LST_UNIFORMES' );
+    $("#eventos").visible( opt == 'LST_EVE_ALFA' || opt == 'LST_EVE_CTRL' );
 	$("#btnGerar").visible( $("#cbListagem").val() !== '' );
 }

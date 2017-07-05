@@ -138,10 +138,14 @@
 							<a role="button" class="btn btn-danger pull-left" data-toggle="modal" id="btnDel"><i class="glyphicon glyphicon-trash"></i>&nbsp;Excluir</a>
 							<?php endif;?>
 						</div>	
-						<div class="col-lg-6 form-group">
+						<div class="col-lg-3 form-group">
 							<?php if (true): //PODE GERAR?>
-							<a role="button" class="btn btn-default" id="btnBus"><i class="fa fa-bus"></i>&nbsp;&Ocirc;nibus</a>
-							<a role="button" class="btn btn-default" id="btnPrint"><i class="fa fa-print"></i>&nbsp;Imprimir</a>
+							<a role="button" class="btn btn-default pull-right" id="btnBus"><i class="fa fa-bus"></i>&nbsp;&Ocirc;nibus</a>
+							<?php endif;?>
+						</div>	
+						<div class="col-lg-3 form-group">
+							<?php if (true): //PODE GERAR?>
+							<a role="button" class="btn btn-default pull-left" id="btnPrint"><i class="fa fa-print"></i>&nbsp;Imprimir</a>
 							<?php endif;?>
 						</div>	
 						<div class="col-lg-3 form-group">
@@ -191,9 +195,8 @@
 								<div class="row" id="rowFilterMembros" style="display:none">
 									<div class="form-group col-xs-12">
 										<select field="cd_lista" name="cmMembros" id="cmMembros" opt-value="cd" opt-label="ds" class="selectpicker form-control input-sm" data-container="body" data-width="100%">
-											<option value="LE-AUTORIZ">AUTORIZA&Ccedil;&Otilde;ES</option>
-											<option value="LE-MEMBROS">LISTA DE PARTICIPANTES</option>
-											<option value="LE-PASSAGE">LISTA DE PASSAGEIROS</option>
+											<option value="LP-ALFA">LISTAGEM ALFAB&Eacute;TICA</option>
+											<option value="LP-AUTO">CONTROLE DE AUTORIZA&Ccedil;&Otilde;ES</option>
 										</select>
 									</div>
 								</div>

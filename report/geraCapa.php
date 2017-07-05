@@ -54,10 +54,11 @@ class ESPCR extends TCPDF {
 		$this->params = $params;
 		
 		$result = $GLOBALS['conn']->Execute("
-			SELECT ID, DS_ITEM, CD_AREA_INTERNO
-			  FROM TAB_APRENDIZADO 
-			 WHERE CD_ITEM_INTERNO = ?
-			   AND TP_ITEM = ?", Array( $codEsp, "ES" ) );
+			SELECT ta.ID, ta.DS_ITEM, ta.CD_AREA_INTERNO, tm.NR_PG_ASS
+			  FROM TAB_APRENDIZADO ta
+		INNER JOIN TAB_MATERIAIS tm ON (tm.ID_TAB_APREND = ta.ID)
+			 WHERE ta.CD_ITEM_INTERNO = ?
+			   AND ta.TP_ITEM = ?", Array( $codEsp, "ES" ) );
  
 		if ($result->EOF):
 			return;
@@ -66,6 +67,7 @@ class ESPCR extends TCPDF {
 		//achar o nome e a area com select
 		$nomeEsp = utf8_encode($result->fields['DS_ITEM']);
 		$areaEsp = $result->fields['CD_AREA_INTERNO'];
+		$pgAss = $result->fields['NR_PG_ASS'];
 
 		$this->AddPage();
 		$this->setXY(0,0);
@@ -78,7 +80,7 @@ class ESPCR extends TCPDF {
 
 		$this->Ln(5);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'I', 13);
-		$this->Cell(0, 0, "$codEsp", 0, false, 'C');
+		$this->Cell(0, 0, "$codEsp - #$pgAss", 0, false, 'C');
 		
 		if (!empty($this->params[0])):
 			$barCODE = mb_strtoupper("PE". fStrZero(base_convert($result->fields["ID"],10,36),2) . fStrZero(base_convert($this->params[0],10,36),3));

@@ -113,13 +113,17 @@ function getDomainFilter( $parameters ) {
 	elseif ( $type == "MA" ):
 		$domain = getMesAniversario();
 
-		//HISTORICO
+	//HISTORICO
 	elseif ( $type == "HH" ):
 		$year = date("Y");
 		$domain = array(
 			array( "value" => "4", "label" => "INVESTIDOS EM $year" ),
 			array( "value" => "5", "label" => "INVESTIDOS ANTES DE $year" )
 		);
+		
+	//TIPO DE MATERIAIS
+	elseif ( $type == "HT" ):
+		$domain = getTipoMateriais();
 		
 	//BATIZADO
 	elseif ( $type == "B" ):
@@ -134,7 +138,6 @@ function getDomainFilter( $parameters ) {
 		endfor;
 		$domain[] = array( "value" => "A". $y, "label" => "ANTES DE ". $y);
 		
-		
 	//TIPO DE OCORRENCIA
 	elseif ( $type == "TO" ):
 		$domain = array(
@@ -142,7 +145,11 @@ function getDomainFilter( $parameters ) {
 			array( "value" => "N", "label" => "NEGATIVA" )
 		);
 		
-		//UNIDADE
+	//UNIDADE
+	elseif ( $type == "EV" ):
+		$domain = getDomainEventos();
+		
+	//UNIDADE
 	elseif ( $type == "U" ):
 		$domain = getDomainUnidades();
 	

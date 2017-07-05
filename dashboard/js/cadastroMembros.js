@@ -5,61 +5,60 @@ var rowSelected = undefined;
 
 $(document).ready(function(){
 	
-	dataTable = $('#membrosDatatable')
-		.DataTable({
-			lengthChange: false,
-			ordering: true,
-			paging: false,
-			scrollY: 300,
-			searching: true,
-			processing: true,
-			language: {
-				info: "_END_ membros",
-				search: "",
-				searchPlaceholder: "Procurar...",
-				infoFiltered: " de _MAX_",
-				loadingRecords: "Aguarde - carregando...",
-				zeroRecords: "Dados indispon&iacute;veis para esta sele&ccedil;&atilde;o",
-				infoEmpty: "0 encontrados"
-			},
-			ajax: {
-				type: "POST",
-				url: jsLIB.rootDir+"rules/membros.php",
-				data: function (d) {
-					d.MethodName = "getMembros",
-					d.data = { 
-						filtro: tpFiltro,
-						filters: jsFilter.jSON()
-					}
-				},
-				dataSrc: "membros"
-			},
-			order: [ 1, 'asc' ],
-			columns: [
-				{	data: 'id',
-					sortable: true,
-					width: "5%"
-				},
-				{	data: 'nm',
-					sortable: true,
-					type: 'ptbr-string',
-					width: "45%"
-				},
-				{	data: 'uni',
-					sortable: true,
-					type: 'ptbr-string',
-					width: "20%"
-				},
-				{	data: 'cgo',
-					sortable: true,
-					type: 'ptbr-string',
-					width: "30%"
+	dataTable = $('#membrosDatatable').DataTable({
+		lengthChange: false,
+		ordering: true,
+		paging: false,
+		scrollY: 300,
+		searching: true,
+		processing: true,
+		language: {
+			info: "_END_ membros",
+			search: "",
+			searchPlaceholder: "Procurar...",
+			infoFiltered: " de _MAX_",
+			loadingRecords: "Aguarde - carregando...",
+			zeroRecords: "Dados indispon&iacute;veis para esta sele&ccedil;&atilde;o",
+			infoEmpty: "0 encontrados"
+		},
+		ajax: {
+			type: "POST",
+			url: jsLIB.rootDir+"rules/membros.php",
+			data: function (d) {
+				d.MethodName = "getMembros",
+				d.data = { 
+					filtro: tpFiltro,
+					filters: jsFilter.jSON()
 				}
-			]
-		})
-		.on( 'search.dt', function() {
-			ruleBtnNovo();
-		});
+			},
+			dataSrc: "membros"
+		},
+		order: [ 1, 'asc' ],
+		columns: [
+			{	data: 'id',
+				sortable: true,
+				width: "5%"
+			},
+			{	data: 'nm',
+				sortable: true,
+				type: 'ptbr-string',
+				width: "45%"
+			},
+			{	data: 'uni',
+				sortable: true,
+				type: 'ptbr-string',
+				width: "20%"
+			},
+			{	data: 'cgo',
+				sortable: true,
+				type: 'ptbr-string',
+				width: "30%"
+			}
+		]
+	})
+	.on( 'search.dt', function() {
+		ruleBtnNovo();
+	});
 		
 	$('#btnAtivos, #btnTodos').click(function(){
 		 switchSelecion( $(this).attr('tp-filtro') );

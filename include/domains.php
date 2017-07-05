@@ -15,6 +15,23 @@ function getDomainMembrosAtivos(){
 	return $arr;
 }
 
+function getDomainEventos(){
+	$arr = array();
+	
+	$result = $GLOBALS['conn']->Execute("
+		SELECT ID, DS 
+		FROM EVE_SAIDA 
+		ORDER BY DH_S DESC
+	");
+	foreach ($result as $k => $f):
+		$arr[] = array(
+			"value"	=> $f['ID'],
+			"label"	=> utf8_encode($f['DS'])
+		);
+	endforeach;
+	return $arr;
+}
+
 function getDomainUnidades(){
 	$arr = array();
 	
@@ -44,6 +61,24 @@ function getTipoAprendizado(){
 		$arr[] = array( 
 			"value"	=> $result->fields['ID'],
 			"label"	=> utf8_encode($result->fields['DS'])
+		);
+		$result->MoveNext();
+	endwhile;
+	return $arr;
+}
+
+function getTipoMateriais(){
+	$arr = array();
+	
+	$result = $GLOBALS['conn']->Execute("
+		SELECT DISTINCT TP
+		  FROM TAB_MATERIAIS
+		 WHERE FG_IM = 'S'
+		  ORDER BY TP");
+	while (!$result->EOF):
+		$arr[] = array(
+				"value"	=> utf8_encode($result->fields['TP']),
+				"label"	=> utf8_encode($result->fields['TP'])
 		);
 		$result->MoveNext();
 	endwhile;

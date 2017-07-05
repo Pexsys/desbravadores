@@ -165,7 +165,12 @@ $(document).ready(function(){
 				if (opt == "LE-AUTORIZ"){
 					url += 'geraAutorizacao.php?id='+$("#saidaID").val();
 				} else if (opt == "LE-MEMBROS"){
-					url += 'geraListaEvento.php?id='+$("#saidaID").val();
+					opt = $("#cmMembros").val();
+					if (opt == 'LP-ALFA'){
+						url += 'geraListaEvento.php?id='+$("#saidaID").val();
+					} else if ('LP-AUTO'){
+						url += 'geraListaEventoAutoriz.php?id='+$("#saidaID").val();
+					}
 				} else if (opt == "LE-PASSAGE"){
 					url += 'geraListaPassageiros.php?id='+$("#saidaID").val();
 				}
