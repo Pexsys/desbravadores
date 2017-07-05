@@ -1,4 +1,5 @@
 var dataTable = undefined;
+var save = undefined;
 
 $(document).ready(function(){
 	$.fn.dataTable.moment( 'DD/MM/YYYY' );
@@ -88,24 +89,23 @@ $(document).ready(function(){
 		})
 		.submit( function(event) {
 			var parameter = {
-				frm: jsLIB.getJSONFields( $('#cadListaForm') )
+				frm: jsLIB.getJSONFields( $('#cadListaForm') ),
+				tp: save
 			};
-			jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/cadastroEstoque.php", { MethodName : 'addEstoque', data : parameter } );
+			jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/cadastroEstoque.php", { MethodName : 'setEstoque', data : parameter } );
 			dataTable.ajax.reload();
 			$("#listaModal").modal('hide');
 		})
 	;
 	
 	$('#btnAdd').click(function(){
-		var parameter = {
-			domains : [ "tiposEstoque", "nomes" ]
-		};
-		var cg = jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/listaCompras.php", { MethodName : 'getData', data : parameter }, 'RETURN' );
-		jsLIB.populateOptions( $("#cmTipo"), cg.tipos );
-		jsLIB.populateOptions( $("#cmNome"), cg.nomes );
+		save = "add";
+		$("#cmTipo").prop('disabled', false);
+		$("#cmItem").prop('disabled', false);
+		populateTipos();
 		
 		$('#divItem').visible(false);
-		jsLIB.resetForm( $('#cadListaForm') );
+		jsLIB.resetForm( $('#cadListaForm') );	
 		$("#qtItens").val(1);
 		$("#listaModal").modal();
 	});
@@ -114,12 +114,7 @@ $(document).ready(function(){
 		var value = $(this).val();
 		var visible = value != '';
 		if (visible){
-			var parameter = {
-				key : value,
-				domains : [ "itensEstoque" ]
-			};
-			var cg = jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/listaCompras.php", { MethodName : 'getData', data : parameter }, 'RETURN' );
-			jsLIB.populateOptions( $("#cmItem"), cg.itens );
+			populateItens(value);
 		}
 		$('#divItem').visible(visible);
 	});
@@ -131,27 +126,40 @@ $(document).ready(function(){
 	});
 	
 	$('#matEstTable tbody').on('click', 'tr', function () {
-		$(this).toggleClass('selected');
-		ruleBtnEdit();
+		var matID = dataTable.row( this ).data().id;
+		var es = jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/cadastroEstoque.php", { MethodName : 'getItem', data : { id: matID } }, 'RETURN' );
+		if (es){
+			save = "edit";
+			
+			jsLIB.resetForm( $('#cadListaForm') );
+			$('#divItem').visible(false);
+			
+			populateTipos();
+			$("#cmTipo").prop('disabled', true).val(es.tp).change();
+
+			$("#qtItens").val(es.qt_est);
+
+			populateItens(es.tp);
+			$("#cmItem").prop('disabled', true).val(matID).change();
+			$("#listaModal").modal();
+		}
 	});	
-	ruleBtnEdit(false);
-	
 
 });
 
-function ruleBtnEdit( force ){
-	var data = dataTable.rows('.selected').data();
-	var selected = "";
-	if (force == undefined){
-		if (data.length == 1){
-			selected = data[0].id;
-			var es = jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/cadastroEstoque.php", { MethodName : 'getItem', data : { id: selected } }, 'RETURN' );
-			if (!es || !es.edit){
-				selected = "";
-			}
-		}
-	}
-	$("#btnEdit")
-		.attr("id-item",selected)
-		.visible( selected != "" );
+function populateTipos(){
+	var parameter = {
+		domains : [ "tipos" ]
+	};
+	var cg = jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/listaCompras.php", { MethodName : 'getData', data : parameter }, 'RETURN' );
+	jsLIB.populateOptions( $("#cmTipo"), cg.tipos );
+}
+
+function populateItens(tp){
+	var parameter = {
+		key : tp,
+		domains : [ "itens" ]
+	};
+	var cg = jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/listaCompras.php", { MethodName : 'getData', data : parameter }, 'RETURN' );
+	jsLIB.populateOptions( $("#cmItem"), cg.itens );
 }

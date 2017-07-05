@@ -90,17 +90,38 @@ function getEstoque( $parameters ) {
 	return array( "result" => true, "est" => $arr );
 }
 
-function addEstoque( $parameters ) {
+function setEstoque( $parameters ){
 	$frm = $parameters["frm"];
 	$qtItens = max( $frm["qt_itens"], 1 );
 	
-	if ( isset($frm["id"]) ):
-		fConnDB();
-		$materiais = new MATERIAIS();
+	fConnDB();
+	$materiais = new MATERIAIS();
+	
+	if ($parameters["tp"] == "edit"):
+		$materiais->setQtdEstoque( $frm["id"], $qtItens );
+	else:
 		$materiais->addItemEstoque( $frm["id"], $qtItens );
 	endif;
 	
-	return array("result" => true);
+	return array( "result" => true );
 }
 
+function getItem( $parameters ){
+	$arr = array();
+	$id = $parameters["id"];
+	$arr["id"] = $id;
+
+	fConnDB();
+	$result = $GLOBALS['conn']->Execute("
+		SELECT TP, QT_EST
+		FROM TAB_MATERIAIS
+		WHERE ID = ?
+	", array($id) );
+	if (!$result->EOF):
+		$arr["tp"] = $result->fields["TP"];
+		$arr["qt_est"] = $result->fields["QT_EST"];
+	endif;
+	
+	return $arr;
+}
 ?>

@@ -33,8 +33,6 @@
 	</div>
 	<div class="row">
 		<button class="btn btn-warning" id="btnAdd"><i class="fa fa-plus"></i>&nbsp;Adicionar Item</button>
-		&nbsp;
-		<button class="btn btn-secondary" id="btnEdit"><i class="fa fa-pencil"></i>&nbsp;Editar</button>
 	</div>
 </div>
 

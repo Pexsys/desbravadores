@@ -53,5 +53,20 @@ class MATERIAIS {
 		endif;
 	}	
 
+	public function addItemEstoque( $matID, $qtd ){
+		$GLOBALS['conn']->Execute("
+			UPDATE TAB_MATERIAIS 
+			   SET QT_EST = QT_EST + ?
+			 WHERE ID = ?
+		", array($qtd, $matID) );
+	}
+	
+	public function setQtdEstoque( $matID, $qtd ){
+		$GLOBALS['conn']->Execute("
+			UPDATE TAB_MATERIAIS
+			   SET QT_EST = ?
+			 WHERE ID = ?
+		", array($qtd, $matID) );
+	}
 }
 ?>

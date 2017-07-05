@@ -244,45 +244,4 @@ class COMPRAS {
 		endforeach;
 	}		
 }
-
-class COMPRAS_LST extends TCPDF {
-	
-	function __construct() {
-		parent::__construct(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-
-		$this->SetCreator(PDF_CREATOR);
-		$this->SetAuthor('Ricardo J. Cesar');
-		$this->SetSubject('Clube Pioneiros');
-		$this->SetKeywords('Desbravadores, Autorizações, Pioneiros, Capão Redondo');
-		$this->SetTitle('Lista de Compras');
-		$this->setImageScale(PDF_IMAGE_SCALE_RATIO);
-		$this->setPrintHeader(false);
-		$this->setPrintFooter(false);
-		$this->SetTopMargin(4);
-		$this->SetFooterMargin(0);
-		$this->SetLeftMargin(4);
-		$this->SetRightMargin(4);
-		$this->SetHeaderMargin(0);
-		$this->SetFooterMargin(0);
-	}
-
- 	public function Header() {
-	}
-	
-	public function Footer() {
-		$this->SetY(-10);
-		$this->SetFont(PDF_FONT_NAME_MAIN, 'I', 8);
-		$this->Cell(0, 10, fClubeID(), 0, false, 'C');
-	}
-
-	public function newPage() {
-		$this->AddPage();
-		$this->setXY(0,0);
-	}
-	
-	public function download( $name = "compras.pdf" ) {
-		$this->lastPage();
-		$this->Output($name, 'I');
-	}
-}
 ?>
