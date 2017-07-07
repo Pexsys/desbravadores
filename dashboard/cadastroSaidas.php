@@ -138,14 +138,19 @@
 							<a role="button" class="btn btn-danger pull-left" data-toggle="modal" id="btnDel"><i class="glyphicon glyphicon-trash"></i>&nbsp;Excluir</a>
 							<?php endif;?>
 						</div>	
-						<div class="col-lg-3 form-group">
+						<div class="col-lg-6 form-group">
 							<?php if (true): //PODE GERAR?>
-							<a role="button" class="btn btn-default pull-right" id="btnBus"><i class="fa fa-bus"></i>&nbsp;&Ocirc;nibus</a>
+							<div class="btn-group pull-left">
+								<span class="btn btn-default" contenteditable="true"><i class="fa fa-paperclip" aria-hidden="true"></i>&nbsp;Atribui&ccedil;&otilde;es</span>
+								<button data-toggle="dropdown" class="btn btn-default dropdown-toggle" aria-expanded="false"><span class="caret"></span></button>
+								<ul class="dropdown-menu" contenteditable="true">
+									<li><a href="#"><i class="fa fa-bus"></i>&nbsp;&Ocirc;nibus</a></li>
+									<li><a href="#"><i class="glyphicon glyphicon-tent"></i>&nbsp;Barracas</a></li>
+								</ul>
+							</div>
 							<?php endif;?>
-						</div>	
-						<div class="col-lg-3 form-group">
 							<?php if (true): //PODE GERAR?>
-							<a role="button" class="btn btn-default pull-left" id="btnPrint"><i class="fa fa-print"></i>&nbsp;Imprimir</a>
+							<a role="button" class="btn btn-info pull-right" id="btnPrint"><i class="fa fa-print"></i>&nbsp;Imprimir</a>
 							<?php endif;?>
 						</div>	
 						<div class="col-lg-3 form-group">
@@ -178,8 +183,8 @@
 									<div class="form-group col-xs-12">
 										<select field="cd_lista" name="cmLista" id="cmLista" opt-value="cd" opt-label="ds" class="selectpicker form-control input-sm" data-container="body" data-width="100%">
 											<option value="LE-AUTORIZ">AUTORIZA&Ccedil;&Otilde;ES</option>
-											<option value="LE-MEMBROS">LISTA DE PARTICIPANTES</option>
-											<option value="LE-PASSAGE">LISTA DE PASSAGEIROS</option>
+											<option value="LE-MEMBROS">LISTAGEM DE PARTICIPANTES</option>
+											<option value="LE-PASSAGE">LISTAGEM DE PASSAGEIROS</option>
 										</select>
 									</div>
 								</div>
@@ -195,7 +200,8 @@
 								<div class="row" id="rowFilterMembros" style="display:none">
 									<div class="form-group col-xs-12">
 										<select field="cd_lista" name="cmMembros" id="cmMembros" opt-value="cd" opt-label="ds" class="selectpicker form-control input-sm" data-container="body" data-width="100%">
-											<option value="LP-ALFA">LISTAGEM ALFAB&Eacute;TICA</option>
+											<option value="LP-ALFA">GERAL ALFAB&Eacute;TICA</option>
+											<option value="LP-TENTS">CONTROLE DE BARRACAS</option>
 											<option value="LP-AUTO">CONTROLE DE AUTORIZA&Ccedil;&Otilde;ES</option>
 										</select>
 									</div>

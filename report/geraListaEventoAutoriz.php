@@ -76,7 +76,7 @@ class LISTAEVENTOALFA extends TCPDF {
 		
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 8);
 		$this->SetTextColor(255,255,255);
-		$this->SetFillColor(80,80,80);
+		$this->SetFillColor(6,156,16);
 		$this->setCellPaddings(1,0,1,0);
 		$this->setXY(5, $this->posY);
 		$this->Cell(35, 6, "Controle", 0, false, 'C', true);
@@ -119,7 +119,7 @@ class LISTAEVENTOALFA extends TCPDF {
 		$this->posY+=2;
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 9);
 		$this->SetTextColor(255,255,255);
-		$this->SetFillColor(80,80,80);
+		$this->SetFillColor(6,156,16);
 		$this->setCellPaddings(1,0,1,0);
 		$this->setXY(5, $this->posY);
 		$this->Cell(200, 6, "Total de Autorizações: ".$result->RecordCount(), 0, false, 'C', true);

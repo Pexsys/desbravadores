@@ -2,7 +2,7 @@
 @require_once('../include/functions.php');
 @require_once('../include/_core/lib/tcpdf/tcpdf.php');
 
-class LISTAEVENTOBUS extends TCPDF {
+class LISTAEVENTOTENT extends TCPDF {
 	
 	//lines styles
 	private $stLine;
@@ -61,7 +61,7 @@ class LISTAEVENTOBUS extends TCPDF {
 		
 		$this->setXY(20,$this->posY);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 20);
-		$this->Cell(185, 6, "LISTAGEM DE PASSAGEIROS - ÔNIBUS ". $this->header["BUS"], 0, false, 'C', false, false, false, false, 'T', 'M');
+		$this->Cell(185, 6, "LISTAGEM DE USO DE BARRACAS", 0, false, 'C', false, false, false, false, 'T', 'M');
 		$this->posY += 8;
 
 		$this->setXY(20,$this->posY);
@@ -96,7 +96,7 @@ class LISTAEVENTOBUS extends TCPDF {
 		$this->header = $header;
 	}
 	
-	public function addGrupoBus($g) {
+	public function addGrupoTent($g) {
 	    $this->setHeaderFields($g);
 	    $this->newPage();
 	    
@@ -104,9 +104,9 @@ class LISTAEVENTOBUS extends TCPDF {
         	SELECT *
               FROM EVE_SAIDA_USE
              WHERE ID_EVE_SAIDA = ?
-               AND BUS = ?
+               AND TENT = ?
             ORDER BY NM, DT
-        ", array( $g["ID"], $g["BUS"] ) );
+        ", array( $g["ID"], $g["TENT"] ) );
 		foreach ($rsM as $k => $f):
 			$this->startTransaction();
 			$start_page = $this->getPage();
@@ -158,21 +158,21 @@ class LISTAEVENTOBUS extends TCPDF {
 }
 
 $eveID = fRequest("id");
-$pdf = new LISTAEVENTOBUS();
+$pdf = new LISTAEVENTOTENT();
 
 fConnDB();
 $result = $GLOBALS['conn']->Execute("
-	SELECT es.ID, es.DS, es.DS_TEMA, es.DS_ORG, es.DS_DEST, esu.BUS
+	SELECT es.ID, es.DS, es.DS_TEMA, es.DS_ORG, es.DS_DEST, esu.TENT
       FROM EVE_SAIDA es
-INNER JOIN EVE_SAIDA_USE esu ON (esu.ID_EVE_SAIDA = es.ID AND esu.BUS IS NOT NULL)
+INNER JOIN EVE_SAIDA_USE esu ON (esu.ID_EVE_SAIDA = es.ID AND esu.TENT IS NOT NULL)
      WHERE es.ID = ?
-    ORDER BY esu.BUS
+    ORDER BY esu.TENT
 ", array($eveID) );
 
 if (!$result->EOF):
     foreach ( $result as $o => $g ):
         $pdf->seq = 0;
-    	$pdf->addGrupoBus($g);
+    	$pdf->addGrupoTent($g);
     endforeach;
     $pdf->download();
 endif;
