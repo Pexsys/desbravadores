@@ -168,8 +168,10 @@ $(document).ready(function(){
 					opt = $("#cmMembros").val();
 					if (opt == 'LP-ALFA'){
 						url += 'geraListaEvento.php?id='+$("#saidaID").val();
-					} else if ('LP-AUTO'){
+					} else if (opt == 'LP-AUTO'){
 						url += 'geraListaEventoAutoriz.php?id='+$("#saidaID").val();
+					} else if (opt == 'LP-TENTS'){
+						url += 'geraListaEventoTent.php?id='+$("#saidaID").val();
 					}
 				} else if (opt == "LE-PASSAGE"){
 					url += 'geraListaEventoBus.php?id='+$("#saidaID").val();
@@ -188,6 +190,9 @@ $(document).ready(function(){
 		$("#printModal").modal();
 	});
 	
+	$('#btnUse').click(function(){
+	});
+
 	$("#saidasModal").on('show.bs.modal', function(event){
 		buttons();
 	});
@@ -244,11 +249,8 @@ $(document).ready(function(){
 
 function rulesGeracao(opt){
 	$("#divFilter").visible( opt == 'LE-MEMBROS' );
-	
-    $("#rowFilterMembros").visible( opt == 'LE-MEMBROS'  );
+    $("#rowFilterMembros").visible( opt == 'LE-MEMBROS' );
 }
-
-
 
 function ruleButtonSelection( filtro ){
 	if ( filtro == 'Y' && !$('#btnAtivos').hasClass("btn-primary") ) {

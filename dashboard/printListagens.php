@@ -15,16 +15,17 @@ $eventos= getDomainFilter( array( "type" => "EV" ) );
 		<select name="cbListagem" id="cbListagem" class="selectpicker form-control input-sm" title="Escolha uma Listagem" data-width="100%" data-container="body" data-actions-box="true">
 			<option value="LST_ATIVOS">LISTAGEM DE MEMBROS</option>
 			<option value="LST_BATISMO">LISTAGEM DE MEMBROS - SITUACAO DE BATISMO</option>
-			<option value="LST_CLASSE">LISTAGEM DE MEMBROS POR CLASSE</option>
-			<option value="LST_UNIFORMES">LISTAGEM DE MEMBROS/UNIFORMES</option>
+			<option value="LST_CLASSE">LISTAGEM DE MEMBROS - CLASSE</option>
+			<option value="LST_UNIFORMES">LISTAGEM DE MEMBROS - UNIFORMES</option>
 			<option data-divider="true"></option>
-			<option value="LST_PRESPAIS">LISTAGEM DE PRESENÇA - REUNIÃO DE PAIS</option>
+			<option value="LST_PRESPAIS">LISTAGEM DE PRESEN&Ccedil;A - REUNI&Atilde;O DE PAIS</option>
 			<option data-divider="true"></option>
 			<option value="LST_ESTRELATS">REQUISI&Ccedil;&Atilde;O DE ESTRELAS DE TEMPO DE SERVI&Ccedil;O</option>
 			<option data-divider="true"></option>
-			<option value="LST_EVE_ALFA">LISTAGEM DE SAIDA - ALFAB&Eacute;TICA</option>
-			<option value="LST_EVE_CTRL">LISTAGEM DE SAIDA - CONTROLE DE AUTORIZA&Ccedil;&Otilde;ES</option>
-			<option value="LST_EVE_PASS">LISTAGEM DE SAIDA - PASSAGEIROS</option>
+			<option value="LST_EVE_ALFA">LISTAGEM DE SA&Iacute;DA - ALFAB&Eacute;TICA</option>
+			<option value="LST_EVE_CTRL">LISTAGEM DE SA&Iacute;DA - CONTROLE DE AUTORIZA&Ccedil;&Otilde;ES</option>
+			<option value="LST_EVE_PASS">LISTAGEM DE SA&Iacute;DA - PASSAGEIROS</option>
+			<option value="LST_EVE_TENT">LISTAGEM DE SA&Iacute;DA - BARRACAS</option>
 		</select>
 	</div>
 </div>

@@ -66,7 +66,7 @@ class LISTACLASSE extends TCPDF {
 
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 8);
 		$this->SetTextColor(255,255,255);
-		$this->SetFillColor(80,80,80);
+		$this->SetFillColor(135,102,35);
 		$this->setCellPaddings(1,0,1,0);
 		$this->setXY(5, 22);
 		$this->Cell(85, 6, "Nome Completo", 0, false, 'L', true);

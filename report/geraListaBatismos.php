@@ -11,6 +11,7 @@ class LISTAATIVOSALFA extends TCPDF {
 	private $lineAlt;
 	public $tipoBatismo;
 	public $title;
+	public $count;
 	
 	function __construct() {
 		parent::__construct(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
@@ -70,7 +71,7 @@ class LISTAATIVOSALFA extends TCPDF {
 
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 8);
 		$this->SetTextColor(255,255,255);
-		$this->SetFillColor(80,80,80);
+		$this->SetFillColor(155,120,208);
 		$this->setCellPaddings(1,0,1,0);
 		$this->setXY(5, 22);
 		$this->Cell(85, 6, "Nome Completo", 0, false, 'L', true);
@@ -144,10 +145,10 @@ class LISTAATIVOSALFA extends TCPDF {
 		$this->posY+=2;
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 9);
 		$this->SetTextColor(255,255,255);
-		$this->SetFillColor(80,80,80);
+		$this->SetFillColor(155,120,208);
 		$this->setCellPaddings(1,0,1,0);
 		$this->setXY(5, $this->posY);
-		$this->Cell(200, 6, "Total de Membros não Batizados: ".$result->RecordCount(), 0, false, 'C', true);
+		$this->Cell(200, 6, $this->count .": " .$result->RecordCount(), 0, false, 'C', true);
 	}
 	
 	public function newPage() {
@@ -163,17 +164,6 @@ class LISTAATIVOSALFA extends TCPDF {
 	}
 }
 
-/*
-$aM = explode(",",fRequest("m"));
-if ( !isset($aM) || count($aM) == 0 ):
-	exit("SELECIONE OS MESES QUE DESEJA IMPRIMIR AS FICHAS DE CHAMADA!");
-endif;
-$u = fRequest("u");
-$aU = explode(",",$u);
-if ( !isset($aU) || count($aU) == 0 ):
-	exit("SELECIONE AS UNIDADES QUE DESEJA IMPRIMIR AS FICHAS DE CHAMADA!");
-endif;
-*/
 $pdf = new LISTAATIVOSALFA();
 $pdf->tipoBatismo = fRequest("filter");
 
@@ -187,16 +177,21 @@ $query = "
 if ($pdf->tipoBatismo == "S"):
 	$query .= "ca.DT_BAT IS NOT NULL";
 	$pdf->title = "Listagem de Membros Batizados";
+	$pdf->count = "Total de Membros Batizados";
 elseif ($pdf->tipoBatismo == "N"):
 	$query .= "ca.DT_BAT IS NULL";
 	$pdf->title = "Listagem de Membros Não Batizados";
+	$pdf->count = "Total de Membros Não Batizados";
 elseif (fStrStartWith($pdf->tipoBatismo,"A")):
     $antes = substr($pdf->tipoBatismo,1,4);
 	$query .= "YEAR(ca.DT_BAT) < $antes";
 	$pdf->title = "Listagem de Membros Batizados antes de $antes";
+	$pdf->count = "Total de Membros Batizados antes de $antes";
 else:
 	$query .= "YEAR(ca.DT_BAT) = ". $pdf->tipoBatismo;
 	$pdf->title = "Listagem de Membros Batizados em ". $pdf->tipoBatismo;
+	$pdf->count = "Total de Membros Batizados em ". $pdf->tipoBatismo;
+	
 endif;
 $query .= " ORDER BY ca.CEP, ca.NR_LOGR, ca.NM";
 

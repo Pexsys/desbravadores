@@ -2,20 +2,29 @@
 @require_once("../include/functions.php");
 responseMethod();
 
+function getAgasalhos(){
+	return array( "result" => true, "source" => getTamanhos("A") );
+}
+
 function getCamisetas(){
+	return array( "result" => true, "source" => getTamanhos("C") );
+}
+
+function getTamanhos( $tp ){
 	$arr = array();
 	fConnDB();
 	
 	$result = $GLOBALS['conn']->Execute("
 		SELECT CD
-		  FROM TAB_CAMISETA 
-	  ORDER BY CD");
+		  FROM TAB_TAMANHOS
+		 WHERE TP = ?
+	  ORDER BY ORD", array($tp) );
 	foreach ($result as $k => $fields):
 		$arr[] = array(
 			"cd" => $fields['CD']
 		);
 	endforeach;
-	return array( "result" => true, "source" => $arr );
+	return $arr;
 }
 
 function getCargos(){

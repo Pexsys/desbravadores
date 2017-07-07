@@ -76,15 +76,15 @@ class LISTAEVENTOALFA extends TCPDF {
 		
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 8);
 		$this->SetTextColor(255,255,255);
-		$this->SetFillColor(80,80,80);
+		$this->SetFillColor(235,192,22);
 		$this->setCellPaddings(1,0,1,0);
-		$this->setY(5);
+		$this->setXY(5,$this->posY);
 		$this->Cell(85, 6, "Nome Completo", 0, false, 'L', true);
-		$this->setY(90);
+		$this->setX(90);
 		$this->Cell(50, 6, "Cargo", 0, false, 'L', true);
-		$this->setY(140);
+		$this->setX(140);
 		$this->Cell(30, 6, "Idade/Nasc.", 0, false, 'C', true);
-		$this->setY(170);
+		$this->setX(170);
 		$this->Cell(35, 6, "Telefones", 0, false, 'L', true);
 		$this->posY += 6;
 	}
@@ -126,7 +126,7 @@ class LISTAEVENTOALFA extends TCPDF {
 		$this->posY+=2;
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 9);
 		$this->SetTextColor(255,255,255);
-		$this->SetFillColor(80,80,80);
+		$this->SetFillColor(235,192,22);
 		$this->setCellPaddings(1,0,1,0);
 		$this->setXY(5, $this->posY);
 		$this->Cell(200, 6, "Total de Membros no Evento: ".$result->RecordCount(), 0, false, 'C', true);

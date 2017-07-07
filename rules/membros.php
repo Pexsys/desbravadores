@@ -497,6 +497,9 @@ function getUnidades( $parameters ) {
 			$fIdade = " AND IDADE <= $anos";
 			if ( $anos > 15 ):
 				$fd = ",'A'";
+			elseif ( $anos < 10 ):
+				$fIdade = " AND IDADE > 15";
+				$fd = ",'A'";
 			endif;
 		endif;
 		

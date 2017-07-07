@@ -66,7 +66,7 @@ class LISTAUNIDADE extends TCPDF {
 
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 8);
 		$this->SetTextColor(255,255,255);
-		$this->SetFillColor(80,80,80);
+		$this->SetFillColor(13,110,195);
 		$this->setCellPaddings(1,0,1,0);
 		$this->setXY(5, 22);
 		$this->Cell(85, 6, "Nome Completo", 0, false, 'L', true);
@@ -119,9 +119,9 @@ class LISTAUNIDADE extends TCPDF {
 	private function addLine($f){
 		$this->setCellPaddings(1,1,1,1);
 		if ($this->lineAlt):
-		$this->SetFillColor(240,240,240);
+			$this->SetFillColor(240,240,240);
 		else:
-		$this->SetFillColor(255,255,255);
+			$this->SetFillColor(255,255,255);
 		endif;
 		$this->setXY(5, $this->posY);
 		$this->Cell(85, 5, utf8_encode($f["NM"]), 0, false, 'L', true, false, 1);

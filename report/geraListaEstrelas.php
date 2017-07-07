@@ -130,7 +130,7 @@ if (!$result->EOF):
 	$pdf->posY += $pdf->getLastH()+4;
 	$pdf->setCellHeightRatio(0);
 	$pdf->SetTextColor(255,255,255);
-	$pdf->SetFillColor(80,80,80);
+	$pdf->SetFillColor(252,70,70);
 	$pdf->setCellPaddings(1,0,1,0);
 	$pdf->setXY(20, $pdf->posY);
 	$pdf->Cell(120, 7, "Nome Completo", 0, false, 'L', true);

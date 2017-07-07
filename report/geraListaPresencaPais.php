@@ -2,7 +2,7 @@
 @require_once('../include/functions.php');
 @require_once('../include/_core/lib/tcpdf/tcpdf.php');
 
-class LISTAMATERIAIS extends TCPDF {
+class LISTAPRESENCA extends TCPDF {
 	
 	//lines styles
 	private $stLine;
@@ -87,7 +87,7 @@ class LISTAMATERIAIS extends TCPDF {
 			$this->SetFillColor(255,255,255);
 		endif;
 		$this->setXY(5, $this->posY);
-		$this->Cell(135, 10, utf8_encode($f["NM"]), 0, false, 'L', true, false, 1);
+		$this->Cell(200, 10, utf8_encode($f["NM"]), 0, false, 'L', true, false, 1);
 		
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 5);
 		$this->Line(140, $this->posY+8, 205, $this->posY+8, $this->stLine3);
@@ -123,7 +123,7 @@ class LISTAMATERIAIS extends TCPDF {
 	}
 }
 
-$pdf = new LISTAMATERIAIS();
+$pdf = new LISTAPRESENCA();
 $pdf->setTipoUniforme(fRequest("filter"));
 
 fConnDB();

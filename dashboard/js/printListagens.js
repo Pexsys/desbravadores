@@ -23,6 +23,8 @@ $(document).ready(function(){
 				url += 'geraListaEventoAutoriz.php?id='+$("#cbEventos").val();
 			} else if (opt == "LST_EVE_PASS") {
 			    url += 'geraListaEventoBus.php?id='+$("#cbEventos").val();
+			} else if (opt == "LST_EVE_PASS") {
+			    url += 'geraListaEventoTent.php?id='+$("#cbEventos").val();
 			}
 			window.open(url,'_blank','top=50,left=50,height=750,width=550,menubar=no,status=no,titlebar=no',true);
 		}
@@ -38,6 +40,6 @@ $(document).ready(function(){
 function rulesGeracao(){
     $("#batismo").visible( opt == 'LST_BATISMO' );
     $("#uniformes").visible( opt == 'LST_UNIFORMES' );
-    $("#eventos").visible( opt == 'LST_EVE_ALFA' || opt == 'LST_EVE_CTRL' || opt == 'LST_EVE_PASS' );
+    $("#eventos").visible( opt == 'LST_EVE_ALFA' || opt == 'LST_EVE_CTRL' || opt == 'LST_EVE_PASS' || opt == 'LST_EVE_TENT' );
 	$("#btnGerar").visible( $("#cbListagem").val() !== '' );
 }
