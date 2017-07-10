@@ -441,7 +441,7 @@ function fListDocumentos($relativePath,$title,$extentions,$classPanel,$tagItem){
 					<div class="media">
 						<a href="http://desbravadores.org.br.s3.amazonaws.com/materiais/2013/RUD.pdf" target="_new">
 						  <div class="media-left">
-							  <img class="media-object" src="http://pt1.downloads.adventistas.org/2013/09/reguladesb.jpg" alt="Regulamento de Uniformes Desbravadores, Aventureiros e Ministério Jovem" width="22px" height="22px" border="0">
+							  <img class="media-object" src="<?php echo $capa_img?>reguladesb.jpg" alt="Regulamento de Uniformes Desbravadores, Aventureiros e Ministério Jovem" width="22px" height="22px" border="0">
 						  </div>
 						  <div class="media-body">
 							<?php echo "<$tagItem class=\"media-heading\">Regulamento de Uniformes</$tagItem>";?>
