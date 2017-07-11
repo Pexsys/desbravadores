@@ -157,7 +157,7 @@ class LISTAEVENTOBUS extends TCPDF {
 	}
 }
 
-$eveID = fRequest("id");
+$eveID = fRequest("eve");
 $pdf = new LISTAEVENTOBUS();
 
 fConnDB();

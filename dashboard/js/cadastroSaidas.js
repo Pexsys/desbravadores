@@ -1,70 +1,122 @@
 var saidaDataTable = undefined;
+var attrDataTable = undefined;
 var rowSelected = undefined;
 var tpFiltro = (jsLIB.parameters.flt === 'ALL' ? 'T' : 'Y');
+var tpFiltroAttr = '';
 
 $(document).ready(function(){
 	$.fn.dataTable.moment( 'DD/MM/YYYY HH:mm' );
+	
+	attrDataTable = $('#attrDatatable').DataTable({
+		lengthChange: false,
+		ordering: true,
+		paging: false,
+		scrollY: 300,
+		searching: true,
+		processing: true,
+		language: {
+			info: "_END_ participantes",
+			search: "",
+			searchPlaceholder: "Procurar...",
+			infoFiltered: " de _MAX_",
+			loadingRecords: "Aguarde - carregando...",
+			zeroRecords: "Dados indispon&iacute;veis para esta sele&ccedil;&atilde;o",
+			infoEmpty: "0 encontrados"
+		},
+		ajax: {
+			type	: "POST",
+			url	: jsLIB.rootDir+"rules/saidas.php",
+			data	: function (d) {
+					d.MethodName = "getAttrib",
+					d.data = { 
+						filter: tpFiltroAttr,
+						id: $("#saidaID").val()
+					}
+				},
+			dataSrc: "people"
+		},
+		order: [ 1, 'asc' ],
+		columns: [
+			{	data: 'id',
+				visible: false
+			},
+			{	data: 'nm',
+				sortable: true,
+				type: 'ptbr-string',
+				width: "55%"
+			},
+			{	data: 'un',
+				sortable: true,
+				type: 'ptbr-string',
+				width: "35%"
+			},
+			{	data: 'cd',
+				sortable: true,
+				type: 'ptbr-string',
+				width: "10%"
+			}
+		]
+	});
+	
 
-	saidaDataTable = $('#saidasDatatable')
-		.DataTable({
-			lengthChange: false,
-			ordering: true,
-			paging: false,
-			scrollY: 300,
-			searching: true,
-			processing: true,
-			language: {
-				info: "_END_ sa&iacute;das",
-				search: "",
-				searchPlaceholder: "Procurar...",
-				infoFiltered: " de _MAX_",
-				loadingRecords: "Aguarde - carregando...",
-				zeroRecords: "Dados indispon&iacute;veis para esta sele&ccedil;&atilde;o",
-				infoEmpty: "0 encontrados"
-			},
-			ajax: {
-				type	: "POST",
-				url	: jsLIB.rootDir+"rules/saidas.php",
-				data	: function (d) {
-						d.MethodName = "getSaidas",
-						d.data = { 
-							filter: tpFiltro
-						}
-					},
-				dataSrc: "saidas"
-			},
-			order: [ 2, 'desc' ],
-			columns: [
-				{	data: 'id',
-					sortable: true,
-					width: "5%"
-				},
-				{	data: 'ds',
-					sortable: true,
-					width: "55%"
-				},
-				{	data: 'dh_s',
-					sortable: true,
-					width: "20%",
-					render: function (data) {
-						return moment.unix(data).format("DD/MM/YYYY HH:mm")
+	saidaDataTable = $('#saidasDatatable').DataTable({
+		lengthChange: false,
+		ordering: true,
+		paging: false,
+		scrollY: 300,
+		searching: true,
+		processing: true,
+		language: {
+			info: "_END_ sa&iacute;das",
+			search: "",
+			searchPlaceholder: "Procurar...",
+			infoFiltered: " de _MAX_",
+			loadingRecords: "Aguarde - carregando...",
+			zeroRecords: "Dados indispon&iacute;veis para esta sele&ccedil;&atilde;o",
+			infoEmpty: "0 encontrados"
+		},
+		ajax: {
+			type	: "POST",
+			url	: jsLIB.rootDir+"rules/saidas.php",
+			data	: function (d) {
+					d.MethodName = "getSaidas",
+					d.data = { 
+						filter: tpFiltro
 					}
 				},
-				{	data: 'dh_r',
-					sortable: true,
-					width: "20%",
-					render: function (data) {
-						return moment.unix(data).format("DD/MM/YYYY HH:mm")
-					}
+			dataSrc: "saidas"
+		},
+		order: [ 2, 'desc' ],
+		columns: [
+			{	data: 'id',
+				sortable: true,
+				width: "5%"
+			},
+			{	data: 'ds',
+				sortable: true,
+				width: "55%"
+			},
+			{	data: 'dh_s',
+				sortable: true,
+				width: "20%",
+				render: function (data) {
+					return moment.unix(data).format("DD/MM/YYYY HH:mm")
 				}
-			],
-			fnRowCallback: function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-                if ( aData.dh_r < moment().unix() ) {
-                    $('td', nRow).css('color', '#d0d0d0');
-                } 
-            }
-		})
-	;
+			},
+			{	data: 'dh_r',
+				sortable: true,
+				width: "20%",
+				render: function (data) {
+					return moment.unix(data).format("DD/MM/YYYY HH:mm")
+				}
+			}
+		],
+		fnRowCallback: function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
+            if ( aData.dh_r < moment().unix() ) {
+                $('td', nRow).css('color', '#d0d0d0');
+            } 
+        }
+	});
 	
 	$('#datetimepickerini, #datetimepickerfim').datetimepicker({
 		locale: 'pt-br',
@@ -159,35 +211,26 @@ $(document).ready(function(){
 		})
 		.submit( function(event) {
 			event.preventDefault();
-			var opt = $("#cmLista").val();
-			if (opt !== ''){
-				var url = jsLIB.rootDir+'report/';
-				if (opt == "LE-AUTORIZ"){
-					url += 'geraAutorizacao.php?id='+$("#saidaID").val();
-				} else if (opt == "LE-MEMBROS"){
-					opt = $("#cmMembros").val();
-					if (opt == 'LP-ALFA'){
-						url += 'geraListaEvento.php?id='+$("#saidaID").val();
-					} else if (opt == 'LP-AUTO'){
-						url += 'geraListaEventoAutoriz.php?id='+$("#saidaID").val();
-					} else if (opt == 'LP-TENTS'){
-						url += 'geraListaEventoTent.php?id='+$("#saidaID").val();
-					}
-				} else if (opt == "LE-PASSAGE"){
-					url += 'geraListaEventoBus.php?id='+$("#saidaID").val();
-				}
+			var opt = $("#printModal").attr('report-id');
+			if (opt){
+				url = jsLIB.rootDir+'report/'+opt+'&eve='+$("#saidaID").val();
 				window.open(url,'_blank','top=50,left=50,height=750,width=550,menubar=no,status=no,titlebar=no',true);
 			}
 		})
 	;
 	
-	$("#cmLista").change(function(){
-		rulesGeracao( $(this).val() );
+	$("[name=cmLista]").change(function(){
+		rulesGeracao( $(this), true );
+	});	
+
+	$("[name=cmSubLista]").change(function(){
+		rulesGeracao( $(this), false );
 	});	
 	
 	$('#btnPrint').click(function(){
 		jsLIB.resetForm( $('#printForm') );
 		$("#printModal").modal();
+		$("[name=cmLista]").triggerHandler('change');
 	});
 	
 	$('#btnUse').click(function(){
@@ -245,11 +288,37 @@ $(document).ready(function(){
 		populateMembers();
 	});
 	
+	$("[name=btnShowAttr]").click(function(){
+		var attrRule = $(this).attr("attr-rule");
+		$("#lblTitle").html(this.innerHTML);
+		$("#lblRow").html($(this).attr("attr-caption"));
+
+		tpFiltroAttr = attrRule;
+		attrDataTable.ajax.reload();
+		
+		$("#attrModal")
+			.attr("attr-rule", attrRule)
+			.modal()
+		;
+	});
+	
 });
 
-function rulesGeracao(opt){
-	$("#divFilter").visible( opt == 'LE-MEMBROS' );
-    $("#rowFilterMembros").visible( opt == 'LE-MEMBROS' );
+function rulesGeracao( obj, filter ){
+	if (filter){
+		$("#divFilterPrint").visible(false);
+		$("[name=rowFilter]").visible(false);
+	}
+	var show = obj.find(":selected").attr('show'); 
+	if (show !== undefined) {
+		if (filter){
+			$("#divFilterPrint").visible(true);
+			$("#"+show).visible(true);
+			$("[name=cmSubLista]").filter(":visible").triggerHandler('change');
+		}
+	} else if (obj.val() !== ''){
+		$("#printModal").attr('report-id', obj.val() );
+	}
 }
 
 function ruleButtonSelection( filtro ){
@@ -269,6 +338,7 @@ function switchSelecion( filtro ) {
 }
 
 function buttons(){
+	$('#divAttr').visible( $("#saidaID").val() != "Novo" );
 	$('#btnDel').visible( $("#saidaID").val() != "Novo" );
 	$('#btnPrint').visible( $("#saidaID").val() != "Novo" );
 }

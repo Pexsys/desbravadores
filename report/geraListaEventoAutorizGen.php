@@ -2,7 +2,7 @@
 @require_once('../include/functions.php');
 @require_once('../include/_core/lib/tcpdf/tcpdf.php');
 
-class LISTAEVENTOALFA extends TCPDF {
+class LISTAEVENTOAUTORIZGENERO extends TCPDF {
 	
 	//lines styles
 	private $stLine;
@@ -60,7 +60,7 @@ class LISTAEVENTOALFA extends TCPDF {
 		
 		$this->setXY(20,$this->posY);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 15);
-		$this->Cell(185, 7, utf8_encode( $this->header["DS"] . (!is_null($this->header["DS_TEMA"]) ? " - ".$this->header["DS_TEMA"] : "") ), 0, false, 'C', false, false, false, false, 'T', 'M');
+		$this->Cell(185, 7, utf8_encode($this->header["DS"] . (!is_null($this->header["DS_TEMA"]) ? " - ".$this->header["DS_TEMA"] : "") ), 0, false, 'C', false, false, false, false, 'T', 'M');
 		$this->posY += 7;
 		
 		$this->setXY(20,$this->posY);
@@ -76,25 +76,63 @@ class LISTAEVENTOALFA extends TCPDF {
 		
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 8);
 		$this->SetTextColor(255,255,255);
-		$this->SetFillColor(235,192,22);
+		$this->SetFillColor(6,156,16);
 		$this->setCellPaddings(1,0,1,0);
-		$this->setXY(5,$this->posY);
+		$this->setXY(5, $this->posY);
+		$this->Cell(35, 6, "Controle", 0, false, 'C', true);
+		$this->setXY(40, $this->posY);
 		$this->Cell(85, 6, "Nome Completo", 0, false, 'L', true);
-		$this->setX(90);
-		$this->Cell(50, 6, "Cargo", 0, false, 'L', true);
-		$this->setX(140);
-		$this->Cell(30, 6, "Idade/Nasc.", 0, false, 'C', true);
-		$this->setX(170);
-		$this->Cell(35, 6, "Telefones", 0, false, 'L', true);
-		$this->posY += 6;
+		$this->setXY(125, $this->posY);
+		$this->Cell(30, 6, "Idade/Nasc.", 0, false, 'L', true);
+		$this->setXY(155, $this->posY);
+		$this->Cell(50, 6, "Telefones", 0, false, 'L', true);
+		$this->posY += 7;
 	}
 
 	public function setHeaderFields($header){
 		$this->header = $header;
 	}
+
+	public function addGrupoGenero($g) {
+		$this->setHeaderFields($g);
+		$this->newPage();
+		
+		$rsM = $GLOBALS['conn']->Execute("
+			SELECT ca.NM, ca.DS_CARGO, ca.DT_NASC, ca.FONE_RES, ca.FONE_CEL, ca.IDADE_HOJE
+			FROM EVE_SAIDA_PESSOA esp
+		    INNER JOIN CON_ATIVOS ca ON (ca.ID = esp.ID_CAD_PESSOA)
+		    WHERE esp.ID_EVE_SAIDA = ?
+			  AND esp.FG_AUTORIZ = 'S'
+			  AND ca.TP_SEXO = ?
+			ORDER BY ca.NM
+		", array( $g["ID_EVE_SAIDA"], $g["TP_SEXO"] ) );
+		foreach ($rsM as $k => $f):
+			$this->startTransaction();
+			$start_page = $this->getPage();
+			$this->addLine($f);
+			if  ($this->getNumPages() != $start_page):
+				$this->rollbackTransaction(true);
+				$this->newPage();
+				$this->addLine($f);
+			else:
+				$this->commitTransaction();
+			endif;
+		endforeach;
+		
+		$this->startTransaction();
+		$start_page = $this->getPage();
+		$this->addLineCount($rsM);
+		if  ($this->getNumPages() != $start_page):
+			$this->rollbackTransaction(true);
+			$this->newPage();
+			$this->addLineCount($rsM);
+		else:
+			$this->commitTransaction();
+		endif;
+	}
 	
 	public function addLine($f){
-		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 7);
+		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 9);
 		$this->setCellPaddings(1,1,1,1);
 		if ($this->lineAlt):
 			$this->SetFillColor(240,240,240);
@@ -102,23 +140,16 @@ class LISTAEVENTOALFA extends TCPDF {
 			$this->SetFillColor(255,255,255);
 		endif;
 		$this->setXY(5, $this->posY);
-		$this->Cell(85, 5, utf8_encode($f["NM"]), 0, false, 'L', true, false, 1);
-		$this->setX(90);
-
-		$colorR = base_convert(substr($f["CD_COR_GENERO"],1,2),16,10);
-		$colorG = base_convert(substr($f["CD_COR_GENERO"],3,2),16,10);
-		$colorB = base_convert(substr($f["CD_COR_GENERO"],5,2),16,10);
-		$this->SetTextColor($colorR,$colorG,$colorB);
-
-		$this->Cell(56, 5, utf8_encode($f["DS_CARGO"]), 0, false, 'L', true, false, 1);
-		$this->setX(146);
-		$this->Cell(5, 5, $f["IDADE_HOJE"], 0, false, 'L', true, false, 1);
-		$this->SetTextColor(0,0,0);
-		$this->setX(150);
-		$this->Cell(20, 5, strftime("%d/%m/%Y",strtotime($f["DT_NASC"])), 0, false, 'L', true, false, 1);
-		$this->setX(170);
-		$this->Cell(35, 5, trim($f["FONE_RES"]."   ".$f["FONE_CEL"]), 0, false, 'L', true, false, 1);
-		$this->posY+=5;
+		$this->Cell(34, 7, "", 1, false, 'C', true);
+		$this->setX(40);
+		$this->Cell(85, 7, utf8_encode($f["NM"]), 0, false, 'L', true, false, 1);
+		$this->setX(125);
+		$this->Cell(5, 7, $f["IDADE_HOJE"], 0, false, 'L', true, false, 1);
+		$this->setX(130);
+		$this->Cell(25, 7, strftime("%d/%m/%Y",strtotime($f["DT_NASC"])), 0, false, 'L', true, false, 1);
+		$this->setX(155);
+		$this->Cell(50, 7, trim($f["FONE_RES"]."   ".$f["FONE_CEL"]), 0, false, 'L', true, false, 1);
+		$this->posY+=7;
 		$this->lineAlt = !$this->lineAlt;
 	}
 	
@@ -126,10 +157,10 @@ class LISTAEVENTOALFA extends TCPDF {
 		$this->posY+=2;
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 9);
 		$this->SetTextColor(255,255,255);
-		$this->SetFillColor(235,192,22);
+		$this->SetFillColor(6,156,16);
 		$this->setCellPaddings(1,0,1,0);
 		$this->setXY(5, $this->posY);
-		$this->Cell(200, 6, "Total de Membros no Evento: ".$result->RecordCount(), 0, false, 'C', true);
+		$this->Cell(200, 6, "Total de Autorizações: ".$result->RecordCount(), 0, false, 'C', true);
 	}
 	
 	public function newPage() {
@@ -141,55 +172,27 @@ class LISTAEVENTOALFA extends TCPDF {
 
 	public function download() {
 		$this->lastPage();
-		$this->Output("ListagemParticipantesEvento_".date('Y-m-d_H:i:s').".pdf", "I");
+		$this->Output("ListagemParticipantesAutorizGen_".date('Y-m-d_H:i:s').".pdf", "I");
 	}
 }
 
 $eveID = fRequest("eve");
-$pdf = new LISTAEVENTOALFA();
+$pdf = new LISTAEVENTOAUTORIZGENERO();
 
 fConnDB();
 $result = $GLOBALS['conn']->Execute("
-	SELECT 
-			es.DS, es.DS_TEMA, es.DS_ORG, es.DS_DEST,
-			esp.ID AS ID_EVE_PESSOA, 
-			ca.ID, ca.NM, ca.CD_CARGO, ca.DS_CARGO, ca.DT_NASC, ca.FONE_RES, ca.FONE_CEL, ca.IDADE_HOJE, 
-			YEAR(es.DH_R)-YEAR(ca.DT_NASC) - IF(DATE_FORMAT(ca.DT_NASC,'%m%d')>DATE_FORMAT(es.DH_R,'%m%d'),1,0) AS IDADE_EVENTO_FIM,
-			esp.FG_AUTORIZ 
-	FROM EVE_SAIDA es
-    INNER JOIN EVE_SAIDA_PESSOA esp on (esp.ID_EVE_SAIDA = es.ID)
+	SELECT DISTINCT es.DS, es.DS_TEMA, es.DS_ORG, es.DS_DEST, 
+					esp.ID_EVE_SAIDA, ca.TP_SEXO 
+   	FROM EVE_SAIDA es
+    INNER JOIN EVE_SAIDA_PESSOA esp on (esp.ID_EVE_SAIDA = es.ID AND esp.FG_AUTORIZ = 'S')
     INNER JOIN CON_ATIVOS ca on (ca.ID = esp.ID_CAD_PESSOA)
     WHERE es.ID = ?
-	ORDER BY ca.NM
+	ORDER BY ca.TP_SEXO
 ", array($eveID) );
 if (!$result->EOF):
-	$pdf->setHeaderFields($result->fields);
-
-	$pdf->newPage();
-	foreach ( $result as $ra => $f ):
-		$pdf->startTransaction();
-		$start_page = $pdf->getPage();
-		$pdf->addLine($f);
-		if  ($pdf->getNumPages() != $start_page):
-			$pdf->rollbackTransaction(true);
-			$pdf->newPage();
-			$pdf->addLine($f);
-		else:
-			$pdf->commitTransaction();     
-		endif;
+	foreach ( $result as $o => $g ):
+		$pdf->addGrupoGenero($g);
 	endforeach;
-	
-	$pdf->startTransaction();
-	$start_page = $pdf->getPage();
-	$pdf->addLineCount($result);
-	if  ($pdf->getNumPages() != $start_page):
-		$pdf->rollbackTransaction(true);
-		$pdf->newPage();
-		$pdf->addLineCount($result);
-	else:
-		$pdf->commitTransaction();     
-	endif;
-	
 	$pdf->download();
 endif;
 exit;

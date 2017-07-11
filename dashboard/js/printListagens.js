@@ -18,13 +18,13 @@ $(document).ready(function(){
 			} else if (opt == "LST_PRESPAIS") {
 				url += 'geraListaPresencaPais.php?';
 			} else if (opt == "LST_EVE_ALFA") {
-				url += 'geraListaEvento.php?id='+$("#cbEventos").val();
+				url += 'geraListaEvento.php?eve='+$("#cbEventos").val();
 			} else if (opt == "LST_EVE_CTRL") {
-				url += 'geraListaEventoAutoriz.php?id='+$("#cbEventos").val();
+				url += 'geraListaEventoAutoriz.php?eve='+$("#cbEventos").val();
 			} else if (opt == "LST_EVE_PASS") {
-			    url += 'geraListaEventoBus.php?id='+$("#cbEventos").val();
+			    url += 'geraListaEventoBus.php?eve='+$("#cbEventos").val();
 			} else if (opt == "LST_EVE_PASS") {
-			    url += 'geraListaEventoTent.php?id='+$("#cbEventos").val();
+			    url += 'geraListaEventoTent.php?eve='+$("#cbEventos").val();
 			}
 			window.open(url,'_blank','top=50,left=50,height=750,width=550,menubar=no,status=no,titlebar=no',true);
 		}

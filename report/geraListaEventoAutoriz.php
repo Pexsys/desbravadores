@@ -138,7 +138,7 @@ class LISTAEVENTOALFA extends TCPDF {
 	}
 }
 
-$eveID = fRequest("id");
+$eveID = fRequest("eve");
 $pdf = new LISTAEVENTOALFA();
 
 fConnDB();

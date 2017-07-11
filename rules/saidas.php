@@ -489,4 +489,29 @@ function getSaidas( $parameters ) {
 	endforeach;
 	return array( "result" => true, "saidas" => $arr );
 }
+
+function getAttrib( $parameters ) {
+	$arr = array();
+	$filter = strtoupper($parameters["filter"]);
+	if (!empty($filter)):
+		fConnDB();
+		$result = $GLOBALS['conn']->Execute("
+			SELECT esp.ID, ca.NM, ca.DS_UNIDADE, esp.$filter
+			FROM EVE_SAIDA es
+			INNER JOIN EVE_SAIDA_PESSOA esp ON (esp.ID_EVE_SAIDA = es.ID)
+	        INNER JOIN CON_ATIVOS ca ON (ca.ID = esp.ID_CAD_PESSOA)
+	        WHERE es.ID = ?
+			ORDER BY ca.NM
+		", array( $parameters["id"] ) );
+		foreach ($result as $k => $f):
+			$arr[] = array(
+				"id" => $f['ID'],
+				"nm" => utf8_encode($f["NM"]),
+				"un" => utf8_encode($f["DS_UNIDADE"]),
+				"cd" => utf8_encode($f[$filter])
+			);
+		endforeach;
+	endif;
+	return array( "people" => $arr );
+}
 ?>
