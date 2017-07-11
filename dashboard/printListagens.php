@@ -3,7 +3,7 @@
 @require_once("../include/domains.php");
 
 $batismo = getDomainFilter( array( "type" => "B" ) );
-$eventos= getDomainFilter( array( "type" => "EV" ) );
+$eventos = getDomainFilter( array( "type" => "EV" ) );
 ?>
 <div class="row">
 	<div class="col-lg-12">
@@ -23,9 +23,13 @@ $eventos= getDomainFilter( array( "type" => "EV" ) );
 			<option value="LST_ESTRELATS">REQUISI&Ccedil;&Atilde;O DE ESTRELAS DE TEMPO DE SERVI&Ccedil;O</option>
 			<option data-divider="true"></option>
 			<option value="LST_EVE_ALFA">LISTAGEM DE SA&Iacute;DA - ALFAB&Eacute;TICA</option>
-			<option value="LST_EVE_CTRL">LISTAGEM DE SA&Iacute;DA - CONTROLE DE AUTORIZA&Ccedil;&Otilde;ES</option>
-			<option value="LST_EVE_PASS">LISTAGEM DE SA&Iacute;DA - PASSAGEIROS</option>
+			<option value="LST_EVE_CTRL">LISTAGEM DE SA&Iacute;DA - CONTROLE DE AUTORIZA&Ccedil;&Otilde;ES - GERAL</option>
+			<option value="LST_EVE_CTRL_GEN">LISTAGEM DE SA&Iacute;DA - CONTROLE DE AUTORIZA&Ccedil;&Otilde;ES - G&Ecirc;NERO</option>
 			<option value="LST_EVE_TENT">LISTAGEM DE SA&Iacute;DA - BARRACAS</option>
+			<option value="LST_EVE_KITCHEN">LISTAGEM DE SA&Iacute;DA - COZINHA</option>
+			<option value="LST_EVE_PASS">LISTAGEM DE SA&Iacute;DA - PASSAGEIROS</option>
+			<option value="LST_EVE_MAT_C">LISTAGEM DE SA&Iacute;DA - CAMISETAS</option>
+			<option value="LST_EVE_MAT_A">LISTAGEM DE SA&Iacute;DA - AGASALHOS</option>
 		</select>
 	</div>
 </div>

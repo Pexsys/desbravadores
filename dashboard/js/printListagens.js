@@ -21,10 +21,18 @@ $(document).ready(function(){
 				url += 'geraListaEvento.php?eve='+$("#cbEventos").val();
 			} else if (opt == "LST_EVE_CTRL") {
 				url += 'geraListaEventoAutoriz.php?eve='+$("#cbEventos").val();
-			} else if (opt == "LST_EVE_PASS") {
+			} else if (opt == "LST_EVE_CTRL_GEN") {
+				url += 'geraListaEventoAutorizGen.php?eve='+$("#cbEventos").val();
+            } else if (opt == "LST_EVE_PASS") {
 			    url += 'geraListaEventoBus.php?eve='+$("#cbEventos").val();
-			} else if (opt == "LST_EVE_PASS") {
+			} else if (opt == "LST_EVE_TENT") {
 			    url += 'geraListaEventoTent.php?eve='+$("#cbEventos").val();
+			} else if (opt == "LST_EVE_KITCHEN") {
+			    url += 'geraListaEventoKitchen.php?eve='+$("#cbEventos").val();
+			} else if (opt == "LST_EVE_MAT_C") {
+			    url += 'geraListaUniformes.php?filter=C&eve='+$("#cbEventos").val();
+			} else if (opt == "LST_EVE_MAT_A") {
+			    url += 'geraListaUniformes.php?filter=A&eve='+$("#cbEventos").val();
 			}
 			window.open(url,'_blank','top=50,left=50,height=750,width=550,menubar=no,status=no,titlebar=no',true);
 		}
@@ -40,6 +48,6 @@ $(document).ready(function(){
 function rulesGeracao(){
     $("#batismo").visible( opt == 'LST_BATISMO' );
     $("#uniformes").visible( opt == 'LST_UNIFORMES' );
-    $("#eventos").visible( opt == 'LST_EVE_ALFA' || opt == 'LST_EVE_CTRL' || opt == 'LST_EVE_PASS' || opt == 'LST_EVE_TENT' );
+    $("#eventos").visible( opt.startsWith('LST_EVE') );
 	$("#btnGerar").visible( $("#cbListagem").val() !== '' );
 }
