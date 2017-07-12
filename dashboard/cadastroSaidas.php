@@ -202,11 +202,11 @@
 								<div class="row" name="rowFilter" id="divPartic" style="display:none">
 									<div class="form-group col-xs-12">
 										<select name="cmSubLista" opt-value="cd" opt-label="ds" class="selectpicker form-control input-sm" data-container="body" data-width="100%">
-											<option value="geraListaEvento.php?">GERAL ALFAB&Eacute;TICA</option>
-											<option value="geraListaEventoAutoriz.php?">CONTROLE DE AUTORIZA&Ccedil;&Otilde;ES - GERAL</option>
+											<option value="geraListaEvento.php?">ALFAB&Eacute;TICA</option>
+											<option value="geraListaEventoAutoriz.php?">CONTROLE DE AUTORIZA&Ccedil;&Otilde;ES - ALFAB&Eacute;TICA</option>
 											<option value="geraListaEventoAutorizGen.php?">CONTROLE DE AUTORIZA&Ccedil;&Otilde;ES - POR GENERO</option>
-											<option value="geraListaUniformes.php?filter=A">CONTROLE DE AGASALHOS</option>
-											<option value="geraListaUniformes.php?filter=C">CONTROLE DE CAMISETAS</option>
+											<option value="geraListaUniformes.php?filter=A">CONTROLE DE AGASALHOS - GERAL</option>
+											<option value="geraListaUniformes.php?filter=C">CONTROLE DE CAMISETAS - GERAL</option>
 										</select>
 									</div>
 								</div>
@@ -235,34 +235,28 @@
 	</form>
 </div>
 
-<div class="modal fade" id="attrModal" role="dialog" data-backdrop="static">
+<div class="modal" id="attrModal" role="dialog" data-backdrop="static">
 	<form method="post" id="attrForm">
 		<div class="modal-dialog modal-lg" role="document">
 			<div class="modal-content">
-				<div class="modal-header">
-					<button aria-hidden="true" data-dismiss="modal" class="close" type="button" id="btnX">&times;</button>
-				</div>			
 				<div class="modal-body">
 					<div class="panel panel-info">
 						<div class="panel-heading">
 							<label id="lblTitle"></label>
+							<button aria-hidden="true" data-dismiss="modal" class="close" type="button" id="btnX">&times;</button>							
 						</div>
 						<div class="panel-body">
-							<div class="col-lg-12">
-								<div class="row">
-									<table class="compact row-border hover stripe" style="cursor: pointer;" cellspacing="0" width="100%" id="attrDatatable">
-										<thead>
-											<tr>
-												<th></th>
-												<th>Nome</th>
-												<th>Unidade</th>
-												<th id="lblRow">X</th>
-											</tr>
-										</thead>
-										<tbody/>
-									</table>
-								</div>
-							</div>	
+							<table class="compact row-border hover stripe" width="100%" id="attrDatatable">
+								<thead>
+									<tr>
+										<th></th>
+										<th>Nome</th>
+										<th>Unidade</th>
+										<th id="lblRow">X</th>
+									</tr>
+								</thead>
+								<tbody/>
+							</table>
 						</div>
 					</div>
 				</div>

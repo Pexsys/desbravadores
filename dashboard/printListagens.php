@@ -28,8 +28,8 @@ $eventos = getDomainFilter( array( "type" => "EV" ) );
 			<option value="LST_EVE_TENT">LISTAGEM DE SA&Iacute;DA - BARRACAS</option>
 			<option value="LST_EVE_KITCHEN">LISTAGEM DE SA&Iacute;DA - COZINHA</option>
 			<option value="LST_EVE_PASS">LISTAGEM DE SA&Iacute;DA - PASSAGEIROS</option>
-			<option value="LST_EVE_MAT_C">LISTAGEM DE SA&Iacute;DA - CAMISETAS</option>
-			<option value="LST_EVE_MAT_A">LISTAGEM DE SA&Iacute;DA - AGASALHOS</option>
+			<option value="LST_EVE_MAT_C">LISTAGEM DE SA&Iacute;DA - CAMISETAS - GERAL</option>
+			<option value="LST_EVE_MAT_A">LISTAGEM DE SA&Iacute;DA - AGASALHOS - GERAL</option>
 		</select>
 	</div>
 </div>
@@ -56,6 +56,7 @@ $eventos = getDomainFilter( array( "type" => "EV" ) );
 	<div class="col-lg-8" id="eventos" style="display:none;">
     	<label for="cbEventos" class="control-label">Eventos:</label>
     	<select name="cbEventos" id="cbEventos" class="selectpicker form-control input-sm" title="Escolha o Evento" data-width="100%" data-container="body" data-actions-box="false">
+    		<option></option>
     	    <?php
     	   		$s = false;
     	        foreach ($eventos["domain"] as $k => $o):

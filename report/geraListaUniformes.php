@@ -8,6 +8,8 @@ class LISTAMATERIAIS extends TCPDF {
 	private $stLine;
 	private $posY;
 	private $lineAlt;
+	private $eventoID;
+	private $header;
 	public $tipoUniforme;
 	
 	function __construct() {
@@ -42,7 +44,15 @@ class LISTAMATERIAIS extends TCPDF {
 	public function setTipoUniforme($tipoUniforme){
 	    $this->tipoUniforme = $tipoUniforme;
 	}
+	
+	public function setEventoID($eventoID){
+		$this->eventoID = $eventoID;
+	}
 
+	public function setHeaderFields($header){
+		$this->header = $header;
+	}
+	
 	public function Footer() {
 		$this->Line(5, 288, 205, 288, $this->stLine3);
 		$this->SetY(-9);
@@ -58,28 +68,40 @@ class LISTAMATERIAIS extends TCPDF {
  	public function Header() {
 		$this->setXY(0,0);
 		$this->Image("img/logo.jpg", 5, 5, 14, 16, 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+		$this->posY = 5;
 		
-		$this->setXY(20,5);
-		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 15.5);
-		$this->Cell(185, 9, "Listagem Alfabética de Uniformes: _____________________________", 0, false, 'C', false, false, false, false, 'T', 'M');
-		$this->setXY(20,15);
+		$this->setXY(20,$this->posY);
+		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 16);
+		$this->Cell(185, 6, "LISTAGEM PARA CONTROLE DE ". ($this->tipoUniforme == "A" ? "AGASALHOS" : "CAMISETAS: _________________" ), 0, false, 'C', false, false, false, false, 'T', 'M');
+		$this->posY += 7;
+		
+		$this->setXY(20,$this->posY);
 		$this->SetTextColor(80,80,80);
-		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 7);
+		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 8);
 		$this->Cell(185, 5, fClubeID(), 0, false, 'C', false, false, false, false, false, false, 'T', 'M');
+		$this->posY += 6;
+		
+		if (!empty($this->eventoID)):
+			$this->setXY(20,$this->posY);
+			$this->SetTextColor(0,0,0);
+			$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 9);
+			$this->Cell(185, 5, utf8_encode($this->header["DS"] . (!is_null($this->header["DS_TEMA"]) ? " - ".$this->header["DS_TEMA"] : "")  ." - ". $this->header["DS_DEST"]), 0, false, 'C', false, false, false, false, 'T', 'M');
+		endif;
+		$this->posY += 5;
 
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 8);
 		$this->SetTextColor(255,255,255);
 		$this->SetFillColor(149,107,164);
 		$this->setCellPaddings(1,0,1,0);
-		$this->setXY(5, 22);
+		$this->setXY(5, $this->posY);
 		$this->Cell(135, 6, "Nome Completo", 0, false, 'L', true);
-		$this->setXY(140, 22);
+		$this->setX(140);
 		$this->Cell(25, 6, "Utiliza Nº", 0, false, 'C', true);
-		$this->setXY(165, 22);
+		$this->setX(165);
 		$this->Cell(20, 6, "Nº Retirada", 0, false, 'L', true);
-		$this->setXY(185, 22);
+		$this->setX(185);
 		$this->Cell(20, 6, "Nº Devolução", 0, false, 'L', true);
-		$this->posY = 29;
+		$this->posY += 7;
 	}
 
 	public function addLineUniforme($f){
@@ -141,86 +163,94 @@ class LISTAMATERIAIS extends TCPDF {
 
 	public function download() {
 		$this->lastPage();
-		$this->Output("ListagemCamisetas_".date('Y-m-d_H:i:s').".pdf", "I");
+		$this->Output("ListagemMateriais_".date('Y-m-d_H:i:s').".pdf", "I");
 	}
 }
 
-/*
-$aM = explode(",",fRequest("m"));
-if ( !isset($aM) || count($aM) == 0 ):
-	exit("SELECIONE OS MESES QUE DESEJA IMPRIMIR AS FICHAS DE CHAMADA!");
-endif;
-$u = fRequest("u");
-$aU = explode(",",$u);
-if ( !isset($aU) || count($aU) == 0 ):
-	exit("SELECIONE AS UNIDADES QUE DESEJA IMPRIMIR AS FICHAS DE CHAMADA!");
-endif;
-*/
 $pdf = new LISTAMATERIAIS();
 $pdf->setTipoUniforme(fRequest("filter"));
+$eventoID = fRequest("eve");
+$pdf->setEventoID($eventoID);
 
 fConnDB();
-$pdf->newPage();
-$result = $GLOBALS['conn']->Execute("
-	SELECT ca.NM, ". ($pdf->tipoUniforme == "C" ? " ca.TP_CAMISETA" : "ca.TP_AGASALHO") ." AS TP
+$str = "
+	SELECT ca.NM, ". ($pdf->tipoUniforme == "C" ? " ca.TP_CAMISETA" : "ca.TP_AGASALHO") ." AS TP 
+
+	".(!empty($eventoID) 
+		? ", es.DS, es.DS_TEMA, es.DS_ORG, es.DS_DEST" : "")."
+
 	FROM CON_ATIVOS ca
+
+	".(!empty($eventoID) 
+		? " INNER JOIN EVE_SAIDA_PESSOA esp ON (esp.ID_CAD_PESSOA = ca.ID AND esp.ID_EVE_SAIDA = $eventoID)
+			INNER JOIN EVE_SAIDA es ON (es.ID = esp.ID_EVE_SAIDA)" : "")."
+					
 	ORDER BY ca.NM
-");
-foreach ( $result as $ra => $f ):
-	$pdf->startTransaction();
-	$start_page = $pdf->getPage();
-	$pdf->addLine($f);
-	if  ($pdf->getNumPages() != $start_page):
-		$pdf->rollbackTransaction(true);
-		$pdf->newPage();
-		$pdf->addLine($f);
-	else:
-		$pdf->commitTransaction();     
-	endif;
-endforeach;
+";
+$result = $GLOBALS['conn']->Execute($str);
+if (!$result->EOF):
+	$pdf->setHeaderFields($result->fields);
 
-$pdf->startTransaction();
-$start_page = $pdf->getPage();
-$pdf->addLineCount($result);
-if  ($pdf->getNumPages() != $start_page):
-	$pdf->rollbackTransaction(true);
 	$pdf->newPage();
-	$pdf->addLineCount($result);
-else:
-	$pdf->commitTransaction();     
-endif;
-
-if ($pdf->tipoUniforme == "C"):
-    $result = $GLOBALS['conn']->Execute("
-    	SELECT ca.TP_CAMISETA AS TP, COUNT(*) AS QTD
-    	FROM CON_ATIVOS ca
-    	LEFT JOIN TAB_TAMANHOS tt ON (tt.TP = 'C' AND tt.CD = ca.TP_CAMISETA)
-    	GROUP BY ca.TP_CAMISETA
-    	ORDER BY tt.ORD
-    ");
-else:
-    $result = $GLOBALS['conn']->Execute("
-    	SELECT ca.TP_AGASALHO AS TP, COUNT(*) AS QTD
-    	FROM CON_ATIVOS ca
-    	LEFT JOIN TAB_TAMANHOS tt ON (tt.TP = 'A' AND tt.CD = ca.TP_AGASALHO)
-    	GROUP BY ca.TP_AGASALHO
-    	ORDER BY tt.ORD
-    ");
-endif;
-
-foreach ( $result as $ra => $f ):
+	foreach ( $result as $ra => $f ):
+		$pdf->startTransaction();
+		$start_page = $pdf->getPage();
+		$pdf->addLine($f);
+		if  ($pdf->getNumPages() != $start_page):
+			$pdf->rollbackTransaction(true);
+			$pdf->newPage();
+			$pdf->addLine($f);
+		else:
+			$pdf->commitTransaction();     
+		endif;
+	endforeach;
+	
 	$pdf->startTransaction();
 	$start_page = $pdf->getPage();
-	$pdf->addLineUniforme($f);
+	$pdf->addLineCount($result);
 	if  ($pdf->getNumPages() != $start_page):
 		$pdf->rollbackTransaction(true);
 		$pdf->newPage();
-		$pdf->addLineUniforme($f);
+		$pdf->addLineCount($result);
 	else:
 		$pdf->commitTransaction();     
 	endif;
-endforeach;
 
-$pdf->download();
+	//RESUMO GERAL
+	if ($pdf->tipoUniforme == "C"):
+	    $result = $GLOBALS['conn']->Execute("
+	    	SELECT ca.TP_CAMISETA AS TP, COUNT(*) AS QTD
+	    	FROM CON_ATIVOS ca
+			".(!empty($eventoID) ? " INNER JOIN EVE_SAIDA_PESSOA esp ON (esp.ID_CAD_PESSOA = ca.ID AND esp.ID_EVE_SAIDA = $eventoID) " : "")."
+	    	LEFT JOIN TAB_TAMANHOS tt ON (tt.TP = 'C' AND tt.CD = ca.TP_CAMISETA)
+	    	GROUP BY ca.TP_CAMISETA
+	    	ORDER BY tt.ORD
+	    ");
+	else:
+	    $result = $GLOBALS['conn']->Execute("
+	    	SELECT ca.TP_AGASALHO AS TP, COUNT(*) AS QTD
+	    	FROM CON_ATIVOS ca
+			".(!empty($eventoID) ? " INNER JOIN EVE_SAIDA_PESSOA esp ON (esp.ID_CAD_PESSOA = ca.ID AND esp.ID_EVE_SAIDA = $eventoID) " : "")."
+	    	LEFT JOIN TAB_TAMANHOS tt ON (tt.TP = 'A' AND tt.CD = ca.TP_AGASALHO)
+	    	GROUP BY ca.TP_AGASALHO
+	    	ORDER BY tt.ORD
+	    ");
+	endif;
+	
+	foreach ( $result as $ra => $f ):
+		$pdf->startTransaction();
+		$start_page = $pdf->getPage();
+		$pdf->addLineUniforme($f);
+		if  ($pdf->getNumPages() != $start_page):
+			$pdf->rollbackTransaction(true);
+			$pdf->newPage();
+			$pdf->addLineUniforme($f);
+		else:
+			$pdf->commitTransaction();     
+		endif;
+	endforeach;
+	
+	$pdf->download();
+endif;
 exit;
 ?>

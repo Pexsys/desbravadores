@@ -71,10 +71,11 @@ class LISTAEVENTOTENT extends TCPDF {
 		$this->posY += 5;
 		
 		$this->setXY(20,$this->posY);
-		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 8);
+		$this->SetTextColor(0,0,0);
+		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 9);
 		$this->Cell(185, 5, utf8_encode($this->header["DS"] . (!is_null($this->header["DS_TEMA"]) ? " - ".$this->header["DS_TEMA"] : "")  ." - ". $this->header["DS_DEST"]), 0, false, 'C', false, false, false, false, 'T', 'M');
 		$this->posY += 5;
-
+		
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 8);
 		$this->SetTextColor(255,255,255);
 		$this->SetFillColor(218,165,32);

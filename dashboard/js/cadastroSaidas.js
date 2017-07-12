@@ -53,7 +53,11 @@ $(document).ready(function(){
 			{	data: 'cd',
 				sortable: true,
 				type: 'ptbr-string',
-				width: "10%"
+				width: "5%",
+				render: function(data, type, full, meta){
+					return "<input type=\"text\" name=\"editCD\" class=\"form-control input-xs\" attr-id=\""+full.id+"\" value=\""+ data +"\">";
+				}
+				
 			}
 		]
 	});
@@ -293,13 +297,22 @@ $(document).ready(function(){
 		$("#lblTitle").html(this.innerHTML);
 		$("#lblRow").html($(this).attr("attr-caption"));
 
-		tpFiltroAttr = attrRule;
-		attrDataTable.ajax.reload();
-		
 		$("#attrModal")
 			.attr("attr-rule", attrRule)
 			.modal()
 		;
+		tpFiltroAttr = attrRule;
+		attrDataTable.ajax.reload(function(){
+			$("[name=editCD]").unbind('change').change(function(){
+				var parameter = {
+					id: $(this).attr('attr-id'),
+					fl: attrRule,
+					vl: $(this).val()
+				};
+				jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/saidas.php", { MethodName : 'setAttrib', data : parameter } );				
+			});
+			
+		});
 	});
 	
 });

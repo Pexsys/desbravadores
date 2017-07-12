@@ -514,4 +514,19 @@ function getAttrib( $parameters ) {
 	endif;
 	return array( "people" => $arr );
 }
+
+function setAttrib( $parameters ) {
+	fConnDB();
+	
+	$fl = $parameters["fl"];
+	$vl = fReturnStringNull( $parameters["vl"] );
+	
+	$GLOBALS['conn']->Execute("
+		UPDATE EVE_SAIDA_PESSOA SET
+			$fl = ?
+		WHERE ID = ?
+	", array( $vl, $parameters["id"] ) );
+
+	return array( "result" => true );
+}
 ?>
