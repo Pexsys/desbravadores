@@ -9,8 +9,10 @@ $(document).ready(function(){
 				url += 'geraListaAtivos.php?';
 			} else if (opt == "LST_BATISMO"){
 				url += 'geraListaBatismos.php?filter='+$("#cbBatismo").val();
-			} else if (opt == "LST_CLASSE"){
-				url += 'geraListaClasse.php?';
+			} else if (opt == "LST_CLASSES"){
+				url += 'geraListaClasse.php?filter='+$("#cbClasses").val();
+			} else if (opt == "LST_UNIDADES"){
+				url += 'geraListaUnidade.php?filter='+$("#cbUnidades").val();
 			} else if (opt == "LST_UNIFORMES"){
 				url += 'geraListaUniformes.php?filter='+$("#cbUniformes").val();
 			} else if (opt == "LST_ESTRELATS"){
@@ -48,6 +50,8 @@ $(document).ready(function(){
 function rulesGeracao(){
     $("#batismo").visible( opt == 'LST_BATISMO' );
     $("#uniformes").visible( opt == 'LST_UNIFORMES' );
+    $("#unidades").visible( opt == 'LST_UNIDADES' );
+    $("#classes").visible( opt == 'LST_CLASSES' );
     $("#eventos").visible( opt.startsWith('LST_EVE') );
 	$("#btnGerar").visible( $("#cbListagem").val() !== '' );
 }

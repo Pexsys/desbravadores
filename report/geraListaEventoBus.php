@@ -114,7 +114,7 @@ class LISTAEVENTOBUS extends TCPDF {
 	    $this->newPage();
 	    
 	    $rsM = $GLOBALS['conn']->Execute("
-		  SELECT ca.NM, ca.DT_NASC, ca.FONE_RES, ca.FONE_CEL, ca.NR_DOC, ca.NR_CPF
+		  SELECT ca.NM, ca.DT_NASC, ca.FONE_RES, ca.FONE_CEL, ca.NR_DOC, ca.NR_CPF, ca.CPF_RESP
 			FROM EVE_SAIDA_PESSOA esp
 		    INNER JOIN CON_ATIVOS ca ON (ca.ID = esp.ID_CAD_PESSOA)
 		    WHERE esp.ID_EVE_SAIDA = ?
@@ -164,7 +164,7 @@ class LISTAEVENTOBUS extends TCPDF {
 		$this->setX(118);
 		$this->Cell(24, 5, $f["NR_DOC"], 0, false, 'L', true, false, 1);
 		$this->setX(142);
-		$this->Cell(21, 5, $f["NR_CPF"], 0, false, 'L', true, false, 1);
+		$this->Cell(21, 5, ( is_null($f["NR_CPF"]) ? $f["CPF_RESP"]: $f["NR_CPF"] ), 0, false, 'L', true, false, 1);
 		$this->setX(163);
 		$this->Cell(42, 5, trim($f["FONE_RES"]."   ".$f["FONE_CEL"]), 0, false, 'L', true, false, 1);
 		$this->posY+=5;

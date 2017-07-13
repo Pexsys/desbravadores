@@ -173,17 +173,7 @@ class LISTACLASSE extends TCPDF {
 	}
 }
 
-/*
-$aM = explode(",",fRequest("m"));
-if ( !isset($aM) || count($aM) == 0 ):
-	exit("SELECIONE OS MESES QUE DESEJA IMPRIMIR AS FICHAS DE CHAMADA!");
-endif;
-$u = fRequest("u");
-$aU = explode(",",$u);
-if ( !isset($aU) || count($aU) == 0 ):
-	exit("SELECIONE AS UNIDADES QUE DESEJA IMPRIMIR AS FICHAS DE CHAMADA!");
-endif;
-*/
+$filter = fRequest("filter");
 $pdf = new LISTACLASSE();
 
 fConnDB();
@@ -194,6 +184,7 @@ $result = $GLOBALS['conn']->Execute("
 	INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
 	WHERE ah.DT_CONCLUSAO IS NULL
 	  AND ta.TP_ITEM = ?
+	  ". (isset($filter) && !is_null($filter) && $filter !== "null" ? " AND ta.ID IN ($filter)" : "" ) ."
 	ORDER BY ta.CD_ITEM_INTERNO
 ", array("CL") );
 foreach ( $result as $ra => $f ):

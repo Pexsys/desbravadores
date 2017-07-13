@@ -214,7 +214,7 @@ $result = $GLOBALS['conn']->Execute("
 	SELECT *
 	FROM TAB_UNIDADE
 	WHERE FG_ATIVA = ?
-	  ". (isset($filter) && !is_null($filter) && $filter !== "null" ? " AND ID IN ($filter)"  : "" ) ."
+	  ". (isset($filter) && !is_null($filter) && $filter !== "null" ? " AND ID IN ($filter)" : "" ) ."
 	ORDER BY IDADE
 ", array("S") );
 foreach ( $result as $ra => $f ):
