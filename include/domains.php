@@ -73,7 +73,6 @@ function getTipoMateriais(){
 	$result = $GLOBALS['conn']->Execute("
 		SELECT DISTINCT TP
 		  FROM TAB_MATERIAIS
-		 WHERE FG_IM = 'S'
 		  ORDER BY TP");
 	while (!$result->EOF):
 		$arr[] = array(

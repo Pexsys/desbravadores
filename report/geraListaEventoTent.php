@@ -60,7 +60,7 @@ class LISTAEVENTOTENT extends TCPDF {
  		
  		$this->setXY(20,$this->posY);
  		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 20);
- 		$this->Cell(185, 6, "LISTAGEM DE PASSAGEIROS - ÔNIBUS ". $this->header["BUS"], 0, false, 'C', false, false, false, false, 'T', 'M');
+ 		$this->Cell(185, 6, "LISTAGEM DE USO DAS BARRACAS", 0, false, 'C', false, false, false, false, 'T', 'M');
  		$this->posY += 8;
  		
  		$this->setXY(20,$this->posY);
