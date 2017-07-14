@@ -149,7 +149,7 @@ $(document).ready(function(){
 
 function populateTipos(){
 	var parameter = {
-		domains : [ "tipos" ]
+		domains : [ "tiposEst" ]
 	};
 	var cg = jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/listaCompras.php", { MethodName : 'getData', data : parameter }, 'RETURN' );
 	jsLIB.populateOptions( $("#cmTipo"), cg.tipos );
@@ -158,7 +158,7 @@ function populateTipos(){
 function populateItens(tp){
 	var parameter = {
 		key : tp,
-		domains : [ "itens" ]
+		domains : [ "itensEst" ]
 	};
 	var cg = jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/listaCompras.php", { MethodName : 'getData', data : parameter }, 'RETURN' );
 	jsLIB.populateOptions( $("#cmItem"), cg.itens );

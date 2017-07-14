@@ -2,7 +2,7 @@
 @require_once('../include/functions.php');
 @require_once('../include/_core/lib/tcpdf/tcpdf.php');
 
-class LISTAEVENTOBUS extends TCPDF {
+class LISTAEVENTOKITCHEN extends TCPDF {
 	
 	//lines styles
 	private $stLine;
@@ -36,7 +36,7 @@ class LISTAEVENTOBUS extends TCPDF {
 
 		$this->SetCreator(PDF_CREATOR);
 		$this->SetAuthor('Ricardo J. Cesar');
-		$this->SetTitle('Listagem de Passageiros do Evento');
+		$this->SetTitle('Listagem de Uso de Sacolinhas da Cozinha');
 		$this->SetSubject('Clube Pioneiros');
 		$this->SetKeywords('Desbravadores, Especialidades, Pioneiros, Capão Redondo');
 		$this->setImageScale(PDF_IMAGE_SCALE_RATIO);
@@ -61,7 +61,7 @@ class LISTAEVENTOBUS extends TCPDF {
 		
 		$this->setXY(20,$this->posY);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 20);
-		$this->Cell(185, 6, "LISTAGEM DE PASSAGEIROS - ÔNIBUS ". $this->header["BUS"], 0, false, 'C', false, false, false, false, 'T', 'M');
+		$this->Cell(185, 6, "LISTAGEM DE SACOLINHAS DA COZINHA", 0, false, 'C', false, false, false, false, 'T', 'M');
 		$this->posY += 8;
 
 		$this->setXY(20,$this->posY);
@@ -71,8 +71,7 @@ class LISTAEVENTOBUS extends TCPDF {
 		$this->posY += 5;
 		
 		$this->setXY(20,$this->posY);
-		$this->SetTextColor(0,0,0);
-		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 9);
+		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 8);
 		$this->Cell(185, 5, utf8_encode($this->header["DS"] . (!is_null($this->header["DS_TEMA"]) ? " - ".$this->header["DS_TEMA"] : "")  ." - ". $this->header["DS_DEST"]), 0, false, 'C', false, false, false, false, 'T', 'M');
 		$this->posY += 5;
 
@@ -81,73 +80,18 @@ class LISTAEVENTOBUS extends TCPDF {
 		$this->SetFillColor(218,165,32);
 		$this->setCellPaddings(1,0,1,0);
 		$this->setXY(5, $this->posY);
-		$this->Cell(8, 6, "Seq.", 0, false, 'C', true);
-		$this->setX(13);
-		$this->Cell(87, 6, "Nome Completo", 0, false, 'L', true);
-		$this->setX(100);
-		$this->Cell(18, 6, "Nascimento", 0, false, 'C', true);
-		$this->setX(118);
-		$this->Cell(24, 6, "Identificação", 0, false, 'L', true);
-		$this->setX(142);
-		$this->Cell(21, 6, "CPF", 0, false, 'C', true);
-		$this->setX(163);
-		$this->Cell(42, 6, "Telefones", 0, false, 'L', true);
+		$this->Cell(170, 6, "Nome Completo", 0, false, 'L', true);
+		$this->setX(175);
+		$this->Cell(30, 6, "Número", 0, false, 'C', true);
 		$this->posY += 6;
 	}
 
 	public function setHeaderFields($header){
 		$this->header = $header;
 	}
-	
-	public function addLineCount($result){
-		$this->posY+=2;
-		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 9);
-		$this->SetTextColor(255,255,255);
-		$this->SetFillColor(218,165,32);
-		$this->setCellPaddings(1,0,1,0);
-		$this->setXY(5, $this->posY);
-		$this->Cell(200, 6, "Total de Passageiros: ".$result->RecordCount(), 0, false, 'C', true);
-	}
-	
-	public function addGrupoBus($g) {
-	    $this->setHeaderFields($g);
-	    $this->newPage();
-	    
-	    $rsM = $GLOBALS['conn']->Execute("
-		  SELECT ca.NM, ca.DT_NASC, ca.FONE_RES, ca.FONE_CEL, ca.NR_DOC, ca.NR_CPF, ca.CPF_RESP
-			FROM EVE_SAIDA_PESSOA esp
-		    INNER JOIN CON_ATIVOS ca ON (ca.ID = esp.ID_CAD_PESSOA)
-		    WHERE esp.ID_EVE_SAIDA = ?
-			  AND esp.BUS = ?
-			ORDER BY ca.NM
-		", array( $g["ID"], $g["BUS"]) );
-		foreach ($rsM as $k => $f):
-			$this->startTransaction();
-			$start_page = $this->getPage();
-			$this->addLine($f);
-			if  ($this->getNumPages() != $start_page):
-				$this->rollbackTransaction(true);
-				$this->newPage();
-				$this->addLine($f);
-			else:
-				$this->commitTransaction();     
-			endif;
-		endforeach;
-		
-		$this->startTransaction();
-		$start_page = $this->getPage();
-		$this->addLineCount($rsM);
-		if  ($this->getNumPages() != $start_page):
-			$this->rollbackTransaction(true);
-			$this->newPage();
-			$this->addLineCount($rsM);
-		else:
-			$this->commitTransaction();
-		endif;
-	}
-	
+
 	public function addLine($f){
-		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 7);
+		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 15);
 		$this->setCellPaddings(1,1,1,1);
 		$this->SetTextColor(0,0,0);
 		if ($this->lineAlt):
@@ -156,18 +100,10 @@ class LISTAEVENTOBUS extends TCPDF {
 			$this->SetFillColor(255,255,255);
 		endif;
 		$this->setXY(5, $this->posY);
-		$this->Cell(8, 5, str_pad( ++$this->seq, 2, "0", STR_PAD_LEFT), 0, false, 'C', true);
-		$this->setX(13);
-		$this->Cell(87, 5, utf8_encode($f["NM"]), 0, false, 'L', true, false, 1);
-		$this->setX(100);
-		$this->Cell(18, 5, strftime("%d/%m/%Y",strtotime($f["DT_NASC"])), 0, false, 'C', true, false, 1);
-		$this->setX(118);
-		$this->Cell(24, 5, $f["NR_DOC"], 0, false, 'L', true, false, 1);
-		$this->setX(142);
-		$this->Cell(21, 5, ( is_null($f["NR_CPF"]) ? $f["CPF_RESP"]: $f["NR_CPF"] ), 0, false, 'L', true, false, 1);
-		$this->setX(163);
-		$this->Cell(42, 5, trim($f["FONE_RES"]."   ".$f["FONE_CEL"]), 0, false, 'L', true, false, 1);
-		$this->posY+=5;
+		$this->Cell(170, 12, utf8_encode($f["NM"]), 0, false, 'L', true, false, 1);
+		$this->setX(175);
+		$this->Cell(30, 12, $f["KITCHEN"], 0, false, 'C', true, false, 1);
+		$this->posY+=12;
 		$this->lineAlt = !$this->lineAlt;
 	}
 	
@@ -180,26 +116,37 @@ class LISTAEVENTOBUS extends TCPDF {
 
 	public function download() {
 		$this->lastPage();
-		$this->Output("ListagemPassageirosEvento_".date('Y-m-d_H:i:s').".pdf", "I");
+		$this->Output("ListagemCozinhaEvento_".date('Y-m-d_H:i:s').".pdf", "I");
 	}
 }
 
 $eveID = fRequest("eve");
-$pdf = new LISTAEVENTOBUS();
+$pdf = new LISTAEVENTOKITCHEN();
 
 fConnDB();
 $result = $GLOBALS['conn']->Execute("
-	SELECT DISTINCT es.ID, es.DS, es.DS_TEMA, es.DS_ORG, es.DS_DEST, esp.BUS
-      FROM EVE_SAIDA es
-INNER JOIN EVE_SAIDA_PESSOA esp ON (esp.ID_EVE_SAIDA = es.ID AND esp.BUS IS NOT NULL)
-     WHERE es.ID = ?
-    ORDER BY esp.BUS
+		SELECT es.DS, es.DS_TEMA, es.DS_ORG, es.DS_DEST, ca.NM, esp.KITCHEN
+	      FROM EVE_SAIDA es
+	INNER JOIN EVE_SAIDA_PESSOA esp ON (esp.ID_EVE_SAIDA = es.ID AND esp.KITCHEN IS NOT NULL)
+	INNER JOIN CON_ATIVOS ca ON (ca.ID = esp.ID_CAD_PESSOA)
+	     WHERE es.ID = ?
+	  ORDER BY ca.NM
 ", array($eveID) );
-
 if (!$result->EOF):
+	$pdf->setHeaderFields($result->fields);
+	$pdf->newPage();
+
     foreach ( $result as $o => $g ):
-        $pdf->seq = 0;
-    	$pdf->addGrupoBus($g);
+   		$pdf->startTransaction();
+    	$start_page = $pdf->getPage();
+	    $pdf->addLine($g);
+	    if  ($pdf->getNumPages() != $start_page):
+	    	$pdf->rollbackTransaction(true);
+	   		$pdf->newPage();
+	    	$pdf->addLine($g);
+	    else:
+	    	$pdf->commitTransaction();
+	    endif;
     endforeach;
     $pdf->download();
 endif;

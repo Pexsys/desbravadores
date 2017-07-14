@@ -59,19 +59,20 @@ class LISTAEVENTOALFA extends TCPDF {
 		$this->posY = 5;
 		
 		$this->setXY(20,$this->posY);
-		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 15);
-		$this->Cell(185, 7, utf8_encode( $this->header["DS"] . (!is_null($this->header["DS_TEMA"]) ? " - ".$this->header["DS_TEMA"] : "") ), 0, false, 'C', false, false, false, false, 'T', 'M');
-		$this->posY += 7;
-		
-		$this->setXY(20,$this->posY);
-		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 9);
-		$this->Cell(185, 5, utf8_encode($this->header["DS_ORG"] . " - " .$this->header["DS_DEST"]), 0, false, 'C', false, false, false, false, 'T', 'M');
-		$this->posY += 5;
+		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 16);
+		$this->Cell(185, 6, "LISTAGEM ALFABÉTICA DE PARTICIPANTES", 0, false, 'C', false, false, false, false, 'T', 'M');
+		$this->posY += 8;
 		
 		$this->setXY(20,$this->posY);
 		$this->SetTextColor(80,80,80);
-		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 7);
+		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 8);
 		$this->Cell(185, 5, fClubeID(), 0, false, 'C', false, false, false, false, false, false, 'T', 'M');
+		$this->posY += 5;
+		
+		$this->setXY(20,$this->posY);
+		$this->SetTextColor(0,0,0);
+		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 9);
+		$this->Cell(185, 5, utf8_encode($this->header["DS"] . (!is_null($this->header["DS_TEMA"]) ? " - ".$this->header["DS_TEMA"] : "")  ." - ". $this->header["DS_DEST"]), 0, false, 'C', false, false, false, false, 'T', 'M');
 		$this->posY += 5;
 		
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 8);
@@ -145,7 +146,7 @@ class LISTAEVENTOALFA extends TCPDF {
 	}
 }
 
-$eveID = fRequest("id");
+$eveID = fRequest("eve");
 $pdf = new LISTAEVENTOALFA();
 
 fConnDB();

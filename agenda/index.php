@@ -1,8 +1,7 @@
 <?php
 if (session_id () == "") :
 	session_start ();
-
-	endif;
+endif;
 require_once ("../include/header_simples.php");
 require_once ("../include/_variables.php");
 include ("../include/functions.php");

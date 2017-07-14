@@ -38,6 +38,8 @@
 			<div class="modal-body">
 				<form method="post" id="cadSaidasForm">
 					<input type="hidden" field="id_cad_eventos"/>
+					<input type="hidden" field="buses" id="buses"/>
+					<input type="hidden" field="tents" id="tents"/>
 					<div class="row">
 						<div class="col-lg-12">
 							<div class="panel panel-red" aria-expanded="false">
@@ -98,10 +100,10 @@
 									</div>
 									<div class="row">
 										<div class="form-group col-xs-6">
-											<input type="checkbox" name="cbAtivo" id="cbAtivo" field="fg_campori" value-on="S" value-off="N" data-toggle="toggle" data-onstyle="warning" data-offstyle="default" data-on="<b>AUTORIZAÇÃO CAMPORI</b>" data-off="AUTORIZAÇÃO COMUM" data-size="small" data-width="200"/>
+											<input type="checkbox" name="cbAtivo" id="cbAtivo" field="fg_campori" value-on="S" value-off="N" data-toggle="toggle" data-onstyle="warning" data-offstyle="default" data-on="AUTORIZAÇÃO CAMPORI" data-off="AUTORIZAÇÃO COMUM" data-size="small" data-width="200"/>
 										</div>
 										<div class="form-group col-xs-6">
-											<input type="checkbox" name="cbImprimir" id="cbImprimir" field="fg_imprimir" value-on="S" value-off="N" data-toggle="toggle" data-onstyle="warning" data-offstyle="default" data-on="IMPRESSÃO EXTERNA" data-off="IMPRESSÃO INTERNA" data-size="small" data-width="200"/>
+											<input type="checkbox" name="cbImprimir" id="cbImprimir" field="fg_imprimir" value-on="S" value-off="N" data-toggle="toggle" data-onstyle="default" data-offstyle="warning" data-on="IMPRESSÃO EXTERNA" data-off="IMPRESSÃO INTERNA" data-size="small" data-width="200"/>
 										</div>
 									</div>
 									<div class="row">
@@ -140,12 +142,12 @@
 						</div>	
 						<div class="col-lg-6 form-group">
 							<?php if (true): //PODE GERAR?>
-							<div class="btn-group pull-left">
-								<span class="btn btn-default" contenteditable="true"><i class="fa fa-paperclip" aria-hidden="true"></i>&nbsp;Atribui&ccedil;&otilde;es</span>
-								<button data-toggle="dropdown" class="btn btn-default dropdown-toggle" aria-expanded="false"><span class="caret"></span></button>
+							<div class="pull-left" id="divAttr" style="display:none">
+								<a data-toggle="dropdown" class="btn btn-default dropdown-toggle" aria-expanded="false"><i class="fa fa-paperclip" aria-hidden="true"></i>&nbsp;Atribui&ccedil;&otilde;es&nbsp;|&nbsp;<span class="caret"></span></a>
 								<ul class="dropdown-menu" contenteditable="true">
-									<li><a href="#"><i class="fa fa-bus"></i>&nbsp;&Ocirc;nibus</a></li>
-									<li><a href="#"><i class="glyphicon glyphicon-tent"></i>&nbsp;Barracas</a></li>
+									<li><a role="button" name="btnShowAttr" attr-rule="bus" attr-caption="&Ocirc;nibus"><i class="fa fa-bus"></i>&nbsp;&Ocirc;nibus</a></li>
+									<li><a role="button" name="btnShowAttr" attr-rule="tent" attr-caption="Barraca"><i class="glyphicon glyphicon-tent"></i>&nbsp;Barracas</a></li>
+									<li><a role="button" name="btnShowAttr" attr-rule="kitchen" attr-caption="Sacolinha"><i class="fa fa-cutlery"></i>&nbsp;Sacolinhas</a></li>
 								</ul>
 							</div>
 							<?php endif;?>
@@ -181,28 +183,39 @@
 							<div>
 								<div class="row">
 									<div class="form-group col-xs-12">
-										<select field="cd_lista" name="cmLista" id="cmLista" opt-value="cd" opt-label="ds" class="selectpicker form-control input-sm" data-container="body" data-width="100%">
-											<option value="LE-AUTORIZ">AUTORIZA&Ccedil;&Otilde;ES</option>
-											<option value="LE-MEMBROS">LISTAGEM DE PARTICIPANTES</option>
-											<option value="LE-PASSAGE">LISTAGEM DE PASSAGEIROS</option>
+										<select name="cmLista" opt-value="cd" opt-label="ds" class="selectpicker form-control input-sm" data-container="body" data-width="100%">
+											<option value="geraAutorizacao.php?">AUTORIZA&Ccedil;&Otilde;ES</option>
+											<option show="divPartic">LISTAGEM DE PARTICIPANTES</option>
+											<option show="divAttrib">LISTAGEM DE ATRIBUI&Ccedil;&Otilde;ES</option>
 										</select>
 									</div>
 								</div>
 							</div>
 						</div>	
 					</div>
-					<div class="panel panel-warning" id="divFilter" style="display:none">
+					<div class="panel panel-warning" id="divFilterPrint" style="display:none">
 						<div class="panel-heading" style="padding:4px 10px 0px">
 							<label>Filtros</label>
 						</div>
 						<div class="panel-body" style="padding:4px 10px 0px">
 							<div>
-								<div class="row" id="rowFilterMembros" style="display:none">
+								<div class="row" name="rowFilter" id="divPartic" style="display:none">
 									<div class="form-group col-xs-12">
-										<select field="cd_lista" name="cmMembros" id="cmMembros" opt-value="cd" opt-label="ds" class="selectpicker form-control input-sm" data-container="body" data-width="100%">
-											<option value="LP-ALFA">GERAL ALFAB&Eacute;TICA</option>
-											<option value="LP-TENTS">CONTROLE DE BARRACAS</option>
-											<option value="LP-AUTO">CONTROLE DE AUTORIZA&Ccedil;&Otilde;ES</option>
+										<select name="cmSubLista" opt-value="cd" opt-label="ds" class="selectpicker form-control input-sm" data-container="body" data-width="100%">
+											<option value="geraListaEvento.php?">ALFAB&Eacute;TICA</option>
+											<option value="geraListaEventoAutoriz.php?">CONTROLE DE AUTORIZA&Ccedil;&Otilde;ES - ALFAB&Eacute;TICA</option>
+											<option value="geraListaEventoAutorizGen.php?">CONTROLE DE AUTORIZA&Ccedil;&Otilde;ES - POR GENERO</option>
+											<option value="geraListaUniformes.php?filter=A">CONTROLE DE AGASALHOS - GERAL</option>
+											<option value="geraListaUniformes.php?filter=C">CONTROLE DE CAMISETAS - GERAL</option>
+										</select>
+									</div>
+								</div>
+								<div class="row" name="rowFilter" id="divAttrib" style="display:none">
+									<div class="form-group col-xs-12">
+										<select name="cmSubLista" opt-value="cd" opt-label="ds" class="selectpicker form-control input-sm" data-container="body" data-width="100%">
+											<option value="geraListaEventoTent.php?">LISTAGEM DE BARRACAS</option>
+											<option value="geraListaEventoKitchen.php?">LISTAGEM DE SACOLINHAS</option>
+											<option value="geraListaEventoBus.php?">LISTAGEM DE PASSAGEIROS/&Ocirc;NIBUS</option>
 										</select>
 									</div>
 								</div>
@@ -216,6 +229,36 @@
 							<button type="submit" class="btn btn-success pull-right"><i class="fa fa-file-pdf-o"></i>&nbsp;Gerar PDF</button>
 						</div>	
 					</div>	
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+
+<div class="modal" id="attrModal" role="dialog" data-backdrop="static">
+	<form method="post" id="attrForm">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-body">
+					<div class="panel panel-info">
+						<div class="panel-heading">
+							<label id="lblTitle"></label>
+							<button aria-hidden="true" data-dismiss="modal" class="close" type="button" id="btnX">&times;</button>							
+						</div>
+						<div class="panel-body">
+							<table class="compact row-border hover stripe" width="100%" id="attrDatatable">
+								<thead>
+									<tr>
+										<th></th>
+										<th>Nome</th>
+										<th>Unidade</th>
+										<th id="lblRow">X</th>
+									</tr>
+								</thead>
+								<tbody/>
+							</table>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

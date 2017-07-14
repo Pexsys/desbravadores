@@ -57,7 +57,7 @@ class ESPCR extends TCPDF {
 	    $this->line = $line;
 	    $this->campori = ($this->line["FG_CAMPORI"] == "S");
 	    $arr = explode(' ',utf8_encode(strtolower($this->line["DS_CARGO"])));
-        $this->dsCargo = $arr[0];
+	    $this->dsCargo = (fStrStartWith($this->line["CD_CARGO"],"1") ? ($this->line["TP_SEXO"] == "F" ? "desbravadora" : "desbravador") : $arr[0]);
 	}
 
  	public function Header() {
@@ -263,7 +263,7 @@ if ( isset($eventoID) && strlen($eventoID) > 0 ):
 	endif;	
 	$list = true;
 else:
-	$eventoID = fRequest("id");
+	$eventoID = fRequest("eve");
 endif;
 if ( ( !isset($eventoID) || empty($eventoID) || stristr($eventoID, "indispon") ) && ( !isset($pID) || empty($pID) ) ):
 	echo "AUTORIZA&Ccedil;&Atilde;O N&Atilde;O ENCONTRADA!";
@@ -322,7 +322,7 @@ $aP = 0;
 $query = "
 	SELECT es.ID, es.DS, es.DH_S, es.DH_R, es.DS_TEMA, es.DS_ORG, es.DS_DEST, es.DS_ORIG, es.FG_CAMPORI,
 	       esp.ID_CAD_PESSOA, 
-	       ca.NM, ca.TP_SEXO, ca.NR_DOC, ca.NR_CPF, ca.TP_SEXO_RESP, ca.DS_RESP, ca.NM_RESP, ca.DOC_RESP, ca.CPF_RESP, ca.TEL_RESP, ca.DS_CARGO,
+	       ca.NM, ca.TP_SEXO, ca.NR_DOC, ca.NR_CPF, ca.TP_SEXO_RESP, ca.DS_RESP, ca.NM_RESP, ca.DOC_RESP, ca.CPF_RESP, ca.TEL_RESP, ca.CD_CARGO, ca.DS_CARGO,
 	       cd.NOME_DIRETOR, cd.IDENT_DIRETOR
 	  FROM EVE_SAIDA es,
 	       EVE_SAIDA_PESSOA esp,

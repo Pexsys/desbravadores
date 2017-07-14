@@ -3,7 +3,9 @@
 @require_once("../include/domains.php");
 
 $batismo = getDomainFilter( array( "type" => "B" ) );
-$eventos= getDomainFilter( array( "type" => "EV" ) );
+$eventos = getDomainFilter( array( "type" => "EV" ) );
+$unidades = getDomainFilter( array( "type" => "U" ) );
+$classes = getDomainFilter( array( "type" => "C" ) );
 ?>
 <div class="row">
 	<div class="col-lg-12">
@@ -15,7 +17,8 @@ $eventos= getDomainFilter( array( "type" => "EV" ) );
 		<select name="cbListagem" id="cbListagem" class="selectpicker form-control input-sm" title="Escolha uma Listagem" data-width="100%" data-container="body" data-actions-box="true">
 			<option value="LST_ATIVOS">LISTAGEM DE MEMBROS</option>
 			<option value="LST_BATISMO">LISTAGEM DE MEMBROS - SITUACAO DE BATISMO</option>
-			<option value="LST_CLASSE">LISTAGEM DE MEMBROS - CLASSE</option>
+			<option value="LST_CLASSES">LISTAGEM DE MEMBROS - CLASSE</option>
+			<option value="LST_UNIDADES">LISTAGEM DE MEMBROS - UNIDADE</option>
 			<option value="LST_UNIFORMES">LISTAGEM DE MEMBROS - UNIFORMES</option>
 			<option data-divider="true"></option>
 			<option value="LST_PRESPAIS">LISTAGEM DE PRESEN&Ccedil;A - REUNI&Atilde;O DE PAIS</option>
@@ -23,9 +26,13 @@ $eventos= getDomainFilter( array( "type" => "EV" ) );
 			<option value="LST_ESTRELATS">REQUISI&Ccedil;&Atilde;O DE ESTRELAS DE TEMPO DE SERVI&Ccedil;O</option>
 			<option data-divider="true"></option>
 			<option value="LST_EVE_ALFA">LISTAGEM DE SA&Iacute;DA - ALFAB&Eacute;TICA</option>
-			<option value="LST_EVE_CTRL">LISTAGEM DE SA&Iacute;DA - CONTROLE DE AUTORIZA&Ccedil;&Otilde;ES</option>
-			<option value="LST_EVE_PASS">LISTAGEM DE SA&Iacute;DA - PASSAGEIROS</option>
+			<option value="LST_EVE_CTRL">LISTAGEM DE SA&Iacute;DA - CONTROLE DE AUTORIZA&Ccedil;&Otilde;ES - GERAL</option>
+			<option value="LST_EVE_CTRL_GEN">LISTAGEM DE SA&Iacute;DA - CONTROLE DE AUTORIZA&Ccedil;&Otilde;ES - G&Ecirc;NERO</option>
 			<option value="LST_EVE_TENT">LISTAGEM DE SA&Iacute;DA - BARRACAS</option>
+			<option value="LST_EVE_KITCHEN">LISTAGEM DE SA&Iacute;DA - COZINHA</option>
+			<option value="LST_EVE_PASS">LISTAGEM DE SA&Iacute;DA - PASSAGEIROS</option>
+			<option value="LST_EVE_MAT_C">LISTAGEM DE SA&Iacute;DA - CAMISETAS - GERAL</option>
+			<option value="LST_EVE_MAT_A">LISTAGEM DE SA&Iacute;DA - AGASALHOS - GERAL</option>
 		</select>
 	</div>
 </div>
@@ -36,6 +43,26 @@ $eventos= getDomainFilter( array( "type" => "EV" ) );
     	<select name="cbUniformes" id="cbUniformes" class="selectpicker form-control input-sm" title="Escolha o tipo de Uniforme" data-width="100%" data-container="body" data-actions-box="false">
     		<option value="A">AGASALHOS</option>
     		<option value="C" selected>CAMISETAS</option>
+    	</select>
+    </div>
+	<div class="col-lg-8" id="classes" style="display:none;">
+    	<label for="cbClasses" class="control-label">Batizados:</label>
+    	<select name="cbClasses" id="cbClasses" class="selectpicker form-control input-sm" title="Escolha uma ou mais classes"  multiple data-selected-text-format="count > 4" data-width="100%" data-container="body" data-actions-box="true">
+    	    <?php
+    	    foreach ($classes["domain"] as $k => $o):
+    	    	echo "<option value=\"". $o["value"] ."\" selected>". $o["label"] ."</option>";
+    	    endforeach;
+    	    ?>
+    	</select>
+    </div>
+	<div class="col-lg-8" id="unidades" style="display:none;">
+    	<label for="cbUnidades" class="control-label">Batizados:</label>
+    	<select name="cbUnidades" id="cbUnidades" class="selectpicker form-control input-sm" title="Escolha uma ou mais unidades"  multiple data-selected-text-format="count > 4" data-width="100%" data-container="body" data-actions-box="true">
+    	    <?php
+    	    foreach ($unidades["domain"] as $k => $o):
+    	    	echo "<option value=\"". $o["value"] ."\" selected>". $o["label"] ."</option>";
+    	    endforeach;
+    	    ?>
     	</select>
     </div>
 	<div class="col-lg-8" id="batismo" style="display:none;">
@@ -52,6 +79,7 @@ $eventos= getDomainFilter( array( "type" => "EV" ) );
 	<div class="col-lg-8" id="eventos" style="display:none;">
     	<label for="cbEventos" class="control-label">Eventos:</label>
     	<select name="cbEventos" id="cbEventos" class="selectpicker form-control input-sm" title="Escolha o Evento" data-width="100%" data-container="body" data-actions-box="false">
+    		<option></option>
     	    <?php
     	   		$s = false;
     	        foreach ($eventos["domain"] as $k => $o):

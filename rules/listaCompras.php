@@ -196,6 +196,20 @@ function getData( $parameters ) {
 				);
 			endforeach;
 		endif;
+		if ( $f == "tiposEst" ):
+			$arr["tipos"] = array();
+			$result = $GLOBALS['conn']->Execute("
+				SELECT DISTINCT TP 
+				  FROM TAB_MATERIAIS 
+				 ORDER BY TP");
+			foreach ($result as $k => $fields):
+				$tp = utf8_encode($fields['TP']);
+				$arr["tipos"][] = array( 
+					"id" => $tp,
+					"ds" => $tp
+				);
+			endforeach;
+		endif;
 		if ( $f == "nomes" ):
 			$arr["nomes"] = array();
 			$qtdZeros = zeroSizeID();
@@ -214,13 +228,35 @@ function getData( $parameters ) {
 				SELECT ID, DS, CMPL, FUNDO
 				  FROM TAB_MATERIAIS 
 				 WHERE FG_IM = 'S' AND TP = ?
-				ORDER BY ds
+				ORDER BY DS
 			", array($parameters["key"]));
 			foreach ($result as $k => $fields):
 				$arr["itens"][] = array( 
 					"id" => $fields['ID'],
 					"cm" => $fields['CMPL'],
 					"ds" => utf8_encode($fields['DS']) . ( !is_null($fields['FUNDO']) ? " - FUNDO ". ($fields['FUNDO'] == "BR" ? "BRANCO" : "CAQUI") : "")
+				);
+			endforeach;
+		endif;
+		if ( $f == "itensEst" ):
+			$arr["itens"] = array();
+			$result = $GLOBALS['conn']->Execute("
+				SELECT tm.ID, tm.DS, tm.CMPL, tm.FUNDO, ta.TP_ITEM, ta.CD_ITEM_INTERNO, ta.DS_ITEM
+				  FROM TAB_MATERIAIS tm
+			 LEFT JOIN TAB_APRENDIZADO ta ON (ta.ID = tm.ID_TAB_APREND)
+				 WHERE tm.TP = ?
+				   AND ta.CD_ITEM_INTERNO IS NOT NULL
+				ORDER BY tm.FUNDO DESC, ta.CD_ITEM_INTERNO, tm.DS
+			", array($parameters["key"]));
+			foreach ($result as $k => $fields):
+			    $ds = $fields['DS'] . ( !is_null($fields['FUNDO']) ? " - FUNDO ". ($fields['FUNDO'] == "BR" ? "BRANCO" : "CAQUI") : "");
+			    if ($fields["TP_ITEM"] == "ES"):
+			        $ds = $fields["DS"] ." ". $fields["CD_ITEM_INTERNO"] ."-". $fields["DS_ITEM"];
+			    endif;
+				$arr["itens"][] = array( 
+					"id" => $fields['ID'],
+					"cm" => $fields['CMPL'],
+					"ds" => utf8_encode($ds)
 				);
 			endforeach;
 		endif;
