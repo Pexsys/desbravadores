@@ -28,6 +28,7 @@ $classes = getDomainFilter( array( "type" => "C" ) );
 			<option value="LST_EVE_ALFA">LISTAGEM DE SA&Iacute;DA - ALFAB&Eacute;TICA</option>
 			<option value="LST_EVE_CTRL">LISTAGEM DE SA&Iacute;DA - CONTROLE DE AUTORIZA&Ccedil;&Otilde;ES - GERAL</option>
 			<option value="LST_EVE_CTRL_GEN">LISTAGEM DE SA&Iacute;DA - CONTROLE DE AUTORIZA&Ccedil;&Otilde;ES - G&Ecirc;NERO</option>
+			<option value="LST_EVE_DIS_ESC">LISTAGEM DE SA&Iacute;DA - DISPENSA ESCOLAR</option>
 			<option value="LST_EVE_TENT">LISTAGEM DE SA&Iacute;DA - BARRACAS</option>
 			<option value="LST_EVE_KITCHEN">LISTAGEM DE SA&Iacute;DA - COZINHA</option>
 			<option value="LST_EVE_PASS">LISTAGEM DE SA&Iacute;DA - PASSAGEIROS</option>

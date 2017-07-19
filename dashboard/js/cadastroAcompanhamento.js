@@ -61,7 +61,7 @@ $(document).ready(function(){
 			}
 		],
 		fnRowCallback: function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-			var row = nRow.cells[3];
+			var row = nRow.cells[5];
 			if ( aData.pg < 51 ) {
 				$(row).css('color', '#cc0000').css('font-weight', 'bold');
 			} else if ( aData.pg < 85 ) {

@@ -95,25 +95,69 @@ $pdf = new LISTAESTRELAS();
 fConnDB();
 $pdf->newPage();
 
-$result = $GLOBALS['conn']->Execute("SELECT NM_PASTOR, NOW() AS DH FROM CON_PASTOR");
-$nmPastor = titleCase($result->fields["NM_PASTOR"]);
+$result = $GLOBALS['conn']->Execute("SELECT NOME_DIRETOR, NOW() AS DH FROM CON_DIRETOR");
+$nmDiretor = titleCase($result->fields["NOME_DIRETOR"]);
 
-$pdf->posY += 5;
+$pdf->posY += 1;
+
 $pdf->setXY(20,$pdf->posY);
-$pdf->SetFont(PDF_FONT_NAME_MAIN, 'N', 13);
+$pdf->SetFont(PDF_FONT_NAME_MAIN, 'N', 12);
 $pdf->Cell(100, 5, "São Paulo, ".utf8_encode(strftime("%d de %B de %Y",strtotime($result->fields["DH"]))), 0, false, 'L', false, false, false, false, 'T', 'M');
+$pdf->posY += 5;
 
+$pdf->setXY(20,$pdf->posY);
+$pdf->SetFont(PDF_FONT_NAME_MAIN, 'N', 12);
+$pdf->Cell(100, 5, "São Paulo, ".utf8_encode(strftime("%d de %B de %Y",strtotime($result->fields["DH"]))), 0, false, 'L', false, false, false, false, 'T', 'M');
 $pdf->posY += 12;
+
 $pdf->SetY(++$pdf->posY);
 $pdf->SetTextColor(0,0,0);
-$pdf->SetFont(PDF_FONT_NAME_MAIN, '', 13);
+$pdf->SetFont(PDF_FONT_NAME_MAIN, '', 12);
 
 $html = "<p align=\"justify\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			Eu, $nmPastor, pastor do Distrito de Capão Redondo,
+			Eu, $nmDiretor, pastor do Distrito de Capão Redondo,
 			venho através desta, recomendar a <b>Estrela de Tempo de Serviço</b> aos 
 			membros da direção do Clube Pioneiros listados abaixo, em reconhecimento 
 			de sua dedicação no trabalho de liderar o clube para Salvação e Serviço.		
 		</p>";
+/*
+São Paulo, 19 de julho de 2017.
+
+Ao
+EMEF CAMPO LIMPO II
+
+Prezados Senhores:
+
+
+Pertencemos ao Clube de Desbravadores, órgão pertencente à Igreja Adventista do 7º Dia, que tem por finalidade auxiliar os pais na formação do caráter de seus filhos, na faixa etária de 10 a 15 anos. 
+
+O trabalho que realizamos compreende atividades, tais como:
+•	Projetos Comunitários: limpeza de praças, plantio de árvores, pintura de meio fio, desfiles anti-fumo e álcool, desfiles cívicos, visitas a asilos e orfanatos, auxílio em campanhas de vacinação, entre outros, que promovem a conscientização de preservação do meio onde vivemos, respeitando a vida e os semelhantes, além de orientá-los para um viver mais saudável;
+•	Aulas teóricas e práticas de especializações nas mais diversas áreas: dando-os a oportunidade de identificarem-se com áreas para futura profissão;
+•	Desenvolvimento de atividades físicas: condicionamento físico e modalidades esportivas;
+•	Apoio aos pais na orientação de seus filhos adolescentes;
+•	Acampamentos e caminhadas: para educação ecológica e ambiental;
+
+São atividades exclusivamente preparadas para a faixa etária e desenvolvidas durante os domingos e muitas vezes em alguns períodos do ano.
+
+Nos próximos dias 24 a 29 de julho estaremos participando de um evento denominado “Campori”, onde estarão concentrados aproximadamente 15.000 desbravadores, dos mais diversos clubes da do Estado de São.
+
+Os desbravadores aguardam ansiosamente por este evento todos os anos, e por ser este um programa especial e importante para nossos meninos e meninas, solicitamos seu apoio, dispensando os(as) alunos(as) abaixo citados, nos dias citados acima, colaborando para que possam fazer provas e entregar trabalhos em outra data, sendo que o desbravador estará ciente de que deverá recuperar toda a matéria perdida, e não ter excedido o seu n.º de faltas limite para o ano.
+
+
+FABIANO MESSIAS DA SILVA
+
+
+Certos de poder contar com seu apoio ao nosso trabalho subscrevemo-nos.
+
+Atenciosamente,
+
+
+
+Ricardo Jonadabs César
+Diretor do Clube
+
+*/
 $pdf->setCellHeightRatio(2);
 $pdf->writeHTMLCell(0,0,20,$pdf->posY,$html,0,0,false,true,"",false);
 

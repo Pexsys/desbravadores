@@ -385,12 +385,33 @@ function fSaida( $parameters ) {
 }
 
 function fSaidaPessoa( $saidaID, $arrayParticip ) {
+	
+	$result = $GLOBALS['conn']->Execute("
+		SELECT ID_CAD_PESSOA, BUS, TENT, KITCHEN
+		FROM EVE_SAIDA_PESSOA 
+		WHERE ID_EVE_SAIDA = ?
+	", array( $saidaID ) );	
+	foreach ($result as $k => $f):
+		$esp[] = $f;
+	endforeach;
+
 	$GLOBALS['conn']->Execute("DELETE FROM EVE_SAIDA_PESSOA WHERE ID_EVE_SAIDA = ?", Array( $saidaID ) );
 	if ( count($arrayParticip) > 0 ):
 		$GLOBALS['conn']->Execute("
 			INSERT INTO EVE_SAIDA_PESSOA (ID_EVE_SAIDA, ID_CAD_PESSOA)
 			SELECT ?, ID FROM CON_ATIVOS WHERE ID IN (". implode(',',$arrayParticip) .") ORDER BY NM
 		", array($saidaID) );
+		
+		foreach ($esp as $k => $f):
+			$GLOBALS['conn']->Execute("
+				UPDATE EVE_SAIDA_PESSOA SET 
+					BUS = ?, 
+					TENT = ?, 
+					KITCHEN = ?
+				WHERE ID_CAD_PESSOA = ?
+				  AND ID_EVE_SAIDA = ?
+			", array( $f["BUS"], $f["TENT"], $f["KITCHEN"], $f["ID_CAD_PESSOA"], $saidaID ) );
+		endforeach;
 
 		$aAutoriz = array();
 		$result = $GLOBALS['conn']->Execute("

@@ -35,6 +35,8 @@ $(document).ready(function(){
 			    url += 'geraListaUniformes.php?filter=C&eve='+$("#cbEventos").val();
 			} else if (opt == "LST_EVE_MAT_A") {
 			    url += 'geraListaUniformes.php?filter=A&eve='+$("#cbEventos").val();
+			} else if (opt == "LST_EVE_DIS_ESC") {
+			    url += 'geraListaDispensaEscola.php?eve='+$("#cbEventos").val();
 			}
 			window.open(url,'_blank','top=50,left=50,height=750,width=550,menubar=no,status=no,titlebar=no',true);
 		}
