@@ -203,6 +203,7 @@
 									<div class="form-group col-xs-12">
 										<select name="cmSubLista" opt-value="cd" opt-label="ds" class="selectpicker form-control input-sm" data-container="body" data-width="100%">
 											<option value="geraListaEvento.php?">ALFAB&Eacute;TICA</option>
+											<option value="geraListaDispensaEscola.php?">DISPENSA ESCOLAR</option>
 											<option value="geraListaEventoAutoriz.php?">CONTROLE DE AUTORIZA&Ccedil;&Otilde;ES - ALFAB&Eacute;TICA</option>
 											<option value="geraListaEventoAutorizGen.php?">CONTROLE DE AUTORIZA&Ccedil;&Otilde;ES - POR GENERO</option>
 											<option value="geraListaUniformes.php?filter=A">CONTROLE DE AGASALHOS - GERAL</option>

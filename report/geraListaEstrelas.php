@@ -96,7 +96,7 @@ fConnDB();
 $pdf->newPage();
 
 $result = $GLOBALS['conn']->Execute("SELECT NM_PASTOR, NOW() AS DH FROM CON_PASTOR");
-$nmPastor = titleCase(mb_strtolower($result->fields["NM_PASTOR"]));
+$nmPastor = titleCase($result->fields["NM_PASTOR"]);
 
 $pdf->posY += 5;
 $pdf->setXY(20,$pdf->posY);
@@ -109,7 +109,7 @@ $pdf->SetTextColor(0,0,0);
 $pdf->SetFont(PDF_FONT_NAME_MAIN, '', 13);
 
 $html = "<p align=\"justify\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			Eu, ".$nmPastor.", pastor do Distrito de Capão Redondo,
+			Eu, $nmPastor, pastor do Distrito de Capão Redondo,
 			venho através desta, recomendar a <b>Estrela de Tempo de Serviço</b> aos 
 			membros da direção do Clube Pioneiros listados abaixo, em reconhecimento 
 			de sua dedicação no trabalho de liderar o clube para Salvação e Serviço.		

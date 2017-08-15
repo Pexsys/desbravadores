@@ -23,6 +23,11 @@ $(document).ready(function(){
 		})
 		.on('success.validator.fv', function(e, data) {
 		})
+		.on('success.field.fv', function(e, data) {
+            if (data.fv.getSubmitButton()) {
+                data.fv.disableSubmitButtons(false);
+            }
+        })
 		.formValidation({
 			framework: 'bootstrap',
 			icon: {
@@ -107,6 +112,7 @@ $(document).ready(function(){
 	$('#clearSelection').on('click',function(){
 		dataTable.$('tr.selected').removeClass('selected');
 		list = [];
+		$('#nmMembro').selectpicker('deselectAll');
 	});
 
 	var capas = jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/capas.php", { MethodName : 'getNames' }, 'RETURN' );

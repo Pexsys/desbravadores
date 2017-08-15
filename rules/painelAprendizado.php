@@ -18,7 +18,7 @@ function getGraphData() {
 		FROM (
 			SELECT cap.ID_CAD_PESSOA, cap.CD_COR, cap.DS_ITEM, cap.ID_TAB_APREND, cap.CD_ITEM_INTERNO, COUNT(*) AS QTD 
 			  FROM CON_APR_PESSOA cap
-	    INNER JOIN CON_ATIVOS ca ON (ca.ID = cap.ID_CAD_PESSOA)
+	    INNER JOIN CON_ATIVOS ca ON (ca.ID = cap.ID_CAD_PESSOA AND ca.FG_REU_SEM = 'S')
 			 WHERE cap.CD_ITEM_INTERNO LIKE '01%'
 			   AND cap.DT_ASSINATURA IS NOT NULL
 			   AND cap.DT_CONCLUSAO IS NULL
@@ -49,7 +49,7 @@ function getGraphData() {
 			FROM (
 				SELECT cap.ID_CAD_PESSOA, cap.ID_TAB_APREND, COUNT(*) AS QTD 
 				  FROM CON_APR_PESSOA cap
-	        INNER JOIN CON_ATIVOS ca ON (ca.ID = cap.ID_CAD_PESSOA)
+	        INNER JOIN CON_ATIVOS ca ON (ca.ID = cap.ID_CAD_PESSOA AND ca.FG_REU_SEM = 'S')
 				 WHERE cap.CD_ITEM_INTERNO LIKE '01%00'
 			       AND cap.DT_ASSINATURA IS NOT NULL
 				   AND cap.DT_CONCLUSAO IS NULL
@@ -84,7 +84,7 @@ function getGraphData() {
 			FROM (
 				SELECT cap.ID_CAD_PESSOA, cap.ID_TAB_APREND, COUNT(*) AS QTD 
 				  FROM CON_APR_PESSOA cap
-	        INNER JOIN CON_ATIVOS ca ON (ca.ID = cap.ID_CAD_PESSOA)
+	        INNER JOIN CON_ATIVOS ca ON (ca.ID = cap.ID_CAD_PESSOA AND ca.FG_REU_SEM = 'S')
 				 WHERE cap.CD_ITEM_INTERNO LIKE '01%01'
 			       AND cap.DT_ASSINATURA IS NOT NULL
 				   AND cap.DT_CONCLUSAO IS NULL
@@ -162,11 +162,12 @@ function getGraphData() {
 	 LEFT JOIN (SELECT ah.ID_CAD_PESSOA, COUNT(*) AS QT
 				  FROM APR_HISTORICO ah 
 			INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
-			INNER JOIN CON_ATIVOS ca ON (ca.ID = ah.ID_CAD_PESSOA)
+			INNER JOIN CON_ATIVOS ca ON (ca.ID = ah.ID_CAD_PESSOA AND ca.FG_REU_SEM = 'S')
 				 WHERE ta.CD_ITEM_INTERNO LIKE '01%00'
 				   AND YEAR(ah.DT_AVALIACAO) < YEAR(NOW())
 			  GROUP BY ah.ID_CAD_PESSOA) AS a ON (a.ID_CAD_PESSOA = at.ID)
-		WHERE a.QT IS NULL OR a.QT < ?
+		WHERE (a.QT IS NULL OR a.QT < ?) 
+		  AND at.FG_REU_SEM = 'S'
 	", $qtdRegulares );
 	if (!$result->EOF):
 		$aCompletar = $result->fields['QT_RG'];
@@ -180,11 +181,12 @@ function getGraphData() {
 	 LEFT JOIN (SELECT ah.ID_CAD_PESSOA, COUNT(*) AS QT
 				  FROM APR_HISTORICO ah 
 			INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
-			INNER JOIN CON_ATIVOS ca ON (ca.ID = ah.ID_CAD_PESSOA)
+			INNER JOIN CON_ATIVOS ca ON (ca.ID = ah.ID_CAD_PESSOA AND ca.FG_REU_SEM = 'S')
 				 WHERE ta.CD_ITEM_INTERNO LIKE '01%00'
-				   AND YEAR(ah.DT_CONCLUSAO) = YEAR(NOW())
+				   AND (YEAR(ah.DT_CONCLUSAO) = YEAR(NOW()) OR YEAR(ah.DT_INVESTIDURA) = YEAR(NOW()))
 			  GROUP BY ah.ID_CAD_PESSOA) AS a ON (a.ID_CAD_PESSOA = at.ID)
 		WHERE a.QT < ?
+		  AND at.FG_REU_SEM = 'S'
 	", $qtdRegulares );
 	$arr["rgC"] = array();
 	$pct = 0;
@@ -192,18 +194,18 @@ function getGraphData() {
 		$aCompletadas = $result->fields['QT_RG_OK'];
 		$pct = floor(($aCompletadas/max($aCompletar,1))*100);
 		$arr["rgC"][] = array( 
-			"label"		=> "Completadas", 
+			"label"		=> "Completadas ($aCompletadas)", 
 			"data"		=> array(0,$pct),
 			"color"		=> "#00FF00"
 		);
 	endif;
 	$arr["rgC"][] = array( 
-		"label"		=> "Pendentes", 
+		"label"		=> "Pendentes (". ($aCompletar-$aCompletadas) .")", 
 		"data"		=> array(1,floor(100-$pct)),
 		"color"		=> "#FF0000"
 	);
 
-	//CLASSES AVANCADAS COMPLETADAS
+	//CLASSES AVANCADAS A COMPLETAR
 	$aCompletar = 0;
 	$result = $GLOBALS['conn']->Execute("
 		SELECT COUNT(*) AS QT_AV
@@ -211,16 +213,18 @@ function getGraphData() {
 	 LEFT JOIN (SELECT ah.ID_CAD_PESSOA, COUNT(*) AS QT
 				  FROM APR_HISTORICO ah 
 			INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
-			INNER JOIN CON_ATIVOS ca ON (ca.ID = ah.ID_CAD_PESSOA)
+			INNER JOIN CON_ATIVOS ca ON (ca.ID = ah.ID_CAD_PESSOA AND ca.FG_REU_SEM = 'S')
 				 WHERE ta.CD_ITEM_INTERNO LIKE '01%01'
 				   AND YEAR(ah.DT_AVALIACAO) < YEAR(NOW())
 			  GROUP BY ah.ID_CAD_PESSOA) AS a ON (a.ID_CAD_PESSOA = at.ID)
-		WHERE a.QT IS NULL OR a.QT < ?
+		WHERE (a.QT IS NULL OR a.QT < ?)
+		  AND at.FG_REU_SEM = 'S'
 	", $qtdRegulares );
 	if (!$result->EOF):
 		$aCompletar = $result->fields['QT_AV'];
 	endif;
 
+	//CLASSES AVANCADAS COMPLETADAS
 	$aCompletadas = 0;
 	$result = $GLOBALS['conn']->Execute("
 		SELECT COUNT(*) AS QT_AV_OK
@@ -228,11 +232,12 @@ function getGraphData() {
 	 LEFT JOIN (SELECT ah.ID_CAD_PESSOA, COUNT(*) AS QT
 				  FROM APR_HISTORICO ah 
 			INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
-			INNER JOIN CON_ATIVOS ca ON (ca.ID = ah.ID_CAD_PESSOA)
+			INNER JOIN CON_ATIVOS ca ON (ca.ID = ah.ID_CAD_PESSOA AND ca.FG_REU_SEM = 'S')
 				 WHERE ta.CD_ITEM_INTERNO LIKE '01%01'
-				   AND YEAR(ah.DT_CONCLUSAO) = YEAR(NOW())
+				   AND (YEAR(ah.DT_CONCLUSAO) = YEAR(NOW()) OR YEAR(ah.DT_INVESTIDURA) = YEAR(NOW()))
 			  GROUP BY ah.ID_CAD_PESSOA) AS a ON (a.ID_CAD_PESSOA = at.ID)
 		WHERE a.QT < ?
+		  AND at.FG_REU_SEM = 'S'
 	", $qtdRegulares );
 	$arr["avC"] = array();
 	$pct = 0;
@@ -240,13 +245,13 @@ function getGraphData() {
 		$aCompletadas = $result->fields['QT_AV_OK'];
 		$pct = floor(($aCompletadas/max($aCompletar,1))*100);
 		$arr["avC"][] = array( 
-			"label"		=> "Completadas", 
+			"label"		=> "Completadas ($aCompletadas)", 
 			"data"		=> array(0,$pct),
 			"color"		=> "#00FF00"
 		);
 	endif;
 	$arr["avC"][] = array( 
-		"label"		=> "Pendentes", 
+		"label"		=> "Pendentes (". ($aCompletar-$aCompletadas) .")", 
 		"data"		=> array(1,floor(100-$pct)),
 		"color"		=> "#FF0000"
 	);

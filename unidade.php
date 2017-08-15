@@ -66,7 +66,7 @@ endforeach;
                     <li><b>Cor da unidade</b>:&nbsp;<i class="fa fa-stop" aria-hidden="true" style="color:<?php echo $result->fields["CD_COR"];?>"></i></li>
                     <li><b>Grito de Guerra</b>:<br/><i><?php echo utf8_encode($result->fields["GRITO"]);?></i></li>
                     <li><b><?php echo $membros->RecordCount();?>&nbsp;Membros</b>:&nbsp;<?php echo $strmembros;?></li>
-                    <li><b>Hist&oacute;ria e Significados</b>:&nbsp;<?php echo utf8_encode($result->fields["HISTORY"]);?></li>
+                    <?php echo (!empty($result->fields["HISTORY"]) ? "<li><b>Hist&oacute;ria e Significados</b>:&nbsp;".utf8_encode($result->fields["HISTORY"])."</li>" : "" );?>
                 </ul>
             </div>
             <div class="col-md-12">

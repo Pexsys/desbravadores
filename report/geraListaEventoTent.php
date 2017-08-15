@@ -82,7 +82,7 @@ class LISTAEVENTOTENT extends TCPDF {
 		$this->SetFillColor(213,21,0);
 		$this->setCellPaddings(1,0,1,0);
 		$this->setXY(5, $this->posY);
-		$this->Cell(205, 10, "BARRACA ".$f["TENT"], 0, false, 'L', true);
+		$this->Cell(200, 10, "BARRACA ".$f["TENT"], 0, false, 'L', true);
 		$this->posY += 10;
 		
 		$rs = $GLOBALS['conn']->Execute("
@@ -108,7 +108,7 @@ class LISTAEVENTOTENT extends TCPDF {
 			$this->SetFillColor(255,255,255);
 		endif;
 		$this->setXY(5, $this->posY);
-		$this->Cell(205, 8, utf8_encode($f["NM"]), 0, false, 'L', true, false, 1);
+		$this->Cell(200, 8, utf8_encode($f["NM"]), 0, false, 'L', true, false, 1);
 		$this->posY+=8;
 		$this->lineAlt = !$this->lineAlt;
 	}

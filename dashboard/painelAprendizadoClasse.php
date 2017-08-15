@@ -35,6 +35,9 @@ endif;
 $classGraphs = "col-md-12 col-sm-12 col-lg-12";
 if (!empty($like)):
 	$where .= " AND ta.CD_ITEM_INTERNO LIKE '$like%'";
+	if (fStrStartWith($cargo,"2-04")):
+	    $where .= " AND at.CD_CARGO NOT LIKE '2-%'";
+	endif;
 	$classGraphs = "col-md-12 col-sm-12 col-lg-6";
 endif;
 $result = $GLOBALS['conn']->Execute("

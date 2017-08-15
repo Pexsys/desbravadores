@@ -26,7 +26,7 @@
 	</div>
 	<div class="col-xs-12 col-md-12">
 		<div class="row form-group form-group-sm">
-			<input type="button" id="clearSelection" class="btn btn-warning  pull-left" value="Limpar Selecionadas"/>
+			<input type="button" id="clearSelection" class="btn btn-warning  pull-left" value="Limpar Sele&ccedil;&atilde;o"/>
 			<input type="submit" class="btn btn-success pull-right" value="Gerar Selecionadas"/>
 		</div>
 	</div>
