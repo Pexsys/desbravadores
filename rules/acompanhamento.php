@@ -23,7 +23,7 @@ function getQueryByFilter( $parameters ) {
 	endif;
 	if ($cargo != "2-04-00" && fStrStartWith($cargo,"2-04")):
 		$like = "01-".substr($cargo,-2);
-		$where .= " AND cap.CD_ITEM_INTERNO LIKE '$like%'";
+		$where .= " AND cap.CD_ITEM_INTERNO LIKE '$like%' AND at.CD_CARGO NOT LIKE '2-%'";
 	endif;	
 	
 	$aWhere = array();
@@ -105,8 +105,7 @@ function getQueryByFilter( $parameters ) {
 		FROM CON_APR_PESSOA cap
 		INNER JOIN CON_APR_ITEM cai ON (cai.ID = cap.ID_TAB_APREND)
 		INNER JOIN CON_ATIVOS at ON (at.ID = cap.ID_CAD_PESSOA)
-		WHERE cap.DT_CONCLUSAO IS NULL
-		  AND cap.DT_ASSINATURA IS NOT NULL 
+		WHERE cap.DT_ASSINATURA IS NOT NULL 
 		  AND cap.DT_INVESTIDURA IS NULL
 		  $where
 	 GROUP BY at.NM, cap.ID_CAD_PESSOA, cap.TP_ITEM, cap.CD_ITEM_INTERNO, cap.DS_ITEM, cap.DT_INICIO, cap.DT_CONCLUSAO, cap.DT_AVALIACAO, cai.QTD

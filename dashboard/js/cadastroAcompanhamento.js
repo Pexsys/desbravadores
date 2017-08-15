@@ -124,9 +124,9 @@ $(document).ready(function(){
 							pickSeconds: false,
 							useCurrent: false
 						});
-						$("#divResultado").show();
 						$('#btnGravar').visible(true);
-					 }
+					}
+					$("#divResultado").show();
 				},
 				function(data,fx){
 					$("#divResultado").empty().hide();

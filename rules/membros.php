@@ -426,6 +426,7 @@ function getMember( $parameters ) {
 		
 		$arr["membro"] = array( 
 			"cad_pessoa-id"			    => str_pad($result->fields['ID'], $qtdZeros, "0", STR_PAD_LEFT),
+			"cad_pessoa-bc"			    => "P000".strtoupper(fStrZero(base_convert($result->fields['ID'],10,36),3)),
 			"cad_pessoa-nm"			    => utf8_encode(trim($result->fields['NM'])),
 			"cad_pessoa-email"		    => utf8_encode(trim($result->fields['EMAIL'])),
 			"cad_pessoa-nm_escola"		=> utf8_encode(trim($result->fields['NM_ESCOLA'])),

@@ -265,9 +265,10 @@
 									</div>
 								</div>
 							</div>
-						</div>
-						<hr/>
-						<div class="row">
+						    <hr/>
+						    <div class="form-group col-xs-3 pull-left">
+								<input type="text" field="cad_pessoa-bc" class="form-control input-sm" style="font-size:18px;text-align:center;font-weight:bolder" readonly="readonly"/>
+							</div>
 							<div class="form-group col-xs-3 pull-right">
 								<input type="checkbox" name="cbAtivo" id="cbAtivo" field="fg_ativo" value-on="S" value-off="N" data-toggle="toggle" data-onstyle="success" data-offstyle="default" data-on="<b>ATIVO</b>" data-off="INATIVO" data-size="small" data-width="110"/>
 							</div>

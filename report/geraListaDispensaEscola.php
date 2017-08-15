@@ -2,7 +2,7 @@
 @require_once('../include/functions.php');
 @require_once('../include/_core/lib/tcpdf/tcpdf.php');
 
-class LISTAESTRELAS extends TCPDF {
+class LISTADISPENSAESCOLAR extends TCPDF {
 	
 	//lines styles
 	private $stLine;
@@ -34,7 +34,7 @@ class LISTAESTRELAS extends TCPDF {
 
 		$this->SetCreator(PDF_CREATOR);
 		$this->SetAuthor('Ricardo J. Cesar');
-		$this->SetTitle('Listagem de Membros Ativos');
+		$this->SetTitle('Listagem de Dispensa Escolar');
 		$this->SetSubject('Clube Pioneiros');
 		$this->SetKeywords('Desbravadores, Especialidades, Pioneiros, Capão Redondo');
 		$this->setImageScale(PDF_IMAGE_SCALE_RATIO);
@@ -57,7 +57,7 @@ class LISTAESTRELAS extends TCPDF {
  		$this->Line(161, 7, 161, 42, $this->stLine2);
 
  		$this->setXY(163,7);
- 		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 9);
+ 		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 8);
  		$this->Cell(44, 5, "Distrito de Capão Redondo", 0, false, 'L', false, false, false, false, 'T', 'M');
  		$this->setXY(163,12);
  		$this->Cell(44, 5, "Av. Ellis Maas, 520", 0, false, 'L', false, false, false, false, 'T', 'M');
@@ -74,7 +74,56 @@ class LISTAESTRELAS extends TCPDF {
  		$this->SetTextColor(0,128,128);
  		$this->Cell(44, 5, "Associação Paulista Sul", 0, false, 'L', false, false, false, false, 'T', 'M');
  		$this->SetTextColor(0,0,0);
- 		$this->posY = 43;
+ 		$this->posY = 48;
+ 	}
+ 	
+ 	public function addLine($f){
+ 	    if ($this->lineAlt):
+			$this->SetFillColor(245,245,245);
+		else:
+			$this->SetFillColor(255,255,255);
+		endif;
+		$this->lineAlt = !$this->lineAlt;
+        $this->setXY(20, $this->posY);
+        $this->Cell(175, 5, utf8_encode($f["NM"]), 0, false, 'L', true);
+        $this->posY += 5; 	    
+ 	}
+ 	
+ 	public function finishSchool($nmDiretor){
+        $this->startTransaction();
+		$start_page = $this->getPage();
+		$this->ends($nmDiretor);
+		if  ($this->getNumPages() != $start_page):
+			$this->rollbackTransaction(true);
+			$this->newPage();
+			$this->ends($nmDiretor);
+		else:
+			$this->commitTransaction();     
+		endif;	    
+ 	}
+ 	
+ 	public function ends($nmDiretor){
+ 	    $this->setCellPaddings(0,0,0,0);
+    	$this->posY += 3;
+    	$this->SetFillColor(255,255,255);
+    	$this->setXY(10, $this->posY);
+    	
+        $html = "
+            <p align=\"justify\">Certos de poder contar com seu apoio ao nosso trabalho subscrevemo-nos.<br/>
+                Atenciosamente,
+            </p>
+        ";
+        $this->setCellHeightRatio(2);
+        $this->writeHTMLCell(0,0,10,$this->posY,$html,0,0,false,true,"",false);
+        $this->posY += $this->getLastH()+10;
+    	$this->setXY(10, $this->posY);
+    	$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 8);
+    	$this->Cell(120, 4, $nmDiretor, 0, false, 'L', true);
+    	$this->posY += 4;
+    	$this->setXY(10, $this->posY);
+    	$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 8);
+    	$this->SetTextColor(120,120,120);
+    	$this->Cell(30, 3, "Diretor do Clube", 0, false, 'L', true);
  	}
 
 	public function newPage() {
@@ -86,137 +135,116 @@ class LISTAESTRELAS extends TCPDF {
 
 	public function download() {
 		$this->lastPage();
-		$this->Output("ListagemEstrela_".date('Y-m-d_H:i:s').".pdf", "I");
+		$this->Output("ListagemDispensaEscolar_".date('Y-m-d_H:i:s').".pdf", "I");
 	}
 }
 
-$pdf = new LISTAESTRELAS();
-
+$eveID = fRequest("eve");
 fConnDB();
-$pdf->newPage();
 
 $result = $GLOBALS['conn']->Execute("SELECT NOME_DIRETOR, NOW() AS DH FROM CON_DIRETOR");
 $nmDiretor = titleCase($result->fields["NOME_DIRETOR"]);
+$dh = $result->fields["DH"];
 
-$pdf->posY += 1;
+$escolaAnt = "";
 
-$pdf->setXY(20,$pdf->posY);
-$pdf->SetFont(PDF_FONT_NAME_MAIN, 'N', 12);
-$pdf->Cell(100, 5, "São Paulo, ".utf8_encode(strftime("%d de %B de %Y",strtotime($result->fields["DH"]))), 0, false, 'L', false, false, false, false, 'T', 'M');
-$pdf->posY += 5;
+$result = $GLOBALS['conn']->Execute("
+	SELECT ca.NM_ESCOLA, ca.NM, es.DH_S, es.DH_R
+	  FROM CON_ATIVOS ca
+INNER JOIN EVE_SAIDA_PESSOA esp ON (esp.ID_CAD_PESSOA = ca.ID AND esp.FG_AUTORIZ = 'S')
+INNER JOIN EVE_SAIDA es ON (es.ID = esp.ID_EVE_SAIDA)
+	 WHERE es.ID = ?
+	   AND ca.NM_ESCOLA IS NOT NULL
+  ORDER BY ca.NM_ESCOLA, ca.NM
+", array($eveID) );
+if (!$result->EOF):
+    $pdf = new LISTADISPENSAESCOLAR();
+    
+    foreach ($result as $k => $f):
+        
+        if ( $escolaAnt != trim($f["NM_ESCOLA"]) ):
+            if ($escolaAnt != ""):
+                $pdf->finishSchool($nmDiretor);
+            endif;
+            $escolaAnt = trim($f["NM_ESCOLA"]);
+            
+            $pdf->newPage();
+    
+            $pdf->setXY(10,$pdf->posY);
+            $pdf->SetFont(PDF_FONT_NAME_MAIN, 'N', 9);
+            $pdf->Cell(100, 5, "São Paulo, ".utf8_encode(strftime("%d de %B de %Y",strtotime($dh))), 0, false, 'L', false, false, false, false, 'T', 'M');
+            $pdf->posY += 10;
+        
+            $pdf->setXY(10,$pdf->posY);
+            $pdf->Cell(100, 5, "A(o)", 0, false, 'L', false, false, false, false, 'T', 'M');
+            $pdf->posY += 5;
+        
+            $pdf->setXY(10,$pdf->posY);
+            $pdf->SetFont(PDF_FONT_NAME_MAIN, 'B', 9);
+            $pdf->Cell(100, 5, utf8_encode($escolaAnt), 0, false, 'L', false, false, false, false, 'T', 'M');
+            $pdf->posY += 10;
+            
+            $dhs = strtotime($f["DH_S"]);
+            $dhr = strtotime($f["DH_R"]);
+            
+            if ( strftime("%B",$dhs) != strftime("%B",$dhr) ):
+                $datas = strftime("%d",$dhs). " de " .strftime("%B",$dhs). " a ". strftime("%d",$dhr) ." de ". strftime("%B",$dhr);
+            else:
+                $datas = strftime("%d",$dhs) ." a ". strftime("%d",$dhr) ." de ". strftime("%B",$dhr);
+            endif;
+        
+            $pdf->SetFont(PDF_FONT_NAME_MAIN, 'N', 8);
+            $html = "
+                <p align=\"justify\">Prezados Senhores,<br/>
+                    <br/>
+                    Pertencemos ao Clube de Desbravadores, órgão pertencente à Igreja Adventista do 7º Dia, que tem por finalidade auxiliar os pais na formação do caráter de seus filhos, na faixa etária de 10 a 15 anos. O trabalho que realizamos compreende atividades, tais como:
+                    Projetos Comunitários: limpeza de praças, plantio de árvores, pintura de meio fio, desfiles anti-fumo e álcool, desfiles cívicos, visitas a asilos e orfanatos, auxílio em campanhas de vacinação, entre outros, que promovem a conscientização de preservação do meio onde vivemos, respeitando a vida e os semelhantes, além de orientá-los para um viver mais saudável;&nbsp;
+                    Aulas teóricas e práticas de especializações nas mais diversas áreas: dando-os a oportunidade de identificarem-se com áreas para futura profissão;&nbsp;
+                    Desenvolvimento de atividades físicas: condicionamento físico e modalidades esportivas;&nbsp;
+                    Apoio aos pais na orientação de seus filhos adolescentes;&nbsp;
+                    Acampamentos e caminhadas: para educação ecológica e ambiental;<br/>
+                    São atividades exclusivamente preparadas para a faixa etária e desenvolvidas durante os domingos e muitas vezes em alguns períodos do ano. Nos próximos dias $datas estaremos participando de um evento denominado “Campori”, onde estarão concentrados os desbravadores, dos mais diversos clubes e locais. Os desbravadores aguardam ansiosamente por este evento todos os anos, e por ser este um programa especial e importante para nossos meninos e meninas, solicitamos seu apoio, dispensando os(as) alunos(as) abaixo citados, nos dias citados acima, colaborando para que possam fazer provas e entregar trabalhos em outra data, sendo que o desbravador estará ciente de que deverá recuperar toda a matéria perdida, e não ter excedido o seu número de faltas limite para o ano.
+                </p>
+            ";
+            $pdf->setCellHeightRatio(2);
+            $pdf->writeHTMLCell(0,0,10,$pdf->posY,$html,0,0,false,true,"",false);
+            
+        	$pdf->posY += $pdf->getLastH()+4;
+        	$pdf->setCellHeightRatio(0);
+        	$pdf->SetTextColor(255,255,255);
+        	$pdf->SetFillColor(100,100,100);
+        	$pdf->setCellPaddings(1,0,1,0);
+        	$pdf->setXY(20, $pdf->posY);
+        	$pdf->Cell(175, 5, "Nome Completo", 0, false, 'L', true);
+        	$pdf->posY += 5;
+        	$pdf->SetTextColor(0,0,0);
+        	$pdf->lineAlt = false;
+        endif;
+        
+        $pdf->startTransaction();
+		$start_page = $pdf->getPage();
+		$pdf->addLine($f);
+		if  ($pdf->getNumPages() != $start_page):
+			$pdf->rollbackTransaction(true);
+			$pdf->newPage();
+			$pdf->addLine($f);
+		else:
+			$pdf->commitTransaction();     
+		endif;
 
-$pdf->setXY(20,$pdf->posY);
-$pdf->SetFont(PDF_FONT_NAME_MAIN, 'N', 12);
-$pdf->Cell(100, 5, "São Paulo, ".utf8_encode(strftime("%d de %B de %Y",strtotime($result->fields["DH"]))), 0, false, 'L', false, false, false, false, 'T', 'M');
-$pdf->posY += 12;
+    endforeach;
+    $pdf->finishSchool($nmDiretor);
+    $pdf->download();
+endif;
 
-$pdf->SetY(++$pdf->posY);
-$pdf->SetTextColor(0,0,0);
-$pdf->SetFont(PDF_FONT_NAME_MAIN, '', 12);
 
-$html = "<p align=\"justify\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			Eu, $nmDiretor, pastor do Distrito de Capão Redondo,
-			venho através desta, recomendar a <b>Estrela de Tempo de Serviço</b> aos 
-			membros da direção do Clube Pioneiros listados abaixo, em reconhecimento 
-			de sua dedicação no trabalho de liderar o clube para Salvação e Serviço.		
-		</p>";
 /*
-São Paulo, 19 de julho de 2017.
-
-Ao
-EMEF CAMPO LIMPO II
-
-Prezados Senhores:
-
-
-Pertencemos ao Clube de Desbravadores, órgão pertencente à Igreja Adventista do 7º Dia, que tem por finalidade auxiliar os pais na formação do caráter de seus filhos, na faixa etária de 10 a 15 anos. 
-
-O trabalho que realizamos compreende atividades, tais como:
-•	Projetos Comunitários: limpeza de praças, plantio de árvores, pintura de meio fio, desfiles anti-fumo e álcool, desfiles cívicos, visitas a asilos e orfanatos, auxílio em campanhas de vacinação, entre outros, que promovem a conscientização de preservação do meio onde vivemos, respeitando a vida e os semelhantes, além de orientá-los para um viver mais saudável;
-•	Aulas teóricas e práticas de especializações nas mais diversas áreas: dando-os a oportunidade de identificarem-se com áreas para futura profissão;
-•	Desenvolvimento de atividades físicas: condicionamento físico e modalidades esportivas;
-•	Apoio aos pais na orientação de seus filhos adolescentes;
-•	Acampamentos e caminhadas: para educação ecológica e ambiental;
-
-São atividades exclusivamente preparadas para a faixa etária e desenvolvidas durante os domingos e muitas vezes em alguns períodos do ano.
-
-Nos próximos dias 24 a 29 de julho estaremos participando de um evento denominado “Campori”, onde estarão concentrados aproximadamente 15.000 desbravadores, dos mais diversos clubes da do Estado de São.
-
-Os desbravadores aguardam ansiosamente por este evento todos os anos, e por ser este um programa especial e importante para nossos meninos e meninas, solicitamos seu apoio, dispensando os(as) alunos(as) abaixo citados, nos dias citados acima, colaborando para que possam fazer provas e entregar trabalhos em outra data, sendo que o desbravador estará ciente de que deverá recuperar toda a matéria perdida, e não ter excedido o seu n.º de faltas limite para o ano.
-
 
 FABIANO MESSIAS DA SILVA
 
 
-Certos de poder contar com seu apoio ao nosso trabalho subscrevemo-nos.
 
-Atenciosamente,
-
-
-
-Ricardo Jonadabs César
-Diretor do Clube
 
 */
-$pdf->setCellHeightRatio(2);
-$pdf->writeHTMLCell(0,0,20,$pdf->posY,$html,0,0,false,true,"",false);
-
-$result = $GLOBALS['conn']->Execute("
-	SELECT CD, NM, COUNT(*) AS QTD
-	  FROM CON_COMPRAS
-	 WHERE CD LIKE '03-01-%'
-	   AND FG_COMPRA = 'N'
-	 GROUP BY CD, NM
-	 ORDER BY CD, NM
-");
-if (!$result->EOF):
-	$pdf->SetFont(PDF_FONT_NAME_MAIN, '', 10);
-	$pdf->posY += $pdf->getLastH()+4;
-	$pdf->setCellHeightRatio(0);
-	$pdf->SetTextColor(255,255,255);
-	$pdf->SetFillColor(252,70,70);
-	$pdf->setCellPaddings(1,0,1,0);
-	$pdf->setXY(20, $pdf->posY);
-	$pdf->Cell(120, 7, "Nome Completo", 0, false, 'L', true);
-	$pdf->setXY(140, $pdf->posY);
-	$pdf->Cell(30, 7, "Tempo", 0, false, 'C', true);
-	$pdf->setXY(170, $pdf->posY);
-	$pdf->Cell(30, 7, "Quantidade", 0, false, 'C', true);
-	$pdf->posY += 7;
-	$pdf->SetTextColor(0,0,0);
-	
-	foreach($result as $k => $f):
-		if ($pdf->lineAlt):
-			$pdf->SetFillColor(245,245,245);
-		else:
-			$pdf->SetFillColor(255,255,255);
-		endif;
-		$pdf->setXY(20, $pdf->posY);
-		$pdf->Cell(120, 5, utf8_encode($f["NM"]), 0, false, 'L', true);
-		$pdf->setXY(140, $pdf->posY);
-		$pdf->Cell(30, 5, (substr($f["CD"],-2) * 1), 0, false, 'C', true);
-		$pdf->setXY(170, $pdf->posY);
-		$pdf->Cell(30, 5, $f["QTD"], 0, false, 'C', true);
-		$pdf->posY += 5;
-		$pdf->lineAlt = !$pdf->lineAlt;
-	endforeach;
-	
-	$pdf->setCellPaddings(0,0,0,0);
-	$pdf->posY += 10;
-	$pdf->SetFillColor(255,255,255);
-	$pdf->SetFont(PDF_FONT_NAME_MAIN, '', 13);
-	$pdf->setXY(20, $pdf->posY);
-	$pdf->Cell(120, 6, "Atenciosamente,", 0, false, 'L', true);
-	$pdf->posY += 30;
-	$pdf->setXY(20, $pdf->posY);
-	$pdf->Cell(120, 6, $nmPastor, 0, false, 'L', true);
-	$pdf->posY += 6;
-	$pdf->setXY(20, $pdf->posY);
-	$pdf->SetFont(PDF_FONT_NAME_MAIN, 'N', 10);
-	$pdf->SetTextColor(120,120,120);
-	$pdf->Cell(120, 3, "Pastor Distrital", 0, false, 'L', true);
-endif;
-
-$pdf->download();
 exit;
 ?>
