@@ -18,6 +18,7 @@
 				<tr>
 					<th>C&oacute;d.</th>
 					<th>Descri&ccedil;&atilde;o</th>
+					<th>Local</th>
 					<th>Sa&iacute;da</th>
 					<th>Retorno</th>
 				</tr>

@@ -90,7 +90,7 @@ $(document).ready(function(){
 				},
 			dataSrc: "saidas"
 		},
-		order: [ 2, 'desc' ],
+		order: [ 3, 'desc' ],
 		columns: [
 			{	data: 'id',
 				sortable: true,
@@ -98,18 +98,22 @@ $(document).ready(function(){
 			},
 			{	data: 'ds',
 				sortable: true,
-				width: "55%"
+				width: "29%"
+			},
+			{	data: 'dst',
+				sortable: true,
+				width: "40%"
 			},
 			{	data: 'dh_s',
 				sortable: true,
-				width: "20%",
+				width: "13%",
 				render: function (data) {
 					return moment.unix(data).format("DD/MM/YYYY HH:mm")
 				}
 			},
 			{	data: 'dh_r',
 				sortable: true,
-				width: "20%",
+				width: "13%",
 				render: function (data) {
 					return moment.unix(data).format("DD/MM/YYYY HH:mm")
 				}
