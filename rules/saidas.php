@@ -478,7 +478,7 @@ function getSaidas( $parameters ) {
 	
 	fConnDB();
 	
-	$query = "SELECT es.ID, es.DS, es.DH_S, es.DH_R FROM EVE_SAIDA es";
+	$query = "SELECT es.ID, es.DS, es.DS_DEST, es.DH_S, es.DH_R FROM EVE_SAIDA es";
 	if ( $parameters["filter"] == "Y" ):
 		$query .= " WHERE YEAR(es.DH_R) = YEAR(NOW())";
 	elseif ( $parameters["filter"] == "P" ):
@@ -504,6 +504,7 @@ function getSaidas( $parameters ) {
 		$arr[] = array( 
 			"id" => str_pad($fields['ID'], 3, "0", STR_PAD_LEFT),
 			"ds" => utf8_encode($fields['DS']),
+			"dst" => utf8_encode($fields['DS_DEST']),
 			"dh_s" => strtotime($fields['DH_S']),
 			"dh_r" => strtotime($fields['DH_R'])
 		);

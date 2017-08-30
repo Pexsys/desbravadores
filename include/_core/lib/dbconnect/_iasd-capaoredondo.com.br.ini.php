@@ -1,7 +1,7 @@
 <?php
 $DBType = "mysql";
 $DBServerHost = "localhost";
-$DBUser = "capao_pioneiros";
+$DBUser = "capao_desbrav";
 $DBPassWord = "CVBpoi123";
-$DBDataBase = "capao_pioneiros";
+$DBDataBase = "capao_desbrav";
 ?>
