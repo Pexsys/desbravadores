@@ -2,7 +2,7 @@
 @include_once("include/functions.php");
 fHeaderPage( array( $GLOBALS['VirtualDir']."include/_core/css/index.css" )
 		   , array( $GLOBALS['VirtualDir']."js/index.js") );
-echo fConnDB();
+fConnDB();
 
 function nextEvents(){
 ?>
