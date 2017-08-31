@@ -1,5 +1,5 @@
 <?php
-$DBType = "mysql";
+$DBType = "mysqli";
 $DBServerHost = "localhost";
 $DBUser = "capao_desbrav";
 $DBPassWord = "CVBpoi123";

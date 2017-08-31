@@ -146,7 +146,7 @@ endif;
 
 function fConnDB(){
 	try{
-		$GLOBALS['conn'] = ADONewConnection($GLOBALS['DBType']);
+		$GLOBALS['conn'] = newAdoConnection($GLOBALS['DBType']);
 		$GLOBALS['conn']->SetCharSet('utf8');
 		$GLOBALS['conn']->Connect($GLOBALS['DBServerHost'],$GLOBALS['DBUser'],$GLOBALS['DBPassWord'],$GLOBALS['DBDataBase']);
 		$GLOBALS['conn']->SetFetchMode(ADODB_FETCH_ASSOC);
@@ -154,6 +154,7 @@ function fConnDB(){
 	}catch (Exception $e){
 		return false;
 	}
+	return false;
 }
 
 function zeroSizeID(){
