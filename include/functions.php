@@ -151,7 +151,7 @@ function fConnDB(){
 		$GLOBALS['conn']->Connect($GLOBALS['DBServerHost'],$GLOBALS['DBUser'],$GLOBALS['DBPassWord'],$GLOBALS['DBDataBase']);
 		$GLOBALS['conn']->SetFetchMode(ADODB_FETCH_ASSOC);
 		return true;
-	}catch (Eception $e){
+	}catch (Exception $e){
 		return false;
 	}
 	return false;
