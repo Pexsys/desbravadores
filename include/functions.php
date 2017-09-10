@@ -519,13 +519,11 @@ function fListFanfarra($relativePath,$title,$extentions){
 										$fileDoc = $capaFiles[$j];
 										$soundFile = substr($fileDoc,0,strlen($fileDoc)-4);
 										$linkPDF = $capa.$dirRepertorio[$i].'/'.$fileDoc;
-										$linkMID = $capa.$dirRepertorio[$i].'/'.$soundFile.'.mid';
 										$linkMP3 = $capa.$dirRepertorio[$i].'/'.$soundFile.'.mp3';
 										$desc = str_replace('_', ' ', $soundFile);
 										?>
 										<li>
 											<a href="<?php echo $linkPDF;?>" target="_new"><img src="<?php echo $capa_img?>icone_pdf.png" width="16" height="16" title="PDF"></a>
-											<a href="<?php echo $linkMID;?>" target="_new"><img src="<?php echo $capa_img?>icone_mid.png" width="16" height="16" title="Midi"></a>
 											<a href="<?php echo $linkMP3;?>" target="_new"><img src="<?php echo $capa_img?>icone_mp3.png" width="16" height="16" title="MP3"></a>
 											<span><?php echo $desc;?></span>
 										</li>
