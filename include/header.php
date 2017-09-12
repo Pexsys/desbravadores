@@ -4,13 +4,10 @@
 	$relativePath = "img/carrousel/index/";
 	$extentions = ".jpg.jpeg.gif.png";
 	$capa = $GLOBALS['VirtualDir'] . $relativePath;
-	if ($_SERVER['SERVER_NAME'] == "192.168.1.249" || $_SERVER['SERVER_NAME'] == "localhost"):
-		$document_root = substr($_SERVER['DOCUMENT_ROOT'],0,strlen($_SERVER['DOCUMENT_ROOT'])-1);
-		$fisico_repertorio = $document_root . $capa;
-	else:
-		$document_root = $_SERVER['DOCUMENT_ROOT'];
-		$fisico_repertorio = $relativePath;
-	endif;
+
+	$document_root = $_SERVER['DOCUMENT_ROOT'];
+	$fisico_repertorio = $relativePath;
+
 	$dirRepertorio = array();
 	if (is_dir($fisico_repertorio)):
 		if ($handle = opendir($fisico_repertorio)):

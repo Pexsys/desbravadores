@@ -291,89 +291,6 @@ function fDifDatas($pDataIni,$pDataFim,$pRetorno){
 	return $retorno;
 }
 
-function fMontaCarrousel($relativePath,$extentions){
-	$capa = $GLOBALS['VirtualDir'] . $relativePath;
-	if ($_SERVER['SERVER_NAME'] == "192.168.1.249" || $_SERVER['SERVER_NAME'] == "localhost"):
-		$document_root = substr($_SERVER['DOCUMENT_ROOT'],0,strlen($_SERVER['DOCUMENT_ROOT'])-1);
-		$fisico_capas = $document_root . $capa;
-	else:
-		$document_root = $_SERVER['DOCUMENT_ROOT'];
-		$fisico_capas = $aDocumentos[$nLocais][0];
-	endif;
-	$capaFiles = array();
-	if (is_dir($fisico_capas)):
-		if ($handle = opendir($fisico_capas)):
-			while (false !== ($file = readdir($handle))):
-				if ($file != "." && $file != ".." && !is_file($file)):
-					$ext = strtolower(substr($file,strlen($file)-4,4));
-					if (!(strpos($extentions,$ext) === false)):
-						$capaFiles[] = $file;
-					endif;
-				endif;
-			endwhile;
-			closedir($handle);
-
-			if (count($capaFiles) > 1):
-				sort($capaFiles);
-
-				$maxCars = 6;
-				$minPerCar = 2;
-				$qtdFiles = count($capaFiles);
-				$qtd = min( $maxCars, floor( $qtdFiles / $minPerCar ) );
-				$qtdMax = max( $minPerCar, floor( $qtdFiles / $qtd ) );
-
-				$aCarrousel = array();
-				for ($i=0;$i<$qtd;$i++):
-					$aCarrousel[$i] = $qtdMax;
-				endfor;
-				$i = 0;
-				while ( array_sum($aCarrousel) < $qtdFiles ):
-					$aCarrousel[$i]++;
-					if ( $i++ > count($aCarrousel) ):
-						$i = 0;
-					endif;
-				endwhile;
-				
-				$icF = 0;
-				for ($c=0;$c<count($aCarrousel);$c++):
-					echo "<div class=\"col-md-2\">";
-					echo "<div id=\"carousel-example-generic$c\" class=\"carousel slide\" data-ride=\"carousel\">";
-
-					echo "<!-- Indicators -->";
-					echo "<ol class=\"carousel-indicators\">";
-					for ($x=0;$x<$aCarrousel[$c];$x++):
-					echo "<li data-target=\"#carousel-example-generic$c\" data-slide-to=\"$x\"". ($x == 0 ? " class=\"active\"" : "") ."></li>";
-					endfor;
-					echo "</ol>";
-					
-					echo "<!-- Wrapper for slides -->";
-					echo "<div class=\"carousel-inner\" role=\"listbox\">";
-					
-					for ($x=0;$x<$aCarrousel[$c];$x++):
-					echo "<div class=\"item". ($x == 0 ? " active" : "") ."\">";
-					echo "<img src=\"".$capa.$capaFiles[$icF++]."\" alt=\"$x\" width=\"100%\" height=\"100%\"/>";
-					echo "</div>";
-					endfor;
-					echo "</div>";
-					
-					echo "<!-- Controls -->";
-					echo "<a class=\"left carousel-control\" href=\"#carousel-example-generic$c\" role=\"button\" data-slide=\"prev\">";
-					echo "<span class=\"glyphicon glyphicon-chevron-left\" aria-hidden=\"true\"></span>";
-					echo "<span class=\"sr-only\">Previous</span>";
-					echo "</a>";
-					echo "<a class=\"right carousel-control\" href=\"#carousel-example-generic$c\" role=\"button\" data-slide=\"next\">";
-					echo "<span class=\"glyphicon glyphicon-chevron-right\" aria-hidden=\"true\"></span>";
-					echo "<span class=\"sr-only\">Next</span>";
-					echo "</a>";
-					
-					echo "</div>";
-					echo "</div>";
-				endfor;
-			endif;
-		endif;
-	endif;
-}
-
 function fListDocumentos($relativePath,$title,$extentions,$classPanel,$tagItem){
 	$capa = $GLOBALS['VirtualDir'] . $relativePath;
 	$capa_img = $GLOBALS['VirtualDir'] . $relativePath."img/";
@@ -462,13 +379,10 @@ function fListDocumentos($relativePath,$title,$extentions,$classPanel,$tagItem){
 function fListFanfarra($relativePath,$title,$extentions){
 	$capa = $GLOBALS['VirtualDir'] . $relativePath;
 	$capa_img = $GLOBALS['VirtualDir'] . "img/";
-	if ($_SERVER['SERVER_NAME'] == "192.168.1.249" || $_SERVER['SERVER_NAME'] == "localhost"):
-		$document_root = substr($_SERVER['DOCUMENT_ROOT'],0,strlen($_SERVER['DOCUMENT_ROOT'])-1);
-		$fisico_repertorio = $document_root . $capa;
-	else:
-		$document_root = $_SERVER['DOCUMENT_ROOT'];
-		$fisico_repertorio = $relativePath;
-	endif;
+
+	$document_root = $_SERVER['DOCUMENT_ROOT'];
+	$fisico_repertorio = $relativePath;
+
 	$dirRepertorio = array();
 	if (is_dir($fisico_repertorio)):
 		if ($handle = opendir($fisico_repertorio)):
