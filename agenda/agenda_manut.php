@@ -66,7 +66,7 @@ body {
 				<input type=hidden name=ID_EVENTO ID=ID_EVENTO value="<?php echo $ID_EVENTO;?>">
 				<input type=hidden name=ACAO ID=ACAO value="GRAVAR">
 				<tr>
-					<td valign=top><span class="style1"><strong>Data/Hora Início:</strong>                    
+					<td valign=top><span class="style1"><strong>Data/Hora Inï¿½cio:</strong>                    
 				    <input type=text size=11 maxlength=10 name=INIEVE_DATA id=INIEVE_DATA value="<?php echo $INIEVE_DATA;?>">
                     <strong>(dd/mm/yyyy)&nbsp;&nbsp;</strong>&nbsp;&nbsp;
                     <input type=text size=6 maxlength=5 name=INIEVE_HORA id=INIEVE_HORA value="<?php echo $INIEVE_HORA;?>"> 
@@ -88,7 +88,7 @@ body {
 					</span></td>
 				</tr>
 				<tr>
-					<td valign=top><span class="style1"><strong>Número:</strong>                    
+					<td valign=top><span class="style1"><strong>Nï¿½mero:</strong>                    
 				    <input type=text size=6 maxlength=5 name=NUM_LOGRADOURO id=NUM_LOGRADOURO value="<?php echo $row->NUM_LOGRADOURO;?>">
 					</span></td>
 				</tr>
@@ -113,7 +113,7 @@ body {
 					</span></td>
 				</tr>
 				<tr>
-					<td valign=top><span class="style5">Informações Adicionais:</span><br>					  <textarea name=INFO_ADIC id=INFO_ADIC cols=100 rows=10><?php echo $row->INFO_ADIC;?></TEXTAREA></td>
+					<td valign=top><span class="style5">Informaï¿½ï¿½es Adicionais:</span><br>					  <textarea name=INFO_ADIC id=INFO_ADIC cols=100 rows=10><?php echo $row->INFO_ADIC;?></TEXTAREA></td>
 				</tr>
 				<tr>
 					<td valign=top><span class="style1"><strong>Confirmado:</strong>				    
@@ -245,7 +245,7 @@ body {
 					<?php 
 				endif;
 				
-				$strExclusao = str_replace("\r\n","<br>",str_replace("'","´",str_replace("\"","´",$row->DESC_LOCAL))) . " " . $cHora;
+				$strExclusao = str_replace("\r\n","<br>",str_replace("'","ï¿½",str_replace("\"","ï¿½",$row->DESC_LOCAL))) . " " . $cHora;
 				?>
 				<tr bgcolor="#F0F0F0" onmouseover="javascript:this.style.backgroundColor='#E4E4E4';" onmouseout="javascript:this.style.backgroundColor='#F0F0F0';">
 					<td onmouseover="javascript:this.style.cursor='hand';" onmouseout="javascript:this.style.cursor='default';" onclick="javascript:window.location.replace('agenda_manut.php?ACAO=EDIT&ID_EVENTO=<?php echo $row->ID_EVENTO;?>');"><img src="<?php echo $o->PHPDomain . $VirtualDir?>agenda/edit.png" border=0 alt="Editar"></td>
