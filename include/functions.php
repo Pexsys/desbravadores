@@ -1,4 +1,5 @@
 <?php
+ini_set('memory_limit','200M');
 error_reporting (E_ALL & ~ E_NOTICE & ~ E_DEPRECATED); //
 setlocale(LC_ALL, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
 date_default_timezone_set('America/Sao_Paulo');
@@ -67,6 +68,7 @@ function fSetSessionLogin( $result ){
 }
 
 function responseMethod() {
+    header('Content-type: application/json');
 	// Getting the json data from the request
 	$response = '';
 	
@@ -146,7 +148,7 @@ endif;
 
 function fConnDB(){
 	try{
-		$GLOBALS['conn'] = newAdoConnection($GLOBALS['DBType']);
+		$GLOBALS['conn'] = ADONewConnection($GLOBALS['DBType']);
 		$GLOBALS['conn']->SetCharSet('utf8');
 		$GLOBALS['conn']->Connect($GLOBALS['DBServerHost'],$GLOBALS['DBUser'],$GLOBALS['DBPassWord'],$GLOBALS['DBDataBase']);
 		$GLOBALS['conn']->SetFetchMode(ADODB_FETCH_ASSOC);
@@ -156,6 +158,209 @@ function fConnDB(){
 	}
 	return false;
 }
+
+/*
+REGRAS MESTRADO
+
+  let masterRules = {
+    
+    //ADRA - 509
+    ME001 : [
+      {  //1
+        min : 6,
+        selection : [ 
+          'AD001', 'AD002', 'AD003', 'AD004', 'AD005', 'AD006', 'AD007', 'AD008', 'AD009'
+        ]
+      },
+      {  //2
+        min : 1,
+        selection : [ 
+          'AM004', 'HM029', 'AM007', 'AM013', 'AM010' 
+        ]
+      }
+    ],
+
+    //ARTES A HABILIDADES MANUAIS - 510
+    ME002 : [
+      {  //3
+        min : 7,
+        selection : [ 
+          'HM001', 'HM002', 'HM003', 'HM004', 'HM005', 'HM006', 'HM007', 'HM008', 'HM009', 'HM010',
+          'HM011', 'HM012', 'HM013', 'HM014', 'HM015', 'HM016', 'HM017', 'HM018', 'HM019', 'HM020',
+          'HM021', 'HM022', 'HM023', 'HM024', 'HM025', 'HM026', 'HM027', 'HM028', 'HM029', 'HM030',
+          'HM031', 'HM032', 'HM033', 'HM034', 'HM035', 'HM036', 'HM037', 'HM038', 'HM039', 'HM040',
+          'HM041', 'HM042', 'HM043', 'HM044', 'HM045', 'HM046', 'HM047', 'HM048', 'HM049', 'HM050',
+          'HM051', 'HM052', 'HM053', 'HM054', 'HM055', 'HM056', 'HM057', 'HM058', 'HM059', 'HM060',
+          'HM061', 'HM062', 'HM063', 'HM064', 'HM065', 'HM066', 'HM067', 'HM068', 'HM069', 'HM070',
+          'HM071', 'HM072', 'HM073', 'HM074', 'HM075', 'HM076', 'HM077', 'HM078', 'HM079', 'HM080',
+          'HM081', 'HM082', 'HM083', 'HM084', 'HM085', 'HM086', 'HM087', 'HM088'
+        ]
+      }
+    ],
+    
+    //ATIVIDADES AGRICOLAS - 511
+    ME003 : [
+      {  //4
+        min : 7,
+        selection : [ 
+          'AA001', 'AA002', 'AA003', 'AA004', 'AA005', 'AA006', 'AA007', 'AA008', 'AA009', 'AA010', 
+          'AA011', 'AA012', 'AA013', 'AA014', 'AA015'
+        ]
+      }
+    ],
+    
+    //TESTIFICACAO - 512
+    ME004 : [
+      {  //5
+        min : 7,
+        selection : [ 
+          'AM001', 'AM002', 'AM003', 'AM004', 'AM005', 'AM006', 'AM008', 'AM009', 'AM010', 'AM011', 
+          'AM012', 'AM013', 'AM014', 'AM015', 'AM016', 'AM017', 'AM018', 'AM019', 'AM020', 'AM021', 
+          'AM022', 'AM023', 'AM024', 'AM029', 'AM030', 'AM031', 'AM032', 'AM034', 'AM035', 'AM036', 
+          'AM037', 'AM038', 'AM039', 'AM040', 'AM041', 'AM042', 'AM043'
+        ]
+      }
+    ],
+    
+    //PROFISSIONAIS - 513
+    ME005 : [
+      {  //6
+        min : 7,
+        selection : [ 
+          'AP001', 'AP002', 'AP003', 'AP004', 'AP005', 'AP006', 'AP007', 'AP008', 'AP009', 'AP010', 
+          'AP011', 'AP012', 'AP013', 'AP014', 'AP015', 'AP016', 'AP017', 'AP018', 'AP019', 'AP020', 
+          'AP021', 'AP022', 'AP023', 'AP024', 'AP025', 'AP026', 'AP027', 'AP028', 'AP029', 'AP031', 
+          'AP033', 'AP032', 'AP036', 'AP037', 'AP038', 'AP040', 'AP046', 'AP047', 'AP048', 'AP050', 
+          'AP051', 'AP053', 'AP054', 'AP055', 'AP056', 'AP058', 'AP059', 'AP060', 'AP061', 'AP062'
+        ]
+      }
+    ],
+    
+    //CIENCIA E TECNOLOGIA - 514
+    ME006 : [
+      {  //7
+        min : 7,
+        selection : [ 
+          'CS002', 'CS007', 'CS013', 'CS021', 'CS022', 'AP034', 'AP035', 'AP041', 'AP042', 'AP043', 
+          'AP044', 'AP045', 'AP049', 'AP052'
+        ]
+      }
+    ],
+    
+    //AQUATICA - 515
+    ME007 : [
+      {  //8
+        min : 7,
+        selection : [ 
+          'AR005', 'AR008', 'AR015', 'AR016', 'AR018', 'AR019', 'AR023', 'AR026', 'AR027', 'AR028', 
+          'AR029', 'AR030', 'AR031', 'AR032', 'AR039', 'AR079', 'AR061', 'AR105'
+        ]
+      }
+    ],
+    
+    //ESPORTES - 516
+    ME008 : [
+      {  //9
+        min : 7,
+        selection : [ 
+          'AR002', 'AR008', 'AR013', 'AR014', 'AR025', 'AR030', 'AR034', 'AR035', 'AR037', 'AR038', 
+          'AR041', 'AR042', 'AR043', 'AR044', 'AR049', 'AR054', 'AR060', 'AR063', 'AR065', 'AR066', 
+          'AR072', 'AR073', 'AR074', 'AR075', 'AR076', 'AR080', 'AR091', 'AR094', 'AR097', 'AR098', 
+          'AR103', 'AR107', 'AR108', 'AR109'
+        ]
+      }
+    ],
+    
+    //VIDA CAMPESTRE - 517
+    ME009 : [
+      {  //10
+        min : 7,
+        selection : [ 
+          'AR001', 'AR010', 'AR012', 'AR020', 'AR021', 'AR022', 'AR024', 'AR033', 'AR036', 'AR043', 
+          'AR045', 'AR046', 'AR053', 'AR056', 'AR057', 'AR058', 'AR070', 'AR085', 'AR088', 'AR089', 
+          'AR095', 'AR099', 'AR101', 'AR102', 'AR104'
+        ]
+      }
+    ],
+    
+    //ATIVIDADES RECREATIVAS - 518
+    ME010 : [
+      {  //11
+        min : 7,
+        selection : [ 
+          'AR011', 'AR012', 'AR017', 'AR040', 'AR047', 'AR048', 'AR050', 'AR059', 'AR062', 'AR067', 
+          'AR068', 'AR071', 'AR077', 'AR078', 'AR081', 'AR082', 'AR083', 'AR086', 'AR087', 'AR092', 
+          'AR093', 'AR096', 'AR099', 'AR100', 'AR106'
+        ]
+      }
+    ],
+    
+    //SAUDE - 519
+    ME011 : [
+      {  //12
+        min : 7,
+        selection : [ 
+          'CS001', 'CS003', 'CS004', 'CS005', 'CS006', 'CS008', 'CS010', 'CS011', 'CS012', 'CS015', 
+          'CS016', 'CS017', 'CS018', 'CS019', 'CS020', 'CS023', 'CS024', 'CS026', 'CS028', 'CS029', 
+          'CS030'
+        ]
+      }
+    ],
+    
+    //ZOOLOGIA - 520
+    ME012 : [
+      {  //13
+        min : 7,
+        selection : [ 
+          'EN001', 'EN003', 'EN004', 'EN007', 'EN008', 'EN010', 'EN011', 'EN014', 'EN020', 'EN022', 
+          'EN023', 'EN024', 'EN025', 'EN027', 'EN030', 'EN031', 'EN032', 'EN034', 'EN037', 'EN051', 
+          'EN052', 'EN054', 'EN055', 'EN057', 'EN059', 'EN060', 'EN061', 'EN065', 'EN066', 'EN068', 
+          'EN069', 'EN070', 'EN071', 'EN076', 'EN078', 'EN080', 'EN083', 'EN085', 'EN087', 'EN090', 
+          'EN094'
+        ]
+      }
+    ],
+    
+    //ECOLOGIA - 521
+    ME013 : [
+      {  //14
+        min : 3,
+        selection : [ 
+          'EN044', 'EN046', 'EN058'
+        ]
+      },
+      { //15
+        min : 4,
+        selection : [ 
+          'EN045', 'EN067', 'EN073', 'EN081', 'EN082', 'EN089', 'EN092', 'EN093'
+        ]
+      }
+    ],
+    
+    //BOTANICA - 522
+    ME014 : [
+      { //16
+        min : 7,
+        selection : [ 
+          'EN005', 'EN006', 'EN015', 'EN018', 'EN019', 'EN021', 'EN029', 'EN033', 'EN036', 'EN038', 
+          'EN039', 'EN040', 'EN042', 'EN048', 'EN049', 'EN053', 'EN062', 'EN063', 'EN072', 'EN074', 
+          'EN077', 'EN084', 'EN086', 'EN088'
+        ]
+      }
+    ],
+    
+    //HABILIDADES DOMESTICAS - 523
+    ME015 : [
+      { //17
+        min : 7,
+        selection : [ 
+          'HD001', 'HD002', 'HD003', 'HD004', 'HD005', 'HD006', 'HD007', 'HD008', 'HD009', 'HD010', 
+          'HD011', 'HD012'
+        ]
+      }
+    ]
+  };
+*/
 
 function zeroSizeID(){
 	$rs = $GLOBALS['conn']->Execute("SELECT COUNT(*) AS qtd FROM CAD_PESSOA");
@@ -291,6 +496,89 @@ function fDifDatas($pDataIni,$pDataFim,$pRetorno){
 	return $retorno;
 }
 
+function fMontaCarrousel($relativePath,$extentions){
+	$capa = $GLOBALS['VirtualDir'] . $relativePath;
+	if ($_SERVER['SERVER_NAME'] == "192.168.1.249" || $_SERVER['SERVER_NAME'] == "localhost"):
+		$document_root = substr($_SERVER['DOCUMENT_ROOT'],0,strlen($_SERVER['DOCUMENT_ROOT'])-1);
+		$fisico_capas = $document_root . $capa;
+	else:
+		$document_root = $_SERVER['DOCUMENT_ROOT'];
+		$fisico_capas = $aDocumentos[$nLocais][0];
+	endif;
+	$capaFiles = array();
+	if (is_dir($fisico_capas)):
+		if ($handle = opendir($fisico_capas)):
+			while (false !== ($file = readdir($handle))):
+				if ($file != "." && $file != ".." && !is_file($file)):
+					$ext = strtolower(substr($file,strlen($file)-4,4));
+					if (!(strpos($extentions,$ext) === false)):
+						$capaFiles[] = $file;
+					endif;
+				endif;
+			endwhile;
+			closedir($handle);
+
+			if (count($capaFiles) > 1):
+				sort($capaFiles);
+
+				$maxCars = 6;
+				$minPerCar = 2;
+				$qtdFiles = count($capaFiles);
+				$qtd = min( $maxCars, floor( $qtdFiles / $minPerCar ) );
+				$qtdMax = max( $minPerCar, floor( $qtdFiles / $qtd ) );
+
+				$aCarrousel = array();
+				for ($i=0;$i<$qtd;$i++):
+					$aCarrousel[$i] = $qtdMax;
+				endfor;
+				$i = 0;
+				while ( array_sum($aCarrousel) < $qtdFiles ):
+					$aCarrousel[$i]++;
+					if ( $i++ > count($aCarrousel) ):
+						$i = 0;
+					endif;
+				endwhile;
+				
+				$icF = 0;
+				for ($c=0;$c<count($aCarrousel);$c++):
+					echo "<div class=\"col-md-2\">";
+					echo "<div id=\"carousel-example-generic$c\" class=\"carousel slide\" data-ride=\"carousel\">";
+
+					echo "<!-- Indicators -->";
+					echo "<ol class=\"carousel-indicators\">";
+					for ($x=0;$x<$aCarrousel[$c];$x++):
+					echo "<li data-target=\"#carousel-example-generic$c\" data-slide-to=\"$x\"". ($x == 0 ? " class=\"active\"" : "") ."></li>";
+					endfor;
+					echo "</ol>";
+					
+					echo "<!-- Wrapper for slides -->";
+					echo "<div class=\"carousel-inner\" role=\"listbox\">";
+					
+					for ($x=0;$x<$aCarrousel[$c];$x++):
+					echo "<div class=\"item". ($x == 0 ? " active" : "") ."\">";
+					echo "<img src=\"".$capa.$capaFiles[$icF++]."\" alt=\"$x\" width=\"100%\" height=\"100%\"/>";
+					echo "</div>";
+					endfor;
+					echo "</div>";
+					
+					echo "<!-- Controls -->";
+					echo "<a class=\"left carousel-control\" href=\"#carousel-example-generic$c\" role=\"button\" data-slide=\"prev\">";
+					echo "<span class=\"glyphicon glyphicon-chevron-left\" aria-hidden=\"true\"></span>";
+					echo "<span class=\"sr-only\">Previous</span>";
+					echo "</a>";
+					echo "<a class=\"right carousel-control\" href=\"#carousel-example-generic$c\" role=\"button\" data-slide=\"next\">";
+					echo "<span class=\"glyphicon glyphicon-chevron-right\" aria-hidden=\"true\"></span>";
+					echo "<span class=\"sr-only\">Next</span>";
+					echo "</a>";
+					
+					echo "</div>";
+					echo "</div>";
+				endfor;
+			endif;
+		endif;
+	endif;
+}
+
 function fListDocumentos($relativePath,$title,$extentions,$classPanel,$tagItem){
 	$capa = $GLOBALS['VirtualDir'] . $relativePath;
 	$capa_img = $GLOBALS['VirtualDir'] . $relativePath."img/";
@@ -379,10 +667,13 @@ function fListDocumentos($relativePath,$title,$extentions,$classPanel,$tagItem){
 function fListFanfarra($relativePath,$title,$extentions){
 	$capa = $GLOBALS['VirtualDir'] . $relativePath;
 	$capa_img = $GLOBALS['VirtualDir'] . "img/";
-
-	$document_root = $_SERVER['DOCUMENT_ROOT'];
-	$fisico_repertorio = $relativePath;
-
+	if ($_SERVER['SERVER_NAME'] == "192.168.1.249" || $_SERVER['SERVER_NAME'] == "localhost"):
+		$document_root = substr($_SERVER['DOCUMENT_ROOT'],0,strlen($_SERVER['DOCUMENT_ROOT'])-1);
+		$fisico_repertorio = $document_root . $capa;
+	else:
+		$document_root = $_SERVER['DOCUMENT_ROOT'];
+		$fisico_repertorio = $relativePath;
+	endif;
 	$dirRepertorio = array();
 	if (is_dir($fisico_repertorio)):
 		if ($handle = opendir($fisico_repertorio)):
@@ -528,8 +819,8 @@ function getIconAprendizado( $tpItem, $areaInterno, $sizeClass = "" ){
 	return $retorno;
 }
 
-function fItemAprendizado( $panelClass, $iconLeft, $value, $titulo, $detalhes, $detalhes2 = "", $style = "", $fields ) {
-	echo "<div class=\"col-md-8 col-xs-12 col-sm-12 col-lg-4\">";
+function fItemAprendizado( $panelClass, $iconLeft, $value, $titulo, $detalhes, $detalhes2 = "", $style = "", $fields, $panelClassSize = "col-md-6 col-xs-6 col-sm-6 col-lg-4" ) {
+	echo "<div class=\"$panelClassSize\">";
 	if ( isset($fields) ):
 		echo "  <div class=\"panel $panelClass\" name=\"progress\" cad-id=\"".$fields["ID_CAD_PESSOA"]."\" req-id=\"".$fields["ID_TAB_APREND"]."\">";
 		echo "	<div class=\"panel-heading\"". (empty($style)?"style=\"cursor:pointer;\"":" style=\"cursor:pointer;$style\"").">";
