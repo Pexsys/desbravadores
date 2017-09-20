@@ -2,10 +2,23 @@ var datasets = undefined;
 var choiceContainer = undefined;
 var previousPoint = null, previousLabel = null;
 
-
 $(document).ready(function(){
+    
+    $("[name=print]").on('click',function(){
+        var url = jsLIB.rootDir+'report/';
+        var what = $(this).attr('what');
+        if (what == 'capa'){
+            url += 'geraCapa.php?nome='+$(this).attr('id-pess')+'|&list='+$(this).attr('cd-item');
+        }
+        window.open(
+			url,
+			'_blank',
+			'top=50,left=50,height=750,width=550,menubar=no,status=no,titlebar=no',
+			true
+		);
+	});
+    
 	datasets = jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/meuAprendizado.php", { MethodName : 'getGraphData' }, 'RETURN' );
-	
 	if (datasets.ob) {
 		choiceContainer = $("#choices");
 		$.each(datasets, function(key, val) {
@@ -14,7 +27,6 @@ $(document).ready(function(){
 					'" checked="checked" id="op'+ key +'"/>'+ val.label +'</label>&nbsp;');
 			}
 		});
-
 		choiceContainer.find("input").click(plotAccordingToChoices);
 		plotAccordingToChoices();
 	}

@@ -304,6 +304,7 @@ function fPrepareForm(){
 function closeAndRefresh(){
 	dataTable.ajax.reload( function(){
 		ruleBtnDelete( false );
+		updateNotifications();
 	});
 	$("#aprendModal").modal('hide');
 }

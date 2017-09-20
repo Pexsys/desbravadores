@@ -4,7 +4,7 @@ global $mail;
 $GLOBALS['mail'] = new PHPMailer();
 $GLOBALS['mail']->SetLanguage('br','phpmailer/language/');
 $GLOBALS['mail']->IsSMTP();
-$GLOBALS['mail']->Host = "server18.srvlinux.info";
+$GLOBALS['mail']->Host = "server11.srvlinux.info";
 $GLOBALS['mail']->Port = 465;
 $GLOBALS['mail']->SMTPAuth = true;
 $GLOBALS['mail']->SMTPSecure = 'ssl';

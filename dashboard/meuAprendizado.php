@@ -7,15 +7,23 @@ function getClassPainelMestrado( $pct ){
 	elseif ($pct < 100):
 		return "panel-red";
 	else:
-		return "panel-green";
+		return "panel-success";
 	endif;
 }
-
 $membroID = $_SESSION['USER']['id_cad_pessoa'];
 ?>
+<style>
+.blink{
+    animation:blink 600ms infinite alternate;
+}
+@keyframes blink {
+    from { opacity:1; }
+    to { opacity:0.5; }
+};
+</style>
 <div class="row">
 	<div class="col-lg-12">
-		<h3 class="page-header">Meu aprendizado</h3>
+		<a id="mestrados"></a><h3 class="page-header">Meu aprendizado</h3>
 	</div>
 </div>
 <div class="row">
@@ -135,24 +143,61 @@ endif;
 	", array("ME") );
 	foreach ($rg as $lg => $fg):
         $min = $fg["MIN_AREA"];
+
         $feitas = 0;
-        
         //LE PARAMETRO MINIMO E HISTORICO PARA A REGRA
 	    $rR = $GLOBALS['conn']->Execute("
-            SELECT tar.QT_MIN, COUNT(*) AS QT_FEITAS
-            FROM TAB_APR_REQ tar
+                SELECT tar.ID, tar.QT_MIN, COUNT(*) AS QT_FEITAS
+                  FROM TAB_APR_REQ tar
             INNER JOIN CON_APR_REQ car ON (car.ID_TAB_APR_REQ = tar.ID AND car.TP_ITEM_RQ = ?)
             INNER JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = car.ID_RQ AND ah.ID_CAD_PESSOA = ? AND ah.DT_CONCLUSAO IS NOT NULL)
-            WHERE tar.ID_TAB_APREND = ?
-	    ", array( "ES", $membroID, $fg["ID"] ) );
+                 WHERE tar.ID_TAB_APREND = ?
+              GROUP BY tar.ID, tar.QT_MIN
+    	", array( "ES", $membroID, $fg["ID"] ) );
 	    foreach($rR as $lR => $fR):
             $feitas += min( $fR["QT_MIN"], $fR["QT_FEITAS"] );
         endforeach;
 	    
 	    $icon = getIconAprendizado( $fg["TP_ITEM"], $fg["CD_AREA_INTERNO"], "fa-4x" );
 		$area = getMacroArea( $fg["TP_ITEM"], $fg["CD_AREA_INTERNO"] );
-		$pct = floor( ( $feitas / $min ) * 100);
-	    fItemAprendizado( getClassPainelMestrado( $pct ), $icon, $fg["CD_ITEM_INTERNO"], titleCase( substr($fg["DS_ITEM"],12) ), titleCase( $area ), "$feitas / $min", null, null, "col-md-4 col-xs-8 col-sm-6 col-lg-3" );
+		$pct = floor( ( $feitas / $min ) * 100 );
+		
+		$class  = getClassPainelMestrado( $pct );
+		$sizeClass = "col-md-4 col-xs-8 col-sm-6 col-lg-3";
+		$fields = null;
+		
+		//VERIFICA SE AINDA NÃO CONCLUIDO
+		if ( $pct >= 100 ):
+    	    $rI = $GLOBALS['conn']->Execute("
+                SELECT DT_CONCLUSAO
+                FROM APR_HISTORICO 
+                WHERE ID_CAD_PESSOA = ?
+                  AND ID_TAB_APREND = ?
+    	    ", array( $membroID, $fg["ID"] ) );	
+    	    if ($rI->EOF || is_null($rI->fields["DT_CONCLUSAO"]) ):
+    	        $class = "panel-green";
+    	        $sizeClass = "col-md-4 col-xs-8 col-sm-6 col-lg-3 blink";
+    	        
+    	        //INSERE NOTIFICAÇOES SE NÃO EXISTIR.
+    	        $GLOBALS['conn']->Execute("
+    				INSERT INTO LOG_MENSAGEM ( ID_ORIGEM, TP, ID_USUARIO, EMAIL, DH_GERA )
+    				SELECT ?, 'M', cu.ID_USUARIO, ca.EMAIL, NOW()
+    				  FROM CON_ATIVOS ca
+    			INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID)
+    				 WHERE ca.ID = ?
+    				   AND NOT EXISTS (SELECT 1 FROM LOG_MENSAGEM WHERE ID_ORIGEM = ? AND TP = 'M' AND ID_USUARIO = cu.ID_USUARIO)
+    			", array( $fg["ID"], $membroID, $fg["ID"] ) );
+    			
+    			$fields = array(
+    			    "name" => "print",
+    			    "what" => "capa",
+    			    "id-pess" => $membroID,
+    			    "cd-item" => $fg["CD_ITEM_INTERNO"]
+    			);
+    	    endif;
+		endif;
+		
+	    fItemAprendizado( $class, $icon, $fg["CD_ITEM_INTERNO"], titleCase( substr($fg["DS_ITEM"],12) ) . "<br/>$feitas / $min", null, null, null, $fields, $sizeClass );
 	endforeach;
 	?>
 </div>
