@@ -26,7 +26,7 @@
 		}
 
    /*
-   Novas Funções para acesso a Banco de Dados
+   Novas Funï¿½ï¿½es para acesso a Banco de Dados
    */
     function dbConecta(){ 
 			$this->SqlHandle = mysql_connect($this->SqlHost,$this->SqlUser,$this->SqlPassWord) or $this->fErro('Erro ao Conectar com o Banco de dados - 100',0);
@@ -158,7 +158,7 @@
 			elseif ($cMes == "02"):
 				$cRet = "Fevereiro";
 			elseif ($cMes == "03"):
-				$cRet = "Março";
+				$cRet = "Marï¿½o";
 			elseif ($cMes == "04"):
 				$cRet = "Abril";
 			elseif ($cMes == "05"):
@@ -192,7 +192,7 @@
 			elseif ($nDiaSemana == 2):
 				$cDiaSemana = "Segunda-Feira";
 			elseif ($nDiaSemana == 3):
-				$cDiaSemana = "Terça-Feira";
+				$cDiaSemana = "Terï¿½a-Feira";
 			elseif ($nDiaSemana == 4):
 				$cDiaSemana = "Quarta-Feira";
 			elseif ($nDiaSemana == 5):
@@ -200,7 +200,7 @@
 			elseif ($nDiaSemana == 6):
 				$cDiaSemana = "Sexta-Feira";
 			elseif ($nDiaSemana == 7):
-				$cDiaSemana = "Sábado";
+				$cDiaSemana = "Sï¿½bado";
 			endif;
 			$lsRetorno = $cDiaSemana;
 			if ($lConcatDia){
@@ -320,7 +320,7 @@
 							
 			$days = ($to_date - $from_date)/86400; 
 
-			/*Adicionado o ceil($days) para garantir que o resultado seja sempre um número inteiro */ 
+			/*Adicionado o ceil($days) para garantir que o resultado seja sempre um nï¿½mero inteiro */ 
 			return ceil($days); 
 		}  
 
@@ -343,40 +343,40 @@
 		} 
 
 		function fStrEsp($cString){
-			$cString = str_replace("á", "á", $cString);
-			$cString = str_replace("é", "é", $cString);
-			$cString = str_replace("í", "í", $cString);
-			$cString = str_replace("ó", "ó", $cString);
-			$cString = str_replace("ú", "ú", $cString);
-			$cString = str_replace("Á", "Á", $cString);
-			$cString = str_replace("É", "É", $cString);
-			$cString = str_replace("Í", "Í", $cString);
-			$cString = str_replace("Ó", "Ó", $cString);
-			$cString = str_replace("Ú", "Ú", $cString);
+			$cString = str_replace("ï¿½", "ï¿½", $cString);
+			$cString = str_replace("ï¿½", "ï¿½", $cString);
+			$cString = str_replace("ï¿½", "ï¿½", $cString);
+			$cString = str_replace("ï¿½", "ï¿½", $cString);
+			$cString = str_replace("ï¿½", "ï¿½", $cString);
+			$cString = str_replace("ï¿½", "ï¿½", $cString);
+			$cString = str_replace("ï¿½", "ï¿½", $cString);
+			$cString = str_replace("ï¿½", "ï¿½", $cString);
+			$cString = str_replace("ï¿½", "ï¿½", $cString);
+			$cString = str_replace("ï¿½", "ï¿½", $cString);
 																										  
-			$cString = str_replace("ç", "ç", $cString);
-			$cString = str_replace("Ç", "Ç", $cString);
+			$cString = str_replace("ï¿½", "ï¿½", $cString);
+			$cString = str_replace("ï¿½", "ï¿½", $cString);
 																										  
-			$cString = str_replace("à", "à", $cString);
-			$cString = str_replace("À", "À", $cString);
+			$cString = str_replace("ï¿½", "ï¿½", $cString);
+			$cString = str_replace("ï¿½", "ï¿½", $cString);
 																										  
-			$cString = str_replace("ã", "ã", $cString);
-			$cString = str_replace("õ", "õ", $cString);
-			$cString = str_replace("Ã", "Ã", $cString);
-			$cString = str_replace("Õ", "Õ", $cString);
+			$cString = str_replace("ï¿½", "ï¿½", $cString);
+			$cString = str_replace("ï¿½", "ï¿½", $cString);
+			$cString = str_replace("ï¿½", "ï¿½", $cString);
+			$cString = str_replace("ï¿½", "ï¿½", $cString);
 																										  
-			$cString = str_replace("â", "â", $cString);
-			$cString = str_replace("ê", "ê", $cString);
-			$cString = str_replace("ô", "ô", $cString);
-			$cString = str_replace("Â", "Â", $cString);
-			$cString = str_replace("Ê", "Ê", $cString);
-			$cString = str_replace("Ô", "Ô", $cString);
+			$cString = str_replace("ï¿½", "ï¿½", $cString);
+			$cString = str_replace("ï¿½", "ï¿½", $cString);
+			$cString = str_replace("ï¿½", "ï¿½", $cString);
+			$cString = str_replace("ï¿½", "ï¿½", $cString);
+			$cString = str_replace("ï¿½", "ï¿½", $cString);
+			$cString = str_replace("ï¿½", "ï¿½", $cString);
 
-			$cString = str_replace("ü", "ü", $cString);
-			$cString = str_replace("Ü", "Ü", $cString);
+			$cString = str_replace("ï¿½", "ï¿½", $cString);
+			$cString = str_replace("ï¿½", "ï¿½", $cString);
 
-			$cString = str_replace("º", "º", $cString);
-			$cString = str_replace("ª", "ª", $cString);
+			$cString = str_replace("ï¿½", "ï¿½", $cString);
+			$cString = str_replace("ï¿½", "ï¿½", $cString);
 																											
 			$cString = str_replace("\r\n", "<br>", $cString);
 
