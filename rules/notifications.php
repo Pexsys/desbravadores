@@ -9,6 +9,7 @@ function getNotifications(){
 	$arr = array();
 	$arr = getItemNotify( $arr, "C", "fa-bullhorn", "Comunicados", $GLOBALS['VirtualDir']."dashboard/index.php?id=41" );
 	$arr = getItemNotify( $arr, "O", "fa-exclamation-triangle", "Ocorr&ecirc;ncias", $GLOBALS['VirtualDir']."dashboard/index.php?id=51" );
+	$arr = getItemNotify( $arr, "M", "fa-check-circle", "Mestrado Conclu&iacute;do", $GLOBALS['VirtualDir']."dashboard/index.php?id=16#mestrados" );
 	
 	$html = "";
 	$qt = 0;

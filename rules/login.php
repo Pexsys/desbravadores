@@ -29,7 +29,7 @@ function login( $parameters ) {
 		$barfn			= substr($usr, 1, 1);
 		$barfnid		= substr($usr, 2, 2);
 		$barpessoa36	= substr($usr, 4, 3);
-		$usrClube		= (strlen($usr) == 7 && $barini == "P" && strpos("0ABCDEF", $barfn) > 0);
+		$usrClube		= (strlen($usr) == 7 && $barini == "P" && strpos("0ABCDEF", $barfn) > -1);
 		
 		fConnDB();
 		$result = checkUser($usr, $pag);
