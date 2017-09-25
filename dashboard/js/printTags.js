@@ -22,12 +22,12 @@ $(document).ready(function(){
 			type	: "POST",
 			url	: jsLIB.rootDir+"rules/printTags.php",
 			data	: function (d) {
-					d.MethodName = "getTags",
-					d.data = { 
-							 filtro: 'T',
-							 filters: jsFilter.jSON()
-						}
-				},
+				d.MethodName = "getTags",
+				d.data = {
+					filtro: 'T',
+					filters: jsFilter.jSON()
+				}
+			},
 			dataSrc: "tags"
 		},
 		fnInitComplete: function(oSettings, json) {
@@ -67,13 +67,11 @@ $(document).ready(function(){
 		ruleBtnDelete();
 	});
 
-	$("#addTagsForm")
-		.submit( function(e) {
-			e.preventDefault();
-			e.stopPropagation();
-			updateSaida();
-		})
-	;
+	$("#addTagsForm").submit( function(e) {
+		e.preventDefault();
+		e.stopPropagation();
+		updateSaida();
+	});
 	
 	$('#btnNovo').click(function(){
 		jsLIB.resetForm( $('#addTagsForm') );
@@ -154,12 +152,10 @@ $(document).ready(function(){
 		$("#prepareModal").modal();
 	});
 	
-	$('#cadPrepareForm')
-		.submit( function(e) {
-			e.preventDefault();
-			e.stopPropagation();
-		})
-	;
+	$('#cadPrepareForm').submit( function(e) {
+		e.preventDefault();
+		e.stopPropagation();
+	});
 
 	$("#btnGerar").click( function(e) {
 		var parameter = {

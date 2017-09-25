@@ -27,7 +27,7 @@ function drawBoxesArea($title,$result,$boxClass){
 				$value = ( $tp == "ES" ? $fields["CD_ITEM_INTERNO"] : "" );
 				$icon = getIconAprendizado( $fields["TP_ITEM"], $fields["CD_AREA_INTERNO"], "fa-4x" );
 				$area = getMacroArea( $fields["TP_ITEM"], $fields["CD_AREA_INTERNO"] );
-				fItemAprendizado( $boxClass, $icon, $value, titleCase( $fields["DS_ITEM"] ), titleCase( $area ), "" );
+				fItemAprendizado( $boxClass, $icon, $value, titleCase( $fields["DS_ITEM"] ), titleCase( $area ) );
 			endforeach;
 			?>
 		</div>
@@ -78,7 +78,13 @@ if (!$result->EOF):
 				$qtd = $rs->fields["QT_COMPL"];
 			endif;
 			$pct = floor( ( $qtd / $qtdReq ) * 100);
-			fItemAprendizado( getClass( $pct ), $icon, "$pct%", titleCase( $fields["DS_ITEM"] ), titleCase( $area ), "$qtd / $qtdReq", "", $fields );
+			fItemAprendizado( getClass( $pct ), $icon, "$pct%", titleCase( $fields["DS_ITEM"] ), titleCase( $area ), "$qtd / $qtdReq", null, 
+			    array( 
+    			    "name" => "progress",
+    			    "cad-id" => $fields["ID_CAD_PESSOA"],
+    			    "req-id" => $fields["ID_TAB_APREND"]
+    			) 
+			);
 		endforeach;
 		?>
 	</div>

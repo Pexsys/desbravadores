@@ -175,7 +175,7 @@ REGRAS MESTRADO
       {  //2
         min : 1,
         selection : [ 
-          'AM004', 'HM029', 'AM007', 'AM013', 'AM010' 
+          'AM004', 'AM007', 'AM010', 'AM013', 'HM029' 
         ]
       }
     ],
@@ -819,11 +819,14 @@ function getIconAprendizado( $tpItem, $areaInterno, $sizeClass = "" ){
 	return $retorno;
 }
 
-function fItemAprendizado( $panelClass, $iconLeft, $value, $titulo, $detalhes, $detalhes2 = "", $style = "", $fields, $panelClassSize = "col-md-6 col-xs-6 col-sm-6 col-lg-4" ) {
+function fItemAprendizado( $panelClass, $iconLeft, $value, $titulo, $detalhes = null, $detalhes2 = "", $style = "", $fields = null, $panelClassSize = "col-md-6 col-xs-6 col-sm-6 col-lg-4" ) {
 	echo "<div class=\"$panelClassSize\">";
 	if ( isset($fields) ):
-		echo "  <div class=\"panel $panelClass\" name=\"progress\" cad-id=\"".$fields["ID_CAD_PESSOA"]."\" req-id=\"".$fields["ID_TAB_APREND"]."\">";
-		echo "	<div class=\"panel-heading\"". (empty($style)?"style=\"cursor:pointer;\"":" style=\"cursor:pointer;$style\"").">";
+		echo "  <div class=\"panel $panelClass\"";
+		foreach ($fields as $k => $i):
+		    echo " $k=\"$i\"";
+		endforeach;
+		echo "><div class=\"panel-heading\"". (empty($style)?"style=\"cursor:pointer;\"":" style=\"cursor:pointer;$style\"").">";
 	else:
 		echo "  <div class=\"panel $panelClass\">";
 		echo "	<div class=\"panel-heading\"". (empty($style)?"":" style=\"$style\"").">";
@@ -839,13 +842,14 @@ function fItemAprendizado( $panelClass, $iconLeft, $value, $titulo, $detalhes, $
 	if ( isset($fields) ):
 		echo "<div id=\"detalhes\" class=\"panel-body panel-collapse collapse\"></div>";
 	endif;
-	echo "	<div class=\"panel-footer\">
-				<span class=\"pull-left\">$detalhes</span>
-				<span class=\"pull-right\">$detalhes2</span>
-				<div class=\"clearfix\"></div>
-			</div>
-		</div>
-	</div>";
+	if ( isset($detalhes) || isset($detalhes2) ):
+    	echo "<div class=\"panel-footer\">
+    				<span class=\"pull-left\">$detalhes</span>
+    				<span class=\"pull-right\">$detalhes2</span>
+    				<div class=\"clearfix\"></div>
+    			</div>";
+    endif;
+    echo "</div></div>";
 }
 
 function fFormataData($data,$formato){
@@ -897,7 +901,8 @@ function getOptionTag($array,$option){
 function getTagsTipo(){
 	$arr = array();
 	$arr[] = array("id"	=> "0",	"cl" => "N", "md" => "1", "ds"=> "0-BÁSICA/NOME" );
-	$arr[] = array("id"	=> "1",	"cl" => "S", "md" => "3", "ds"=> "1-PASTA DE AVALIAÇÃO" );
+	$arr[] = array("id"	=> "1",	"cl" => "S", "md" => "3", "ds"=> "1-CAPA DA PASTA DE AVALIAÇÃO" );
+	$arr[] = array("id"	=> "2",	"cl" => "S", "md" => "3", "ds"=> "2-CAPA DE LEITURA BÍBLICA" );
 	$arr[] = array("id"	=> "A",	"cl" => "S", "md" => "1", "ds"=> "A-CARTÃO DE CLASSE" );
 	$arr[] = array("id"	=> "B",	"cl" => "S", "md" => "1", "ds"=> "B-CADERNO DE ATIVIDADES" );
 	$arr[] = array("id"	=> "C",	"cl" => "S", "md" => "2", "ds"=> "C-PASTA DE CLASSE" );

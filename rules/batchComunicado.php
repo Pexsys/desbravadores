@@ -42,7 +42,9 @@ foreach($rs as $k => $l):
 			$GLOBALS['conn']->Execute("
 				UPDATE LOG_MENSAGEM
 				   SET DH_SEND = NOW()
-				 WHERE ID_ORIGEM = ?
+				 WHERE DH_SEND IS NULL
+		           AND EMAIL IS NOT NULL
+				   AND ID_ORIGEM = ?
 				   AND TP = ?
 			", array( $l["ID"], "C") );
 		else:

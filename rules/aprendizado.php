@@ -150,8 +150,15 @@ function delete( $parameters ) {
 				 WHERE ID_CAD_PESSOA = ? 
 				   AND ID_TAB_APREND = ?
 			", array( $rs->fields["ID_CAD_PESSOA"], $rs->fields["ID_TAB_APREND"]) );
+			
+            //REMOVE NOTIFICACOES, SE EXISTIREM.
+            $GLOBALS['conn']->Execute("
+    		    DELETE FROM LOG_MENSAGEM 
+    		    WHERE ID_ORIGEM = ? AND TP = ? AND ID_USUARIO = (SELECT ID_USUARIO FROM CAD_USUARIOS WHERE ID_CAD_PESSOA = ?)
+    		", array( $rs->fields["ID_TAB_APREND"], "M", $rs->fields["ID_CAD_PESSOA"] ) );
 		endif;
 		$GLOBALS['conn']->Execute("DELETE FROM APR_HISTORICO WHERE ID = ?", array($id) );
+		
 	endforeach;
 	return array( "result" => true );
 }
@@ -195,6 +202,7 @@ function setAprendizado( $parameters ) {
 
 		//VERIFICA SE TEM IDS SELECIONADOS PARA ATUALIZAR ATRIBUTOS.
 		if ( isset($frm["id"]) && is_array($frm["id"]) ):
+		    $arr["x"] = array();
 			$frm["id_pessoa"] = array();
 			$prepare = updateHistoricoQuery( $paramDates, "ID = ?" );
 
@@ -223,8 +231,9 @@ function setAprendizado( $parameters ) {
 		//VERIFICA SE TEM MEMBROS ESPECIFICOS PARA ATUALIZAR ATRIBUTOS,
 		//DESDE QUE NAO TENHA ITENS DE APRENDIZADO A INSERIR/ALTERAR ESPECIFICOS
 		elseif ( isset($frm["id_pessoa"]) && is_array($frm["id_pessoa"]) && count($arrItens) == 0 ):
+		    $arr["x"] = array();
 			foreach ($frm["id_pessoa"] as $id):
-				$rh = $GLOBALS['conn']->Execute("SELECT ID_TAB_APREND FROM APR_HISTORICO WHERE ID_CAD_PESSOA = ? AND DT_INVESTIDURA IS NULL ", array($id));
+				$rh = $GLOBALS['conn']->Execute("SELECT ID_TAB_APREND FROM APR_HISTORICO WHERE ID_CAD_PESSOA = ? AND DT_INVESTIDURA IS NULL", array($id));
 				if (!$rh->EOF):
 					foreach ($rh as $k => $ln):
 						$paramDates = getParamDates( $frm );
@@ -246,11 +255,55 @@ function setAprendizado( $parameters ) {
 			endforeach;
 		endif;
 	endif;
+	
+	$arr["result"] = true;
+	$arr["msg"] = "";
 
 	//INCLUI/ATUALIZA ITENS
 	foreach ($arrItens as $id):
 		foreach ($frm["id_pessoa"] as $idPessoa):
-			updateHistorico( $idPessoa, $id, $paramDates, $compras );
+		    
+		    $deixa = true;
+		    //VERIFICA SE ITEM É UM MESTRADO E SE COMPLETOU TODOS AS ESPECIALIDADES DA REGRA.
+		    if ( isset($frm["cd_mest"]) && is_array($frm["cd_mest"]) && in_array($id, is_array($frm["cd_mest"])) ):
+		        
+		        //LE REGRAS
+            	$rg = $GLOBALS['conn']->Execute("
+            	    SELECT DISTINCT car.ID, car.CD_ITEM_INTERNO, car.CD_AREA_INTERNO, car.DS_ITEM, car.TP_ITEM, car.MIN_AREA
+            	      FROM CON_APR_REQ car
+            	     WHERE car.ID = ?
+            	", array($id) );
+            	foreach ($rg as $lg => $fg):
+                    $min = $fg["MIN_AREA"];
+            
+                    $feitas = 0;
+                    //LE PARAMETRO MINIMO E HISTORICO PARA A REGRA
+            	    $rR = $GLOBALS['conn']->Execute("
+                            SELECT tar.ID, tar.QT_MIN, COUNT(*) AS QT_FEITAS
+                              FROM TAB_APR_REQ tar
+                        INNER JOIN CON_APR_REQ car ON (car.ID_TAB_APR_REQ = tar.ID AND car.TP_ITEM_RQ = ?)
+                        INNER JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = car.ID_RQ AND ah.ID_CAD_PESSOA = ? AND ah.DT_CONCLUSAO IS NOT NULL)
+                             WHERE tar.ID_TAB_APREND = ?
+                          GROUP BY tar.ID, tar.QT_MIN
+                	", array( "ES", $idPessoa, $fg["ID"] ) );
+            	    foreach($rR as $lR => $fR):
+                        $feitas += min( $fR["QT_MIN"], $fR["QT_FEITAS"] );
+                    endforeach;
+            	    
+            		$pct = floor( ( $feitas / $min ) * 100 );
+            		
+            		//VERIFICA SE AINDA NÃO CONCLUIDO
+            		if ( $pct < 100 ):
+                        $arr["result"] = false;
+                        $arr["msg"] .= "Verifique regra. Inclusão não permitida para o item ".$fg["DS_ITEM"];
+                        $deixa = false;
+            		endif;
+            	endforeach;
+            endif;
+		    
+		    if ($deixa):
+			    updateHistorico( $idPessoa, $id, $paramDates, $compras );
+			endif;
 			
 			//INCLUI ITENS DE IDENTIFICACAO
 			if ($id >= 1 && $id <= 12):
@@ -260,11 +313,10 @@ function setAprendizado( $parameters ) {
 					endforeach;
 				endif;
 			endif;
-			
+		    
 		endforeach;
 	endforeach;
-
-	$arr["result"] = true;
+	
 	return $arr;
 }
 

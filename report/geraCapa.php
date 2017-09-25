@@ -8,6 +8,7 @@ class ESPCR extends TCPDF {
 	private $stLine;
 	private $stLine2;
 	private $params;
+	private $top;
 	
 	function __construct() {
 		parent::__construct(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
@@ -50,8 +51,38 @@ class ESPCR extends TCPDF {
 		endif;
 	}
 	
+	private function newPage() {
+		$this->AddPage();
+		$this->setCellPaddings(0,0,0,0);
+		$this->SetTextColor(0,0,0);
+		$this->setXY(0,0);
+		$this->top = 10;
+	}
+	
+	private function addRequisitoMestrado( $req, $f ){
+		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 10);
+		$this->SetFillColor(255,255,255);
+		$this->SetTextColor(0,0,0);
+		$this->setXY(10, $this->top);
+		$this->Cell(150, 5, "$req) Ter pelo menos " .$f["min"]. " das seguintes: ", '', 1, 'L', 1);
+		$this->top += 5;
+	}
+	
 	public function addEspecialidade($codEsp,$params) {
 		$this->params = $params;
+		$idPessoa = $this->params[0];
+		$nmPessoa = $this->params[1];
+		
+		if (!empty($idPessoa)):
+		    $result = $GLOBALS['conn']->Execute("
+    			SELECT *
+    			  FROM CON_ATIVOS
+    			 WHERE ID = ?
+    	    ", array( $idPessoa ) );
+    	    if (!$result->EOF):
+    	        $nmPessoa = utf8_encode($result->fields["NM"]);
+            endif;
+		endif;
 		
 		$result = $GLOBALS['conn']->Execute("
 			SELECT ta.ID, ta.DS_ITEM, ta.CD_AREA_INTERNO, tm.NR_PG_ASS
@@ -82,7 +113,7 @@ class ESPCR extends TCPDF {
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'I', 13);
 		$this->Cell(0, 0, "$codEsp - #$pgAss", 0, false, 'C');
 		
-		if (!empty($this->params[0])):
+		if (!empty($idPessoa)):
 			$barCODE = mb_strtoupper("PE". fStrZero(base_convert($result->fields["ID"],10,36),2) . fStrZero(base_convert($this->params[0],10,36),3));
 			$this->write1DBarcode($barCODE, 'C39', 73, 178, '', 17, 0.4, $this->stLine3, 'N');
 		endif;
@@ -90,7 +121,7 @@ class ESPCR extends TCPDF {
 		$tbTop = 205;
 		$this->setY($tbTop);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 17);
-		$this->Cell(0, 0, $this->params[1], 0, false, 'C', false, false, 1, false, 'C', 'C');
+		$this->Cell(0, 0, $nmPessoa, 0, false, 'C', false, false, 1, false, 'C', 'C');
 		
 		$tbTop += 5;		
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 9);
@@ -163,6 +194,149 @@ class ESPCR extends TCPDF {
 		$this->Cell(80, 10, "", 'TLB', 1, 'C', 1, '', 0, false, 'T', 'C');
 		$this->RoundedRect(142, $tbTop, 48, 10, 2.5, '0100', 'D', $this->stLine2);
 		$this->Line(142, $tbTop-11, 142, $tbTop+10, $this->stLine);
+		
+		//MONTA ESPECIALIDADES COMPLETADAS NA SEGUNDA FOLHA DESSE MESTRADO.
+		if (!empty($idPessoa) && $areaEsp == "ME"):
+		    
+		    $fazReq = true;
+		    $arr = array();
+		    
+            //LE PARAMETRO MINIMO E HISTORICO PARA A REGRA
+    	    $rR = $GLOBALS['conn']->Execute("
+                    SELECT tar.ID, tar.QT_MIN, COUNT(*) AS QT_FEITAS
+                      FROM TAB_APR_REQ tar
+                INNER JOIN CON_APR_REQ car ON (car.ID_TAB_APR_REQ = tar.ID AND car.TP_ITEM_RQ = ?)
+                INNER JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = car.ID_RQ AND ah.ID_CAD_PESSOA = ? AND ah.DT_INICIO IS NOT NULL)
+                     WHERE tar.ID_TAB_APREND = ?
+                  GROUP BY tar.ID, tar.QT_MIN
+        	", array( "ES", $idPessoa, $result->fields["ID"] ) );
+    	    foreach($rR as $lR => $fR):
+    	        $fazReq = ( $fR["QT_FEITAS"] >= $fR["QT_MIN"] );
+    	        
+    	        if (!$fazReq):
+    	            break;
+                endif;
+                
+                $arr[ $fR["ID"] ] = array(
+                    "min" => $fR["QT_MIN"],
+                    "hist" => array()
+                );
+                
+                //ADICIONAR REGRA E SELECAO DA REGRA.
+                //LE PARAMETRO MINIMO E HISTORICO PARA A REGRA
+        	    $rS = $GLOBALS['conn']->Execute("
+                    SELECT car.ID_RQ, car.CD_AREA_INTERNO_RQ, car.CD_ITEM_INTERNO_RQ, car.DS_ITEM_RQ, 
+                           tm.NR_PG_ASS, 
+                           ah.DT_INICIO, ah.DT_CONCLUSAO
+                      FROM CON_APR_REQ car
+                INNER JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = car.ID_RQ AND ah.ID_CAD_PESSOA = ? AND ah.DT_CONCLUSAO IS NOT NULL)
+                INNER JOIN TAB_MATERIAIS tm ON (tm.ID_TAB_APREND = car.ID_RQ)
+                     WHERE car.ID_TAB_APR_REQ = ?
+            ORDER BY tm.NR_PG_ASS, car.CD_AREA_INTERNO_RQ, car.CD_ITEM_INTERNO_RQ 
+            	", array( $idPessoa, $fR["ID"] ) );
+        	    foreach($rS as $lS => $fS):
+                     $arr[ $fR["ID"] ]["hist"][] = $fS;
+                endforeach;
+                
+            endforeach;
+    		
+    		//VERIFICA SE CONCLUIDO
+    		if ( $fazReq ):
+                $this->newPage();
+                
+                $req = 0;
+                foreach ($arr as $k => $i):
+                    ++$req;
+                    
+                    //ADICIONA CABECALHO DO REQUISITO.
+                    $this->startTransaction();
+                	$start_page = $this->getPage();
+                	$this->addRequisitoMestrado( $req, $i );
+                	if  ($this->getNumPages() != $start_page):
+                		$this->rollbackTransaction(true);
+                		$this->newPage();
+                		$this->addRequisitoMestrado( $req, $i );
+                	else:
+                		$this->commitTransaction();     
+                	endif;
+                	$this->top += 3;
+                	
+                	//ADICIONA ITENS DO REQUISITO
+                    foreach ($i["hist"] as $j => $z):
+                        $this->startTransaction();
+                    	$start_page = $this->getPage();
+                    	$this->addItemMestrado( $z );
+                    	if  ($this->getNumPages() != $start_page):
+                    		$this->rollbackTransaction(true);
+                    		$this->newPage();
+                    		$this->addItemMestrado( $z );
+                    	else:
+                    		$this->commitTransaction();     
+                    	endif;
+                    endforeach;
+                    
+                    $this->top += 20;
+                endforeach;
+    		endif;
+    		
+    		//REMOVE NOTIFICACAO PARA O MESTRADO
+    		$GLOBALS['conn']->Execute("
+    		    UPDATE LOG_MENSAGEM SET DH_READ = NOW()
+    		          WHERE ID_ORIGEM = ? 
+    		            AND TP = ? 
+    		            AND ID_USUARIO = (SELECT ID_USUARIO FROM CAD_USUARIOS WHERE ID_CAD_PESSOA = ?)
+    		", array( $result->fields["ID"], "M", $idPessoa ) );
+
+		endif;
+	}
+
+	private function addItemMestrado( $f ){
+		$areaEsp = $f['CD_AREA_INTERNO_RQ'];
+	    $codEsp = $f['CD_ITEM_INTERNO_RQ'];
+	    
+		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 10);
+		$this->SetFillColor(255,255,255);
+		$this->SetTextColor(0,0,0);
+		$this->setXY(15, $this->top);
+		$this->Image("img/aprendizado/ES/$areaEsp/$codEsp.jpg", 13, $this->top, 26, 21, 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+		
+		$this->top += 2;
+		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 10);
+		$this->SetFillColor(100,100,100);
+		$this->SetTextColor(255,255,255);
+		$this->RoundedRect(40, $this->top, 160, 6, 2.5, '1001', 'FD', $this->stLine2);
+		$this->setXY(44, $this->top+1);
+		$this->Cell(140, 4, utf8_encode($f['DS_ITEM_RQ']), '', 1, 'L', 1, '', 0, false, 'T', 'C');
+		$this->top += 6;
+		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 6);
+		$this->SetFillColor(180,180,180);
+		$this->setXY(40, $this->top);
+		$this->Cell(16, 4, "Código", 'TL', 1, 'C', 1, '', 0, false, 'T', 'C');
+		$this->setXY(56, $this->top);
+		$this->Cell(16, 4, "Assinatura", 'TL', 1, 'C', 1, '', 0, false, 'T', 'C');
+		$this->setXY(72, $this->top);
+		$this->Cell(32, 4, "Início", 'TL', 1, 'C', 1, '', 0, false, 'T', 'C');
+		$this->setXY(104, $this->top);
+		$this->Cell(32, 4, "Conclusão", 'TL', 1, 'C', 1, '', 0, false, 'T', 'C');
+		$this->setXY(136, $this->top);
+		$this->Cell(64, 4, "Instrutor", 'TLR', 1, 'C', 1, '', 0, false, 'T', 'C');
+		$this->top += 4;
+		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 8);
+		$this->SetFillColor(255,255,255);
+		$this->SetTextColor(0,0,0);
+		$this->setXY(40, $this->top);
+		$this->Cell(16, 7, $codEsp, '', 1, 'C', 1, '', 0, false, 'T', 'C');
+		$this->setXY(56, $this->top);
+		$this->Cell(16, 7, "#".$f['NR_PG_ASS'], 'L', 1, 'C', 1, '', 0, false, 'T', 'C');
+		$this->setXY(72, $this->top);
+		$this->Cell(32, 7, (is_null($f["DT_INICIO"]) ? "____/____/_________" : strftime("%d/%m/%Y",strtotime($f["DT_INICIO"]))), 'L', 1, 'C', 1, '', 0, false, 'T', 'C');
+		$this->setXY(104, $this->top);
+		$this->Cell(32, 7, (is_null($f["DT_CONCLUSAO"]) ? "____/____/_________" : strftime("%d/%m/%Y",strtotime($f["DT_CONCLUSAO"]))), 'L', 1, 'C', 1, '', 0, false, 'T', 'C');
+		$this->setXY(136, $this->top);
+		$this->Cell(64, 7, "", '', 1, 'C', 1, '', 0, false, 'T', 'C');
+		$this->RoundedRect(40, $this->top, 96, 7, 2.5, '0010', 'D', $this->stLine2);
+		$this->RoundedRect(136, $this->top, 64, 7, 2.5, '0100', 'D', $this->stLine2);
+        $this->top += 10;
 	}
 
 	public function download() {
@@ -198,7 +372,7 @@ if ($nome == "ALL"):
 		  FROM CON_ATIVOS 
 		 ORDER BY NM");
 	foreach ($result as $k => $line):
-		$arrNome[] = $line["ID"] ."|". utf8_encode($line["NM"]);
+		$arrNome[] = $line["ID"];
 	endforeach;
 else:
 	$arrNome = explode(",",$nome);
