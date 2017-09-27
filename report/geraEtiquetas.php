@@ -204,6 +204,38 @@ class ETIQUETAS extends TCPDF {
 			$this->setXY($x+30,$y+180);
 			$this->Cell(160, 35, utf8_encode($ln["NM"]), 1, false, 'C', false, false, false, false, 'T', 'M');
 
+		//TIPO 2 - CAPA DA LEITURA BIBLICA
+		elseif ($ln["TP"] == "2"):
+		
+			$this->SetLineStyle(
+				array(	'width' => 0.1, 
+						'cap' => 'square', // butt, round, square
+						'join' => 'bevel', //miter, round, bevel
+						'dash' => 0, 
+						'color' => array($colorR, $colorG, $colorB)
+				)
+			);
+			
+			$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 16);
+			$this->SetFillColor(255,255,255);
+			$this->SetTextColor($colorR, $colorG, $colorB);
+			
+			$s = "img/aprendizado/PA/logotipo_".fStrZero($ln["ID_TAB_APREND"],2).".jpg";
+			$this->Image($s, $x+30, $y+20, 40, 30, 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+			
+			$this->setXY($x+72,$y+20);
+			$this->Cell(118, 30, "RELATÓRIO DE LEITURA BÍBLICA", 1, false, 'C', false, false, false, false, 'T', 'M');	
+			
+			$this->setXY($x+30,$y+52);
+			$this->SetFillColor(255,255,255);
+			$this->Cell(160, 120, "", 1, false, 'C', false, false, false, false, 'T', 'M');
+			
+			$s = "img/aprendizado/LB/image1.jpg";
+			$this->Image($s, $x+35, $y+57, 150, 110, 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+
+			$this->setXY($x+30,$y+174);
+			$this->Cell(160, 35, utf8_encode($ln["NM"]), 1, false, 'C', false, false, false, false, 'T', 'M');
+
 		//TIPO 0 - MEMBROS DO CLUBE
 		elseif ($ln["TP"] == "0"):
 			$this->setXY($x,$y);

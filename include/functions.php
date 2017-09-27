@@ -901,7 +901,8 @@ function getOptionTag($array,$option){
 function getTagsTipo(){
 	$arr = array();
 	$arr[] = array("id"	=> "0",	"cl" => "N", "md" => "1", "ds"=> "0-BÁSICA/NOME" );
-	$arr[] = array("id"	=> "1",	"cl" => "S", "md" => "3", "ds"=> "1-PASTA DE AVALIAÇÃO" );
+	$arr[] = array("id"	=> "1",	"cl" => "S", "md" => "3", "ds"=> "1-CAPA DA PASTA DE AVALIAÇÃO" );
+	$arr[] = array("id"	=> "2",	"cl" => "S", "md" => "3", "ds"=> "2-CAPA DE LEITURA BÍBLICA" );
 	$arr[] = array("id"	=> "A",	"cl" => "S", "md" => "1", "ds"=> "A-CARTÃO DE CLASSE" );
 	$arr[] = array("id"	=> "B",	"cl" => "S", "md" => "1", "ds"=> "B-CADERNO DE ATIVIDADES" );
 	$arr[] = array("id"	=> "C",	"cl" => "S", "md" => "2", "ds"=> "C-PASTA DE CLASSE" );

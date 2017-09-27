@@ -85,7 +85,7 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
         				    <br/>
         				    Entre no sistema do clube (www.iasd-capaoredondo.com.br/desbravadores) e confira na op&ccedil;&atilde;o <i>Minha P&aacute;gina / Meu Aprendizado</i>. Caso n&atilde;o consiga ou n&atilde;o tenha acesso, procure seu conselheiro(a), instrutor(a) ou a secretaria do clube.<br/>
         				    <br/>
-        				    Tenho muito orgulho de v&ecirc;-l".($fA["SEXO"] == "F"?"a":"o")." pois tornou-se um".($fA["SEXO"] == "F"?"a":"")." especialista nessa &aacute;rea. Meus Parab&eacute;ns!<br/>
+        				    Fiquei orgulhoso ao saber que se tornou um".($rA->fields["SEXO"] == "F"?"a":"")." especialista nessa &aacute;rea. Isso &eacute; bom pra vocêcirc; e tamb&eacute;m para o clube. Meus Parab&eacute;ns!<br/>
         				    <br/>
         				    Com carinho,<br/>
         				    <br/>
@@ -94,12 +94,11 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
         				    IASD Cap&atilde;o Redondo
         				    </p>
         				";
-        				echo "$mensagem<br/><br/>";
 
             			$GLOBALS['mail']->ClearAllRecipients();
         				$GLOBALS['mail']->AddAddress( $fA["EMAIL"] );
         				$GLOBALS['mail']->Subject = utf8_decode("Clube Pioneiros - Aviso de Conclusão");
-        				$GLOBALS['mail']->MsgHTML( str_replace("|","<br/>",$mensagem) );
+        				$GLOBALS['mail']->MsgHTML( $mensagem );
         					
         				if ( $GLOBALS['mail']->Send() ):
         					$nrEnviados++;
@@ -109,7 +108,7 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
         						   SET DH_SEND = NOW()
         						 WHERE ID = ?
         						   AND TP = ?
-        					", array($l1["ID"], "M") );
+        					", array( $l1["ID"], "M" ) );
         					echo "email enviado para ". $fA["EMAIL"]."<br/>";
         				else:
         					echo "email não enviado para ". $fA["EMAIL"]."<br/>";

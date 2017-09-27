@@ -69,7 +69,7 @@ class COMPRAS {
 		$r1 = $GLOBALS['conn']->Execute("SELECT * FROM CON_ATIVOS WHERE ID = ?", array($pessoaID) );
 		
 		$qtItens = max( $r1->fields['QT_UNIFORMES'], 1 );
-		$isProxAnoDir = fIdadeAtual($r1->fields['DT_NASC']) >= 15 && date( 'n' ) > 10;
+		$isProxAnoDir = fIdadeAtual($r1->fields['DT_NASC']) >= 15 && date( 'n' ) >= 10;
 		$fundo = ( fStrStartWith( $r1->fields['CD_CARGO'], "2-") || $isProxAnoDir ? "BR" : "CQ" );
 
 		$GLOBALS['conn']->Execute("
@@ -77,7 +77,7 @@ class COMPRAS {
 			WHERE FG_COMPRA = ?
 			  AND ID_CAD_PESSOA = ?
 			  AND TP = ?
-		", array("N",$pessoaID, $tp) );
+		", array("N", $pessoaID, $tp) );
 
 		//SELECIONA OS ITENS DE HISTORICO
 		$r1 = $GLOBALS['conn']->Execute("

@@ -32,7 +32,7 @@ class TAGS {
 		$option = getOptionTag( $tags, $tp );
 		$md = $option["md"];
 
-		if (is_null($aprendID)):
+		if (is_null($aprendID) && $option["cl"] == "S"):
 			$r = $GLOBALS['conn']->Execute("
 				SELECT MAX(ta.ID) AS ID_TAB_APREND
 				  FROM CON_ATIVOS ca
