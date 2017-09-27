@@ -94,12 +94,11 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
         				    IASD Cap&atilde;o Redondo
         				    </p>
         				";
-        				echo "$mensagem<br/><br/>";
 
             			$GLOBALS['mail']->ClearAllRecipients();
         				$GLOBALS['mail']->AddAddress( $fA["EMAIL"] );
         				$GLOBALS['mail']->Subject = utf8_decode("Clube Pioneiros - Aviso de Conclusão");
-        				$GLOBALS['mail']->MsgHTML( str_replace("|","<br/>",$mensagem) );
+        				$GLOBALS['mail']->MsgHTML( $mensagem );
         					
         				if ( $GLOBALS['mail']->Send() ):
         					$nrEnviados++;

@@ -136,11 +136,12 @@ endif;
 	
 	//LE REGRAS
 	$rg = $GLOBALS['conn']->Execute("
-	    SELECT DISTINCT car.ID, car.CD_ITEM_INTERNO, car.CD_AREA_INTERNO, car.DS_ITEM, car.TP_ITEM, car.MIN_AREA
+	    SELECT DISTINCT car.ID, car.CD_ITEM_INTERNO, car.CD_AREA_INTERNO, car.DS_ITEM, car.TP_ITEM, car.MIN_AREA, ah.DT_CONCLUSAO
 	      FROM CON_APR_REQ car
+   LEFT JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = car.ID AND ah.ID_CAD_PESSOA = ?)
 	     WHERE car.CD_AREA_INTERNO = ?
 	  ORDER BY car.CD_ITEM_INTERNO
-	", array("ME") );
+	", array( $membroID, "ME") );
 	foreach ($rg as $lg => $fg):
         $min = $fg["MIN_AREA"];
 
@@ -162,11 +163,18 @@ endif;
 		$area = getMacroArea( $fg["TP_ITEM"], $fg["CD_AREA_INTERNO"] );
 		$pct = floor( ( $feitas / $min ) * 100 );
 		
-		$class  = getClassPainelMestrado( $pct );
+		$advise = null;
+		$class = "panel-default";
+		if ( $pct < 100 && !is_null($fg["DT_CONCLUSAO"]) ):
+		    $class = "panel-info";
+		    $advise = "Concluído pela regra antiga. Atualize seu mestrado para a regra nova.";
+		else:
+		    $class = getClassPainelMestrado( $pct );
+		endif;
 		$sizeClass = "col-md-4 col-xs-8 col-sm-6 col-lg-3";
 		$fields = null;
 		
-		//VERIFICA SE AINDA NÃO CONCLUIDO
+		//VERIFICA REQUISITOS CUMPRIDOS, MAS AINDA NÃO FINALIZADO.
 		if ( $pct >= 100 ):
     	    $rI = $GLOBALS['conn']->Execute("
                 SELECT DT_CONCLUSAO
@@ -197,7 +205,7 @@ endif;
     	    endif;
 		endif;
 		
-	    fItemAprendizado( $class, $icon, $fg["CD_ITEM_INTERNO"], titleCase( substr($fg["DS_ITEM"],12) ) . "<br/>$feitas / $min", null, null, null, $fields, $sizeClass );
+	    fItemAprendizado( $class, $icon, $fg["CD_ITEM_INTERNO"], titleCase( substr($fg["DS_ITEM"],12) ) . "<br/>$feitas / $min", $advise, null, null, $fields, $sizeClass );
 	endforeach;
 	?>
 </div>
