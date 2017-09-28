@@ -172,40 +172,45 @@ endif;
 		    $class = getClassPainelMestrado( $pct );
 		endif;
 		$sizeClass = "col-md-4 col-xs-8 col-sm-6 col-lg-3";
-		$fields = null;
+		
+		$fields = array(
+			"name" => "detail",
+			"what" => "rules",
+			"id-rule" => $fg["ID"]
+		);
 		
 		//VERIFICA REQUISITOS CUMPRIDOS, MAS AINDA NÃO FINALIZADO.
 		if ( $pct >= 100 ):
-    	    $rI = $GLOBALS['conn']->Execute("
-                SELECT DT_CONCLUSAO
-                FROM APR_HISTORICO 
-                WHERE ID_CAD_PESSOA = ?
-                  AND ID_TAB_APREND = ?
-    	    ", array( $membroID, $fg["ID"] ) );	
-    	    if ($rI->EOF || is_null($rI->fields["DT_CONCLUSAO"]) ):
-    	        $class = "panel-green";
-    	        $sizeClass = "col-md-4 col-xs-8 col-sm-6 col-lg-3 blink";
-    	        
-    	        //INSERE NOTIFICAÇOES SE NÃO EXISTIR.
-    	        $GLOBALS['conn']->Execute("
-    				INSERT INTO LOG_MENSAGEM ( ID_ORIGEM, TP, ID_USUARIO, EMAIL, DH_GERA )
-    				SELECT ?, 'M', cu.ID_USUARIO, ca.EMAIL, NOW()
-    				  FROM CON_ATIVOS ca
-    			INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID)
-    				 WHERE ca.ID = ?
-    				   AND NOT EXISTS (SELECT 1 FROM LOG_MENSAGEM WHERE ID_ORIGEM = ? AND TP = 'M' AND ID_USUARIO = cu.ID_USUARIO)
-    			", array( $fg["ID"], $membroID, $fg["ID"] ) );
-    			
-    			$fields = array(
-    			    "name" => "print",
-    			    "what" => "capa",
-    			    "id-pess" => $membroID,
-    			    "cd-item" => $fg["CD_ITEM_INTERNO"]
-    			);
-    	    endif;
+	    	    $rI = $GLOBALS['conn']->Execute("
+	                SELECT DT_CONCLUSAO
+	                FROM APR_HISTORICO 
+	                WHERE ID_CAD_PESSOA = ?
+	                  AND ID_TAB_APREND = ?
+	    	    ", array( $membroID, $fg["ID"] ) );	
+	    	    if ($rI->EOF || is_null($rI->fields["DT_CONCLUSAO"]) ):
+	    	        $class = "panel-green";
+	    	        $sizeClass = "col-md-4 col-xs-8 col-sm-6 col-lg-3 blink";
+	    	        
+	    	        //INSERE NOTIFICAÇOES SE NÃO EXISTIR.
+	    	        $GLOBALS['conn']->Execute("
+	    				INSERT INTO LOG_MENSAGEM ( ID_ORIGEM, TP, ID_USUARIO, EMAIL, DH_GERA )
+	    				SELECT ?, 'M', cu.ID_USUARIO, ca.EMAIL, NOW()
+	    				  FROM CON_ATIVOS ca
+	    			INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID)
+	    				 WHERE ca.ID = ?
+	    				   AND NOT EXISTS (SELECT 1 FROM LOG_MENSAGEM WHERE ID_ORIGEM = ? AND TP = 'M' AND ID_USUARIO = cu.ID_USUARIO)
+	    			", array( $fg["ID"], $membroID, $fg["ID"] ) );
+	    			
+	    	        $fields = array(
+	    	        		"name" => "print",
+	    	        		"what" => "capa",
+	    	        		"id-pess" => $membroID,
+	    	        		"cd-item" => $fg["CD_ITEM_INTERNO"]
+	    	        );
+	    	    endif;
 		endif;
 		
-	    fItemAprendizado( $class, $icon, $fg["CD_ITEM_INTERNO"], titleCase( substr($fg["DS_ITEM"],12) ) . "<br/>$feitas / $min", $advise, null, null, $fields, $sizeClass );
+		fItemAprendizado( $class, $icon, $fg["CD_ITEM_INTERNO"], titleCase( substr($fg["DS_ITEM"],12), array(" "), array("ADRA", "em", "e") ) . "<br/>$feitas / $min", $advise, null, null, $fields, $sizeClass );
 	endforeach;
 	?>
 </div>

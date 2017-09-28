@@ -18,6 +18,40 @@ $(document).ready(function(){
 		);
 	});
     
+    $("[name=detail]").on('click',function(){
+        var what = $(this).attr('what');
+        if (what == 'rules'){
+        		var parameter = {
+        			id : $(this).attr('id-rule')
+        		};
+        		
+        		var objReturn = jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/meuAprendizado.php", { MethodName : 'getMasterRules', data : parameter }, 'RETURN' );
+            
+            BootstrapDialog.show({
+	    			title: objReturn.title,
+	    			message: objReturn.message,
+	    			type: BootstrapDialog.TYPE_INFO,
+	    			size: BootstrapDialog.SIZE_WIDE,
+	    			draggable: true,
+	    			closable: true,
+	    			closeByBackdrop: true,
+	    			closeByKeyboard: true,
+	    			buttons: [
+	    				{ label: 'Fechar',
+	    					icon: 'glyphicon glyphicon-remove',
+	    					cssClass: 'btn-info',
+	    					autospin: true,
+	    					action: function(dialogRef){
+	    						dialogRef.enableButtons(false);
+	    						dialogRef.setClosable(false);
+	    						dialogRef.close();
+	    					}
+	    				}
+	    			]
+	    		});
+        }
+	});
+    
 	datasets = jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/meuAprendizado.php", { MethodName : 'getGraphData' }, 'RETURN' );
 	if (datasets.ob) {
 		choiceContainer = $("#choices");
