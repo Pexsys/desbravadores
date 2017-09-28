@@ -276,9 +276,9 @@ REGRAS MESTRADO
       {  //10
         min : 7,
         selection : [ 
-          'AR001', 'AR010', 'AR012', 'AR020', 'AR021', 'AR022', 'AR024', 'AR033', 'AR036', 'AR043', 
-          'AR045', 'AR046', 'AR053', 'AR056', 'AR057', 'AR058', 'AR070', 'AR085', 'AR088', 'AR089', 
-          'AR095', 'AR099', 'AR101', 'AR102', 'AR104'
+          'AR001', 'AR010', 'AR012', 'AR020', 'AR021', 'AR022', 'AR024', 'AR033', 'AR036', 'AR045', 
+          'AR046', 'AR053', 'AR056', 'AR057', 'AR058', 'AR070', 'AR085', 'AR088', 'AR089', 'AR095', 
+          'AR099', 'AR101', 'AR102', 'AR104', 'EN043'
         ]
       }
     ],
@@ -498,13 +498,10 @@ function fDifDatas($pDataIni,$pDataFim,$pRetorno){
 
 function fMontaCarrousel($relativePath,$extentions){
 	$capa = $GLOBALS['VirtualDir'] . $relativePath;
-	if ($_SERVER['SERVER_NAME'] == "192.168.1.249" || $_SERVER['SERVER_NAME'] == "localhost"):
-		$document_root = substr($_SERVER['DOCUMENT_ROOT'],0,strlen($_SERVER['DOCUMENT_ROOT'])-1);
-		$fisico_capas = $document_root . $capa;
-	else:
-		$document_root = $_SERVER['DOCUMENT_ROOT'];
-		$fisico_capas = $aDocumentos[$nLocais][0];
-	endif;
+
+	$document_root = $_SERVER['DOCUMENT_ROOT'];
+	$fisico_capas = $aDocumentos[$nLocais][0];
+
 	$capaFiles = array();
 	if (is_dir($fisico_capas)):
 		if ($handle = opendir($fisico_capas)):
@@ -582,6 +579,7 @@ function fMontaCarrousel($relativePath,$extentions){
 function fListDocumentos($relativePath,$title,$extentions,$classPanel,$tagItem){
 	$capa = $GLOBALS['VirtualDir'] . $relativePath;
 	$capa_img = $GLOBALS['VirtualDir'] . $relativePath."img/";
+	
 	$document_root = $_SERVER['DOCUMENT_ROOT'];
 	$fisico_capas = dirname(dirname(__FILE__)) . "/$relativePath";
 	$fisico_img = $fisico_capas . "img/";
@@ -667,13 +665,10 @@ function fListDocumentos($relativePath,$title,$extentions,$classPanel,$tagItem){
 function fListFanfarra($relativePath,$title,$extentions){
 	$capa = $GLOBALS['VirtualDir'] . $relativePath;
 	$capa_img = $GLOBALS['VirtualDir'] . "img/";
-	if ($_SERVER['SERVER_NAME'] == "192.168.1.249" || $_SERVER['SERVER_NAME'] == "localhost"):
-		$document_root = substr($_SERVER['DOCUMENT_ROOT'],0,strlen($_SERVER['DOCUMENT_ROOT'])-1);
-		$fisico_repertorio = $document_root . $capa;
-	else:
-		$document_root = $_SERVER['DOCUMENT_ROOT'];
-		$fisico_repertorio = $relativePath;
-	endif;
+
+	$document_root = $_SERVER['DOCUMENT_ROOT'];
+	$fisico_repertorio = $relativePath;
+
 	$dirRepertorio = array();
 	if (is_dir($fisico_repertorio)):
 		if ($handle = opendir($fisico_repertorio)):
