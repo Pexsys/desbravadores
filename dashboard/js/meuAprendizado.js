@@ -4,20 +4,6 @@ var previousPoint = null, previousLabel = null;
 
 $(document).ready(function(){
     
-    $("[name=print]").on('click',function(){
-        var url = jsLIB.rootDir+'report/';
-        var what = $(this).attr('what');
-        if (what == 'capa'){
-            url += 'geraCapa.php?nome='+$(this).attr('id-pess')+'|&list='+$(this).attr('cd-item');
-        }
-        window.open(
-			url,
-			'_blank',
-			'top=50,left=50,height=750,width=550,menubar=no,status=no,titlebar=no',
-			true
-		);
-	});
-    
     $("[name=detail]").on('click',function(){
         var what = $(this).attr('what');
         if (what == 'rules'){
@@ -36,6 +22,9 @@ $(document).ready(function(){
 	    			closable: true,
 	    			closeByBackdrop: true,
 	    			closeByKeyboard: true,
+	    			onshown: function(dialogRef){
+	    				mapPrint();
+                },
 	    			buttons: [
 	    				{ label: 'Fechar',
 	    					icon: 'glyphicon glyphicon-remove',
@@ -64,7 +53,28 @@ $(document).ready(function(){
 		choiceContainer.find("input").click(plotAccordingToChoices);
 		plotAccordingToChoices();
 	}
+	
+	mapPrint();
 });
+
+function mapPrint(){
+	$("[name=print]").unbind('click').on('click',function(){
+		printClick( $(this).attr('what'), $(this).attr('id-pess'), $(this).attr('cd-item') );
+	});
+}
+
+function printClick( what, idpess, cditem ){
+	 var url = jsLIB.rootDir+'report/';
+     if (what == 'capa'){
+         url += 'geraCapa.php?nome='+idpess+'|&list='+cditem;
+     }
+     window.open(
+		url,
+		'_blank',
+		'top=50,left=50,height=750,width=550,menubar=no,status=no,titlebar=no',
+		true
+	);	
+}
 
 $.fn.UseTooltip = function () {
 	var monthNames = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
