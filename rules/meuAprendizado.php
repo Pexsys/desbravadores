@@ -153,6 +153,7 @@ function getMasterRulesPessoa( $ruleID, $pessoaID ){
 		endforeach;
 	endforeach;
 		
+	$message .= "<ul>";
 	$req = 0;
 	foreach ($arr as $k => $i):
 		++$req;
@@ -164,15 +165,15 @@ function getMasterRulesPessoa( $ruleID, $pessoaID ){
 			$dsItem = titleCase($z['DS_ITEM_RQ'])." (".$z['CD_ITEM_INTERNO_RQ'].")";
 			if (!is_null($z['DT_CONCLUSAO'])):
 				++$plus;
-				$dsItem = "<span style=\"background-color:#00ff00\">($plus) $dsItem</span>";
+				$dsItem = "<span style=\"background-color:#00ff00\">$dsItem<sup>$plus</sup></span>";
 			endif;
 			$list .= ($j>0?", ":"").$dsItem;
 		endforeach;
 		
-		$message .= "<div><p><b>$req) Ter ". $i["min"] ." das seguintes especialidades:</b> <mark class=\"pull-right\">Completadas: <b>$plus</b></mark></p>";
-		$message .= "<div style=\"text-align:justify\">$list</div>";
-		$message .= "</div><br/><br/>";
+		$message .= "<li style=\"text-align:justify;\"><p><b>". ($req > 1 ? "e ter ": "Ter "). $i["min"] ." das seguintes especialidades:</b> <mark class=\"pull-right\">Completadas: <b>$plus</b></mark></p>";
+		$message .= "$list</li><br/><br/>";
 	endforeach;
+	$message .= "</ul>";
 	
 	return array( "return" => true, "title" => $title, "message" => $message );
 }
