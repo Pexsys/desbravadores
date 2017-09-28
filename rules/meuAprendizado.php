@@ -112,4 +112,68 @@ function getGraphData() {
 	endif;
 	return $arr;
 }
+
+
+function getMasterRules( $parameters ) {
+	session_start();
+	return getMasterRulesPessoa( $parameters["id"], $_SESSION['USER']['id_cad_pessoa'] );
+}
+	
+function getMasterRulesPessoa( $ruleID, $pessoaID ){
+	$title = "";
+	$message = "";
+	fConnDB();
+	
+	//LE PARAMETRO MINIMO E HISTORICO PARA A REGRA
+	$rR = $GLOBALS['conn']->Execute("
+		SELECT taq.ID, taq.QT_MIN, ta.DS_ITEM
+		  FROM TAB_APR_REQ taq
+	INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = taq.ID_TAB_APREND)
+		 WHERE taq.ID_TAB_APREND = ?
+    ", array( $ruleID ) );
+	
+	$title = "<b>".titleCase( $rR->fields["DS_ITEM"], array(" "), array("ADRA", "em", "e") )."</b>";
+	
+	foreach($rR as $lR => $fR):
+		$arr[ $fR["ID"] ] = array(
+			"min" => $fR["QT_MIN"],
+			"hist" => array()
+		);
+		//ADICIONAR REGRA E SELECAO DA REGRA.
+		//LE PARAMETRO MINIMO E HISTORICO PARA A REGRA
+		$rS = $GLOBALS['conn']->Execute("
+                    SELECT car.CD_ITEM_INTERNO_RQ, car.DS_ITEM_RQ, ah.DT_CONCLUSAO
+                      FROM CON_APR_REQ car
+                 LEFT JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = car.ID_RQ AND ah.ID_CAD_PESSOA = ?)
+                     WHERE car.ID_TAB_APR_REQ = ?
+            ORDER BY car.CD_AREA_INTERNO_RQ, car.CD_ITEM_INTERNO_RQ
+            	", array( $pessoaID, $fR["ID"] ) );
+		foreach($rS as $lS => $fS):
+			$arr[ $fR["ID"] ]["hist"][] = $fS;
+		endforeach;
+	endforeach;
+		
+	$req = 0;
+	foreach ($arr as $k => $i):
+		++$req;
+		$plus = 0;
+		
+		$list = "";
+		//ADICIONA ITENS DO REQUISITO
+		foreach ($i["hist"] as $j => $z):
+			$dsItem = titleCase($z['DS_ITEM_RQ'])." (".$z['CD_ITEM_INTERNO_RQ'].")";
+			if (!is_null($z['DT_CONCLUSAO'])):
+				++$plus;
+				$dsItem = "<span style=\"background-color:#00ff00\">($plus) $dsItem</span>";
+			endif;
+			$list .= ($j>0?", ":"").$dsItem;
+		endforeach;
+		
+		$message .= "<div><p><b>$req) Ter ". $i["min"] ." das seguintes especialidades:</b> <mark class=\"pull-right\">Completadas: <b>$plus</b></mark></p>";
+		$message .= "<div style=\"text-align:justify\">$list</div>";
+		$message .= "</div><br/><br/>";
+	endforeach;
+	
+	return array( "return" => true, "title" => $title, "message" => $message );
+}
 ?>
