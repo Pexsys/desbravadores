@@ -162,10 +162,13 @@ function getMasterRulesPessoa( $ruleID, $pessoaID ){
 		$list = "";
 		//ADICIONA ITENS DO REQUISITO
 		foreach ($i["hist"] as $j => $z):
-			$dsItem = titleCase($z['DS_ITEM_RQ'])." (".$z['CD_ITEM_INTERNO_RQ'].")";
+			$cdItem = $z['CD_ITEM_INTERNO_RQ'];
+			$dsItem = titleCase($z['DS_ITEM_RQ'])." ($cdItem)";
 			if (!is_null($z['DT_CONCLUSAO'])):
 				++$plus;
-				$dsItem = "<span style=\"background-color:#00ff00\">$dsItem<sup>$plus</sup></span>";
+				$dsItem = "<mark><u>$dsItem</u><sup>$plus</sup></mark>";
+			else:
+				$dsItem = "<a style=\"cursor:pointer\" name=\"print\" what=\"capa\" id-pess=\"$pessoaID\" cd-item=\"$cdItem\">$dsItem</a>";
 			endif;
 			$list .= ($j>0?", ":"").$dsItem;
 		endforeach;
