@@ -15,6 +15,8 @@ $classes = getDomainFilter( array( "type" => "C" ) );
 <div class="row">
 	<div class="col-lg-8">
 		<select name="cbListagem" id="cbListagem" class="selectpicker form-control input-sm" title="Escolha uma Listagem" data-width="100%" data-container="body" data-actions-box="true">
+			<option show="divRegistro" value="geraRegistro.php?filter=">REGISTRO DE HISTÓRICO DE MEMBROS</option>
+			<option data-divider="true"></option>
 			<option value="geraListaAtivos.php?">LISTAGEM DE MEMBROS</option>
 			<option show="divBatismo" value="geraListaBatismos.php?filter=">LISTAGEM DE MEMBROS - SITUACAO DE BATISMO</option>
 			<option show="divClasses" value="geraListaClasse.php?filter=">LISTAGEM DE MEMBROS - CLASSE</option>
@@ -95,6 +97,25 @@ $classes = getDomainFilter( array( "type" => "C" ) );
     	        echo "<option value=\"". $o["value"] ."\"". (!$s ? " selected":"") .">". $o["label"] ."</option>";
     	        	$s = true;
 		endforeach;
+		?>
+		</select>
+    </div>
+ 	<div class="col-lg-8" name="rowFilter" id="divRegistro" style="display:none;">
+		<label for="cbMembros" class="control-label">Membros:</label>
+		<select name="cbMembros" id="cbMembros" class="selectpicker form-control input-sm" title="Escolha um ou mais membros" data-live-search="true" multiple data-selected-text-format="count > 2" data-width="100%" data-container="body" data-actions-box="true">
+		<?php
+			$qtdZeros = zeroSizeID();
+        	$result = $GLOBALS['conn']->Execute("
+        	   SELECT DISTINCT cp.ID, cp.NM
+                 FROM CAD_PESSOA cp
+                WHERE EXISTS (SELECT 1 FROM APR_HISTORICO WHERE ID_CAD_PESSOA = cp.ID)
+                   OR EXISTS (SELECT 1 FROM EVE_SAIDA_PESSOA WHERE ID_CAD_PESSOA = cp.ID)
+                ORDER BY cp.NM
+            ");
+        	foreach($result as $l => $fields):
+        		$id = str_pad($fields['ID'], $qtdZeros, "0", STR_PAD_LEFT);
+        		echo "<option value=\"". $fields['ID'] ."\">$id ".utf8_encode($fields['NM']) ."</option>";
+        	endforeach;
 		?>
 		</select>
     </div>

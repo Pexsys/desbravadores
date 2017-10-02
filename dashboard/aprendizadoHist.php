@@ -21,6 +21,7 @@
 					array( "value" => "U", "label" => "Unidade" ),
 					array( "value" => "A", "label" => "&Aacute;reas" ),
 					array( "value" => "T", "label" => "Membros Ativos" ),
+					array( "value" => "I", "label" => "Membros Inativos" ),
 					array( "value" => "E", "label" => "Especialidade" ),
 					array( "value" => "M", "label" => "Mestrado" )
 				)

@@ -173,6 +173,10 @@ function getDomainFilter( $parameters ) {
 	elseif ( $type == "T" ):
 		$domain = getDomainMembrosAtivos();
 
+	//MEMBROS INATIVOS
+	elseif ( $type == "I" ):
+		$domain = getDomainMembrosInativos();
+
 	//AREAS
 	elseif ( $type == "A" ):
 		$domain = getDomainAreasEspecialidades();
