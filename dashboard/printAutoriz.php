@@ -50,7 +50,7 @@ if ( !$result->EOF ):
     					<div class=\"col-xs-9 text-right\">
     						<div class=\"huge\">".strftime("%Y",strtotime($fields["DH_S"]))."-".fStrZero($fields["ID"],3)."</div>
     					</div>
-    					<div class=\"col-xs-12 text-right\">".utf8_encode(strtoupper( $fields["DS"] ))."</div>
+    					<div class=\"col-xs-12 text-right\">".(strtoupper( $fields["DS"] ))."</div>
     				</div>
 			    </div>	
     		</div>

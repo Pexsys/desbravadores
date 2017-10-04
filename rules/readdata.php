@@ -88,7 +88,7 @@ function setAprendizado( $parm ){
 		//A-CARTAO
 		if ($parm["barfn"] == 10):
 			$arrRetorno = updateHistorico( $parm["barpessoaid"], $parm["barfnid"], $paramDates );
-			$str = $arrRetorno["nm"] ."<br/>". utf8_encode($arrRetorno["ap"]);
+			$str = $arrRetorno["nm"] ."<br/>". ($arrRetorno["ap"]);
 			
 			if ($arrRetorno["ar"] == "REGULAR"):
 				$rs = $GLOBALS['conn']->Execute("
@@ -107,7 +107,7 @@ function setAprendizado( $parm ){
 		//ESPECIALIDADE
 		elseif ($parm["barfn"] == 14):
 			$arrRetorno = updateHistorico( $parm["barpessoaid"], $parm["barfnid"], $paramDates );
-			$arr['result'] = $arrRetorno["nm"] ."<br/>". utf8_encode($arrRetorno["ap"]);
+			$arr['result'] = $arrRetorno["nm"] ."<br/>". ($arrRetorno["ap"]);
 			$arr['logged'] = true;
 		endif;
 	endif;
@@ -170,7 +170,7 @@ function setChamada( $parm ) {
 			   AND l.id_cad_pessoa = ?", Array( $idRegra, $parm["barpessoaid"] ) );
 			   
 		if (!$rs->EOF):
-			$arr['result'] = utf8_encode("Apontamento j&aacute; realizado por ".mb_strtoupper($rs->fields['cd_usuario'])." em ".strftime("%d/%m/%Y &agrave;s %H:%M:%S", strtotime($rs->fields['dh'])));
+			$arr['result'] = ("Apontamento j&aacute; realizado por ".mb_strtoupper($rs->fields['cd_usuario'])." em ".strftime("%d/%m/%Y &agrave;s %H:%M:%S", strtotime($rs->fields['dh'])));
 		
 		else:
 			$GLOBALS['conn']->Execute("
@@ -196,7 +196,7 @@ function setChamada( $parm ) {
 			endif;
 			$strRetorno .= strftime("%d/%m/%Y &agrave;s %H:%M:%S", strtotime($dhApontamento));
 			
-			$arr['result'] = utf8_encode($strRetorno);
+			$arr['result'] = ($strRetorno);
 			$arr['logged'] = true;	
 		endif;
 		

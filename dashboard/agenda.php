@@ -138,7 +138,7 @@
 															<option></option>
 															<?php
 															foreach (fTipoAlvo() as $key => $value):
-																echo "<option value=\"$key\">".utf8_encode($value)."</option>";
+																echo "<option value=\"$key\">".($value)."</option>";
 															endforeach;
 															?>
 														</select>
@@ -151,7 +151,7 @@
 															fConnDB();
 															$result = $GLOBALS['conn']->Execute("SELECT id, ds FROM TAB_RGR_CHAMADA ORDER BY ds");
 															foreach ($result as $ln):
-																echo "<option value=\"".$ln["id"]."\">".utf8_encode($ln["ds"])."</option>";
+																echo "<option value=\"".$ln["id"]."\">".($ln["ds"])."</option>";
 															endforeach;
 															?>
 														</select>
@@ -164,7 +164,7 @@
 															fConnDB();
 															$result = $GLOBALS['conn']->Execute("SELECT id, ds FROM TAB_TP_UNIFORME ORDER BY ds");
 															foreach ($result as $ln):
-																echo "<option value=\"".$ln["id"]."\">".utf8_encode($ln["ds"])."</option>";
+																echo "<option value=\"".$ln["id"]."\">".($ln["ds"])."</option>";
 															endforeach;
 															?>
 														</select>

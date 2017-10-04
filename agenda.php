@@ -40,7 +40,7 @@ fConnDB();
 
 	$MES_ANT = "";
 	while (!$result->EOF):
-		$MES_ATU = utf8_encode(ucfirst(strftime("%B", strtotime($result->fields['DTHORA_EVENTO_INI']))));
+		$MES_ATU = (ucfirst(strftime("%B", strtotime($result->fields['DTHORA_EVENTO_INI']))));
 
 		if ($MES_ATU != $MES_ANT):
 			$MES_ANT = $MES_ATU;
@@ -70,7 +70,7 @@ fConnDB();
 					$info .= " - ".trim($result->fields['DESC_LOCAL']);
 				endif;
 				if ($info != ""):
-					echo utf8_encode($info) . "<br/>";
+					echo ($info) . "<br/>";
 				endif;
 				
 				$endereco = trim($result->fields['DESC_LOGRADOURO']);
@@ -81,7 +81,7 @@ fConnDB();
 					$endereco .= " - ".trim($result->fields['DESC_COMPLEMENTO']);
 				endif;
 				if ($endereco != ""):
-					echo utf8_encode($endereco) . "<br/>";
+					echo ($endereco) . "<br/>";
 				endif;
 				
 				$cidade = "";
@@ -101,15 +101,15 @@ fConnDB();
 					$cidade .= trim($result->fields['COD_UF']);
 				endif;
 				if ($cidade != ""):
-					echo utf8_encode($cidade)."<br/>";
+					echo ($cidade)."<br/>";
 				endif;
 				
 				if (trim($result->fields['tp_grupo']) != ""):
-					echo utf8_encode("<i class=\"fa fa-question-circle\"></i>&nbsp;".fTipoAlvo($result->fields['tp_grupo']))."<br/>";
+					echo ("<i class=\"fa fa-question-circle\"></i>&nbsp;".fTipoAlvo($result->fields['tp_grupo']))."<br/>";
 				endif;
 				
 				if (trim($result->fields['ds']) != ""):
-					echo utf8_encode("<i class=\"fa fa-user-secret\"></i>&nbsp;".$result->fields['ds'])."<br/>";
+					echo ("<i class=\"fa fa-user-secret\"></i>&nbsp;".$result->fields['ds'])."<br/>";
 				endif;
 
 				?>

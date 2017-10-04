@@ -38,8 +38,8 @@ function getCargos(){
 	foreach ($result as $k => $fields):
 		$arr[] = array(
 			"cd" => $fields['CD'],
-			"dm" => utf8_encode($fields['DSM']),
-			"df" => utf8_encode($fields['DSF'])
+			"dm" => ($fields['DSM']),
+			"df" => ($fields['DSF'])
 		);
 	endforeach;
 	return array( "result" => true, "source" => $arr );
@@ -56,7 +56,7 @@ function getUnidades(){
 	foreach ($result as $k => $fields):
 		$arr[] = array(
 			"id" => $fields['ID'],
-			"ds" => utf8_encode($fields['DS']),
+			"ds" => ($fields['DS']),
 			"tp" => $fields['TP'],
 			"ie" => $fields['IDADE'],
 			"cc" => $fields['CD_COR'],

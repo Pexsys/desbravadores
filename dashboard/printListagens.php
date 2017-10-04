@@ -114,7 +114,7 @@ $classes = getDomainFilter( array( "type" => "C" ) );
             ");
         	foreach($result as $l => $fields):
         		$id = str_pad($fields['ID'], $qtdZeros, "0", STR_PAD_LEFT);
-        		echo "<option value=\"". $fields['ID'] ."\">$id ".utf8_encode($fields['NM']) ."</option>";
+        		echo "<option value=\"". $fields['ID'] ."\">$id ".($fields['NM']) ."</option>";
         	endforeach;
 		?>
 		</select>

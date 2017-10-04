@@ -39,7 +39,7 @@ function nextEvents(){
 							$info .= " - ".trim($result->fields['DESC_LOCAL']);
 						endif;
 						if ($info != ""):
-							echo "<i class=\"fa fa-info\"></i>&nbsp;". utf8_encode($info) ."<br/>";
+							echo "<i class=\"fa fa-info\"></i>&nbsp;". ($info) ."<br/>";
 						endif;
 						
 						$endereco = "";
@@ -50,7 +50,7 @@ function nextEvents(){
 							$endereco .= " - ".trim($result->fields['DESC_COMPLEMENTO']);
 						endif;
 						if ($endereco != ""):
-							echo "<i class=\"fa fa-map-marker\"></i>&nbsp;". utf8_encode($endereco) ."<br/>";
+							echo "<i class=\"fa fa-map-marker\"></i>&nbsp;". ($endereco) ."<br/>";
 						endif;
 						
 						$cidade = "";
@@ -70,15 +70,15 @@ function nextEvents(){
 							$cidade .= trim($result->fields['COD_UF']);
 						endif;
 						if ($cidade != ""):
-							echo utf8_encode($cidade)."<br/>";
+							echo ($cidade)."<br/>";
 						endif;
 						
 						if (trim($result->fields['tp_grupo']) != ""):
-							echo "<i class=\"fa fa-question-circle\"></i>&nbsp;". utf8_encode(fTipoAlvo($result->fields['tp_grupo'])) ."<br/>";
+							echo "<i class=\"fa fa-question-circle\"></i>&nbsp;". (fTipoAlvo($result->fields['tp_grupo'])) ."<br/>";
 						endif;
 						
 						if (trim($result->fields['ds']) != ""):
-							echo "<i class=\"fa fa-user-secret\"></i>&nbsp;". utf8_encode($result->fields['ds']) ."<br/>";
+							echo "<i class=\"fa fa-user-secret\"></i>&nbsp;". ($result->fields['ds']) ."<br/>";
 						endif;
 						echo "</div>";
 						?>

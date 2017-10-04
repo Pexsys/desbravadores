@@ -35,7 +35,7 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
     	", array("ME") );
     	foreach ($rg as $lg => $fg):
             $min = $fg["MIN_AREA"];
-            $dsItem = utf8_encode($fg["DS_ITEM"]);
+            $dsItem = ($fg["DS_ITEM"]);
     
             $feitas = 0;
             //LE PARAMETRO MINIMO E HISTORICO PARA A REGRA

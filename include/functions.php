@@ -34,7 +34,7 @@ function fGetPerfil( $cd = NULL ) {
 	while (!$result->EOF):
 		$child = fGetPerfil( $result->fields['cd'] );
 		$arr[ $result->fields['id'] ] = array( 
-			"opt"	 => utf8_encode($result->fields['ds_menu']),
+			"opt"	 => ($result->fields['ds_menu']),
 			"ico"	 => ( $_SESSION['USER']['sexo'] == "F" && isset($result->fields['iconf']) ? $result->fields['iconf'] :  $result->fields['iconm'] ),
 			"active" => false
 		);
@@ -792,7 +792,7 @@ function consultaAprendizadoPessoa( $tabAprendID, $pessoaID ){
 		 WHERE ID = ?
 	", array( $pessoaID ) );
 	if (!$rp->EOF):
-		$arr["nm"] = utf8_encode($rp->fields["NM"]);
+		$arr["nm"] = ($rp->fields["NM"]);
 	endif;
 	return $arr;
 }
@@ -1177,7 +1177,7 @@ function array_msort($array, $cols){
 function titleCase($string, 
 			$delimiters = array(" ", "-", ".", "'", "O'", "Mc"), 
 			$exceptions = array("a", "e", "da", "de", "do", "na", "no", "em", "das", "dos", "ao", "aos", "com", "I", "II", "III", "IV", "V", "VI") ){
-	$string = mb_convert_case(utf8_encode($string), MB_CASE_TITLE, "UTF-8");
+	$string = mb_convert_case(($string), MB_CASE_TITLE, "UTF-8");
 	foreach ($delimiters as $dlnr => $delimiter):
 		$words = explode($delimiter, $string);
 		$newwords = array();

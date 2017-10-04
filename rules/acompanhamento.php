@@ -122,13 +122,13 @@ function getData( $parameters ) {
 	$result = getQueryByFilter( $parameters );
 	foreach ($result as $k => $fields):
 		$arr[] = array( 
-			"ip" => utf8_encode($fields['ID_CAD_PESSOA']),
-			"ia" => utf8_encode($fields['ID_TAB_APREND']),
+			"ip" => ($fields['ID_CAD_PESSOA']),
+			"ia" => ($fields['ID_TAB_APREND']),
 			"di" => is_null($fields['DT_INICIO']) ? "" : strftime("%d/%m/%Y",strtotime($fields['DT_INICIO'])),
 			"dc" => is_null($fields['DT_CONCLUSAO']) ? "" : strftime("%d/%m/%Y",strtotime($fields['DT_CONCLUSAO'])),
 			"da" => is_null($fields['DT_AVALIACAO']) ? "" : strftime("%d/%m/%Y",strtotime($fields['DT_AVALIACAO'])),
-			"nm" => utf8_encode($fields['NM']),
-			"tp" => utf8_encode($fields['DS_ITEM']),
+			"nm" => ($fields['NM']),
+			"tp" => ($fields['DS_ITEM']),
 			"pg" => floor(($fields['QTD'] / $fields['QT_TOTAL'])*100)
 		);
 	endforeach;

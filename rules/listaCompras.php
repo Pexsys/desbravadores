@@ -141,8 +141,8 @@ function getLista( $parameters ) {
 		$arr[] = array( 
 			"tp" => $fields['TP_INCL'],
 			"id" => $fields['ID'],
-			"nm" => utf8_encode($fields['NM']),
-			"ds" => utf8_encode($ds),
+			"nm" => ($fields['NM']),
+			"ds" => ($ds),
 			"ic" => $fields['FG_COMPRA'],
 			"ie" => $fields['FG_ENTREGUE']
 		);
@@ -189,7 +189,7 @@ function getData( $parameters ) {
 				 WHERE FG_IM = 'S'
 				 ORDER BY TP");
 			foreach ($result as $k => $fields):
-				$tp = utf8_encode($fields['TP']);
+				$tp = ($fields['TP']);
 				$arr["tipos"][] = array( 
 					"id" => $tp,
 					"ds" => $tp
@@ -203,7 +203,7 @@ function getData( $parameters ) {
 				  FROM TAB_MATERIAIS 
 				 ORDER BY TP");
 			foreach ($result as $k => $fields):
-				$tp = utf8_encode($fields['TP']);
+				$tp = ($fields['TP']);
 				$arr["tipos"][] = array( 
 					"id" => $tp,
 					"ds" => $tp
@@ -218,7 +218,7 @@ function getData( $parameters ) {
 				$id = str_pad($fields['ID'], $qtdZeros, "0", STR_PAD_LEFT);
 				$arr["nomes"][] = array( 
 					"id" => $id,
-					"ds" => "$id ".utf8_encode($fields['NM'])
+					"ds" => "$id ".($fields['NM'])
 				);
 			endforeach;
 		endif;
@@ -234,7 +234,7 @@ function getData( $parameters ) {
 				$arr["itens"][] = array( 
 					"id" => $fields['ID'],
 					"cm" => $fields['CMPL'],
-					"ds" => utf8_encode($fields['DS']) . ( !is_null($fields['FUNDO']) ? " - FUNDO ". ($fields['FUNDO'] == "BR" ? "BRANCO" : "CAQUI") : "")
+					"ds" => ($fields['DS']) . ( !is_null($fields['FUNDO']) ? " - FUNDO ". ($fields['FUNDO'] == "BR" ? "BRANCO" : "CAQUI") : "")
 				);
 			endforeach;
 		endif;
@@ -256,7 +256,7 @@ function getData( $parameters ) {
 				$arr["itens"][] = array( 
 					"id" => $fields['ID'],
 					"cm" => $fields['CMPL'],
-					"ds" => utf8_encode($ds)
+					"ds" => ($ds)
 				);
 			endforeach;
 		endif;

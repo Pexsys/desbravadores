@@ -89,9 +89,9 @@ function getHistorico( $parameters ) {
 		foreach ($result as $k => $fields):
 			$arr[] = array( 
 				"id" => $fields['ID'],
-				"tp" => utf8_encode($fields['TP']),
-				"ds" => utf8_encode($fields['DS']. ( !is_null($fields['COMPL']) ? " [".$fields['COMPL']."]" : "") ),
-				"nm" => utf8_encode($fields['NM']),
+				"tp" => ($fields['TP']),
+				"ds" => ($fields['DS']. ( !is_null($fields['COMPL']) ? " [".$fields['COMPL']."]" : "") ),
+				"nm" => ($fields['NM']),
 				"dt" => strtotime($fields['DT_ENTREGA'])
 			);
 		endforeach;

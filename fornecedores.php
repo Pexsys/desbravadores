@@ -103,25 +103,25 @@ function fGetType($strTipoEvento){
 				</span> 
 			</div>
 			<div class="media-body">
-				<h4 class="media-heading"><?php  echo "<b>".utf8_encode(trim($rl['NM']))."</b>";?></h4>
+				<h4 class="media-heading"><?php  echo "<b>".(trim($rl['NM']))."</b>";?></h4>
 				<?php
 				if (isset($rl['SRVS'])):
-					echo "<i class=\"fa fa-question\"></i>&nbsp;".utf8_encode(trim($rl['SRVS']))."<br/>";
+					echo "<i class=\"fa fa-question\"></i>&nbsp;".(trim($rl['SRVS']))."<br/>";
 				endif;
 				if (isset($rl['FONES'])):
-					echo "<i class=\"fa fa-phone\"></i>&nbsp;".utf8_encode(trim($rl['FONES']))."<br/>";
+					echo "<i class=\"fa fa-phone\"></i>&nbsp;".(trim($rl['FONES']))."<br/>";
 				endif;
 				if (isset($rl['SITE'])):
-					echo "<i class=\"fa fa-sitemap\"></i>&nbsp;<a href=\"".utf8_encode(trim($rl['SITE']))."\">".utf8_encode(trim($rl['SITE']))."</a><br/>";
+					echo "<i class=\"fa fa-sitemap\"></i>&nbsp;<a href=\"".(trim($rl['SITE']))."\">".(trim($rl['SITE']))."</a><br/>";
 				endif;
 				if (isset($rl['EMAIL'])):
-					echo "<i class=\"fa fa-envelope-o\"></i>&nbsp;".utf8_encode(trim($rl['EMAIL']))."<br/>";
+					echo "<i class=\"fa fa-envelope-o\"></i>&nbsp;".(trim($rl['EMAIL']))."<br/>";
 				endif;
 				if (isset($rl['CONTATO'])):
-					echo "<i class=\"fa fa-user\"></i>&nbsp;".utf8_encode(trim($rl['CONTATO']))."<br/>";
+					echo "<i class=\"fa fa-user\"></i>&nbsp;".(trim($rl['CONTATO']))."<br/>";
 				endif;
 				if (isset($rl['END'])):
-					echo "<i class=\"fa fa-map-marker\"></i>&nbsp;".utf8_encode(trim($rl['END']))."<br/>";
+					echo "<i class=\"fa fa-map-marker\"></i>&nbsp;".(trim($rl['END']))."<br/>";
 				endif;
 				?>						
 			</div>

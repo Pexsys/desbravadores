@@ -122,11 +122,11 @@ function getAprHist( $parameters ) {
 	$result = getQueryByFilter($parameters);
 	if (!is_null($result)):
 		foreach ($result as $k => $fields):
-			$ds = utf8_encode($fields['DS_ITEM']) . ($fields['TP_ITEM'] == "ES" ? " - ".$fields['CD_ITEM_INTERNO'] : "");
+			$ds = ($fields['DS_ITEM']) . ($fields['TP_ITEM'] == "ES" ? " - ".$fields['CD_ITEM_INTERNO'] : "");
 			$arr[] = array( 
 				"id" => $fields['ID'],
-				"nm" => utf8_encode($fields['NM']),
-				"dstpi" => utf8_encode($fields['DS']),
+				"nm" => ($fields['NM']),
+				"dstpi" => ($fields['DS']),
 				"dsitm" => $ds,
 				"dta" => (empty($fields['DT_AVALIACAO']) ? "" : strtotime($fields['DT_AVALIACAO']) ),
 				"pg" =>  ($fields['TP_ITEM'] == "ES" ? $fields['NR_PG_ASS'] : "")
