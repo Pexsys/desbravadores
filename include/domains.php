@@ -9,7 +9,22 @@ function getDomainMembrosAtivos(){
 		$id = str_pad($fields['ID'], $qtdZeros, "0", STR_PAD_LEFT);
 		$arr[] = array(
 			"value" => $fields['ID'],
-			"label" => "$id ".utf8_encode($fields['NM'])
+			"label" => "$id ".($fields['NM'])
+		);
+	endforeach;
+	return $arr;
+}
+
+function getDomainMembrosInativos(){
+	$arr = array();
+	
+	$qtdZeros = zeroSizeID();
+	$result = $GLOBALS['conn']->Execute("SELECT cp.ID, cp.NM FROM CAD_PESSOA cp WHERE NOT EXISTS (SELECT 1 FROM CAD_ATIVOS WHERE ID = cp.ID AND NR_ANO = YEAR(NOW())) ORDER BY cp.NM");
+	foreach($result as $l => $fields):
+		$id = str_pad($fields['ID'], $qtdZeros, "0", STR_PAD_LEFT);
+		$arr[] = array(
+			"value" => $fields['ID'],
+			"label" => "$id ".($fields['NM'])
 		);
 	endforeach;
 	return $arr;
@@ -26,7 +41,7 @@ function getDomainEventos(){
 	foreach ($result as $k => $f):
 		$arr[] = array(
 			"value"	=> $f['ID'],
-			"label"	=> strftime("%d/%m/%Y",strtotime($f["DH_S"])) ." - ". utf8_encode($f['DS'])
+			"label"	=> strftime("%d/%m/%Y",strtotime($f["DH_S"])) ." - ". ($f['DS'])
 		);
 	endforeach;
 	return $arr;
@@ -43,7 +58,7 @@ function getDomainUnidades(){
 	while (!$result->EOF):
 		$arr[] = array( 
 			"value"	=> $result->fields['ID'],
-			"label"	=> utf8_encode($result->fields['DS'])
+			"label"	=> ($result->fields['DS'])
 		);
 		$result->MoveNext();
 	endwhile;
@@ -60,7 +75,7 @@ function getTipoAprendizado(){
 	while (!$result->EOF):
 		$arr[] = array( 
 			"value"	=> $result->fields['ID'],
-			"label"	=> utf8_encode($result->fields['DS'])
+			"label"	=> ($result->fields['DS'])
 		);
 		$result->MoveNext();
 	endwhile;
@@ -76,8 +91,8 @@ function getTipoMateriais(){
 		  ORDER BY TP");
 	while (!$result->EOF):
 		$arr[] = array(
-				"value"	=> utf8_encode($result->fields['TP']),
-				"label"	=> utf8_encode($result->fields['TP'])
+				"value"	=> ($result->fields['TP']),
+				"label"	=> ($result->fields['TP'])
 		);
 		$result->MoveNext();
 	endwhile;
@@ -95,7 +110,7 @@ function getDomainClasses(){
 	while (!$result->EOF):
 		$arr[] = array( 
 			"value"	=> $result->fields['ID'],
-			"label"	=> utf8_encode($result->fields['DS_ITEM'])
+			"label"	=> ($result->fields['DS_ITEM'])
 		);
 		$result->MoveNext();
 	endwhile;
@@ -115,7 +130,7 @@ function getDomainMestrados(){
 	while (!$result->EOF):
 		$arr[] = array( 
 			"value"	=> $result->fields['ID'],
-			"label"	=> $result->fields['CD_ITEM_INTERNO']." ".utf8_encode($result->fields['DS_ITEM'])
+			"label"	=> $result->fields['CD_ITEM_INTERNO']." ".($result->fields['DS_ITEM'])
 		);
 		$result->MoveNext();
 	endwhile;
@@ -135,7 +150,7 @@ function getDomainEspecialidades(){
 	while (!$result->EOF):
 		$arr[] = array( 
 			"value"	=> $result->fields['ID'],
-			"label"	=> $result->fields['CD_ITEM_INTERNO']." ".utf8_encode($result->fields['DS_ITEM'])
+			"label"	=> $result->fields['CD_ITEM_INTERNO']." ".($result->fields['DS_ITEM'])
 		);
 		$result->MoveNext();
 	endwhile;
@@ -154,7 +169,7 @@ function getDomainAreasEspecialidades(){
 	while (!$result->EOF):
 		$arr[] = array( 
 			"value"	=> $result->fields['CD_AREA_INTERNO'],
-			"label"	=> $result->fields['CD_ITEM_INTERNO']." ".utf8_encode($result->fields['DS_ITEM'])
+			"label"	=> $result->fields['CD_ITEM_INTERNO']." ".($result->fields['DS_ITEM'])
 		);
 		$result->MoveNext();
 	endwhile;

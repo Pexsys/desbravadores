@@ -16,7 +16,7 @@ function getFuncoes(){
 	foreach ($result as $k => $fields):
 		$arr[] = array(
 			"id" => $fields['ID'],
-			"ds" => utf8_encode($fields['DS_URL'])
+			"ds" => ($fields['DS_URL'])
 		);
 	endforeach;
 	return array( "result" => true, "source" => $arr );

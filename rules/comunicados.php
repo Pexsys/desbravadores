@@ -91,7 +91,7 @@ function fComunicado( $parameters ) {
 			$out["comunicado"] = array(
 				"id" => $parameters["id"],
 				"fg_pend" => "S",
-				"cd" => utf8_encode( $result->fields['ANO']."-".str_pad($result->fields['CD'], 2, "0", STR_PAD_LEFT))
+				"cd" => ( $result->fields['ANO']."-".str_pad($result->fields['CD'], 2, "0", STR_PAD_LEFT))
 			);
 			
 		else:
@@ -100,9 +100,9 @@ function fComunicado( $parameters ) {
 				$out["success"] = true;
 				$out["comunicado"] = array(
 					"id"		=> $result->fields['ID'],
-					"cd"		=> utf8_encode($result->fields['CD']),
+					"cd"		=> ($result->fields['CD']),
 					"dh"		=> strtotime($result->fields['DH'])."000",
-					"txt"		=> utf8_encode(trim($result->fields['TXT'])),
+					"txt"		=> (trim($result->fields['TXT'])),
 					"fg_pend"	=> $result->fields['FG_PEND']
 				);
 			endif;

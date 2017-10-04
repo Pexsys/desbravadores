@@ -60,7 +60,7 @@ function events( $parameters ) {
 
 		$out[] = array(
 			'id' => $result->fields['ID_EVENTO'],
-			'title' => utf8_encode($title),
+			'title' => ($title),
 			'url' => '',
 			'class' => ( $dh_fim < $DATA_NOW ? '' : fGetClass($tipo_evento) ),
 			'info' => 
@@ -68,13 +68,13 @@ function events( $parameters ) {
 					"id"		=> $result->fields['ID_EVENTO'],
 					"dh_ini"	=> strtotime($dh_ini) .'000',
 					"dh_fim"	=> strtotime($dh_fim) .'000',
-					"ds_info"	=> utf8_encode($ds_info_add),
-					"ds_local"	=> utf8_encode(trim($result->fields['DESC_LOCAL'])),
-					"ds_logra"	=> utf8_encode(trim($result->fields['DESC_LOGRADOURO'])),
-					"nr_logra"	=> utf8_encode(trim($result->fields['NUM_LOGRADOURO'])),
-					"ds_cmpl"	=> utf8_encode(trim($result->fields['DESC_COMPLEMENTO'])),
-					"ds_bai"	=> utf8_encode(trim($result->fields['DESC_BAIRRO'])),
-					"ds_cid"	=> utf8_encode(trim($result->fields['DESC_CIDADE'])),
+					"ds_info"	=> ($ds_info_add),
+					"ds_local"	=> (trim($result->fields['DESC_LOCAL'])),
+					"ds_logra"	=> (trim($result->fields['DESC_LOGRADOURO'])),
+					"nr_logra"	=> (trim($result->fields['NUM_LOGRADOURO'])),
+					"ds_cmpl"	=> (trim($result->fields['DESC_COMPLEMENTO'])),
+					"ds_bai"	=> (trim($result->fields['DESC_BAIRRO'])),
+					"ds_cid"	=> (trim($result->fields['DESC_CIDADE'])),
 					"cd_uf"		=> $result->fields['COD_UF'],
 					"fg_publ"	=> $result->fields['FLAG_PUBLICACAO'],
 					"tp_eve"	=> $tipo_evento,
@@ -332,7 +332,7 @@ function fDtHoraEvento($DTHORA_EVENTO_INI, $DTHORA_EVENTO_FIM){
 		$sDataHora = fConcatNoEmpty($sDataHora, " &agrave;s ", fDescHora($DTHORA_EVENTO_INI) );
 	endif;
 
-	return utf8_encode($sDataHora);
+	return ($sDataHora);
 }
 
 function agendaConsulta( $parameters ) {
@@ -366,7 +366,7 @@ function agendaConsulta( $parameters ) {
 		$mesAnt = "<div class=\"row\">";
 		foreach ($result as $k => $line):
 			$data = strtotime($line['DTHORA_EVENTO_INI']);
-			$nomeMesAtu = utf8_encode(ucfirst(strftime("%B",$data)));
+			$nomeMesAtu = (ucfirst(strftime("%B",$data)));
 			if ($nomeMesAtu != $mesAnt):
 				if ($mesAnt != ""):
 					$str .= "</div>";
@@ -405,7 +405,7 @@ function agendaConsulta( $parameters ) {
 				$info .= " - ".trim($result->fields['DESC_LOCAL']);
 			endif;
 			if ($info != ""):
-				$str .= utf8_encode($info) . "<br/>";
+				$str .= ($info) . "<br/>";
 			endif;
 			$endereco = trim($result->fields['DESC_LOGRADOURO']);
 			if (trim($result->fields['NUM_LOGRADOURO']) != ""):
@@ -415,7 +415,7 @@ function agendaConsulta( $parameters ) {
 				$endereco .= " - ".trim($result->fields['DESC_COMPLEMENTO']);
 			endif;
 			if ($endereco != ""):
-				$str .= utf8_encode($endereco) . "<br/>";
+				$str .= ($endereco) . "<br/>";
 			endif;
 			$cidade = "";
 			if (trim($result->fields['DESC_BAIRRO']) != ""):
@@ -434,7 +434,7 @@ function agendaConsulta( $parameters ) {
 				$cidade .= trim($result->fields['COD_UF']);
 			endif;
 			if ($cidade != ""):
-				$str .= utf8_encode($cidade)."<br/>";
+				$str .= ($cidade)."<br/>";
 			endif;
 			$str .= "</p>";
 			$str .= "</div>";

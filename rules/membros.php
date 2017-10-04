@@ -144,9 +144,9 @@ function getMembros( $parameters ) {
 		
 		$arr[] = array( 
 			"id" => str_pad($result->fields['id'], $qtdZeros, "0", STR_PAD_LEFT),
-			"nm" => utf8_encode($result->fields['NM']),
-			"uni" => utf8_encode($result->fields['DS_UNIDADE']),
-			"cgo" => utf8_encode($result->fields['DS_CARGO']),
+			"nm" => ($result->fields['NM']),
+			"uni" => ($result->fields['DS_UNIDADE']),
+			"cgo" => ($result->fields['DS_CARGO']),
 			"dm" => $aniversario,
 			"ih" => $result->fields['IDADE_HOJE']
 		);
@@ -342,13 +342,13 @@ function verificaResp( $parameters ) {
 function fMergeResp( $arr, $fields ){
 	if (!is_null($fields)):
 		$arr["cad_resp-id"] 			= $fields["ID"];
-		$arr["cad_resp-ds_resp"]		= utf8_encode(trim($fields['DS_RESP']));
-		$arr["cad_resp-nm_resp"]		= utf8_encode(trim($fields['NM_RESP']));
+		$arr["cad_resp-ds_resp"]		= (trim($fields['DS_RESP']));
+		$arr["cad_resp-nm_resp"]		= (trim($fields['NM_RESP']));
 		$arr["cad_resp-tp_sexo_resp"]	= $fields['TP_SEXO_RESP'];
 		$arr["cad_resp-doc_resp"]		= $fields['DOC_RESP'];
 		$arr["cad_resp-cpf_resp"]		= $fields['CPF_RESP'];
 		$arr["cad_resp-tel_resp"]		= $fields['TEL_RESP'];
-		$arr["cad_resp-email_resp"]		= utf8_encode(trim($fields['EMAIL_RESP']));
+		$arr["cad_resp-email_resp"]		= (trim($fields['EMAIL_RESP']));
 	endif;
 	return $arr;
 }
@@ -427,20 +427,20 @@ function getMember( $parameters ) {
 		$arr["membro"] = array( 
 			"cad_pessoa-id"			    => str_pad($result->fields['ID'], $qtdZeros, "0", STR_PAD_LEFT),
 			"cad_pessoa-bc"			    => "P000".strtoupper(fStrZero(base_convert($result->fields['ID'],10,36),3)),
-			"cad_pessoa-nm"			    => utf8_encode(trim($result->fields['NM'])),
-			"cad_pessoa-email"		    => utf8_encode(trim($result->fields['EMAIL'])),
-			"cad_pessoa-nm_escola"		=> utf8_encode(trim($result->fields['NM_ESCOLA'])),
-			"cad_pessoa-ds_relig"		=> utf8_encode(trim($result->fields['DS_RELIG'])),
+			"cad_pessoa-nm"			    => (trim($result->fields['NM'])),
+			"cad_pessoa-email"		    => (trim($result->fields['EMAIL'])),
+			"cad_pessoa-nm_escola"		=> (trim($result->fields['NM_ESCOLA'])),
+			"cad_pessoa-ds_relig"		=> (trim($result->fields['DS_RELIG'])),
 			"cad_pessoa-dt_bat"		    => is_null($result->fields['DT_BAT']) ? "" : date( 'd/m/Y', strtotime($result->fields['DT_BAT']) ),
 			"cad_pessoa-tp_sexo"		=> $result->fields['TP_SEXO'],
 			"cad_pessoa-dt_nasc"		=> is_null($result->fields['DT_NASC']) ? "" : date( 'd/m/Y', strtotime($result->fields['DT_NASC']) ),
 			"cad_pessoa-nr_doc"		    => trim($result->fields['NR_DOC']),
 			"cad_pessoa-nr_cpf"		    => $result->fields['NR_CPF'],
-			"cad_pessoa-logradouro"		=> utf8_encode(trim($result->fields['LOGRADOURO'])),
-			"cad_pessoa-nr_logr"		=> utf8_encode(trim($result->fields['NR_LOGR'])),
-			"cad_pessoa-complemento"	=> utf8_encode(trim($result->fields['COMPLEMENTO'])),
-			"cad_pessoa-bairro"		    => utf8_encode(trim($result->fields['BAIRRO'])),
-			"cad_pessoa-cidade"		    => utf8_encode(trim($result->fields['CIDADE'])),
+			"cad_pessoa-logradouro"		=> (trim($result->fields['LOGRADOURO'])),
+			"cad_pessoa-nr_logr"		=> (trim($result->fields['NR_LOGR'])),
+			"cad_pessoa-complemento"	=> (trim($result->fields['COMPLEMENTO'])),
+			"cad_pessoa-bairro"		    => (trim($result->fields['BAIRRO'])),
+			"cad_pessoa-cidade"		    => (trim($result->fields['CIDADE'])),
 			"cad_pessoa-uf"			    => $result->fields['UF'],
 			"cad_pessoa-cep"		    => $result->fields['CEP'],
 			"cad_pessoa-fone_res"		=> $result->fields['FONE_RES'],
@@ -514,7 +514,7 @@ function getUnidades( $parameters ) {
 		foreach ($result as $k => $l):
 			$arr[] = array( 
 				"value"	=> $l['ID'],
-				"label"	=> utf8_encode($l['DS'])
+				"label"	=> ($l['DS'])
 			);
 		endforeach;
 	endif;
@@ -550,7 +550,7 @@ function getCargos( $parameters ) {
 		while (!$result->EOF):
 			$arr[] = array( 
 				"value"	=> $result->fields['ID'],
-				"label"	=> utf8_encode($result->fields['DS'])
+				"label"	=> ($result->fields['DS'])
 			);
 			$result->MoveNext();
 		endwhile;
@@ -572,7 +572,7 @@ function getInstrumentos( $parameters ) {
 	while (!$result->EOF):
 		$arr[] = array( 
 			"value"	=> $result->fields['ID'],
-			"label"	=> utf8_encode($result->fields['DS'])
+			"label"	=> ($result->fields['DS'])
 		);
 		$result->MoveNext();
 	endwhile;

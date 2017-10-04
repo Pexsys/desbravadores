@@ -135,7 +135,7 @@ function getNames(){
 	if (!$result->EOF):
 		$unidadeID = $result->fields["ID_UNIDADE"];
 		$membroID = $result->fields["ID_CAD_PESSOA"];
-		$membroNM = utf8_encode($result->fields["NM"]);
+		$membroNM = ($result->fields["NM"]);
 		
 		$rs = $GLOBALS['conn']->Execute("
 			SELECT 1 
@@ -209,7 +209,7 @@ function getNames(){
 	          AND ca.IDADE_HOJE < ?
 	", array("S", "S", $usuarioID, 18) );
 	foreach ($rd as $k => $l):
-		$arr[] = array( "id" => $l["ID"], "ds" =>utf8_encode($l["NM"]) );
+		$arr[] = array( "id" => $l["ID"], "ds" =>($l["NM"]) );
 		
 		$aQuery = getUnionByUnidade( $aQuery, $l["ID_UNIDADE"], $l["ID"] );
 		$aQuery = getUnionByClasses( $aQuery, $l["ID"] );
@@ -219,7 +219,7 @@ function getNames(){
 		$rs = $GLOBALS['conn']->Execute( substr($aQuery["query"], 7)." ORDER BY 1", $aQuery["binds"] );
 		if (!$rs->EOF):
 			foreach ($rs as $k => $line):
-				$arr[] = array( "id" => $line["ID"], "ds" => utf8_encode($line["NM"]) );
+				$arr[] = array( "id" => $line["ID"], "ds" => ($line["NM"]) );
 			endforeach;
 		endif;
 	endif;
@@ -370,11 +370,11 @@ function fSaida( $parameters ) {
 						"dh_s"				=> strtotime($result->fields['DH_S'])."000",
 						"dh_r"				=> strtotime($result->fields['DH_R'])."000",
 						"id_cad_eventos"	=> $result->fields['ID_CAD_EVENTOS'],
-						"ds"				=> utf8_encode(trim($result->fields['DS'])),
-						"ds_tema"			=> utf8_encode(trim($result->fields['DS_TEMA'])),
-						"ds_org"			=> utf8_encode(trim($result->fields['DS_ORG'])),
-						"ds_dest"			=> utf8_encode(trim($result->fields['DS_DEST'])),
-						"ds_orig"			=> utf8_encode(trim($result->fields['DS_ORIG'])),
+						"ds"				=> (trim($result->fields['DS'])),
+						"ds_tema"			=> (trim($result->fields['DS_TEMA'])),
+						"ds_org"			=> (trim($result->fields['DS_ORG'])),
+						"ds_dest"			=> (trim($result->fields['DS_DEST'])),
+						"ds_orig"			=> (trim($result->fields['DS_ORIG'])),
 						"fg_campori"		=> $result->fields['FG_CAMPORI'],
 						"fg_imprimir"		=> $result->fields['FG_IMPRIMIR']
 					);
@@ -452,7 +452,7 @@ function getMembros( $parameters ) {
 		$arr[] = array(
 			"pt" => is_null($fields['ID_EVE_PESSOA']) ? 'N' : 'S',
 			"id" => $fields['ID'],
-			"nm" => utf8_encode($fields['NM']),
+			"nm" => ($fields['NM']),
 			"fg" => $fgAutoriz
 		);
 	endforeach;
@@ -503,8 +503,8 @@ function getSaidas( $parameters ) {
 	foreach ($result as $k => $fields):
 		$arr[] = array( 
 			"id" => str_pad($fields['ID'], 3, "0", STR_PAD_LEFT),
-			"ds" => utf8_encode($fields['DS']),
-			"dst" => utf8_encode($fields['DS_DEST']),
+			"ds" => ($fields['DS']),
+			"dst" => ($fields['DS_DEST']),
 			"dh_s" => strtotime($fields['DH_S']),
 			"dh_r" => strtotime($fields['DH_R'])
 		);
@@ -528,9 +528,9 @@ function getAttrib( $parameters ) {
 		foreach ($result as $k => $f):
 			$arr[] = array(
 				"id" => $f['ID'],
-				"nm" => utf8_encode($f["NM"]),
-				"un" => utf8_encode($f["DS_UNIDADE"]),
-				"cd" => utf8_encode($f[$filter])
+				"nm" => ($f["NM"]),
+				"un" => ($f["DS_UNIDADE"]),
+				"cd" => ($f[$filter])
 			);
 		endforeach;
 	endif;

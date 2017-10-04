@@ -20,6 +20,8 @@ function getQueryByFilter( $parameters ) {
 				$where .= " AND at.TP_SEXO ".$notStr."IN";
 			elseif ( $key == "T" ):
 				$where .= " AND at.ID ".$notStr."IN";
+			elseif ( $key == "I" ):
+				$where .= " AND cp.ID ".$notStr."IN";
 			elseif ( $key == "U" ):
 				$where .= " AND at.ID_UNIDADE ".$notStr."IN";
 			elseif ( $key == "C" ):
@@ -88,18 +90,19 @@ function getQueryByFilter( $parameters ) {
 	if (!empty($where)):
 		$query = "
 			SELECT DISTINCT
-				ah.ID,
-				at.NM,
+				cp.ID,
+				cp.NM,
 				ap.TP_ITEM,
 				ta.DS,
 				ap.DS_ITEM,
 				ap.CD_ITEM_INTERNO,
 				ah.DT_AVALIACAO,
 				tm.NR_PG_ASS
-			FROM CON_ATIVOS at
-			INNER JOIN APR_HISTORICO ah ON (ah.id_cad_pessoa = at.id AND ah.DT_INVESTIDURA IS NOT NULL)
-			INNER JOIN TAB_APRENDIZADO ap ON (ap.id = ah.id_tab_aprend)
-			INNER JOIN TAB_MATERIAIS tm ON (tm.id_tab_aprend = ah.id_tab_aprend)
+			FROM CAD_PESSOA cp
+			LEFT JOIN CON_ATIVOS at ON (at.ID = cp.ID)
+			LEFT JOIN APR_HISTORICO ah ON (ah.id_cad_pessoa = cp.id AND ah.DT_INVESTIDURA IS NOT NULL)
+			LEFT JOIN TAB_APRENDIZADO ap ON (ap.id = ah.id_tab_aprend)
+			LEFT JOIN TAB_MATERIAIS tm ON (tm.id_tab_aprend = ah.id_tab_aprend)
 			INNER JOIN TAB_TP_APRENDIZADO ta ON (ta.id = ap.tp_item)
 			WHERE 1=1 $where
 		 ORDER BY at.NM, ap.CD_ITEM_INTERNO
@@ -119,11 +122,11 @@ function getAprHist( $parameters ) {
 	$result = getQueryByFilter($parameters);
 	if (!is_null($result)):
 		foreach ($result as $k => $fields):
-			$ds = utf8_encode($fields['DS_ITEM']) . ($fields['TP_ITEM'] == "ES" ? " - ".$fields['CD_ITEM_INTERNO'] : "");
+			$ds = ($fields['DS_ITEM']) . ($fields['TP_ITEM'] == "ES" ? " - ".$fields['CD_ITEM_INTERNO'] : "");
 			$arr[] = array( 
 				"id" => $fields['ID'],
-				"nm" => utf8_encode($fields['NM']),
-				"dstpi" => utf8_encode($fields['DS']),
+				"nm" => ($fields['NM']),
+				"dstpi" => ($fields['DS']),
 				"dsitm" => $ds,
 				"dta" => (empty($fields['DT_AVALIACAO']) ? "" : strtotime($fields['DT_AVALIACAO']) ),
 				"pg" =>  ($fields['TP_ITEM'] == "ES" ? $fields['NR_PG_ASS'] : "")

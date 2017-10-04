@@ -16,7 +16,7 @@ function getPerfis(){
 	foreach ($result as $k => $fields):
 		$arr[] = array(
 			"id" => $fields['ID'],
-			"ds" => utf8_encode($fields['DS'])
+			"ds" => ($fields['DS'])
 		);
 	endforeach;
 	return array( "result" => true, "source" => $arr );

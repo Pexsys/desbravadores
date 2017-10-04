@@ -129,9 +129,9 @@ function getAprendizado( $parameters ) {
 		$arr[] = array( 
 			"id" => $fields['ID'],
 			"ip" => $fields['ID_CAD_PESSOA'],
-			"nm" => utf8_encode($fields['NM']),
-			"dsitp" => utf8_encode($fields['DS']),
-			"dsitm" => utf8_encode($fields['DS_ITEM']) . ($fields['TP_ITEM'] == "ES" ? " - ".$fields['CD_ITEM_INTERNO'] : "")
+			"nm" => ($fields['NM']),
+			"dsitp" => ($fields['DS']),
+			"dsitm" => ($fields['DS_ITEM']) . ($fields['TP_ITEM'] == "ES" ? " - ".$fields['CD_ITEM_INTERNO'] : "")
 		);
 	endforeach;
 	
@@ -332,7 +332,7 @@ function getData(){
 		$id = str_pad($result->fields['ID'], $qtdZeros, "0", STR_PAD_LEFT);
 		$arr["nomes"][] = array( 
 			"id" => $id,
-			"ds" => "$id ".utf8_encode($result->fields['NM'])
+			"ds" => "$id ".($result->fields['NM'])
 		);
 		$result->MoveNext();
 	endwhile;
@@ -356,7 +356,7 @@ function getMerito(){
 	foreach ($result as $k => $line):
 		$arr[] = array( 
 			"id"	=> $line['ID'],
-			"ds"	=> utf8_encode($line['DS_ITEM'])
+			"ds"	=> ($line['DS_ITEM'])
 		);
 	endforeach;
 	return $arr;
@@ -372,7 +372,7 @@ function getClasse(){
 	foreach ($result as $k => $line):
 		$arr[] = array( 
 			"id"	=> $line['ID'],
-			"ds"	=> utf8_encode($line['DS_ITEM'])
+			"ds"	=> ($line['DS_ITEM'])
 		);
 	endforeach;
 	return $arr;
@@ -390,7 +390,7 @@ function getMestrado(){
 	foreach ($result as $k => $line):
 		$arr[] = array( 
 			"id"	=> $line['ID'],
-			"ds"	=> $line['CD_ITEM_INTERNO'] ." ". utf8_encode($line['DS_ITEM'])
+			"ds"	=> $line['CD_ITEM_INTERNO'] ." ". ($line['DS_ITEM'])
 		);
 	endforeach;
 	return $arr;
@@ -408,7 +408,7 @@ function getEspecialidade(){
 	foreach ($result as $k => $line):
 		$arr[] = array( 
 			"id"	=> $line['ID'],
-			"ds"	=> $line['CD_ITEM_INTERNO'] ." ". utf8_encode($line['DS_ITEM'])
+			"ds"	=> $line['CD_ITEM_INTERNO'] ." ". ($line['DS_ITEM'])
 		);
 	endforeach;
 	return $arr;

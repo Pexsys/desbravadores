@@ -80,8 +80,8 @@ function getEstoque( $parameters ) {
     		
 			$arr[] = array( 
 				"id" => $fields['ID'],
-				"tp" => utf8_encode($fields['TP']),
-				"ds" => utf8_encode($ds),
+				"tp" => ($fields['TP']),
+				"ds" => ($ds),
 				"qt" => $fields['QT_EST']
 			);
 		endforeach;

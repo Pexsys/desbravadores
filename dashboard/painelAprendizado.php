@@ -68,7 +68,7 @@ if (!$result->EOF):
 		echo "<div class=\"panel panel-info\" aria-expanded=\"false\" cd-area=\"$cdArea\">";
 		echo "<div class=\"panel-heading\" style=\"cursor:pointer\">";
 		echo "<h5 class=\"panel-title\" data-toggle=\"collapse\" data-target=\"#$cdArea\">";
-		echo utf8_encode($line["DS_ITEM"])."<span class=\"badge pull-right\">".$line["QTD"]."</span>";
+		echo ($line["DS_ITEM"])."<span class=\"badge pull-right\">".$line["QTD"]."</span>";
 		echo "</h5></div>";
 		echo "<div id=\"$cdArea\" class=\"panel-body panel-collapse collapse\"></div></div></div>";
 	endforeach;

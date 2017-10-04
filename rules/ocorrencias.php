@@ -83,7 +83,7 @@ function fGetMembros(){
 		$id = str_pad($fields['ID_CAD_PESSOA'], $qtdZeros, "0", STR_PAD_LEFT);
 		$arr["nomes"][] = array(
 			"value" => $fields['ID_CAD_PESSOA'],
-			"label" => "$id ".utf8_encode($fields['NM'])
+			"label" => "$id ".($fields['NM'])
 		);
 	endforeach;
 	return $arr;
@@ -212,7 +212,7 @@ function fOcorrencia( $parameters ) {
 			$out["ocorrencia"] = array(
 				"id" => $parameters["id"],
 				"fg_pend" => "S",
-				"cd" => utf8_encode( $result->fields['ANO']."-".str_pad($result->fields['CD'], 2, "0", STR_PAD_LEFT))
+				"cd" => ( $result->fields['ANO']."-".str_pad($result->fields['CD'], 2, "0", STR_PAD_LEFT))
 			);
 		else:
 			$result = $GLOBALS['conn']->Execute("
@@ -226,12 +226,12 @@ function fOcorrencia( $parameters ) {
 				$out["success"] = true;
 				$out["ocorrencia"] = array(
 					"id"		=> $result->fields['ID'],
-					"cd"		=> utf8_encode($result->fields['CD']),
-					"tp"		=> utf8_encode($result->fields['TP']),
+					"cd"		=> ($result->fields['CD']),
+					"tp"		=> ($result->fields['TP']),
 					"id_pessoa"	=> $result->fields['ID_CAD_PESSOA'],
 					"dh"		=> strtotime($result->fields['DH'])."000",
-					"txt"		=> utf8_encode(trim($result->fields['TXT'])),
-					"owner"		=> utf8_encode(trim($result->fields['DS_USUARIO'])),
+					"txt"		=> (trim($result->fields['TXT'])),
+					"owner"		=> (trim($result->fields['DS_USUARIO'])),
 					"fg_pend"	=> $result->fields['FG_PEND']
 				);
 				
@@ -259,7 +259,7 @@ function fOcorrencia( $parameters ) {
 				$id = str_pad($f['ID'], $qtdZeros, "0", STR_PAD_LEFT);
 				$out["nomes"][] = array(
 						"id_pessoa" => $id,
-						"nm" => "$id ".utf8_encode($f['NM'])
+						"nm" => "$id ".($f['NM'])
 				);
 			endforeach;
 		endif;
@@ -280,7 +280,7 @@ function getOcorrencias( $parameters ){
 				"id" => $fields['ID'],
 				"cd" => $fields['CD'],
 				"tp" => $fields['TP'],
-				"nm" => utf8_encode($fields['NM']),
+				"nm" => ($fields['NM']),
 				"st" => (is_null($fields['DH_READ']) ? "S" : "N"),
 				"dh" => strtotime($fields['DH'])
 			);
@@ -289,7 +289,7 @@ function getOcorrencias( $parameters ){
 				"id" => $fields['ID'],
 				"cd" => $fields['CD'],
 				"tp" => $fields['TP'],
-				"nm" => utf8_encode($fields['NM']),
+				"nm" => ($fields['NM']),
 				"st" => $fields['FG_PEND'],
 				"so" => $fields['FG_PEND'],
 				"dh" => strtotime($fields['DH'])

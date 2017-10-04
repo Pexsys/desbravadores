@@ -122,12 +122,12 @@ function getTags( $parameters ) {
 		$ds = substr($option["ds"],2);
 		
 		if ($option["cl"] == "S" || !is_null($fields['DS_ITEM'])):
-			$ds .= "-".utf8_encode($fields['DS_ITEM']);
+			$ds .= "-".($fields['DS_ITEM']);
 		endif;
 		
 		$arr[] = array( 
 			"id" => $fields['ID'],
-			"nm" => utf8_encode($fields['NM']),
+			"nm" => ($fields['NM']),
 			"tp" => $ds,
 			"md" => $fields['MD']
 		);
@@ -153,7 +153,7 @@ function getMembros( $parameters ) {
 		$id = str_pad($fields['ID'], $qtdZeros, "0", STR_PAD_LEFT);
 		$arr[] = array(
 			"id" => $id,
-			"nm" => "$id ".utf8_encode($fields['NM'])
+			"nm" => "$id ".($fields['NM'])
 		);
 	endforeach;
 	return $arr;
@@ -199,7 +199,7 @@ function getClasse( $parameters ){
 	foreach ($result as $k => $line):
 		$arr[] = array( 
 			"id"	=> $line['ID'],
-			"ds"	=> utf8_encode($line['DS_ITEM'])
+			"ds"	=> ($line['DS_ITEM'])
 		);
 	endforeach;
 	return $arr;

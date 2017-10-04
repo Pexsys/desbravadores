@@ -22,7 +22,7 @@ function getName( $parameters ) {
 		$result = $GLOBALS['conn']->Execute("SELECT nm FROM CAD_PESSOA WHERE id = ?", Array( $id ) );
 		if (!$result->EOF):
 			$arr["id"] = $id;
-			$arr["nome"] = utf8_encode($result->fields['nm']);
+			$arr["nome"] = ($result->fields['nm']);
 			$arr['ok'] = true;
 		endif;
 	endif;
@@ -51,7 +51,7 @@ function getNames(){
 	if (!$result->EOF):
 		$unidadeID = $result->fields["ID_UNIDADE"];
 		$membroID = $result->fields["ID_CAD_PESSOA"];
-		$membroNM = utf8_encode($result->fields["NM"]);
+		$membroNM = ($result->fields["NM"]);
 		
 		$arr[] = array( "id" => $result->fields["ID_CAD_PESSOA"]."|$membroNM", "ds" => "<<mim>> - $membroNM");
 		$cargo = $result->fields['CD_CARGO'];
@@ -97,7 +97,7 @@ function getNames(){
 		WHERE cu.ID_USUARIO = ?
 	", array($usuarioID) );
 	foreach ($rd as $k => $l):
-		$arr[] = array( "id" => $l["ID"]."|".utf8_encode($l["NM"]), "ds" =>utf8_encode($l["NM"]) );
+		$arr[] = array( "id" => $l["ID"]."|".($l["NM"]), "ds" =>($l["NM"]) );
 	
 		$aQuery = getUnionByUnidade( $aQuery, $l["ID_UNIDADE"], $l["ID"] );
 		$aQuery = getUnionByClasses( $aQuery, $l["ID"] );
@@ -107,7 +107,7 @@ function getNames(){
 		$rs = $GLOBALS['conn']->Execute( substr($aQuery["query"], 7)." ORDER BY 2", $aQuery["binds"] );
 		foreach ($rs as $k => $line):
 			$id = $line["ID"];
-			$nm = utf8_encode($line["NM"]);
+			$nm = ($line["NM"]);
 			$arr[] = array( "id" => "$id|$nm", "ds" => $nm );
 		endforeach;
 	endif;
@@ -157,8 +157,8 @@ function getEspecialidades() {
 	while (!$result->EOF):
 		$arr[] = array( 
 			"cd_item" => $result->fields['CD_ITEM'],
-			"ds_item" => utf8_encode($result->fields['DS_ITEM']),
-			"ds_area" => utf8_encode($result->fields['DS_AREA'])
+			"ds_item" => ($result->fields['DS_ITEM']),
+			"ds_area" => ($result->fields['DS_AREA'])
 		);
 		$result->MoveNext();
 	endwhile;

@@ -90,6 +90,6 @@
 			$sDataHora .= fDescHora($DTHORA_EVENTO_INI);
 		endif;
 
-		return utf8_encode($sDataHora);
+		return ($sDataHora);
 	}
 ?>
