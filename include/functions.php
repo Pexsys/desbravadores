@@ -411,7 +411,7 @@ function fConcatNoEmpty($sStr, $sSep, $sNew){
 
 function fReturnStringNull($s,$default = null){
 	if ( isset($s) && trim($s) !== "" ):
-		return utf8_decode($s);
+		return $s;
 	endif;
 	return $default;
 }
