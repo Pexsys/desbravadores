@@ -137,8 +137,12 @@
 														<select field="tp_grupo" name="cmGrupo" id="cmGrupo" class="form-control input-sm" placeholder="Grupo" default-value="T">
 															<option></option>
 															<?php
-															foreach (fTipoAlvo() as $key => $value):
-																echo "<option value=\"$key\">".($value)."</option>";
+															$arr = array(
+																"T" => "TODOS",
+																"D" => "DESBRAVADORES",
+																"I" => "DIRETORIA");
+															foreach ($arr as $key => $value):
+																echo "<option value=\"$key\">$value</option>";
 															endforeach;
 															?>
 														</select>
@@ -151,7 +155,7 @@
 															fConnDB();
 															$result = $GLOBALS['conn']->Execute("SELECT id, ds FROM TAB_RGR_CHAMADA ORDER BY ds");
 															foreach ($result as $ln):
-																echo "<option value=\"".$ln["id"]."\">".($ln["ds"])."</option>";
+																echo "<option value=\"".$ln["id"]."\">".$ln["ds"]."</option>";
 															endforeach;
 															?>
 														</select>
@@ -164,7 +168,7 @@
 															fConnDB();
 															$result = $GLOBALS['conn']->Execute("SELECT id, ds FROM TAB_TP_UNIFORME ORDER BY ds");
 															foreach ($result as $ln):
-																echo "<option value=\"".$ln["id"]."\">".($ln["ds"])."</option>";
+																echo "<option value=\"".$ln["id"]."\">".$ln["ds"]."</option>";
 															endforeach;
 															?>
 														</select>
