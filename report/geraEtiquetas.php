@@ -202,7 +202,7 @@ class ETIQUETAS extends TCPDF {
 			$this->SetFillColor(255,255,255);
 			$this->SetTextColor($colorR, $colorG, $colorB);
 			$this->setXY($x+30,$y+180);
-			$this->Cell(160, 35, utf8_encode($ln["NM"]), 1, false, 'C', false, false, false, false, 'T', 'M');
+			$this->Cell(160, 35, $ln["NM"], 1, false, 'C', false, false, false, false, 'T', 'M');
 
 		//TIPO 2 - CAPA DA LEITURA BIBLICA
 		elseif ($ln["TP"] == "2"):
@@ -234,7 +234,7 @@ class ETIQUETAS extends TCPDF {
 			$this->Image($s, $x+35, $y+57, 150, 110, 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
 
 			$this->setXY($x+30,$y+174);
-			$this->Cell(160, 35, utf8_encode($ln["NM"]), 1, false, 'C', false, false, false, false, 'T', 'M');
+			$this->Cell(160, 35, $ln["NM"], 1, false, 'C', false, false, false, false, 'T', 'M');
 
 		//TIPO 0 - MEMBROS DO CLUBE
 		elseif ($ln["TP"] == "0"):
@@ -246,7 +246,7 @@ class ETIQUETAS extends TCPDF {
 			$this->SetTextColor(0,0,0);
 			$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 9);
 			$this->setXY($x+18,$y-4);
-			$this->MultiCell(82, 8, utf8_encode($ln["NM"]), false, 'C', false, 2, "", "", true, 0, false, true, 0, "M", false );
+			$this->MultiCell(82, 8, $ln["NM"], false, 'C', false, 2, "", "", true, 0, false, true, 0, "M", false );
 			
 			//CASO TENHA ITEM DE CLASSE PARA IMPRIMIR
 			if (!is_null($ln["ID_TAB_APREND"])):
@@ -258,7 +258,7 @@ class ETIQUETAS extends TCPDF {
 					$this->SetTextColor(255,255,255);
 				endif;
 				$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 6);
-				$this->MultiCell(50, 3, utf8_encode($ln["DS_ITEM"]), false, 'C', true, 0, "", "", true, 0, false, true, 0, "M", false );
+				$this->MultiCell(50, 3, $ln["DS_ITEM"], false, 'C', true, 0, "", "", true, 0, false, true, 0, "M", false );
 			endif;
 			
 		//TIPO C - PASTA DE CLASSE
@@ -274,12 +274,12 @@ class ETIQUETAS extends TCPDF {
 			$this->setXY($x+2,$y+32);
 			$this->SetTextColor($colorR, $colorG, $colorB);
 			$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 21);
-			$this->MultiCell(126, 25, utf8_encode($ln["DS_ITEM"]), false, 'C', false, 2, "", "", true, 0, false, true, 0, "M", false );
+			$this->MultiCell(126, 25, $ln["DS_ITEM"], false, 'C', false, 2, "", "", true, 0, false, true, 0, "M", false );
 			
 			$this->setXY($x+2,$y+75);
 			$this->SetTextColor(0,0,0);
 			$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 17);
-			$this->Cell(126, 25, utf8_encode($ln["NM"]), false, false, 'C', false, false, true, false, 'B', 'M');
+			$this->Cell(126, 25, $ln["NM"], false, false, 'C', false, false, true, false, 'B', 'M');
 
 			$this->setXY($x+2,$y+83);
 			$this->SetTextColor(180,180,180);
@@ -296,7 +296,7 @@ class ETIQUETAS extends TCPDF {
 			$this->SetTextColor(0,0,0);
 			$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 8);
 			$this->setXY($x+18,$y+1);
-			$this->Cell(78, 7, utf8_encode($ln["NM"]), false, false, 'C', false, false, true, false, 'B', 'M');
+			$this->Cell(78, 7, $ln["NM"], false, false, 'C', false, false, true, false, 'B', 'M');
 			
 			$this->setXY($x+28,$y+1);
 			$this->write1DBarcode($ln["BC"], 'C39', '', '', '', 15, 0.35, $this->stLine, 'N');
@@ -311,7 +311,7 @@ class ETIQUETAS extends TCPDF {
 			$this->SetTextColor(0,0,0);
 			$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 9);
 			$this->setXY($x+18,$y+1);
-			$this->Cell(78, 8, utf8_encode($ln["NM"]), false, false, 'C', false, false, true, false, 'B', 'M');
+			$this->Cell(78, 8, $ln["NM"], false, false, 'C', false, false, true, false, 'B', 'M');
 			
 			if (strpos("AB", $ln["TP"]) !== FALSE ):
 				$this->setXY($x+40,$y+3.5);
@@ -325,7 +325,7 @@ class ETIQUETAS extends TCPDF {
 					$this->SetTextColor(255,255,255);
 				endif;
 				$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 5);
-				$this->Cell(35, 3, utf8_encode($ln["DS_ITEM"]), 0, false, 'C', true, false, false, false, 'B', 'M');
+				$this->Cell(35, 3, $ln["DS_ITEM"], 0, false, 'C', true, false, false, false, 'B', 'M');
 			endif;
 		endif;
 	}
