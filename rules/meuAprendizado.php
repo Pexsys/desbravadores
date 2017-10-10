@@ -142,7 +142,7 @@ function getMasterRulesPessoa( $ruleID, $pessoaID ){
 		//ADICIONAR REGRA E SELECAO DA REGRA.
 		//LE PARAMETRO MINIMO E HISTORICO PARA A REGRA
 		$rS = $GLOBALS['conn']->Execute("
-                    SELECT car.CD_ITEM_INTERNO_RQ, car.DS_ITEM_RQ, ah.DT_CONCLUSAO
+                    SELECT car.CD_ITEM_INTERNO_RQ, car.DS_ITEM_RQ, ah.DT_INICIO, ah.DT_CONCLUSAO
                       FROM CON_APR_REQ car
                  LEFT JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = car.ID_RQ AND ah.ID_CAD_PESSOA = ?)
                      WHERE car.ID_TAB_APR_REQ = ?
@@ -167,6 +167,8 @@ function getMasterRulesPessoa( $ruleID, $pessoaID ){
 			if (!is_null($z['DT_CONCLUSAO'])):
 				++$plus;
 				$dsItem = "<mark><u>$dsItem</u><sup>$plus</sup></mark>";
+			elseif (!is_null($z['DT_INICIO'])):
+				$dsItem = "<u>$dsItem</u>";
 			else:
 				$dsItem = "<a style=\"cursor:pointer\" name=\"print\" what=\"capa\" id-pess=\"$pessoaID\" cd-item=\"$cdItem\">$dsItem</a>";
 			endif;
