@@ -72,7 +72,7 @@ class LISTAEVENTOKITCHEN extends TCPDF {
 		
 		$this->setXY(20,$this->posY);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 8);
-		$this->Cell(185, 5, utf8_encode($this->header["DS"] . (!is_null($this->header["DS_TEMA"]) ? " - ".$this->header["DS_TEMA"] : "")  ." - ". $this->header["DS_DEST"]), 0, false, 'C', false, false, false, false, 'T', 'M');
+		$this->Cell(185, 5, ($this->header["DS"] . (!is_null($this->header["DS_TEMA"]) ? " - ".$this->header["DS_TEMA"] : "")  ." - ". $this->header["DS_DEST"]), 0, false, 'C', false, false, false, false, 'T', 'M');
 		$this->posY += 5;
 
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 8);
@@ -100,7 +100,7 @@ class LISTAEVENTOKITCHEN extends TCPDF {
 			$this->SetFillColor(255,255,255);
 		endif;
 		$this->setXY(5, $this->posY);
-		$this->Cell(170, 12, utf8_encode($f["NM"]), 0, false, 'L', true, false, 1);
+		$this->Cell(170, 12, $f["NM"], 0, false, 'L', true, false, 1);
 		$this->setX(175);
 		$this->Cell(30, 12, $f["KITCHEN"], 0, false, 'C', true, false, 1);
 		$this->posY+=12;

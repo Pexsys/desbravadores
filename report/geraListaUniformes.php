@@ -85,7 +85,7 @@ class LISTAMATERIAIS extends TCPDF {
 			$this->setXY(20,$this->posY);
 			$this->SetTextColor(0,0,0);
 			$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 9);
-			$this->Cell(185, 5, utf8_encode($this->header["DS"] . (!is_null($this->header["DS_TEMA"]) ? " - ".$this->header["DS_TEMA"] : "")  ." - ". $this->header["DS_DEST"]), 0, false, 'C', false, false, false, false, 'T', 'M');
+			$this->Cell(185, 5, ($this->header["DS"] . (!is_null($this->header["DS_TEMA"]) ? " - ".$this->header["DS_TEMA"] : "")  ." - ". $this->header["DS_DEST"]), 0, false, 'C', false, false, false, false, 'T', 'M');
 		endif;
 		$this->posY += 5;
 
@@ -131,7 +131,7 @@ class LISTAMATERIAIS extends TCPDF {
 			$this->SetFillColor(255,255,255);
 		endif;
 		$this->setXY(5, $this->posY);
-		$this->Cell(135, 8, utf8_encode($f["NM"]), 0, false, 'L', true, false, 1);
+		$this->Cell(135, 8, $f["NM"], 0, false, 'L', true, false, 1);
 		$this->setX(140);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 11);
 		$this->Cell(25, 8, $f["TP"], 0, false, 'C', true, false, 1);

@@ -168,9 +168,9 @@ class LISTAINVESTIDURASEC extends TCPDF {
 		endif;
 	    $fundo = $this->getFundo($f["FUNDO"]);
 	    if ($f["TP_ITEM"] == "ES"):
-	        $desc = utf8_encode($f["DS_ITEM"]);
+	        $desc = $f["DS_ITEM"];
         else:
-	        $desc = utf8_encode($f["TP"] ." DE ". $f["DS"]. ($f["CMPL"] == "S" && $f["FG_IM"] =="N" ? " - ".$f["DS_ITEM"] : "") . ( !empty($fundo) ? " - FUNDO $fundo" : "" ));
+	        $desc = ($f["TP"] ." DE ". $f["DS"]. ($f["CMPL"] == "S" && $f["FG_IM"] =="N" ? " - ".$f["DS_ITEM"] : "") . ( !empty($fundo) ? " - FUNDO $fundo" : "" ));
         endif;
 	    $this->add("
             <tr>
@@ -183,7 +183,7 @@ class LISTAINVESTIDURASEC extends TCPDF {
 	}
 
 	public function addLine($f){
-	    $this->dsNomeAtu = utf8_encode($f["NM"]);
+	    $this->dsNomeAtu = $f["NM"];
         $this->addGroupHeader();
         $this->addTableDetail($f);
 	}

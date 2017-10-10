@@ -72,7 +72,7 @@ class LISTAEVENTOTENT extends TCPDF {
  		$this->setXY(20,$this->posY);
  		$this->SetTextColor(0,0,0);
  		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 9);
- 		$this->Cell(185, 5, utf8_encode($this->header["DS"] . (!is_null($this->header["DS_TEMA"]) ? " - ".$this->header["DS_TEMA"] : "")  ." - ". $this->header["DS_DEST"]), 0, false, 'C', false, false, false, false, 'T', 'M');
+ 		$this->Cell(185, 5, ($this->header["DS"] . (!is_null($this->header["DS_TEMA"]) ? " - ".$this->header["DS_TEMA"] : "")  ." - ". $this->header["DS_DEST"]), 0, false, 'C', false, false, false, false, 'T', 'M');
  		$this->posY += 6;
 	}
 	
@@ -108,7 +108,7 @@ class LISTAEVENTOTENT extends TCPDF {
 			$this->SetFillColor(255,255,255);
 		endif;
 		$this->setXY(5, $this->posY);
-		$this->Cell(200, 8, utf8_encode($f["NM"]), 0, false, 'L', true, false, 1);
+		$this->Cell(200, 8, $f["NM"], 0, false, 'L', true, false, 1);
 		$this->posY+=8;
 		$this->lineAlt = !$this->lineAlt;
 	}

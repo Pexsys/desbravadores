@@ -72,7 +72,7 @@ class LISTAEVENTOALFA extends TCPDF {
 		$this->setXY(20,$this->posY);
 		$this->SetTextColor(0,0,0);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 9);
-		$this->Cell(185, 5, utf8_encode($this->header["DS"] . (!is_null($this->header["DS_TEMA"]) ? " - ".$this->header["DS_TEMA"] : "")  ." - ". $this->header["DS_DEST"]), 0, false, 'C', false, false, false, false, 'T', 'M');
+		$this->Cell(185, 5, $this->header["DS"] . (!is_null($this->header["DS_TEMA"]) ? " - ".$this->header["DS_TEMA"] : "")  ." - ". $this->header["DS_DEST"], 0, false, 'C', false, false, false, false, 'T', 'M');
 		$this->posY += 5;
 		
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 8);
@@ -103,7 +103,7 @@ class LISTAEVENTOALFA extends TCPDF {
 			$this->SetFillColor(255,255,255);
 		endif;
 		$this->setXY(5, $this->posY);
-		$this->Cell(85, 5, utf8_encode($f["NM"]), 0, false, 'L', true, false, 1);
+		$this->Cell(85, 5, $f["NM"], 0, false, 'L', true, false, 1);
 		$this->setX(90);
 
 		$colorR = base_convert(substr($f["CD_COR_GENERO"],1,2),16,10);
@@ -111,7 +111,7 @@ class LISTAEVENTOALFA extends TCPDF {
 		$colorB = base_convert(substr($f["CD_COR_GENERO"],5,2),16,10);
 		$this->SetTextColor($colorR,$colorG,$colorB);
 
-		$this->Cell(56, 5, utf8_encode($f["DS_CARGO"]), 0, false, 'L', true, false, 1);
+		$this->Cell(56, 5, $f["DS_CARGO"], 0, false, 'L', true, false, 1);
 		$this->setX(146);
 		$this->Cell(5, 5, $f["IDADE_HOJE"], 0, false, 'L', true, false, 1);
 		$this->SetTextColor(0,0,0);

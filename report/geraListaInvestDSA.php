@@ -160,14 +160,14 @@ class LISTAINVESTIDURADSA extends TCPDF {
 	    $this->add("
             <tr>
                 <td style=\"border-left:1px solid black;text-align:center;color:#000000;background-color:$color\">".(++$this->seq)."</td>
-                <td style=\"border-left:1px solid black;border-right:1px solid black;color:#000000;background-color:$color\">".utf8_encode($f["NM"])."</td>
+                <td style=\"border-left:1px solid black;border-right:1px solid black;color:#000000;background-color:$color\">".$f["NM"]."</td>
             </tr>	        
 	    ");
 	    $this->lineAlt = !$this->lineAlt;	    
 	}
 
 	public function addLine($f){
-	    $this->dsItemAtu = utf8_encode($f["DS_ITEM"]);
+	    $this->dsItemAtu = $f["DS_ITEM"];
         $this->addGroupHeader();
         $this->addTableDetail($f);
 	}

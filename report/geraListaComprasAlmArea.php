@@ -82,9 +82,9 @@ class LISTACOMPRASALM extends TCPDF {
 	
 	private function getGrupo($f){
 	    if ( $f["TP_ITEM"] == "CL" ):
-	    	$this->dsGrupoAtu = utf8_encode($f["TP_GRP"] ." DE ". $f["DS_GRP"]);
+	    	$this->dsGrupoAtu = $f["TP_GRP"] ." DE ". $f["DS_GRP"];
         else:
-        	$this->dsGrupoAtu = utf8_encode($f["TP_GRP"] ." DE ". $f["DS_GRP"] ." - ". $f["DS_GRP_ESP"]);
+        	$this->dsGrupoAtu = $f["TP_GRP"] ." DE ". $f["DS_GRP"] ." - ". $f["DS_GRP_ESP"];
         endif;
 	}
 	
@@ -173,7 +173,7 @@ class LISTACOMPRASALM extends TCPDF {
 			$color = "#f0f0f0";
 		endif;
 	    $fundo = $this->getFundo($f["FUNDO"]);
-	    $desc = utf8_encode( ($f["TP_ITEM"] == "CL" ? $f["DS"] : $f["DS_ITEM"]) . (!empty($fundo) ? " - FUNDO $fundo" : "" ));
+	    $desc = ($f["TP_ITEM"] == "CL" ? $f["DS"] : $f["DS_ITEM"]) . (!empty($fundo) ? " - FUNDO $fundo" : "" );
 	    $this->add("
             <tr>
                 <td style=\"border-left:1px solid black;text-align:center;color:#000000;background-color:$color\">".$f["QT_ITENS"]."</td>

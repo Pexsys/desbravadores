@@ -73,7 +73,7 @@ class LISTAEVENTOBUS extends TCPDF {
 		$this->setXY(20,$this->posY);
 		$this->SetTextColor(0,0,0);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 9);
-		$this->Cell(185, 5, utf8_encode($this->header["DS"] . (!is_null($this->header["DS_TEMA"]) ? " - ".$this->header["DS_TEMA"] : "")  ." - ". $this->header["DS_DEST"]), 0, false, 'C', false, false, false, false, 'T', 'M');
+		$this->Cell(185, 5, ($this->header["DS"] . (!is_null($this->header["DS_TEMA"]) ? " - ".$this->header["DS_TEMA"] : "")  ." - ". $this->header["DS_DEST"]), 0, false, 'C', false, false, false, false, 'T', 'M');
 		$this->posY += 5;
 
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 8);
@@ -158,7 +158,7 @@ class LISTAEVENTOBUS extends TCPDF {
 		$this->setXY(5, $this->posY);
 		$this->Cell(8, 5, str_pad( ++$this->seq, 2, "0", STR_PAD_LEFT), 0, false, 'C', true);
 		$this->setX(13);
-		$this->Cell(87, 5, utf8_encode($f["NM"]), 0, false, 'L', true, false, 1);
+		$this->Cell(87, 5, $f["NM"], 0, false, 'L', true, false, 1);
 		$this->setX(100);
 		$this->Cell(18, 5, strftime("%d/%m/%Y",strtotime($f["DT_NASC"])), 0, false, 'C', true, false, 1);
 		$this->setX(118);

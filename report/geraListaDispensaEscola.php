@@ -85,7 +85,7 @@ class LISTADISPENSAESCOLAR extends TCPDF {
 		endif;
 		$this->lineAlt = !$this->lineAlt;
         $this->setXY(20, $this->posY);
-        $this->Cell(175, 5, utf8_encode($f["NM"]), 0, false, 'L', true);
+        $this->Cell(175, 5, $f["NM"], 0, false, 'L', true);
         $this->posY += 5; 	    
  	}
  	
@@ -172,7 +172,7 @@ if (!$result->EOF):
     
             $pdf->setXY(10,$pdf->posY);
             $pdf->SetFont(PDF_FONT_NAME_MAIN, 'N', 9);
-            $pdf->Cell(100, 5, "São Paulo, ".utf8_encode(strftime("%d de %B de %Y",strtotime($dh))), 0, false, 'L', false, false, false, false, 'T', 'M');
+            $pdf->Cell(100, 5, "São Paulo, ".strftime("%d de %B de %Y",strtotime($dh)), 0, false, 'L', false, false, false, false, 'T', 'M');
             $pdf->posY += 10;
         
             $pdf->setXY(10,$pdf->posY);
@@ -181,7 +181,7 @@ if (!$result->EOF):
         
             $pdf->setXY(10,$pdf->posY);
             $pdf->SetFont(PDF_FONT_NAME_MAIN, 'B', 9);
-            $pdf->Cell(100, 5, utf8_encode($escolaAnt), 0, false, 'L', false, false, false, false, 'T', 'M');
+            $pdf->Cell(100, 5, $escolaAnt, 0, false, 'L', false, false, false, false, 'T', 'M');
             $pdf->posY += 10;
             
             $dhs = strtotime($f["DH_S"]);

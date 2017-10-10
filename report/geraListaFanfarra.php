@@ -102,7 +102,7 @@ class LISTAFANFARRA extends TCPDF {
     		$this->SetTextColor(255,255,255);
     		$this->setXY(5, $this->posY);
     		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 14);
-    		$this->Cell(200, 12, utf8_encode($af["DS"]) ." (".$rsM->RecordCount().")", 0, false, 'L', true);
+    		$this->Cell(200, 12, ($af["DS"]) ." (".$rsM->RecordCount().")", 0, false, 'L', true);
     		$this->posY += 12;
     		$this->lineAlt = false;
     	endif;
@@ -119,11 +119,11 @@ class LISTAFANFARRA extends TCPDF {
 		endif;
 		$this->setXY(5, $this->posY);
 		if ($this->filter == "A"):
-    		$this->Cell(125, 10, utf8_encode($f["NM"]), 0, false, 'L', true, false, 1);
+    		$this->Cell(125, 10, $f["NM"], 0, false, 'L', true, false, 1);
     		$this->setX(130);
-    		$this->Cell(75, 10, $f["CD_FANFARRA"] ." - ". utf8_encode($f["DS"]), 0, false, 'L', true, false, 1);
+    		$this->Cell(75, 10, $f["CD_FANFARRA"] ." - ". $f["DS"], 0, false, 'L', true, false, 1);
     	else:
-    		$this->Cell(175, 10, utf8_encode($f["NM"]), 0, false, 'L', true, false, 1);
+    		$this->Cell(175, 10, $f["NM"], 0, false, 'L', true, false, 1);
     		$this->setX(180);
     		$this->Cell(25, 10, $f["CD_FANFARRA"], 0, false, 'C', true, false, 1);
     	endif;
