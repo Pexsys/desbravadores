@@ -173,7 +173,7 @@ class LISTACOMPRASALM extends TCPDF {
 			$color = "#f0f0f0";
 		endif;
 	    $fundo = $this->getFundo($f["FUNDO"]);
-	    $desc = utf8_encode($f["TP"] ." DE ". $f["DS"]. ($f["CMPL"] == "S" && $f["FG_IM"] =="N" ? " - ".$f["DS_ITEM"] : "") . ( !empty($fundo) ? " - FUNDO $fundo" : "" ));
+	    $desc = $f["TP"] ." DE ". $f["DS"]. ($f["CMPL"] == "S" && $f["FG_IM"] =="N" ? " - ".$f["DS_ITEM"] : "") . ( !empty($fundo) ? " - FUNDO $fundo" : "" );
 	    $this->add("
             <tr>
                 <td style=\"border-left:1px solid black;text-align:center;color:#000000;background-color:$color\">".$f["QT_ITENS"]."</td>

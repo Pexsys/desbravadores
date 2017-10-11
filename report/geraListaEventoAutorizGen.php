@@ -72,7 +72,7 @@ class LISTAEVENTOAUTORIZGENERO extends TCPDF {
 		$this->setXY(20,$this->posY);
 		$this->SetTextColor(0,0,0);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 9);
-		$this->Cell(185, 5, utf8_encode($this->header["DS"] . (!is_null($this->header["DS_TEMA"]) ? " - ".$this->header["DS_TEMA"] : "")  ." - ". $this->header["DS_DEST"]), 0, false, 'C', false, false, false, false, 'T', 'M');
+		$this->Cell(185, 5, ($this->header["DS"] . (!is_null($this->header["DS_TEMA"]) ? " - ".$this->header["DS_TEMA"] : "")  ." - ". $this->header["DS_DEST"]), 0, false, 'C', false, false, false, false, 'T', 'M');
 		$this->posY += 5;
 		
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 8);
@@ -143,7 +143,7 @@ class LISTAEVENTOAUTORIZGENERO extends TCPDF {
 		$this->setXY(5, $this->posY);
 		$this->Cell(34, 7, "", 1, false, 'C', true);
 		$this->setX(40);
-		$this->Cell(85, 7, utf8_encode($f["NM"]), 0, false, 'L', true, false, 1);
+		$this->Cell(85, 7, $f["NM"], 0, false, 'L', true, false, 1);
 		$this->setX(125);
 		$this->Cell(5, 7, $f["IDADE_HOJE"], 0, false, 'L', true, false, 1);
 		$this->setX(130);

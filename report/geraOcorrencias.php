@@ -81,7 +81,7 @@ class OCORRENCIAS extends TCPDF {
 		//writeHTMLCell($w, $h, $x, $y, $html='', $border=0, $ln=0, $fill=0, $reseth=true, $align='', $autopadding=true)
 		$this->SetFont(PDF_FONT_NAME_MAIN);
 		$this->hPoint += 5;
-		$this->writeHTMLCell(200, 0, 5, $this->hPoint, utf8_encode($line["TXT"]."<p style=\"font-size:12px\"><i>Ocorr&ecirc;ncia inserida por ".$line["DS_USUARIO"]."</i></p>"), 
+		$this->writeHTMLCell(200, 0, 5, $this->hPoint, ($line["TXT"]."<p style=\"font-size:12px\"><i>Ocorr&ecirc;ncia inserida por ".$line["DS_USUARIO"]."</i></p>"), 
 			array('LTRB' => array('width' => 0.3, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0))), 
 			0, 0, true, 'J', true);
 		

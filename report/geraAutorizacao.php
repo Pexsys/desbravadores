@@ -56,7 +56,7 @@ class ESPCR extends TCPDF {
 	public function setLine($line){
 	    $this->line = $line;
 	    $this->campori = ($this->line["FG_CAMPORI"] == "S");
-	    $arr = explode(' ',utf8_encode(strtolower($this->line["DS_CARGO"])));
+	    $arr = explode(' ',strtolower($this->line["DS_CARGO"]));
 	    $this->dsCargo = (fStrStartWith($this->line["CD_CARGO"],"1") ? ($this->line["TP_SEXO"] == "F" ? "desbravadora" : "desbravador") : $arr[0]);
 	}
 
@@ -89,12 +89,12 @@ class ESPCR extends TCPDF {
      		$this->setXY(5,35);
      		$this->SetTextColor(0,0,0);
      		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 13);
-     		$this->Cell(200, 8, utf8_encode($this->line["DS"]), 0, false, 'C', false, false, false, false, 'T', 'M');
+     		$this->Cell(200, 8, $this->line["DS"], 0, false, 'C', false, false, false, false, 'T', 'M');
 
      		$this->setXY(5,43);
      		$this->SetTextColor(255,0,0);
      		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 16);
-     		$this->Cell(200, 8, utf8_encode("\"".$this->line["DS_TEMA"]."\""), 0, false, 'C', false, false, false, false, 'T', 'M');
+     		$this->Cell(200, 8, "\"".$this->line["DS_TEMA"]."\"", 0, false, 'C', false, false, false, false, 'T', 'M');
 
      		$this->setXY(5,65);
      		$this->SetTextColor(0,0,0);
@@ -143,7 +143,7 @@ class ESPCR extends TCPDF {
 		
 		$dtS = strtotime($this->line["DH_S"]);
 		$dtR = strtotime($this->line["DH_R"]);
-		$linhaASS = utf8_encode(trim($this->line["NM_RESP"])).", ".utf8_encode($this->line["DOC_RESP"]).", CPF ".utf8_encode($this->line["CPF_RESP"]). (!empty($this->line["TEL_RESP"]) ? ", Fone ".utf8_encode($this->line["TEL_RESP"]) : "");
+		$linhaASS = trim($this->line["NM_RESP"]).", ".$this->line["DOC_RESP"].", CPF ".$this->line["CPF_RESP"]. (!empty($this->line["TEL_RESP"]) ? ", Fone ".$this->line["TEL_RESP"] : "");
 		$barCODE = mb_strtoupper("PD". fStrZero(base_convert($this->line["ID"],10,36),2) . fStrZero(base_convert($this->line["ID_CAD_PESSOA"],10,36),3));
 		
 		$lBase+=4;
@@ -165,13 +165,13 @@ class ESPCR extends TCPDF {
 		$this->SetTextColor(0,0,0);
 		$this->SetFont(PDF_FONT_NAME_MAIN, '', 9);
 		$html = "<p align=\"justify\">Através dos poderes legais a mim atribuídos, autorizo ".
-			($this->line["TP_SEXO"] == "F" ? "a " : "o "). $this->dsCargo ." <b><u>".trim(utf8_encode($this->line["NM"]))."</u></b>, ".
-			utf8_encode($this->line["NR_DOC"])." a participar juntamente com o Clube Pioneiros, dirigido e representado por ".trim(utf8_encode($this->line["NOME_DIRETOR"])).", ".
-			utf8_encode($this->line["IDENT_DIRETOR"]).", do evento: ".trim(utf8_encode($this->line["DS"])). (!empty($this->line["DS_DEST"]) ? "/".trim(utf8_encode($this->line["DS_DEST"])) : "").", ".
+			($this->line["TP_SEXO"] == "F" ? "a " : "o "). $this->dsCargo ." <b><u>".trim($this->line["NM"])."</u></b>, ".
+			$this->line["NR_DOC"]." a participar juntamente com o Clube Pioneiros, dirigido e representado por ".trim($this->line["NOME_DIRETOR"]).", ".
+			$this->line["IDENT_DIRETOR"].", do evento: ".trim($this->line["DS"]). (!empty($this->line["DS_DEST"]) ? "/".trim($this->line["DS_DEST"]) : "").", ".
 			(strftime("%Y-%m-%d",$dtS) == strftime("%Y-%m-%d",$dtR)
-			? "no dia ". utf8_encode(strftime("%e de %B de %Y",$dtS)). ", saindo &agrave;s ". utf8_encode(strftime("%Hh". (strftime("%M",$dtS)>0?"%M":""),$dtS)). " e retornando &agrave;s ". utf8_encode(strftime("%Hh". (strftime("%M",$dtR)>0?"%M":""),$dtR))
-			: ", com saída prevista para ". utf8_encode(strftime("%e de %B de %Y &agrave;s %Hh". (strftime("%M",$dtS)>0?"%M":""),$dtS))." e com retorno previsto para ". utf8_encode(strftime("%e de %B de %Y &agrave;s %Hh". (strftime("%M",$dtR)>0?"%M":""),$dtR))
-			).". Local de Saída/Retorno: ".trim(utf8_encode($this->line["DS_ORIG"])). ". ".
+			? "no dia ". strftime("%e de %B de %Y",$dtS). ", saindo &agrave;s ". strftime("%Hh". (strftime("%M",$dtS)>0?"%M":""),$dtS). " e retornando &agrave;s ". strftime("%Hh". (strftime("%M",$dtR)>0?"%M":""),$dtR)
+			: ", com saída prevista para ". strftime("%e de %B de %Y &agrave;s %Hh". (strftime("%M",$dtS)>0?"%M":""),$dtS)." e com retorno previsto para ". strftime("%e de %B de %Y &agrave;s %Hh". (strftime("%M",$dtR)>0?"%M":""),$dtR)
+			).". Local de Saída/Retorno: ".trim($this->line["DS_ORIG"]). ". ".
 			"Consciente dos grandes benefícios recebidos através do Clube de Desbravadores acima descrito, abdico responsabilizar, ".
 			"em qualquer instância judicial, o(os) responsável(eis) do referido Clube em todos os níveis, bem como a ".
 			"Igreja Adventista do Sétimo Dia, por qualquer dano causado ou sofrido por meu dependente, devido a sua própria atuação, ".
@@ -197,22 +197,22 @@ class ESPCR extends TCPDF {
 	    
 		$dtS = strtotime($this->line["DH_S"]);
 		$dtR = strtotime($this->line["DH_R"]);
-		$linhaASS = utf8_encode(trim($this->line["NM_RESP"])).", ".utf8_encode($this->line["DOC_RESP"]).", CPF ".utf8_encode($this->line["CPF_RESP"]). (!empty($this->line["TEL_RESP"]) ? ", Fone ".utf8_encode($this->line["TEL_RESP"]) : "");
+		$linhaASS = trim($this->line["NM_RESP"]).", ".$this->line["DOC_RESP"].", CPF ".$this->line["CPF_RESP"]. (!empty($this->line["TEL_RESP"]) ? ", Fone ".$this->line["TEL_RESP"] : "");
 
 		$this->SetTextColor(0,0,0);
 		$this->SetY(85);
 		$this->SetFont(PDF_FONT_NAME_MAIN, '', 10);
-		$html = "<p align=\"justify\">Eu, ". utf8_encode(trim($this->line["NM_RESP"])) .", autorizo ".
-				($this->line["TP_SEXO"] == "F" ? "a " : "o "). $this->dsCargo ." <b><u>".trim(utf8_encode($this->line["NM"]))."</u></b>, ".
-				utf8_encode($this->line["NR_DOC"])." a se deslocar e participar juntamente com o Clube de Desbravadores Pioneiros do ". trim(utf8_encode($this->line["DS"])) .", \"". trim(utf8_encode($this->line["DS_TEMA"])) ."\"".
-				", promovido pela ".trim(utf8_encode($this->line["DS_ORG"])) . 
-				" da Igreja Adventista do Sétimo Dia, que se realizará entre ".utf8_encode(strftime("%e de %B de %Y &agrave;s %Hh". (strftime("%M",$dtS)>0?"%M":""),$dtS)) . 
-				" e com retorno em ". utf8_encode(strftime("%e de %B de %Y &agrave;s %Hh". (strftime("%M",$dtR)>0?"%M":""),$dtR)) .
-				", no ".trim(utf8_encode($this->line["DS_DEST"])) .".
+		$html = "<p align=\"justify\">Eu, ". trim($this->line["NM_RESP"]) .", autorizo ".
+				($this->line["TP_SEXO"] == "F" ? "a " : "o "). $this->dsCargo ." <b><u>".trim($this->line["NM"])."</u></b>, ".
+				$this->line["NR_DOC"]." a se deslocar e participar juntamente com o Clube de Desbravadores Pioneiros do ". trim($this->line["DS"]) .", \"". trim($this->line["DS_TEMA"]) ."\"".
+				", promovido pela ".trim($this->line["DS_ORG"]) . 
+				" da Igreja Adventista do Sétimo Dia, que se realizará entre ".strftime("%e de %B de %Y &agrave;s %Hh". (strftime("%M",$dtS)>0?"%M":""),$dtS) . 
+				" e com retorno em ". strftime("%e de %B de %Y &agrave;s %Hh". (strftime("%M",$dtR)>0?"%M":""),$dtR) .
+				", no ".trim($this->line["DS_DEST"]) .".
 				<br/>
 				<br/>
 				Através dos poderes legais a mim atribuídos, nomeio através desta para o período do evento, como responsável pelo menor acima descrito".
-				" o DIRETOR e responsável pelo Clube de Desbravadores Pioneiros, identificado nesta como ".trim(utf8_encode($this->line["NOME_DIRETOR"])).", ".utf8_encode($this->line["IDENT_DIRETOR"]).". 
+				" o DIRETOR e responsável pelo Clube de Desbravadores Pioneiros, identificado nesta como ".trim($this->line["NOME_DIRETOR"]).", ".$this->line["IDENT_DIRETOR"].". 
 				<br/>
 				<br/>
 				Consciente dos grandes benefícios recebidos através do Clube de Desbravadores acima descrito, abdico responsabilizar, 
@@ -233,7 +233,7 @@ class ESPCR extends TCPDF {
 		$this->writeHTML($html, true, true, true, true);
 		
 		$this->SetXY(38,200);
-		$this->Cell(0, 0, "São Paulo, ".utf8_encode(strftime("%e de %B de %Y",strtotime(date("Y-m-d")))), 0, false, 'L', false, false, 1, false, 'L', 'C');
+		$this->Cell(0, 0, "São Paulo, ".strftime("%e de %B de %Y",strtotime(date("Y-m-d"))), 0, false, 'L', false, false, 1, false, 'L', 'C');
 
 		$this->Line(38, 230, 168, 230, $this->stLine3);
 		$this->SetY(233);

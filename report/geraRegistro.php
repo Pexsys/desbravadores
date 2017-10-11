@@ -126,7 +126,7 @@ class ESPCR extends TCPDF {
 		$this->setXY(11, $this->top);
 		$this->Cell(15, 7, $this->line['ID'], 'R', 1, 'C', 1, '', 0, false, 'T', 'C');
 		$this->setXY(29, $this->top);
-		$this->Cell(145, 7, utf8_encode($this->line['NM']), 'R', 1, 'L', 1, '', 0, false, 'T', 'C');
+		$this->Cell(145, 7, $this->line['NM'], 'R', 1, 'L', 1, '', 0, false, 'T', 'C');
 		$this->setXY(179, $this->top);
 		$this->Cell(20, 7, strftime("%d/%m/%Y",strtotime($this->line["DT_NASC"])), '', 1, 'L', 1, '', 0, false, 'T', 'C');
 		$this->RoundedRect(10, $this->top, 190, 7, 1, '0110', 'D', $this->stLine);
@@ -163,9 +163,9 @@ class ESPCR extends TCPDF {
     		$this->setXY(11, $this->top+1);
     		$this->Cell(50, 5, "ANO: ".$f["YEAR_INDEX"], '', 1, 'L', 1, '', 0, false, 'T', 'C');
     		$this->setXY(80, $this->top+1);
-    		$this->Cell(50, 5, "UNIDADE: ".utf8_encode($o->fields["DS"]), '', 1, 'C', 1, '', 0, false, 'T', 'C');
+    		$this->Cell(50, 5, "UNIDADE: ".$o->fields["DS"], '', 1, 'C', 1, '', 0, false, 'T', 'C');
     		$this->setXY(149, $this->top+1);
-    		$this->Cell(50, 5, "CARGO: ".utf8_encode($o->fields["DS_CARGO"]), '', 1, 'R', 1, '', 0, false, 'T', 'C');
+    		$this->Cell(50, 5, "CARGO: ".$o->fields["DS_CARGO"], '', 1, 'R', 1, '', 0, false, 'T', 'C');
     		$this->top += 5;
     		
     		$aprend = $GLOBALS['conn']->Execute("
@@ -214,9 +214,9 @@ class ESPCR extends TCPDF {
                     $this->setXY(10, $this->top);
             		$this->Cell(7, 4, $fa["TP_ITEM"], 'L', 1, 'C', 1, '', 0, false, 'T', 'C');
             		$this->setXY(17, $this->top);
-            		$this->Cell(15, 4, ( $fa["TP_ITEM"] == "CL" ? utf8_encode($fa["CD_AREA_INTERNO"]) : $fa["CD_ITEM_INTERNO"] ), 'L', 1, 'C', 1, '', 0, false, 'T', 'C');
+            		$this->Cell(15, 4, ( $fa["TP_ITEM"] == "CL" ? $fa["CD_AREA_INTERNO"] : $fa["CD_ITEM_INTERNO"] ), 'L', 1, 'C', 1, '', 0, false, 'T', 'C');
             		$this->setXY(32, $this->top);
-            		$this->Cell(108, 4, " ".utf8_encode($fa["DS_ITEM"]), 'L', 1, 'L', 1, '', 0, false, 'T', 'C');
+            		$this->Cell(108, 4, " ".$fa["DS_ITEM"], 'L', 1, 'L', 1, '', 0, false, 'T', 'C');
             		$this->setXY(140, $this->top);
             		$this->Cell(15, 4, ( is_null($fa["DT_INICIO"]) ? "--" : strftime("%d/%m/%Y",strtotime($fa["DT_INICIO"])) ), 'L', 1, 'C', 1, '', 0, false, 'T', 'C');
             		$this->setXY(155, $this->top);
@@ -272,11 +272,11 @@ class ESPCR extends TCPDF {
         		        $this->SetFillColor(225,225,225);
         		    endif;
                     $this->setXY(10, $this->top);
-            		$this->Cell(55, 4, " ".utf8_encode($fe["DS"]), 'L', 1, 'L', 1, '', 0, false, 'T', 'C');
+            		$this->Cell(55, 4, " ".$fe["DS"], 'L', 1, 'L', 1, '', 0, false, 'T', 'C');
                     $this->setXY(65, $this->top);
-            		$this->Cell(55, 4, " ".utf8_encode($fe["DS_TEMA"]), 'L', 1, 'L', 1, '', 0, false, 'T', 'C');
+            		$this->Cell(55, 4, " ".$fe["DS_TEMA"], 'L', 1, 'L', 1, '', 0, false, 'T', 'C');
                     $this->setXY(120, $this->top);
-            		$this->Cell(50, 4, " ".utf8_encode($fe["DS_ORG"]), 'L', 1, 'L', 1, '', 0, false, 'T', 'C');
+            		$this->Cell(50, 4, " ".$fe["DS_ORG"], 'L', 1, 'L', 1, '', 0, false, 'T', 'C');
             		$this->setXY(170, $this->top);
             		$this->Cell(15, 4, ( is_null($fe["DH_S"]) ? "--" : strftime("%d/%m/%Y",strtotime($fe["DH_S"])) ), 'L', 1, 'C', 1, '', 0, false, 'T', 'C');
             		$this->setXY(185, $this->top);

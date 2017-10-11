@@ -88,7 +88,7 @@ class LISTAATIVOSALFA extends TCPDF {
 			$this->SetFillColor(255,255,255);
 		endif;
 		$this->setXY(5, $this->posY);
-		$this->Cell(85, 5, utf8_encode($f["NM"]), 0, false, 'L', true, false, 1);
+		$this->Cell(85, 5, $f["NM"], 0, false, 'L', true, false, 1);
 		$this->setX(90);
 
 		$colorR = base_convert(substr($f["CD_COR_GENERO"],1,2),16,10);
@@ -96,7 +96,7 @@ class LISTAATIVOSALFA extends TCPDF {
 		$colorB = base_convert(substr($f["CD_COR_GENERO"],5,2),16,10);
 		$this->SetTextColor($colorR,$colorG,$colorB);
 
-		$this->Cell(56, 5, utf8_encode($f["DS_CARGO"]), 0, false, 'L', true, false, 1);
+		$this->Cell(56, 5, $f["DS_CARGO"], 0, false, 'L', true, false, 1);
 		$this->setX(146);
 		$this->Cell(5, 5, $f["IDADE_HOJE"], 0, false, 'L', true, false, 1);
 		$this->SetTextColor(0,0,0);

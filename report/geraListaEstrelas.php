@@ -101,7 +101,7 @@ $nmPastor = titleCase($result->fields["NM_PASTOR"]);
 $pdf->posY += 5;
 $pdf->setXY(20,$pdf->posY);
 $pdf->SetFont(PDF_FONT_NAME_MAIN, 'N', 13);
-$pdf->Cell(100, 5, "São Paulo, ".utf8_encode(strftime("%d de %B de %Y",strtotime($result->fields["DH"]))), 0, false, 'L', false, false, false, false, 'T', 'M');
+$pdf->Cell(100, 5, "São Paulo, ".strftime("%d de %B de %Y",strtotime($result->fields["DH"])), 0, false, 'L', false, false, false, false, 'T', 'M');
 
 $pdf->posY += 12;
 $pdf->SetY(++$pdf->posY);
@@ -148,7 +148,7 @@ if (!$result->EOF):
 			$pdf->SetFillColor(255,255,255);
 		endif;
 		$pdf->setXY(20, $pdf->posY);
-		$pdf->Cell(120, 5, utf8_encode($f["NM"]), 0, false, 'L', true);
+		$pdf->Cell(120, 5, $f["NM"], 0, false, 'L', true);
 		$pdf->setXY(140, $pdf->posY);
 		$pdf->Cell(30, 5, (substr($f["CD"],-2) * 1), 0, false, 'C', true);
 		$pdf->setXY(170, $pdf->posY);

@@ -81,7 +81,7 @@ class COMUNICADO extends TCPDF {
 		//writeHTMLCell($w, $h, $x, $y, $html='', $border=0, $ln=0, $fill=0, $reseth=true, $align='', $autopadding=true)
 		$this->SetFont(PDF_FONT_NAME_MAIN);
 		$this->hPoint += 5;
-		$this->writeHTMLCell(200, 0, 5, $this->hPoint, utf8_encode($line["TXT"]), 
+		$this->writeHTMLCell(200, 0, 5, $this->hPoint, $line["TXT"], 
 			array('LTRB' => array('width' => 0.3, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0))), 
 			0, 0, true, 'J', true);
 		

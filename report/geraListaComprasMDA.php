@@ -163,14 +163,14 @@ class LISTAINVESTIDURAMDA extends TCPDF {
             <tr>
                 <td style=\"border-left:1px solid black;text-align:center;color:#000000;background-color:$color\">".(++$this->seq)."</td>
                 <td style=\"border-left:1px solid black;text-align:center;color:#000000;background-color:$color\">".$f["NR_PG_ASS"]."</td>
-                <td style=\"border-left:1px solid black;border-right:1px solid black;color:#000000;background-color:$color\">".utf8_encode($f["DS_ITEM"])."</td>
+                <td style=\"border-left:1px solid black;border-right:1px solid black;color:#000000;background-color:$color\">".$f["DS_ITEM"]."</td>
             </tr>	        
 	    ");
 	    $this->lineAlt = !$this->lineAlt;	    
 	}
 
 	public function addLine($f){
-	    $this->dsNomeAtu = utf8_encode($f["NM"]);
+	    $this->dsNomeAtu = $f["NM"];
         $this->addGroupHeader();
         $this->addTableDetail($f);
 	}

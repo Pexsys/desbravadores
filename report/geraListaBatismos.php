@@ -93,7 +93,7 @@ class LISTAATIVOSALFA extends TCPDF {
 		endif;
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 7);
 		$this->setXY(5, $this->posY);
-		$this->Cell(85, 5, utf8_encode($f["NM"]), 0, false, 'L', true, false, 1);
+		$this->Cell(85, 5, $f["NM"], 0, false, 'L', true, false, 1);
 		$this->setX(90);
 
 		$colorR = base_convert(substr($f["CD_COR_GENERO"],1,2),16,10);
@@ -101,7 +101,7 @@ class LISTAATIVOSALFA extends TCPDF {
 		$colorB = base_convert(substr($f["CD_COR_GENERO"],5,2),16,10);
 		$this->SetTextColor($colorR,$colorG,$colorB);
 
-		$this->Cell(56, 5, utf8_encode($f["DS_CARGO"]), 0, false, 'L', true, false, 1);
+		$this->Cell(56, 5, $f["DS_CARGO"], 0, false, 'L', true, false, 1);
 		$this->setX(146);
 		$this->Cell(5, 5, $f["IDADE_HOJE"], 0, false, 'L', true, false, 1);
 		$this->SetTextColor(0,0,0);
@@ -132,7 +132,7 @@ class LISTAATIVOSALFA extends TCPDF {
 			$endereco .= " - ".trim($f["CEP"]);
 		endif;
 		
-		$this->Cell(200, 5, strtoupper(utf8_encode($endereco)), 0, false, 'R', true, false, 1);
+		$this->Cell(200, 5, strtoupper($endereco), 0, false, 'R', true, false, 1);
 		$this->posY += 5;
 		
 		$this->Line(5, $this->posY, 205, $this->posY, $this->stLine3);

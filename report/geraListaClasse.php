@@ -102,7 +102,7 @@ class LISTACLASSE extends TCPDF {
 		endif;
 		$this->setXY(5, $this->posY);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 10);
-		$this->Cell(200, 7, utf8_encode($af["DS_ITEM"])."-".$af["NR_IDADE_MINIMA"]." anos (".$rsM->RecordCount().")", 0, false, 'L', true);
+		$this->Cell(200, 7, $af["DS_ITEM"]."-".$af["NR_IDADE_MINIMA"]." anos (".$rsM->RecordCount().")", 0, false, 'L', true);
 		$this->posY += 7;
 		$this->lineAlt = false;
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 7);
@@ -119,12 +119,12 @@ class LISTACLASSE extends TCPDF {
 		$this->SetFillColor(255,255,255);
 		endif;
 		$this->setXY(5, $this->posY);
-		$this->Cell(85, 5, utf8_encode($f["NM"]), 0, false, 'L', true, false, 1);
+		$this->Cell(85, 5, $f["NM"], 0, false, 'L', true, false, 1);
 		$this->setX(90);
 		if (fStrStartWith($f["CD_CARGO"], "1-")):
 		$this->SetTextColor(255,0,0);
 		endif;
-		$this->Cell(50, 5, utf8_encode($f["DS_CARGO"]), 0, false, 'L', true, false, 1);
+		$this->Cell(50, 5, $f["DS_CARGO"], 0, false, 'L', true, false, 1);
 		$this->SetTextColor(0,0,0);
 		$this->setX(140);
 		$this->Cell(30, 5, $f["IDADE_HOJE"]." ".strftime("%d/%m/%Y",strtotime($f["DT_NASC"])), 0, false, 'C', true, false, 1);

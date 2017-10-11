@@ -107,7 +107,7 @@ class CHAMADA extends TCPDF {
 		$this->SetFillColor($colorR,$colorG,$colorB);
 		$this->SetTextColor(255,255,255);
 		$this->setCellPaddings(3,0,0,0);
-		$this->Cell($x-5, 8, utf8_encode($this->unidade["DS"]), 0, false, 'L', true);
+		$this->Cell($x-5, 8, $this->unidade["DS"], 0, false, 'L', true);
 		$this->setXY($x, 22);
 		$this->SetFillColor(235,235,235);
 		$this->SetTextColor($colorR,$colorG,$colorB);
@@ -119,7 +119,7 @@ class CHAMADA extends TCPDF {
 		foreach ($this->mesAno as $k => $fm):
 			$hr = fDescHora($fm["DTHORA_EVENTO_INI"]);
 			$this->setXY($x,31);
-			$this->MultiCell($this->xq, 5, utf8_encode(strftime("%d (%a)",strtotime($fm["DTHORA_EVENTO_INI"])))."\n$hr", 1, 'C', true, false, '', '', true, false, false, false, false);
+			$this->MultiCell($this->xq, 5, strftime("%d (%a)",strtotime($fm["DTHORA_EVENTO_INI"]))."\n$hr", 1, 'C', true, false, '', '', true, false, false, false, false);
 			$x+=$this->xq;
 		endforeach;
 		$this->posY = 36;
@@ -164,13 +164,13 @@ class CHAMADA extends TCPDF {
 
 		if ( strftime("%m",strtotime($f["DT_NASC"])) == $this->mesAtu ):
 			$this->SetFillColor(255,255,0);
-			$this->Cell($x-39, $h, str_pad($f["ID"],4,"0",STR_PAD_LEFT)."-".utf8_encode($f["NM"]), 0, false, 'L', true, false, 1);
+			$this->Cell($x-39, $h, str_pad($f["ID"],4,"0",STR_PAD_LEFT)."-".$f["NM"], 0, false, 'L', true, false, 1);
 			$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 7);
 			$this->setXY($x-34,$this->posY);
 			$this->Cell(34, $h, strftime("Dia %d", strtotime($f["DT_NASC"]))." (".$f["IDADE_ANO"]." anos, Parabéns!)", 0, false, 'C', true);
 		else:
 			$this->SetFillColor(230,230,230);
-			$this->Cell($x-27, $h, str_pad($f["ID"],4,"0",STR_PAD_LEFT)."-".utf8_encode($f["NM"]), 0, false, 'L', true, false, 1);
+			$this->Cell($x-27, $h, str_pad($f["ID"],4,"0",STR_PAD_LEFT)."-".$f["NM"], 0, false, 'L', true, false, 1);
 			$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 8);
 			$this->setXY($x-22,$this->posY);
 			$this->Cell(22, $h, strftime("%d/%m",strtotime($f["DT_NASC"]))." - ".$f["IDADE_HOJE"]." anos", 0, false, 'C', true);
@@ -193,7 +193,7 @@ class CHAMADA extends TCPDF {
 		$this->setXY(12.5,$this->posY);
 		$this->SetFillColor(255,255,255);
 		$this->SetTextColor(80,80,80);
-		$this->Cell($x-50.5, $h, utf8_encode($f["DS_CARGO"]), 0, false, 'L', true);
+		$this->Cell($x-50.5, $h, $f["DS_CARGO"], 0, false, 'L', true);
 		$this->setXY($x-36,$this->posY);
 		$this->Cell(35, $h, trim($f["FONE_RES"]."   ".$f["FONE_CEL"]), 0, false, 'R', true);
 		

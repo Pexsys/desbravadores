@@ -28,7 +28,7 @@ endif;
 ?>
 <div class="row">
 	<div class="col-lg-12">
-		<h3 class="page-header">Painel de Aprendizado <?echo date("Y");?> - <?echo titleCase( $classe );?></h3>
+		<h3 class="page-header">Painel de Aprendizado <?php echo date("Y");?> - <?php echo titleCase( $classe );?></h3>
 	</div>
 </div>
 <?php
@@ -75,12 +75,124 @@ endif;
 		<div id="phGhaphC" style="width:100%;height:300px"></div>
 	</div>
 </div>
+<?php
+$pendNome = $GLOBALS['conn']->Execute("
+	SELECT cap.ID_TAB_APREND, cap.CD_ITEM_INTERNO, cap.CD_REQ_INTERNO, cap.CD_AP_AREA, cap.DS_AP_AREA, cap.DS_ITEM, at.NM, cap.CD_COR
+	FROM CON_APR_PESSOA cap
+	INNER JOIN CON_ATIVOS at ON (at.ID = cap.ID_CAD_PESSOA)
+	INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = cap.ID_TAB_APREND)
+	WHERE cap.TP_ITEM = 'CL'
+	AND YEAR(cap.DT_INICIO) = YEAR(NOW())
+	AND cap.DT_ASSINATURA IS NULL
+	AND cap.DT_CONCLUSAO IS NULL $where
+	ORDER BY cap.CD_ITEM_INTERNO, cap.CD_REQ_INTERNO, at.NM
+");
+
+$pendItens = $GLOBALS['conn']->Execute("
+	SELECT cap.ID_TAB_APREND, cap.CD_ITEM_INTERNO, cap.CD_REQ_INTERNO, cap.CD_AP_AREA, cap.DS_AP_AREA, cap.DS_ITEM, at.NM, cap.CD_COR
+	FROM CON_APR_PESSOA cap
+	INNER JOIN CON_ATIVOS at ON (at.ID = cap.ID_CAD_PESSOA)
+	INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = cap.ID_TAB_APREND)
+	WHERE cap.TP_ITEM = 'CL'
+	AND YEAR(cap.DT_INICIO) = YEAR(NOW())
+	AND cap.DT_ASSINATURA IS NULL
+	AND cap.DT_CONCLUSAO IS NULL $where
+	ORDER BY cap.CD_ITEM_INTERNO, at.NM, cap.CD_REQ_INTERNO
+");
+if (!$pendNome->EOF || !$pendItens->EOF):
+?>
+<div class="row">
+	<div class="col-lg-12">
+		<h4 class="page-header">Pendências da Classe em <?php echo date("Y");?></h4>
+	</div>
+</div>
+<div class="row">
+	<?php if (!$pendNome->EOF):?>
+	<div class="col-lg-6 col-xs-6">
+		<div class="panel panel-danger">
+			<div class="panel-heading"><h5 class="panel-title"><i class="fa fa-frown-o"></i>&nbsp;Classe / Item</h5></div>
+			<div class="panel-body" style="padding:5px 10px;font-size:12px">
+				<?php
+				$nomeAtu = "";
+				$clsAtu = "";
+				$areaAtu = "";
+				$first = true;
+				foreach ($pendNome as $k => $line):
+					if ($line["DS_ITEM"] <> $clsAtu):
+						$clsAtu = $line["DS_ITEM"];
+						$color = ($line["ID_TAB_APREND"] == 12 ? "#000000" : "#ffffff");
+						echo "<div class=\"well well-sm\" style=\"padding:4px;margin-bottom:0px;font-size:11px;color:$color;background-color:".$line["CD_COR"]."\"><b>$clsAtu</b></div>";
+						$areaAtu = "";
+						$first = true;
+					endif;
+					if ($line["CD_AP_AREA"] <> $areaAtu):
+						$areaAtu = $line["CD_AP_AREA"];
+						if (!is_null($line["CD_AP_AREA"])):
+							echo "<div class=\"well well-sm\" style=\"padding:4px;margin-bottom:0px;font-size:11px\"><b>".$line["CD_AP_AREA"]." - ".titleCase($line["DS_AP_AREA"])."</b></div>";
+						endif;
+						$reqAtu = "";
+						$first = true;
+					endif;
+					if ($line["CD_REQ_INTERNO"] <> $reqAtu):
+						$reqAtu = $line["CD_REQ_INTERNO"];
+						echo "<div class=\"well well-sm\" style=\"padding:4px;margin-bottom:0px;font-size:11px;color:#000000;background-color:#C8C8C8\"><b>".substr($line["CD_REQ_INTERNO"],-2)."</b></div>";
+						$first = true;
+						$areaAtu = "";
+					endif;
+					echo (!$first ? ", " : ""). $line["NM"];
+					$first = false;
+				endforeach;
+				?>
+			</div>
+		</div>
+	</div>
+	<?php endif;?>
+	<?php if (!$pendItens->EOF):?>
+	<div class="col-lg-6 col-xs-6">
+		<div class="panel panel-danger">
+		<div class="panel-heading"><h5 class="panel-title"><i class="fa fa-frown-o"></i>&nbsp;Classe / Pessoa</h5></div>
+			<div class="panel-body" style="padding:5px 10px;font-size:12px">
+				<?php
+				$nomeAtu = "";
+				$clsAtu = "";
+				$areaAtu = "";
+				$first = true;
+				foreach ($pendItens as $k => $line):
+					if ($line["DS_ITEM"] <> $clsAtu):
+						$clsAtu = $line["DS_ITEM"];
+						$color = ($line["ID_TAB_APREND"] == 12 ? "#000000" : "#ffffff");
+						echo "<div class=\"well well-sm\" style=\"padding:4px;margin-bottom:0px;font-size:11px;color:$color;background-color:".$line["CD_COR"]."\"><b>$clsAtu</b></div>";
+						$nomeAtu = "";
+						$first = true;
+					endif;
+					if ($line["NM"] <> $nomeAtu):
+						$nomeAtu = $line["NM"];
+						echo "<div class=\"well well-sm\" style=\"padding:4px;margin-bottom:0px;font-size:11px;color:#000000;background-color:#C8C8C8\"><b>$nomeAtu</b></div>";
+						$first = true;
+						$areaAtu = "";
+					endif;
+					if ($line["CD_AP_AREA"] <> $areaAtu):
+						$areaAtu = $line["CD_AP_AREA"];
+						if (!is_null($line["CD_AP_AREA"])):
+							echo "<div class=\"well well-sm\" style=\"padding:4px;margin-bottom:0px;font-size:11px\"><b>".$line["CD_AP_AREA"]." - ".titleCase($line["DS_AP_AREA"])."</b></div>";
+						endif;
+						$first = true;
+					endif;
+					echo (!$first ? ", " : "&nbsp;&nbsp;"). substr($line["CD_REQ_INTERNO"],-2);
+					$first = false;
+				endforeach;
+				?>
+			</div>
+		</div>
+	</div>
+	<?php endif;?>
+</div>
 <div class="row">
 	<div class="col-lg-12">
 		<h4 class="page-header">An&aacute;lise individual</h4>
 	</div>
 </div>
-<?php
+<?php endif;
 $result = $GLOBALS['conn']->Execute("
 	SELECT DISTINCT at.NM, at.ID
 	  FROM APR_HISTORICO ah

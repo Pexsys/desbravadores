@@ -80,7 +80,7 @@ class ESPCR extends TCPDF {
     			 WHERE ID = ?
     	    ", array( $idPessoa ) );
     	    if (!$result->EOF):
-    	        $nmPessoa = utf8_encode($result->fields["NM"]);
+    	        $nmPessoa = $result->fields["NM"];
             endif;
 		endif;
 		
@@ -96,7 +96,7 @@ class ESPCR extends TCPDF {
 		endif;
 
 		//achar o nome e a area com select
-		$nomeEsp = utf8_encode($result->fields['DS_ITEM']);
+		$nomeEsp = $result->fields['DS_ITEM'];
 		$areaEsp = $result->fields['CD_AREA_INTERNO'];
 		$pgAss = $result->fields['NR_PG_ASS'];
 
@@ -306,7 +306,7 @@ class ESPCR extends TCPDF {
 		$this->SetTextColor(255,255,255);
 		$this->RoundedRect(40, $this->top, 160, 6, 2.5, '1001', 'FD', $this->stLine2);
 		$this->setXY(44, $this->top+1);
-		$this->Cell(140, 4, utf8_encode($f['DS_ITEM_RQ']), '', 1, 'L', 1, '', 0, false, 'T', 'C');
+		$this->Cell(140, 4, $f['DS_ITEM_RQ'], '', 1, 'L', 1, '', 0, false, 'T', 'C');
 		$this->top += 6;
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 6);
 		$this->SetFillColor(180,180,180);
