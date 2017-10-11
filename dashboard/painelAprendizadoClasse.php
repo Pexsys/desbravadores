@@ -107,8 +107,47 @@ if (!$pendNome->EOF || !$pendItens->EOF):
 	</div>
 </div>
 <div class="row">
+	<?php if (!$pendItens->EOF):?>
+	<div class="col-xs-12 col-md-12 col-sm-12 col-xl-6 col-lg-6">
+		<div class="panel panel-danger">
+		<div class="panel-heading"><h5 class="panel-title"><i class="fa fa-frown-o"></i>&nbsp;Classe / Pessoa</h5></div>
+			<div class="panel-body" style="padding:5px 10px;font-size:12px">
+				<?php
+				$nomeAtu = "";
+				$clsAtu = "";
+				$areaAtu = "";
+				$first = true;
+				foreach ($pendItens as $k => $line):
+					if ($line["DS_ITEM"] <> $clsAtu):
+						$clsAtu = $line["DS_ITEM"];
+						$color = ($line["ID_TAB_APREND"] == 12 ? "#000000" : "#ffffff");
+						echo "<div class=\"well well-sm\" style=\"padding:4px;margin-bottom:0px;font-size:11px;color:$color;background-color:".$line["CD_COR"]."\"><b>$clsAtu</b></div>";
+						$nomeAtu = "";
+						$first = true;
+					endif;
+					if ($line["NM"] <> $nomeAtu):
+						$nomeAtu = $line["NM"];
+						echo "<div class=\"well well-sm\" style=\"padding:4px;margin-bottom:0px;font-size:11px;color:#000000;background-color:#C8C8C8\"><b>$nomeAtu</b></div>";
+						$first = true;
+						$areaAtu = "";
+					endif;
+					if ($line["CD_AP_AREA"] <> $areaAtu):
+						$areaAtu = $line["CD_AP_AREA"];
+						if (!is_null($line["CD_AP_AREA"])):
+							echo "<div class=\"well well-sm\" style=\"padding:4px;margin-bottom:0px;font-size:11px\"><b>".$line["CD_AP_AREA"]." - ".titleCase($line["DS_AP_AREA"])."</b></div>";
+						endif;
+						$first = true;
+					endif;
+					echo (!$first ? ", " : "&nbsp;&nbsp;"). substr($line["CD_REQ_INTERNO"],-2);
+					$first = false;
+				endforeach;
+				?>
+			</div>
+		</div>
+	</div>
+	<?php endif;?>
 	<?php if (!$pendNome->EOF):?>
-	<div class="col-lg-6 col-xs-6">
+	<div class="col-xs-12 col-md-12 col-sm-12 col-xl-6 col-lg-6">
 		<div class="panel panel-danger">
 			<div class="panel-heading"><h5 class="panel-title"><i class="fa fa-frown-o"></i>&nbsp;Classe / Item</h5></div>
 			<div class="panel-body" style="padding:5px 10px;font-size:12px">
@@ -140,45 +179,6 @@ if (!$pendNome->EOF || !$pendItens->EOF):
 						$areaAtu = "";
 					endif;
 					echo (!$first ? ", " : ""). $line["NM"];
-					$first = false;
-				endforeach;
-				?>
-			</div>
-		</div>
-	</div>
-	<?php endif;?>
-	<?php if (!$pendItens->EOF):?>
-	<div class="col-lg-6 col-xs-6">
-		<div class="panel panel-danger">
-		<div class="panel-heading"><h5 class="panel-title"><i class="fa fa-frown-o"></i>&nbsp;Classe / Pessoa</h5></div>
-			<div class="panel-body" style="padding:5px 10px;font-size:12px">
-				<?php
-				$nomeAtu = "";
-				$clsAtu = "";
-				$areaAtu = "";
-				$first = true;
-				foreach ($pendItens as $k => $line):
-					if ($line["DS_ITEM"] <> $clsAtu):
-						$clsAtu = $line["DS_ITEM"];
-						$color = ($line["ID_TAB_APREND"] == 12 ? "#000000" : "#ffffff");
-						echo "<div class=\"well well-sm\" style=\"padding:4px;margin-bottom:0px;font-size:11px;color:$color;background-color:".$line["CD_COR"]."\"><b>$clsAtu</b></div>";
-						$nomeAtu = "";
-						$first = true;
-					endif;
-					if ($line["NM"] <> $nomeAtu):
-						$nomeAtu = $line["NM"];
-						echo "<div class=\"well well-sm\" style=\"padding:4px;margin-bottom:0px;font-size:11px;color:#000000;background-color:#C8C8C8\"><b>$nomeAtu</b></div>";
-						$first = true;
-						$areaAtu = "";
-					endif;
-					if ($line["CD_AP_AREA"] <> $areaAtu):
-						$areaAtu = $line["CD_AP_AREA"];
-						if (!is_null($line["CD_AP_AREA"])):
-							echo "<div class=\"well well-sm\" style=\"padding:4px;margin-bottom:0px;font-size:11px\"><b>".$line["CD_AP_AREA"]." - ".titleCase($line["DS_AP_AREA"])."</b></div>";
-						endif;
-						$first = true;
-					endif;
-					echo (!$first ? ", " : "&nbsp;&nbsp;"). substr($line["CD_REQ_INTERNO"],-2);
 					$first = false;
 				endforeach;
 				?>

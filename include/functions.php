@@ -814,7 +814,7 @@ function getIconAprendizado( $tpItem, $areaInterno, $sizeClass = "" ){
 	return $retorno;
 }
 
-function fItemAprendizado( $panelClass, $iconLeft, $value, $titulo, $detalhes = null, $detalhes2 = "", $style = "", $fields = null, $panelClassSize = "col-md-6 col-xs-6 col-sm-6 col-lg-4" ) {
+function fItemAprendizado( $panelClass, $iconLeft, $value, $titulo, $detalhes = null, $detalhes2 = "", $style = "", $fields = null, $panelClassSize = "col-md-6 col-xs-12 col-sm-6 col-lg-4 col-xl-3" ) {
 	echo "<div class=\"$panelClassSize\">";
 	if ( isset($fields) ):
 		echo "  <div class=\"panel $panelClass\"";
