@@ -171,7 +171,7 @@ endif;
 		else:
 		    $class = getClassPainelMestrado( $pct );
 		endif;
-		$sizeClass = "col-md-4 col-xs-12 col-sm-6 col-xl-2 col-lg-3";
+		$sizeClass = "col-md-6 col-xs-12 col-sm-6 col-lg-4 col-xl-3";
 		
 		$fields = array(
 			"name" => "detail",
