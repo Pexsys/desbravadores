@@ -37,19 +37,16 @@ foreach($rs as $k => $l):
 		endforeach;
 
 		$GLOBALS['mail']->MsgHTML($l["TXT"]);
-		//if ( $GLOBALS['mail']->Send() ):
-			//ATUALIZA ENVIO
-			$GLOBALS['conn']->Execute("
-				UPDATE LOG_MENSAGEM
-				   SET DH_SEND = NOW()
-				 WHERE DH_SEND IS NULL
-		           AND EMAIL IS NOT NULL
-				   AND ID_ORIGEM = ?
-				   AND TP = ?
-			", array( $l["ID"], "C") );
-		//else:
-			echo "email não enviado";
-		//endif;
+		$GLOBALS['mail']->Send();
+		//ATUALIZA ENVIO
+		$GLOBALS['conn']->Execute("
+			UPDATE LOG_MENSAGEM
+				SET DH_SEND = NOW()
+				WHERE DH_SEND IS NULL
+				AND EMAIL IS NOT NULL
+				AND ID_ORIGEM = ?
+				AND TP = ?
+		", array( $l["ID"], "C") );
 	endif;
 	
 endforeach;

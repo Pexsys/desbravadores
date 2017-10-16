@@ -1,69 +1,23 @@
 <?php
 @require_once("../include/functions.php");
-@require_once("sendmailOcorrencias.php");
 responseMethod();
 
 function getQueryByFilter( $parameters ) {
 	session_start();
 	$usuarioID = $_SESSION['USER']['id_usuario'];
+
+	$aWhere = array(date("Y"));
+	$where = "";
 	
-	if ($parameters["filter"] == "N"):
-		return $GLOBALS['conn']->Execute("
-				SELECT o.ID, a.NM, o.TP, o.CD, o.DH, o.FG_PEND, l.DH_READ
-				  FROM CAD_OCORRENCIA o
-			INNER JOIN CON_ATIVOS a ON (a.ID = o.ID_CAD_PESSOA)
-			INNER JOIN LOG_MENSAGEM l ON (l.ID_ORIGEM = o.ID AND l.TP = 'O')
-				 WHERE YEAR(o.DH) = YEAR(NOW())
-				   AND o.FG_PEND = 'N'
-				   AND l.ID_USUARIO = ?
-			  ORDER BY o.ID DESC
-		", array( $usuarioID ) );
-	
-	else:
-		$aWhere = array( date("Y") );
-		$where = "";
-		if ( isset($parameters["filters"]) ):
-			$keyAnt = "";
-			foreach ($parameters["filters"] as $key => $v):
-				$not = false;
-				if ( isset($parameters["filters"][$key]["fg"]) ):
-					$not = strtolower($parameters["filters"][$key]["fg"]) == "true";
-				endif;
-				$notStr = ( $not ? "NOT " : "" );
-				if ( $key == "X" ):
-					$where .= " AND a.TP_SEXO ".$notStr."IN";
-				elseif ( $key == "U" ):
-					$where .= " AND a.ID_UNIDADE ".$notStr."IN";
-				elseif ( $key == "TO" ):
-					$where .= " AND o.TP ".$notStr."IN";
-				else:
-					$where .= " AND";
-				endif;
-				
-				$prim = true;
-				$where .= " (";
-				if ( is_array( $parameters["filters"][$key]["vl"] ) ):
-					foreach ($parameters["filters"][$key]["vl"] as $value):
-						$aWhere[] = $value;
-						$where .= (!$prim ? "," : "" )."?";
-						$prim = false;
-					endforeach;
-				else:
-					$aWhere[] = "$notStr"."NULL";
-					$where .= "?";
-				endif;
-				$where .= ")";
-			endforeach;
-		endif;
-		
-		return $GLOBALS['conn']->Execute("
-				SELECT o.ID, a.NM, o.TP, o.CD, o.DH, o.FG_PEND
-				  FROM CAD_OCORRENCIA o
-			INNER JOIN CON_ATIVOS a ON (a.ID = o.ID_CAD_PESSOA)
-				 WHERE YEAR(o.DH) = ? $where 
-			  ORDER BY o.ID DESC
-		",$aWhere);
-	endif;
+	return $GLOBALS['conn']->Execute("
+			SELECT cd.ID, cd.SQ, ta.DS_ITEM, taa.CD AS CD_AREA, taa.DS AS DS_AREA, tap.CD_REQ_INTERNO, tap.DS, cd.DH, cd.FG_PEND
+			  FROM CAD_DIARIO cd
+		INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = cd.ID_TAB_APREND)
+		 LEFT JOIN TAB_APR_ITEM tap ON (tap.ID = cd.ID_TAB_APR_ITEM)
+		 LEFT JOIN TAB_APR_AREA taa ON (taa.ID = tap.ID_TAB_APR_AREA)
+			 WHERE YEAR(cd.DH) = ? $where 
+			ORDER BY cd.SQ DESC
+	",$aWhere);
 }
 
 function fGetMembros(){
@@ -267,35 +221,28 @@ function fOcorrencia( $parameters ) {
 	return $out;
 }
 
-function getOcorrencias( $parameters ){
+function getListaDiario( $parameters ){
 	$arr = array();
 	fConnDB();
 	
 	$result = getQueryByFilter( $parameters );
 
 	foreach ($result as $k => $fields):
-		if ($parameters["filter"] == "N"):
-			$arr[] = array(
-				"id" => $fields['ID'],
-				"cd" => $fields['CD'],
-				"tp" => $fields['TP'],
-				"nm" => ($fields['NM']),
-				"st" => (is_null($fields['DH_READ']) ? "S" : "N"),
-				"dh" => strtotime($fields['DH'])
-			);
-		else:
-			$arr[] = array(
-				"id" => $fields['ID'],
-				"cd" => $fields['CD'],
-				"tp" => $fields['TP'],
-				"nm" => ($fields['NM']),
-				"st" => $fields['FG_PEND'],
-				"so" => $fields['FG_PEND'],
-				"dh" => strtotime($fields['DH'])
-			);
-		endif;
+		$dsReq = (!is_null($fields['CD_AREA']) ? $fields['CD_AREA']."-" : "") . 
+				substr($fields['CD_REQ_INTERNO'],-2) . 
+				 (!is_null($fields['DS']) ? " ".substr($fields['DS'],0,35) : "");
+
+		$arr[] = array(
+			"id" => $fields['ID'],
+			"sq" => $fields['SQ'],
+			"cl" => $fields['DS_ITEM'],
+			"rq" => $dsReq,
+			"st" => $fields['FG_PEND'],
+			"so" => $fields['FG_PEND'],
+			"dh" => strtotime($fields['DH'])
+		);
 	endforeach;
-	return array( "result" => true, "ocorr" => $arr );
+	return array( "result" => true, "diario" => $arr );
 }
 
 function fSetRead( $parameters ){
