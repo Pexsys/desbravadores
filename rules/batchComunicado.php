@@ -11,7 +11,7 @@ $rs = $GLOBALS['conn']->Execute("
 		  FROM LOG_MENSAGEM lc
 	INNER JOIN CAD_COMUNICADO cc ON (cc.ID = lc.ID_ORIGEM AND lc.TP = 'C')
 		 WHERE cc.FG_PEND = 'N'
-		   AND lc.DH_SEND IS NULL 
+		   AND (lc.DH_SEND IS NULL AND lc.DH_READ IS NULL)
 		   AND lc.EMAIL IS NOT NULL 
 	  ORDER BY 1
 ");
@@ -26,18 +26,18 @@ foreach($rs as $k => $l):
 		   AND EMAIL IS NOT NULL
 		   AND ID_ORIGEM = ?
 		   AND TP = ?
-     	      ORDER BY ID
+      ORDER BY ID
 	", array($l["ID"], "C") );
 	if ( !$rs1->EOF ):
 		$GLOBALS['mail']->ClearAllRecipients();
 		foreach($rs1 as $k1 => $l1):
 			//$GLOBALS['mail']->AddAddress();
 			$GLOBALS['mail']->addBCC( $l1["EMAIL"] );
+			$nrEnviados++;
 		endforeach;
 
 		$GLOBALS['mail']->MsgHTML($l["TXT"]);
-		if ( $GLOBALS['mail']->Send() ):
-			$nrEnviados++;
+		//if ( $GLOBALS['mail']->Send() ):
 			//ATUALIZA ENVIO
 			$GLOBALS['conn']->Execute("
 				UPDATE LOG_MENSAGEM
@@ -47,9 +47,9 @@ foreach($rs as $k => $l):
 				   AND ID_ORIGEM = ?
 				   AND TP = ?
 			", array( $l["ID"], "C") );
-		else:
+		//else:
 			echo "email não enviado";
-		endif;
+		//endif;
 	endif;
 	
 endforeach;
@@ -70,6 +70,7 @@ $rs = $GLOBALS['conn']->Execute("
 ");
 foreach ($rs as $l):
 	sendOcorrenciaByID($l["ID"]);
+	$nrEnviados++;
 endforeach;
 $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('EMAILS','01.99-Ocorrencias enviados com sucesso ($nrEnviados)...')");
 
