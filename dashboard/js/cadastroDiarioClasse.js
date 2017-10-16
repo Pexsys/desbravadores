@@ -44,26 +44,26 @@ $(document).ready(function(){
 			},
 			{	data: 'sq',
 				sortable: true,
-				width: "10%"
+				width: "5%"
 			},
 			{	data: 'cl',
 				sortable: true,
-				width: "30%"
+				width: "25%"
 			},
 			{	data: 'rq',
 				sortable: true,
-				width: "30%"
+				width: "50%"
 			},
 			{	data: 'dh',
 				sortable: true,
-				width: "15%",
+				width: "10%",
 				render: function (data) {
 					return moment.unix(data).format("DD/MM/YYYY")
 				}
 			},
 			{	data: 'st',
 				sortable: true,
-				width: "15%",
+				width: "10%",
 				render: function (data) {
 					return (data == 'S' ? "RASCUNHO" : "Efetivado");
 				}
@@ -124,7 +124,7 @@ $(document).ready(function(){
 	$('#diaDataTable tbody').on('click', 'tr', function () {
 		rowSelected = this;
 		valuePendOrig = diaDataTable.row( rowSelected ).data().so;
-		populateOcorrencia( diaDataTable.row( rowSelected ).data().id );
+		populateRegistro( diaDataTable.row( rowSelected ).data().id );
 		$("#diaModal").modal();
 	});
 	
@@ -194,7 +194,7 @@ $(document).ready(function(){
 							id: $('#ocoID').val(),
 							op: "DELETE"
 						};
-						jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/ocorrencias.php", { MethodName : 'fOcorrencia', data : parameter } );
+						jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/diarioClasse.php", { MethodName : 'fRegistro', data : parameter } );
 						refreshAndButtons();
 						dialogRef.close();
 						$("#diaModal").modal('hide');
@@ -244,15 +244,15 @@ $(document).ready(function(){
 		}
 	});
 	
-	$("#ocoModal").on('show.bs.modal', function(event){
+	$("#diaModal").on('show.bs.modal', function(event){
 		buttons();
 	});
 	
 	$('#btnNovo').click(function(){
 		jsLIB.resetForm( $('#cadRegForm') );
-		populateOcorrencia( $("#ocoID").val("Novo").val() );
+		populateRegistro( $("#regID").val("Novo").val() );
 		buttons();
-		$("#ocoModal").modal();
+		$("#diaModal").modal();
 	});
 	
 	$("#fgPend").change(function(){
@@ -347,11 +347,11 @@ function rulefields(){
 	tinymce.get('txt').setMode(valuePendOrig == 'N'?'readonly':'design');
 }
 
-function populateOcorrencia( ocorrenciaID ) {
-	var oc = jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/ocorrencias.php", { MethodName : 'fOcorrencia', data : { id : ocorrenciaID } }, 'RETURN' );
+function populateRegistro( diarioID ) {
+	var oc = jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/diarioClasse.php", { MethodName : 'fRegistro', data : { id : diarioID } }, 'RETURN' );
 	jsLIB.populateOptions( $("#cmNome"), oc.nomes );
-	jsLIB.populateForm( $("#cadRegForm"), oc.ocorrencia );
-	valuePendOrig = oc.ocorrencia.fg_pend;
+	jsLIB.populateForm( $("#cadRegForm"), oc.diario );
+	valuePendOrig = oc.diario.fg_pend;
 	valuePend = jsLIB.getValueFromField( $("#fgPend") );
 	rulefields();
 	buttons();
@@ -364,17 +364,17 @@ function refreshAndButtons(){
 }
 
 function populateMembers(){
-	var oc = jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/ocorrencias.php", { MethodName : 'fGetMembros' }, 'RETURN' );
+	var oc = jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/diarioClasse.php", { MethodName : 'fGetMembros' }, 'RETURN' );
 	jsLIB.populateOptions( $("#cmName"), oc.nomes );
 }
 
-function updateOcorrencia(){
+function updateRegistro(){
 	var parameter = {
 		op: "UPDATE",
 		frm: jsLIB.getJSONFields( $('#cadRegForm') )
 	};
-	var oc = jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/ocorrencias.php", { MethodName : 'fOcorrencia', data : parameter }, 'RETURN' );
-	$("#ocoID").val(oc.id);
+	var oc = jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/diarioClasse.php", { MethodName : 'fRegistro', data : parameter }, 'RETURN' );
+	$("#regID").val(oc.id);
 	valuePendOrig = oc.so;
 	valuePend = jsLIB.getValueFromField( $("#fgPend") );
 	buttons();

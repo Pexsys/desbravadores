@@ -56,11 +56,7 @@
 									<div class="row">
 										<div class="form-group col-xs-2">
 											<label for="ocoID" class="control-label">Sequ&ecirc;ncia</label>
-											<input type="text" name="ocoID" id="ocoID" field="id" class="form-control input-sm" placeholder="ID" disabled="disabled" style="text-align:center"/>
-										</div>
-										<div class="form-group col-xs-2">
-											<label for="cd" class="control-label">C&oacute;digo</label>
-											<input type="text" name="ocoCD" id="ocoCD" field="cd" class="form-control input-sm" placeholder="C&oacute;digo" disabled="disabled" style="text-align:center"/>
+											<input type="text" name="regID" id="regID" field="id" class="form-control input-sm" placeholder="ID" disabled="disabled" style="text-align:center"/>
 										</div>
 										<div class="form-group col-xs-3">
 											<label for="ocoDH" class="control-label">Data</label>

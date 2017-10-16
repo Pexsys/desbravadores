@@ -42,7 +42,7 @@ function fGetMembros(){
 	return $arr;
 }
 
-function fOcorrencia( $parameters ) {
+function fRegistro( $parameters ) {
 	session_start();
 	fConnDB();
 	
@@ -160,12 +160,16 @@ function fOcorrencia( $parameters ) {
 	//GET SAIDA
 	else:
 		if ( $parameters["id"] == "Novo" ):
-			$result = $GLOBALS['conn']->Execute("SELECT YEAR(NOW()) AS ANO, COUNT(*)+1 AS CD FROM CAD_OCORRENCIA WHERE YEAR(DH) = YEAR(NOW())" );
+			$result = $GLOBALS['conn']->Execute("
+				SELECT MAX(SQ)+1 AS SQ 
+				  FROM CAD_DIARIO 
+				 WHERE ID_TAB_APREND = ?
+				   AND YEAR(DH) = YEAR(NOW())
+			", array(4) );
 			$out["success"] = true;
-			$out["ocorrencia"] = array(
-				"id" => $parameters["id"],
-				"fg_pend" => "S",
-				"cd" => ( $result->fields['ANO']."-".str_pad($result->fields['CD'], 2, "0", STR_PAD_LEFT))
+			$out["diario"] = array(
+				"id" => $result->fields['SQ'],
+				"fg_pend" => "S"
 			);
 		else:
 			$result = $GLOBALS['conn']->Execute("
@@ -177,7 +181,7 @@ function fOcorrencia( $parameters ) {
 			", array( $parameters["id"] ) );
 			if (!$result->EOF):
 				$out["success"] = true;
-				$out["ocorrencia"] = array(
+				$out["diario"] = array(
 					"id"		=> $result->fields['ID'],
 					"cd"		=> ($result->fields['CD']),
 					"tp"		=> ($result->fields['TP']),
@@ -230,7 +234,7 @@ function getListaDiario( $parameters ){
 	foreach ($result as $k => $fields):
 		$dsReq = (!is_null($fields['CD_AREA']) ? $fields['CD_AREA']."-" : "") . 
 				substr($fields['CD_REQ_INTERNO'],-2) . 
-				 (!is_null($fields['DS']) ? " ".substr($fields['DS'],0,35) : "");
+				 (!is_null($fields['DS']) ? " ".substr($fields['DS'],0,60) : "");
 
 		$arr[] = array(
 			"id" => $fields['ID'],
