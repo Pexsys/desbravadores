@@ -148,11 +148,11 @@ function setRequisito( $parameters ) {
 		if (fStrStartWith($f,"dt-req-")):
 			$reqID = substr($f, 7);
 			
-			$rs = $GLOBALS['conn']->Execute( "SELECT ID_TAB_ITEM FROM TAB_APR_ITEM WHERE ID = ?", $reqID );
+			$rs = $GLOBALS['conn']->Execute( "SELECT ID_TAB_APREND FROM TAB_APR_ITEM WHERE ID = ?", $reqID );
 			if (!$rs->EOF):
 				$uh = updateHistorico(
 					$ip, 
-					$rs->fields["ID_TAB_ITEM"],
+					$rs->fields["ID_TAB_APREND"],
 					array(
 						"dt_inicio" => "N",
 						"dt_conclusao" => "N",
