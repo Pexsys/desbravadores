@@ -20,7 +20,7 @@ function getQueryByFilter( $parameters ) {
 		", array( $usuarioID ) );
 	
 	else:
-		$aWhere = array("N");
+		$aWhere = array( date("Y") );
 		$where = "";
 		if ( isset($parameters["filters"]) ):
 			$keyAnt = "";
@@ -60,8 +60,7 @@ function getQueryByFilter( $parameters ) {
 				SELECT o.ID, a.NM, o.TP, o.CD, o.DH, o.FG_PEND
 				  FROM CAD_OCORRENCIA o
 			INNER JOIN CON_ATIVOS a ON (a.ID = o.ID_CAD_PESSOA)
-				 WHERE o.FG_PEND = ?
-  				   AND YEAR(o.DH) = YEAR(NOW()) $where 
+				 WHERE YEAR(o.DH) = ? $where 
 			  ORDER BY o.ID DESC
 		",$aWhere);
 	endif;
