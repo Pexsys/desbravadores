@@ -44,7 +44,7 @@
 	<div class="modal-dialog modal-lg"><!---->
 		<div class="modal-content">
 			<div class="modal-body">
-				<form method="post" id="cadOcoForm">
+				<form method="post" id="cadRegForm">
 				<input type="hidden" name="regID" id="regID" field="id"/>
 					<div class="row">
 						<div class="col-lg-12">
@@ -55,7 +55,7 @@
 								</div>
 								<div class="panel-body">
 									<div class="row">
-										<div class="form-group col-xs-7">
+										<div class="form-group col-xs-6">
 											<label for="cmClasse" class="control-label">Classe</label>
 											<select field="id_classe" name="cmClasse" id="cmClasse" class="form-control input-sm"></select>
 										</div>
@@ -63,7 +63,7 @@
 											<label for="seqID" class="control-label">Seq.</label>
 											<input type="text" name="seqID" id="seqID" field="sq" class="form-control input-sm" placeholder="" disabled="disabled" style="text-align:center"/>
 										</div>
-										<div class="form-group col-xs-2">
+										<div class="form-group col-xs-3">
 											<label for="regDH" class="control-label">Data</label>
 											<div class="input-group date" id="datetimepicker" datatype="datetimepicker">
 												<input type="text" name="regDH" id="regDH" field="dh" class="form-control input-sm" placeholder="Data"/>
@@ -78,7 +78,7 @@
 									<div class="row">
 										<div class="form-group col-xs-12">
 											<label for="cmReq" class="control-label">Requisito</label>
-											<select field="id_req" name="cmReq" id="cmReq" opt-value="id" opt-label="ds" class="selectpicker form-control input-sm" multiple data-live-search="true" data-container="body" data-width="100%"></select>
+											<select field="id_req" name="cmReq" id="cmReq" opt-value="id" opt-label="ds" class="selectpicker form-control input-sm" data-live-search="true" data-container="body" data-width="100%"></select>
 										</div>
 									</div>
 									<div class="row">

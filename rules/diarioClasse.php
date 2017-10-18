@@ -82,69 +82,45 @@ function fRegistro( $parameters ) {
 		if ( !is_null($id) && is_numeric($id) ):
 			$arr = array(
 				fStrToDate($frm["dh"]),
-				fReturnStringNull(trim($frm["txt"])),
-				fReturnStringNull(trim($frm["cd"])),
-				fReturnStringNull(trim($frm["tp"])),
-				$frm["id_pessoa"],
 				fReturnStringNull($fg_pend),
+				fReturnStringNull(trim($frm["id_classe"])),
+				fReturnStringNull(trim($frm["id_req"])),
+				$frm["sq"],
+				fReturnStringNull(trim($frm["txt"])),
 				$id
 			);
 			$GLOBALS['conn']->Execute("
-				UPDATE CAD_OCORRENCIA SET
+				UPDATE CAD_DIARIO SET
 					DH = ?,
-					TXT = ?,
-					CD = ?,
-					TP = ?,
-					ID_CAD_PESSOA = ?,
-					FG_PEND = ?
+					FG_PEND = ?,
+					ID_TAB_APREND = ?,
+					ID_TAB_APR_ITEM = ?,
+					SQ = ?,
+					TXT = ?
 				WHERE ID = ?
 			",$arr);
 		else:
 			$arr = array(
 				fStrToDate($frm["dh"]),
-				fReturnStringNull(trim($frm["txt"])),
-				fReturnStringNull(trim($frm["cd"])),
-				fReturnStringNull(trim($frm["tp"])),
-				$frm["id_pessoa"],		
 				fReturnStringNull($fg_pend),
-				$userID
+				fReturnStringNull(trim($frm["id_classe"])),
+				fReturnStringNull(trim($frm["id_req"])),
+				$userID,
+				$frm["sq"],
+				fReturnStringNull(trim($frm["txt"]))
 			);
 			$GLOBALS['conn']->Execute("
-				INSERT INTO CAD_OCORRENCIA(
+				INSERT INTO CAD_DIARIO(
 					DH,
-					TXT,
-					CD,
-					TP,
-					ID_CAD_PESSOA,
 					FG_PEND,
-					ID_USUARIO_INS
+					ID_TAB_APREND,
+					ID_TAB_APR_ITEM,
+					ID_USUARIO_INS,
+					SQ,
+					TXT
 				) VALUES (?,?,?,?,?,?,?)
 			",$arr);
 			$id = $GLOBALS['conn']->Insert_ID();
-		endif;
-		
-		//GRAVACAO DEFINITIVA PARA O RESPONSAVEL, ENVIO POR EMAIL
-		if ($fg_pend == "N"):
-			$GLOBALS['conn']->Execute("
-				INSERT INTO LOG_MENSAGEM (ID_ORIGEM, TP, ID_USUARIO, EMAIL, DH_GERA )
-				SELECT $id, 'O',  cu.ID_USUARIO, cr.EMAIL_RESP, NOW()
-				  FROM CON_ATIVOS ca
-			INNER JOIN CAD_RESP cr ON (cr.ID = ca.ID_RESP)
-			INNER JOIN CON_ATIVOS cab ON (REPLACE(REPLACE(cab.NR_CPF,'.',''),'-','') = REPLACE(REPLACE(cr.CPF_RESP,'.',''),'-',''))
-			INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = cab.ID)
-				 WHERE ca.ID = ?
-					
-				UNION
-					
-				SELECT $id, 'O', cu.ID_USUARIO, cr.EMAIL_RESP, NOW()
-				FROM CON_ATIVOS ca
-				INNER JOIN CAD_RESP cr ON (cr.ID = ca.ID_RESP)
-				INNER JOIN CAD_USUARIOS cu ON (cu.CD_USUARIO = REPLACE(REPLACE(cr.CPF_RESP,'.',''),'-',''))
-				WHERE NOT EXISTS (SELECT 1 FROM CON_ATIVOS WHERE REPLACE(REPLACE(NR_CPF,'.',''),'-','') = REPLACE(REPLACE(cr.CPF_RESP,'.',''),'-',''))
-				  AND ca.ID = ?
-			", array( $frm["id_pessoa"], $frm["id_pessoa"] ) );
-		
-			sendOcorrenciaByID($id);	
 		endif;
 		
 		$out["id"] = $id;
@@ -153,8 +129,7 @@ function fRegistro( $parameters ) {
 
 	//EXCLUSAO DE SAIDA
 	elseif ( $op == "DELETE" ):
-		$GLOBALS['conn']->Execute("DELETE FROM LOG_MENSAGEM WHERE ID_ORIGEM = ? AND TP = ?", Array( $parameters["id"], "O" ) );
-		$GLOBALS['conn']->Execute("DELETE FROM CAD_OCORRENCIA WHERE ID = ?", Array( $parameters["id"] ) );
+		$GLOBALS['conn']->Execute("DELETE FROM CAD_DIARIO WHERE ID = ?", Array( $parameters["id"] ) );
 		$out["success"] = true;
 
 	//GET SAIDA
@@ -169,19 +144,19 @@ function fRegistro( $parameters ) {
 				  FROM CAD_DIARIO cd
 			INNER JOIN CAD_USUARIOS cu ON (cu.ID_USUARIO = cd.ID_USUARIO_INS)
 				 WHERE cd.ID = ?
-			", array( $parameters["id_classe"] ) );
+			", array( $parameters["id"] ) );
 			if (!$result->EOF):
 				$out["success"] = true;
 				$out["diario"] = array(
 					"id"			=> $result->fields['ID'],
 					"id_classe"		=> $result->fields['ID_TAB_APREND'],
-					"id_item"		=> $result->fields['ID_TAB_APR_ITEM'],
+					"id_req"		=> $result->fields['ID_TAB_APR_ITEM'],
 					"sq"			=> $result->fields['SQ'],
 					"dh"			=> strtotime($result->fields['DH'])."000",
 					"txt"			=> trim($result->fields['TXT']),
-					"owner"			=> trim($result->fields['DS_USUARIO']),
 					"fg_pend"		=> $result->fields['FG_PEND']
 				);
+				$out["req"] = fGetReq( $result->fields['ID_TAB_APREND'] );
 			endif;
 			
 		endif;
@@ -201,10 +176,6 @@ function fRegistro( $parameters ) {
 			);
 		endforeach;
 
-		if ( !is_null($parameters["id_classe"]) ):
-			$out["req"] = fGetReq( $parameters["id_classe"] );
-		endif;
-		
 	endif;
 	return $out;
 }
@@ -226,7 +197,7 @@ function fGetCompl( $parameters ){
 function fGetReq( $classeID ){
 	$arr = array();
 	$result = $result = $GLOBALS['conn']->Execute("
-		   SELECT taa.CD AS CD_AREA, taa.DS AS DS_AREA, tap.CD_REQ_INTERNO, tap.DS
+		   SELECT tap.ID, taa.CD AS CD_AREA, taa.DS AS DS_AREA, tap.CD_REQ_INTERNO, tap.DS
 			 FROM TAB_APR_ITEM tap 
 		LEFT JOIN TAB_APR_AREA taa ON (taa.ID = tap.ID_TAB_APR_AREA)
 		    WHERE tap.ID_TAB_APREND = ? 
@@ -236,13 +207,14 @@ function fGetReq( $classeID ){
 	foreach ($result as $k => $fields):
 		$dsReq = (!is_null($fields['CD_AREA']) ? $fields['CD_AREA']."-" : "") . 
 				substr($fields['CD_REQ_INTERNO'],-2) . 
-				 (!is_null($fields['DS']) ? " ".substr($fields['DS'],0,60) : "");
+				 (!is_null($fields['DS']) ? " ".$fields['DS'] : "");
 
 		$arr[] = array(
 			"id" => $fields['ID'],
 			"ds" => $dsReq
 		);
 	endforeach;
+	return $arr;
 }
 
 function getListaDiario( $parameters ){

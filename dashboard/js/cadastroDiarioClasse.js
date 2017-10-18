@@ -2,6 +2,7 @@ var diaDataTable = undefined;
 var rowSelected = undefined;
 var valuePend = undefined;
 var valuePendOrig = undefined;
+var formPopulated = false;
 
 $(document).ready(function(){
 	$.fn.dataTable.moment( 'DD/MM/YYYY HH:mm' );
@@ -82,7 +83,7 @@ $(document).ready(function(){
 	$('#datetimepicker').datetimepicker({
 		locale: 'pt-br',
 		language: 'pt-BR',
-		format: 'DD/MM',
+		format: 'DD/MM/YYYY',
 		maskInput: true,
 		pickDate: true,
 		pickTime: false,
@@ -130,7 +131,7 @@ $(document).ready(function(){
 	
 	$("#cadRegForm")
 		.on("change", "[field]", function(e) {
-			$("#cadMembrosForm")
+			$("#cadRegForm")
 				.formValidation('revalidateField', this.id);
 		})
 		.on('err.field.fv', function(e, data) {
@@ -143,10 +144,10 @@ $(document).ready(function(){
 					validators: {
 						excluded: false,
 						notEmpty: {
-							message: 'A data da ocorrência n&atilde;o pode estar em branco'
+							message: 'A data n&atilde;o pode estar em branco!'
 						},
 						date: {
-							format: 'DD/MM',
+							format: 'DD/MM/YYYY',
 							message: 'Data inv&aacute;lida!'
 						}
 					}
@@ -230,7 +231,7 @@ $(document).ready(function(){
 						action: function(dialogRef){
 							dialogRef.enableButtons(false);
 							dialogRef.setClosable(false);
-							updateOcorrencia();
+							updateRegistro();
 							updateNotifications();
 							refreshAndButtons();
 							dialogRef.close();
@@ -239,7 +240,7 @@ $(document).ready(function(){
 					]
 			});		
 		} else {
-			updateOcorrencia();
+			updateRegistro();
 			refreshAndButtons();
 		}
 	});
@@ -349,13 +350,16 @@ function rulefields(){
 }
 
 function populateRegistro( diarioID ) {
+	formPopulated = false;
 	var oc = jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/diarioClasse.php", { MethodName : 'fRegistro', data : { id : diarioID } }, 'RETURN' );
 	jsLIB.populateOptions( $("#cmClasse"), oc.classe );
+	jsLIB.populateOptions( $("#cmReq"), oc.req );
 	jsLIB.populateForm( $("#cadRegForm"), oc.diario );
 	valuePendOrig = oc.diario.fg_pend;
 	valuePend = jsLIB.getValueFromField( $("#fgPend") );
 	rulefields();
 	buttons();
+	formPopulated = true;
 }
 
 function refreshAndButtons(){
