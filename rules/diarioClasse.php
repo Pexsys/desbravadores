@@ -16,7 +16,7 @@ function getQueryByFilter( $parameters ) {
 		 LEFT JOIN TAB_APR_ITEM tap ON (tap.ID = cd.ID_TAB_APR_ITEM)
 		 LEFT JOIN TAB_APR_AREA taa ON (taa.ID = tap.ID_TAB_APR_AREA)
 			 WHERE YEAR(cd.DH) = ? $where 
-			ORDER BY cd.SQ DESC
+			ORDER BY cd.SQ
 	",$aWhere);
 }
 
@@ -159,70 +159,90 @@ function fRegistro( $parameters ) {
 
 	//GET SAIDA
 	else:
+
 		if ( $parameters["id"] == "Novo" ):
-			$result = $GLOBALS['conn']->Execute("
-				SELECT MAX(SQ)+1 AS SQ 
-				  FROM CAD_DIARIO 
-				 WHERE ID_TAB_APREND = ?
-				   AND YEAR(DH) = YEAR(NOW())
-			", array(4) );
 			$out["success"] = true;
-			$out["diario"] = array(
-				"id" => $result->fields['SQ'],
-				"fg_pend" => "S"
-			);
+			$out["diario"] = array( "fg_pend" => "S" );
 		else:
 			$result = $GLOBALS['conn']->Execute("
-				SELECT co.*, ca.NM, cu.DS_USUARIO
-				  FROM CAD_OCORRENCIA co
-			INNER JOIN CON_ATIVOS ca ON (ca.id = co.id_cad_pessoa)
-			INNER JOIN CAD_USUARIOS cu ON (cu.ID_USUARIO = co.ID_USUARIO_INS)
-				 WHERE co.ID = ?
-			", array( $parameters["id"] ) );
+				SELECT *
+				  FROM CAD_DIARIO cd
+			INNER JOIN CAD_USUARIOS cu ON (cu.ID_USUARIO = cd.ID_USUARIO_INS)
+				 WHERE cd.ID = ?
+			", array( $parameters["id_classe"] ) );
 			if (!$result->EOF):
 				$out["success"] = true;
 				$out["diario"] = array(
-					"id"		=> $result->fields['ID'],
-					"cd"		=> ($result->fields['CD']),
-					"tp"		=> ($result->fields['TP']),
-					"id_pessoa"	=> $result->fields['ID_CAD_PESSOA'],
-					"dh"		=> strtotime($result->fields['DH'])."000",
-					"txt"		=> (trim($result->fields['TXT'])),
-					"owner"		=> (trim($result->fields['DS_USUARIO'])),
-					"fg_pend"	=> $result->fields['FG_PEND']
+					"id"			=> $result->fields['ID'],
+					"id_classe"		=> $result->fields['ID_TAB_APREND'],
+					"id_item"		=> $result->fields['ID_TAB_APR_ITEM'],
+					"sq"			=> $result->fields['SQ'],
+					"dh"			=> strtotime($result->fields['DH'])."000",
+					"txt"			=> trim($result->fields['TXT']),
+					"owner"			=> trim($result->fields['DS_USUARIO']),
+					"fg_pend"		=> $result->fields['FG_PEND']
 				);
-				
 			endif;
 			
 		endif;
-		
-		if ( !isset($parameters["nomes"]) ):
-			$out["nomes"][] = array(
-					"id_pessoa" => "",
-					"nm" => "(NENHUM)"
+
+		$rc = $GLOBALS['conn']->Execute("
+			SELECT ID, DS_ITEM
+				FROM TAB_APRENDIZADO
+				WHERE CD_ITEM_INTERNO LIKE '$like%'
+				AND TP_ITEM = 'CL'
+				AND TP_PARA = 'DL'
+			ORDER BY CD_ITEM_INTERNO
+		");
+		foreach ($rc as $r => $f):
+			$out["classe"][] = array(
+				"value" => $f['ID'],
+				"label" => $f['DS_ITEM']
 			);
-			$qtdZeros = zeroSizeID();
-			$result = $GLOBALS['conn']->Execute("
-				  SELECT DISTINCT at.NM, at.ID
-					FROM APR_HISTORICO ah
-			  INNER JOIN CON_ATIVOS at ON (at.ID = ah.ID_CAD_PESSOA)
-			  INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
-				   WHERE at.IDADE_HOJE < 18
-					 AND ah.DT_CONCLUSAO IS NULL 
-				     AND ta.CD_ITEM_INTERNO LIKE '$like%'
-				ORDER BY at.NM
-			");
-			foreach ($result as $r => $f):
-				$id = str_pad($f['ID'], $qtdZeros, "0", STR_PAD_LEFT);
-				$out["nomes"][] = array(
-						"id_pessoa" => $id,
-						"nm" => "$id ".($f['NM'])
-				);
-			endforeach;
+		endforeach;
+
+		if ( !is_null($parameters["id_classe"]) ):
+			$out["req"] = fGetReq( $parameters["id_classe"] );
 		endif;
 		
 	endif;
 	return $out;
+}
+
+function fGetCompl( $parameters ){
+	fConnDB();
+
+	$result = $GLOBALS['conn']->Execute("
+		SELECT MAX(SQ)+1 AS SQ 
+		FROM CAD_DIARIO 
+		WHERE ID_TAB_APREND = ?
+		AND YEAR(DH) = YEAR(NOW())
+	", array($parameters["id_classe"]) );
+	$sq = ( !is_null($result->fields["SQ"]) ? $result->fields["SQ"] : 1);
+
+	return array( "sq" => $sq, "req" => fGetReq( $parameters["id_classe"] ) );
+}
+
+function fGetReq( $classeID ){
+	$arr = array();
+	$result = $result = $GLOBALS['conn']->Execute("
+		   SELECT taa.CD AS CD_AREA, taa.DS AS DS_AREA, tap.CD_REQ_INTERNO, tap.DS
+			 FROM TAB_APR_ITEM tap 
+		LEFT JOIN TAB_APR_AREA taa ON (taa.ID = tap.ID_TAB_APR_AREA)
+		    WHERE tap.ID_TAB_APREND = ? 
+		 ORDER BY taa.CD, tap.CD_REQ_INTERNO
+	", array( $classeID ) );
+
+	foreach ($result as $k => $fields):
+		$dsReq = (!is_null($fields['CD_AREA']) ? $fields['CD_AREA']."-" : "") . 
+				substr($fields['CD_REQ_INTERNO'],-2) . 
+				 (!is_null($fields['DS']) ? " ".substr($fields['DS'],0,60) : "");
+
+		$arr[] = array(
+			"id" => $fields['ID'],
+			"ds" => $dsReq
+		);
+	endforeach;
 }
 
 function getListaDiario( $parameters ){
@@ -247,41 +267,5 @@ function getListaDiario( $parameters ){
 		);
 	endforeach;
 	return array( "result" => true, "diario" => $arr );
-}
-
-function fSetRead( $parameters ){
-	session_start();
-	$comunicadoID = $parameters["id"];
-	$usuarioID = $_SESSION['USER']['id_usuario'];
-	$usuarioCD = $_SESSION['USER']['cd_usuario'];
-	
-	fConnDB();
-	
-	//ATUALIZA USUARIO ATUAL
-	$GLOBALS['conn']->Execute("
-		UPDATE LOG_MENSAGEM SET
-			DH_READ = NOW()
-		WHERE ID_USUARIO = ?
-		  AND ID_ORIGEM = ?
-		  AND TP = ?
-	", array($usuarioID,$comunicadoID,"O"));
-	
-	//VERIFICA SE USUARIO ATUAL EH RESPONSAVEL POR OUTRO.
-	$result = $GLOBALS['conn']->Execute("
-		UPDATE LOG_MENSAGEM SET
-			  DH_READ = NOW()
-		WHERE ID_USUARIO IN (
-							SELECT cu.ID_USUARIO
-							FROM CAD_RESP cr
-							INNER JOIN CON_ATIVOS ca ON (ca.ID_RESP = cr.ID)
-							INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID)
-							WHERE REPLACE(REPLACE(cr.CPF_RESP,'.',''),'-','') = ?		
-							)
-		  AND DH_READ IS NULL
-		  AND ID_ORIGEM = ?
-		  AND TP = ?
-	", array($usuarioCD,$comunicadoID,"O"));
-	
-	return array( "result" => true );
 }
 ?>

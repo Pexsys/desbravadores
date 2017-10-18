@@ -23,7 +23,7 @@
 					<th>Seq.</th>
 					<th>Classe</th>
 					<th>Requisito</th>
-					<th>Registro</th>
+					<th>Data</th>
 					<th>Status</th>
 				</tr>
 			</thead>
@@ -45,43 +45,44 @@
 		<div class="modal-content">
 			<div class="modal-body">
 				<form method="post" id="cadOcoForm">
+				<input type="hidden" name="regID" id="regID" field="id"/>
 					<div class="row">
 						<div class="col-lg-12">
 							<div class="panel panel-warning" aria-expanded="false">
 								<div class="panel-heading">
 									<button aria-hidden="true" data-dismiss="modal" class="close" type="button" id="btnX">&times;</button>
-									<h3 class="panel-title"><b>Ocorr&ecirc;ncia</b></h3>
+									<h3 class="panel-title"><b>Di&aacute;rio</b></h3>
 								</div>
 								<div class="panel-body">
 									<div class="row">
-										<div class="form-group col-xs-2">
-											<label for="ocoID" class="control-label">Sequ&ecirc;ncia</label>
-											<input type="text" name="regID" id="regID" field="id" class="form-control input-sm" placeholder="ID" disabled="disabled" style="text-align:center"/>
+										<div class="form-group col-xs-7">
+											<label for="cmClasse" class="control-label">Classe</label>
+											<select field="id_classe" name="cmClasse" id="cmClasse" class="form-control input-sm"></select>
 										</div>
-										<div class="form-group col-xs-3">
-											<label for="ocoDH" class="control-label">Data</label>
+										<div class="form-group col-xs-1">
+											<label for="seqID" class="control-label">Seq.</label>
+											<input type="text" name="seqID" id="seqID" field="sq" class="form-control input-sm" placeholder="" disabled="disabled" style="text-align:center"/>
+										</div>
+										<div class="form-group col-xs-2">
+											<label for="regDH" class="control-label">Data</label>
 											<div class="input-group date" id="datetimepicker" datatype="datetimepicker">
-												<input type="text" name="ocoDH" id="ocoDH" field="dh" class="form-control input-sm" placeholder="Data"/>
+												<input type="text" name="regDH" id="regDH" field="dh" class="form-control input-sm" placeholder="Data"/>
 												<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 											</div>
 										</div>
 										<div class="form-group col-xs-2">
-											<label for="tpOcor" class="control-label">Tipo</label>
-											<input type="checkbox" name="tpOcor" id="tpOcor" field="tp" value-on="P" value-off="N" data-toggle="toggle" data-onstyle="success" data-offstyle="danger" data-on="<b>POSITIVA</b>" data-off="NEGATIVA" data-size="small" data-width="120"/>
-										</div>
-										<div class="form-group col-xs-2">
 											<label for="fgPend" class="control-label">Status</label>
-											<input type="checkbox" name="fgPend" id="fgPend" field="fg_pend" value-on="N" value-off="S" data-toggle="toggle" data-onstyle="success" data-offstyle="warning" data-on="<b>EFETIVADO</b>" data-off="RASCUNHO" data-size="small" data-width="120"/>
+											<input type="checkbox" name="fgPend" id="fgPend" field="fg_pend" value-on="N" value-off="S" data-toggle="toggle" data-onstyle="success" data-offstyle="warning" data-on="<b>EXECUTADO</b>" data-off="PLANEJADO" data-size="small" data-width="120"/>
 										</div>
 									</div>
 									<div class="row">
 										<div class="form-group col-xs-12">
-											<label for="cmNome" class="control-label">Para</label>
-											<select field="id_pessoa" name="cmNome" id="cmNome" opt-value="id_pessoa" opt-search="nm" opt-label="nm" class="selectpicker form-control input-sm" data-live-search="true" data-container="body" data-width="100%"></select>
+											<label for="cmReq" class="control-label">Requisito</label>
+											<select field="id_req" name="cmReq" id="cmReq" opt-value="id" opt-label="ds" class="selectpicker form-control input-sm" multiple data-live-search="true" data-container="body" data-width="100%"></select>
 										</div>
 									</div>
 									<div class="row">
-										<div class="form-group col-xs-12"><textarea field="txt" id="txt" type="wysiwyg"></textarea></div>
+										<div class="form-group col-xs-12"><textarea field="txt" id="txt" type="wysiwyg" placeholder="Descrição"></textarea></div>
 									</div>
 								</div>
 							</div>

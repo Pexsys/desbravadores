@@ -58,14 +58,14 @@ $(document).ready(function(){
 				sortable: true,
 				width: "10%",
 				render: function (data) {
-					return moment.unix(data).format("DD/MM/YYYY")
+					return moment.unix(data).format("DD/MM")
 				}
 			},
 			{	data: 'st',
 				sortable: true,
 				width: "10%",
 				render: function (data) {
-					return (data == 'S' ? "RASCUNHO" : "Efetivado");
+					return (data == 'S' ? "PLANEJADO" : "Executado");
 				}
 			}
 		],
@@ -82,14 +82,14 @@ $(document).ready(function(){
 	$('#datetimepicker').datetimepicker({
 		locale: 'pt-br',
 		language: 'pt-BR',
-		format: 'DD/MM/YYYY',
+		format: 'DD/MM',
 		maskInput: true,
 		pickDate: true,
 		pickTime: false,
 		pickSeconds: false,
 		useCurrent: false
 	}).on('dp.change',function(){
-		$("#cadRegForm").formValidation('revalidateField', 'ocoDH');
+		$("#cadRegForm").formValidation('revalidateField', 'regDH');
 		buttons();
 	});
 
@@ -139,22 +139,22 @@ $(document).ready(function(){
 		.formValidation({
 			framework: 'bootstrap',
 			fields: {
-				ocoDH: {
+				regDH: {
 					validators: {
 						excluded: false,
 						notEmpty: {
 							message: 'A data da ocorrência n&atilde;o pode estar em branco'
 						},
 						date: {
-							format: 'DD/MM/YYYY',
+							format: 'DD/MM',
 							message: 'Data inv&aacute;lida!'
 						}
 					}
 				},
-				cmNome: {
+				cmClasse: {
 					validators: {
 						notEmpty: {
-							message: 'Selecione a pessoa da ocorr&ecirc;ncia'
+							message: 'Selecione a Classe'
 						}
 					}
 				}
@@ -169,7 +169,7 @@ $(document).ready(function(){
 	$('#btnDel').click(function(){
 		BootstrapDialog.show({
 			title: 'Alerta',
-			message: 'Confirma exclus&atilde;o desta ocorrência?',
+			message: 'Confirma exclus&atilde;o deste registro?',
 			type: BootstrapDialog.TYPE_WARNING,
 			size: BootstrapDialog.SIZE_SMALL,
 			draggable: true,
@@ -191,7 +191,7 @@ $(document).ready(function(){
 						dialogRef.enableButtons(false);
 						dialogRef.setClosable(false);
 						var parameter = {
-							id: $('#ocoID').val(),
+							id: $('#regID').val(),
 							op: "DELETE"
 						};
 						jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/diarioClasse.php", { MethodName : 'fRegistro', data : parameter } );
@@ -260,7 +260,8 @@ $(document).ready(function(){
 		buttons();
 	});
 
-	$("#cmNome").change(function(){
+	$("#cmClasse").change(function(){
+		populateReqs();
 		buttons();
 	});
 	
@@ -336,12 +337,12 @@ function ruleBotaoGerar( force ){
 }
 
 function buttons(){
-	$('#btnDel').visible( $("#ocoID").val() != "Novo" && valuePend == 'S' && valuePendOrig == 'S' );
-	$("#btnGravar").visible(valuePendOrig !== 'N' && $("#ocoDH").val() != '' && $("#cmNome").val() != '');
+	$('#btnDel').visible( $("#regID").val() != "Novo" && valuePend == 'S' && valuePendOrig == 'S' );
+	$("#btnGravar").visible(valuePendOrig !== 'N' && $("#regDH").val() != '' && $("#cmClasse").val() != '');
 }
 
 function rulefields(){
-	$("#ocoDH").enable(valuePendOrig !== 'N');
+	$("#regDH").enable(valuePendOrig !== 'N');
 	$("#tpOcor").prop('disabled', (valuePendOrig == 'N') ).change();
 	$("#fgPend").prop('disabled', (valuePendOrig == 'N') ).change();
 	tinymce.get('txt').setMode(valuePendOrig == 'N'?'readonly':'design');
@@ -349,7 +350,7 @@ function rulefields(){
 
 function populateRegistro( diarioID ) {
 	var oc = jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/diarioClasse.php", { MethodName : 'fRegistro', data : { id : diarioID } }, 'RETURN' );
-	jsLIB.populateOptions( $("#cmNome"), oc.nomes );
+	jsLIB.populateOptions( $("#cmClasse"), oc.classe );
 	jsLIB.populateForm( $("#cadRegForm"), oc.diario );
 	valuePendOrig = oc.diario.fg_pend;
 	valuePend = jsLIB.getValueFromField( $("#fgPend") );
@@ -366,6 +367,15 @@ function refreshAndButtons(){
 function populateMembers(){
 	var oc = jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/diarioClasse.php", { MethodName : 'fGetMembros' }, 'RETURN' );
 	jsLIB.populateOptions( $("#cmName"), oc.nomes );
+}
+
+function populateReqs(){
+	var parameter = {
+		id_classe: $("#cmClasse").val()
+	};
+	var cm = jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/diarioClasse.php", { MethodName : 'fGetCompl', data : parameter }, 'RETURN' );
+	jsLIB.populateOptions( $("#cmReq"), cm.req );
+	$("#seqID").val(cm.sq);
 }
 
 function updateRegistro(){
