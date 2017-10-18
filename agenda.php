@@ -40,7 +40,7 @@ fConnDB();
 
 	$MES_ANT = "";
 	while (!$result->EOF):
-		$MES_ATU = (ucfirst(strftime("%B", strtotime($result->fields['DTHORA_EVENTO_INI']))));
+		$MES_ATU = utf8_encode(ucfirst(strftime("%B", strtotime($result->fields['DTHORA_EVENTO_INI']))));
 
 		if ($MES_ATU != $MES_ANT):
 			$MES_ANT = $MES_ATU;

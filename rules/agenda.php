@@ -343,7 +343,7 @@ function agendaConsulta( $parameters ) {
 	fConnDB();
 
 	$ano = $parameters["ano"];
-	if ( empty($ano) ):
+	if ( empty($ano) || is_null($ano) ):
 		$out["years"] = array();
 		$query = "SELECT DISTINCT NR_ANO 
 			  FROM CAD_ATIVOS ". ( is_null($membroID) ? "" : "WHERE ID = $membroID" ) ." ORDER BY NR_ANO DESC";
@@ -364,9 +364,10 @@ function agendaConsulta( $parameters ) {
 		      ORDER BY DTHORA_EVENTO_INI DESC
 		", array($ano,$ano) );
 		$mesAnt = "<div class=\"row\">";
+		
 		foreach ($result as $k => $line):
 			$data = strtotime($line['DTHORA_EVENTO_INI']);
-			$nomeMesAtu = (ucfirst(strftime("%B",$data)));
+			$nomeMesAtu = utf8_encode(ucfirst(strftime("%B",$data)));
 			if ($nomeMesAtu != $mesAnt):
 				if ($mesAnt != ""):
 					$str .= "</div>";
@@ -374,7 +375,7 @@ function agendaConsulta( $parameters ) {
 					$str .= "</div>";
 				endif;
 				$mesAnt = $nomeMesAtu;
-
+				  
 				$nrMesAtu = strftime("%m",$data);
 				$class = "panel-default";
 				if (strftime("%Y",$data) == date("Y")):
@@ -391,7 +392,6 @@ function agendaConsulta( $parameters ) {
 				$str .= "<div class=\"panel-heading\" style=\"cursor:pointer\"><h5 class=\"panel-title\" data-toggle=\"collapse\" data-target=\"#m$nrMesAtu\" href=\"#m$nrMesAtu\"><b>$nomeMesAtu</h5></b></div>";
 				$str .= "<div id=\"m$nrMesAtu\" class=\"panel-body panel-collapse collapse\">";
 			endif;
-
 			$str .= "<div class=\"media row col-lg-12\">";
 			$str .= "<div class=\"pull-left\"><i class=\"fa ". fGetClassTipoEvento($result->fields['TIPO_EVENTO']) ." fa-2x\"></i></div>";
 			$str .= "<div class=\"media-body\">";
@@ -405,7 +405,7 @@ function agendaConsulta( $parameters ) {
 				$info .= " - ".trim($result->fields['DESC_LOCAL']);
 			endif;
 			if ($info != ""):
-				$str .= ($info) . "<br/>";
+				$str .= "$info<br/>";
 			endif;
 			$endereco = trim($result->fields['DESC_LOGRADOURO']);
 			if (trim($result->fields['NUM_LOGRADOURO']) != ""):
@@ -415,7 +415,7 @@ function agendaConsulta( $parameters ) {
 				$endereco .= " - ".trim($result->fields['DESC_COMPLEMENTO']);
 			endif;
 			if ($endereco != ""):
-				$str .= ($endereco) . "<br/>";
+				$str .=  "$endereco<br/>";
 			endif;
 			$cidade = "";
 			if (trim($result->fields['DESC_BAIRRO']) != ""):
@@ -434,8 +434,9 @@ function agendaConsulta( $parameters ) {
 				$cidade .= trim($result->fields['COD_UF']);
 			endif;
 			if ($cidade != ""):
-				$str .= ($cidade)."<br/>";
+				$str .= "$cidade<br/>";
 			endif;
+			
 			$str .= "</p>";
 			$str .= "</div>";
 			$str .= "</div>";
