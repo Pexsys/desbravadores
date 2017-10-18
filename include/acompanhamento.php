@@ -60,7 +60,7 @@ function marcaRequisito( $pessoaID, $itemID, $reqCD, $assDT ) {
 	$rs = $GLOBALS['conn']->Execute("
 		SELECT tai.ID
 		FROM TAB_APR_ITEM tai
-	  INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = tai.ID_TAB_ITEM)
+	  INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = tai.ID_TAB_APREND)
 		   WHERE ta.ID = ?
 		 AND tai.CD_REQ_INTERNO = ?
 		", array( $itemID, $reqCD ) );
@@ -110,7 +110,7 @@ function fGetClassAcomp( $cap, $param ){
 				  ah.DT_CONCLUSAO, 
 				  apr.DT_ASSINATURA
 			 FROM TAB_APRENDIZADO ta
-		LEFT JOIN TAB_APR_ITEM tai ON ( tai.ID_TAB_ITEM = ta.ID ) 
+		LEFT JOIN TAB_APR_ITEM tai ON ( tai.ID_TAB_APREND = ta.ID ) 
 		LEFT JOIN TAB_APR_AREA taa ON ( taa.ID = tai.ID_TAB_APR_AREA ) 
 		LEFT JOIN APR_HISTORICO ah ON ( ah.ID_TAB_APREND = ta.ID AND ah.ID_CAD_PESSOA = ? )
 		LEFT JOIN APR_PESSOA_REQ apr ON (apr.ID_HISTORICO = ah.ID AND apr.ID_TAB_APR_ITEM = tai.ID)
@@ -128,7 +128,7 @@ function fGetClassAcomp( $cap, $param ){
 				  ah.DT_CONCLUSAO, 
 				  apr.DT_ASSINATURA
 			 FROM TAB_APRENDIZADO ta
-		LEFT JOIN TAB_APR_ITEM tai ON ( tai.ID_TAB_ITEM = ta.ID ) 
+		LEFT JOIN TAB_APR_ITEM tai ON ( tai.ID_TAB_APREND = ta.ID ) 
 		LEFT JOIN TAB_APR_AREA taa ON ( taa.ID = tai.ID_TAB_APR_AREA ) 
 		LEFT JOIN APR_HISTORICO ah ON ( ah.ID_TAB_APREND = ta.ID AND ah.ID_CAD_PESSOA = ? )
 		LEFT JOIN APR_PESSOA_REQ apr ON (apr.ID_HISTORICO = ah.ID AND apr.ID_TAB_APR_ITEM = tai.ID)
