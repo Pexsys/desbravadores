@@ -456,7 +456,7 @@ function fGetDetailClass( $class, $titulo, $icon, $result ) {
 			else:
 				$str .= ", ";
 			endif;
-			$str .= substr($line["CD_REQ_INTERNO"],-2);
+			$str .= "<span title=\"".$line["DS"]."\">". substr($line["CD_REQ_INTERNO"],-2) ."</span>";
 			$first = false;
 		endforeach;
 		$str .= "</div></div></div></div>";
@@ -493,7 +493,7 @@ function getPendentes( $parameters ) {
 	$str = "";
 
 	$result = $GLOBALS['conn']->Execute("
-		SELECT CD_REQ_INTERNO, CD_AP_AREA, DS_AP_AREA
+		SELECT CD_REQ_INTERNO, CD_AP_AREA, DS_AP_AREA, DS
 		  FROM CON_APR_PESSOA
 		 WHERE ID_CAD_PESSOA = ?
 		   AND ID_TAB_APREND = ?
@@ -504,7 +504,7 @@ function getPendentes( $parameters ) {
 	$str .= fGetDetailClass("panel-success","Itens Conclu&iacute;dos","fa-smile-o",$result);
 
 	$result = $GLOBALS['conn']->Execute("
-		SELECT CD_REQ_INTERNO, CD_AP_AREA, DS_AP_AREA
+		SELECT CD_REQ_INTERNO, CD_AP_AREA, DS_AP_AREA, DS
 		  FROM CON_APR_PESSOA
 		 WHERE ID_CAD_PESSOA = ?
 		   AND ID_TAB_APREND = ?
