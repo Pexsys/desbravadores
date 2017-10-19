@@ -62,7 +62,7 @@ if (!$result->EOF):
 			$area = getMacroArea( $fields["TP_ITEM"], $fields["CD_AREA_INTERNO"] );
 			
 			if ($fields["TP_ITEM"] == "ES"):
-			fItemAprendizado( "panel-danger", $icon, $fields["CD_ITEM_INTERNO"], titleCase( $fields["DS_ITEM"] ), titleCase( $area ), strftime("%d/%m/%Y",strtotime($fields["DT_INICIO"])) );
+				fItemAprendizado( "panel-danger", $icon, $fields["CD_ITEM_INTERNO"], titleCase( $fields["DS_ITEM"] ), titleCase( $area ), strftime("%d/%m/%Y",strtotime($fields["DT_INICIO"])) );
 			else:
 				$qtdReq =  $fields["QT_REQ"];
 				$tabAprID =  $fields["ID_TAB_APREND"];
