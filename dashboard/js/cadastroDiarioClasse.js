@@ -66,7 +66,7 @@ $(document).ready(function(){
 				sortable: true,
 				width: "10%",
 				render: function (data) {
-					return (data == 'S' ? "PLANEJADO" : "Executado");
+					return (data == 'S' ? "PLANEJADO" : "Concluído");
 				}
 			}
 		],
@@ -209,7 +209,7 @@ $(document).ready(function(){
 		if (valuePendOrig !== valuePend) {
 			BootstrapDialog.show({
 				title: 'Alerta',
-				message: 'Confirma gravação, envio e geração desta ocorrência?',
+				message: 'Confirma conclus&atilde;o dessa atividade?',
 				type: BootstrapDialog.TYPE_SUCCESS,
 				size: BootstrapDialog.SIZE_SMALL,
 				draggable: true,

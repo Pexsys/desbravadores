@@ -72,7 +72,7 @@
 										</div>
 										<div class="form-group col-xs-2">
 											<label for="fgPend" class="control-label">Status</label>
-											<input type="checkbox" name="fgPend" id="fgPend" field="fg_pend" value-on="N" value-off="S" data-toggle="toggle" data-onstyle="success" data-offstyle="warning" data-on="<b>EXECUTADO</b>" data-off="PLANEJADO" data-size="small" data-width="120"/>
+											<input type="checkbox" name="fgPend" id="fgPend" field="fg_pend" value-on="N" value-off="S" data-toggle="toggle" data-onstyle="success" data-offstyle="warning" data-on="<b>Conclu&iacute;do</b>" data-off="PLANEJADO" data-size="small" data-width="120"/>
 										</div>
 									</div>
 									<div class="row">
@@ -116,23 +116,29 @@
 				<div class="modal-body"> <!-- -->
 					<div class="panel panel-warning">
 						<div class="panel-heading" style="padding:4px 10px 0px">
-							<label>Para quem?</label>
+							<label>O que?</label>
 						</div>
 						<div class="panel-body" style="padding:4px 10px 0px">
 							<div class="btn-group btn-group-justified" data-toggle="buttons">
 							  <label class="btn btn-default btn-sm" name="quem" tab-function="radio" for="Lista">
 								<input type="radio" name="options" id="lista" autocomplete="off" checked>Lista Atual
 							  </label>
-							  <label class="btn btn-default btn-sm" name="quem" tab-function="radio" for="People">
-								<input type="radio" name="options" id="peopl" autocomplete="off">Membros Espec&iacute;ficos
+							  <label class="btn btn-default btn-sm" name="quem" tab-function="radio" for="Classe">
+								<input type="radio" name="options" id="peopl" autocomplete="off">Classe
 							  </label>
 							</div>
 							<br/>
-							<div id="People" class="col-lg-12" style="display:none">
+							<div id="Classe" class="col-lg-12" style="display:none">
 								<div class="row">
 									<div class="form-group col-xs-12">
-										<label for="cmName" class="control-label">Membros</label>
-										<select name="cmName" id="cmName" opt-value="value" opt-search="label" opt-label="label" class="selectpicker form-control input-sm" data-live-search="true" field="ip" title="Escolha um nome" data-width="100%" data-container="body" data-actions-box="true"></select>
+										<label for="cmName" class="control-label">Classe</label>
+										<select name="cmName" id="cmName" opt-value="value" opt-search="label" opt-label="label" class="selectpicker form-control input-sm" data-live-search="true" field="ic" title="Escolha Classe" data-width="100%" data-container="body" data-actions-box="true"></select>
+									</div>
+								</div>
+								<div class="row" style="display:none">
+									<div class="form-group col-xs-12">
+										<label for="cmItem" class="control-label">Item</label>
+										<select name="cmItem" id="cmItem" opt-value="value" opt-search="label" opt-label="label" class="selectpicker form-control input-sm" data-live-search="true" field="it" title="Escolha Itens" data-width="100%" data-container="body" data-actions-box="true"></select>
 									</div>
 								</div>
 							</div>
@@ -150,7 +156,6 @@
 		</div>
 	</form>
 </div>
-
 <script src="<?php echo $GLOBALS['VirtualDir'];?>include/_core/js/tinymce/tinymce.min.js"></script>
 <script src="<?php echo $GLOBALS['VirtualDir'];?>include/_core/js/tinymce/jquery.tinymce.min.js"></script>
 <script src="<?php echo $GLOBALS['VirtualDir'];?>dashboard/js/cadastroDiarioClasse.js<?php echo "?".microtime();?>"></script>
