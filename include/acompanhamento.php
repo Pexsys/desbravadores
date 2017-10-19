@@ -106,7 +106,7 @@ function fGetClassAcomp( $cap, $param ){
 	$result = $GLOBALS['conn']->Execute("
 		   SELECT taa.CD AS CD_AP_AREA, taa.DS AS DS_AP_AREA, 
 				  ta.TP_ITEM, ta.CD_COR, ta.CD_ITEM_INTERNO, ta.CD_AREA_INTERNO, ta.DS_ITEM, 
-				  tai.ID, tai.CD_REQ_INTERNO,
+				  tai.ID, tai.CD_REQ_INTERNO, tai.DS,
 				  ah.DT_CONCLUSAO, 
 				  apr.DT_ASSINATURA
 			 FROM TAB_APRENDIZADO ta
@@ -124,7 +124,7 @@ function fGetClassAcomp( $cap, $param ){
 	$result = $GLOBALS['conn']->Execute("
 		   SELECT taa.CD AS CD_AP_AREA, taa.DS AS DS_AP_AREA, 
 				  ta.TP_ITEM, ta.CD_COR, ta.CD_ITEM_INTERNO, ta.CD_AREA_INTERNO, ta.DS_ITEM, 
-				  tai.ID, tai.CD_REQ_INTERNO,
+				  tai.ID, tai.CD_REQ_INTERNO, tai.DS,
 				  ah.DT_CONCLUSAO, 
 				  apr.DT_ASSINATURA
 			 FROM TAB_APRENDIZADO ta
@@ -168,9 +168,10 @@ function fGetDetailAcomp($class, $titulo, $icon, $result){
 			$req = $line["CD_REQ_INTERNO"];
 			$taiID = $line["ID"];
 			$rTela = substr($req,-2);
+			$hint = $line["DS"];
 			
 			$str .= "<div class=\"row\">";
-			$str .= "<div class=\"col-sm-6\" style=\"padding:1px 0px 2px 15px\">";
+			$str .= "<div class=\"col-sm-6\" style=\"padding:1px 0px 2px 15px\" title=\"$hint\">";
 			$str .= "<label>$rTela</label> <input type=\"checkbox\" for=\"dt-req-$taiID\"". ($checked?" checked":"")." value-on=\"S\" value-off=\"N\" data-on=\"Conclu&iacute;do\" data-off=\"Pendente\" data-onstyle=\"success\" data-offstyle=\"danger\" data-toggle=\"toggle\" data-width=\"85\" data-size=\"small\" data-style=\"quick\"/>";
 			$str .= "</div>";
 			$str .= "<div class=\"col-sm-6\" style=\"1px 15px 2px 10px\">";
