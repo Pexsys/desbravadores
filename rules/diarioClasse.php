@@ -16,7 +16,7 @@ function getQueryByFilter( $parameters ) {
 		 LEFT JOIN TAB_APR_ITEM tap ON (tap.ID = cd.ID_TAB_APR_ITEM)
 		 LEFT JOIN TAB_APR_AREA taa ON (taa.ID = tap.ID_TAB_APR_AREA)
 			 WHERE YEAR(cd.DH) = ? $where 
-			ORDER BY cd.SQ
+			ORDER BY cd.SQ DESC
 	",$aWhere);
 }
 

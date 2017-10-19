@@ -2,7 +2,7 @@
 @require_once('../include/functions.php');
 @require_once('../include/_core/lib/tcpdf/tcpdf.php');
 
-class OCORRENCIAS extends TCPDF {
+class DIARIO extends TCPDF {
 	
 	//lines styles
 	private $stLine;
@@ -16,9 +16,9 @@ class OCORRENCIAS extends TCPDF {
 		
 		$this->SetCreator(PDF_CREATOR);
 		$this->SetAuthor('Ricardo J. Cesar');
-		$this->SetTitle('Geração automática de Comunicados');
+		$this->SetTitle('Geração automática de Diário de Classe');
 		$this->SetSubject('Clube Pioneiros');
-		$this->SetKeywords('Desbravadores, Comunicados, Pioneiros, Capão Redondo');
+		$this->SetKeywords('Desbravadores, Diário, Classe, Pioneiros, Capão Redondo');
 		$this->setImageScale(PDF_IMAGE_SCALE_RATIO);
 		$this->setPrintHeader(false);
 		$this->setPrintFooter(false);
@@ -51,21 +51,21 @@ class OCORRENCIAS extends TCPDF {
 		$this->hPoint = 0;
 	}
 	
-	public function addOcorrencia( $line ) {
+	public function addRegistro( $line ) {
 		$this->startTransaction();
 		$start_page = $this->getPage();
-		$this->modelOcorrencia( $line );
+		$this->modelRegistro( $line );
 		if  ($this->getNumPages() != $start_page) {
 			$this->rollbackTransaction(true);
 			$this->newPage();
-			$this->modelOcorrencia( $line );
+			$this->modelRegistro( $line );
 		}else{
 			$this->commitTransaction();     
 		}	
 		$this->aP++;
 	}
 	
-	public function modelOcorrencia( $line ){
+	public function modelRegistro( $line ){
 		$this->hPoint += 6;
 
 		$this->SetY($this->hPoint);
@@ -75,7 +75,7 @@ class OCORRENCIAS extends TCPDF {
 		$this->Cell(20, 0, "#".fStrZero($line["ID"],3), 0, false, 'L', false, false, 1, false, 'C', 'C');
 		$this->SetX(60);
 		$this->SetTextColor(0,0,0);
-		$this->Cell(0, 0, "Ocorrência ".($line["TP"] == "P"?"POSITIVA":"NEGATIVA")." #".$line["CD"]." [".strftime("%d/%m/%Y",strtotime($line["DH"]))."]", 0, 0, 'L', false, false, 0, false, 'C', 'C');
+		$this->Cell(0, 0, "Registro ".($line["TP"] == "P"?"PLANEJADO":"CONCLUÍDO")." #".$line["CD"]." [".strftime("%d/%m/%Y",strtotime($line["DH"]))."]", 0, 0, 'L', false, false, 0, false, 'C', 'C');
 		$this->Image("img/logo.jpg", 197, $this->hPoint-4, 7, 8, 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
 		
 		//writeHTMLCell($w, $h, $x, $y, $html='', $border=0, $ln=0, $fill=0, $reseth=true, $align='', $autopadding=true)
@@ -88,7 +88,7 @@ class OCORRENCIAS extends TCPDF {
 		$this->Cell(0, 5, $line["NM"], 0, 0, 'L', false, false, 0, false, 'C', 'C');
 		$this->hPoint += 5;
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 12);
-		$this->writeHTMLCell(200, 0, 5, $this->hPoint, ($line["TXT"]."<p style=\"font-size:12px\"><i>Ocorr&ecirc;ncia inserida por ".$line["DS_USUARIO"]."</i></p>"), 
+		$this->writeHTMLCell(200, 0, 5, $this->hPoint, ($line["TXT"]."<p style=\"font-size:12px\"><i>Registro inserido por ".$line["DS_USUARIO"]."</i></p>"), 
 			array('LTRB' => array('width' => 0.3, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0))), 
 			0, 0, true, 'J', true);
 		
@@ -98,7 +98,7 @@ class OCORRENCIAS extends TCPDF {
 
 	public function download() {
 		$this->lastPage();
-		$this->Output("Ocorrencias_".date('Y-m-d_H:i:s').".pdf", 'I');
+		$this->Output("DiarioClasse_".date('Y-m-d_H:i:s').".pdf", 'I');
 	}
 }
 fConnDB();
@@ -106,28 +106,33 @@ fConnDB();
 $where = "";
 $id = fRequest("id");
 if (isset($id) && !empty($id)):
-	$where .= " AND co.ID IN ($id)";
+	$where .= " AND cd.ID IN ($id)";
 endif;
 
-$ip = fRequest("ip");
-if (isset($ip) && !empty($ip)):
-	$where .= " AND co.ID_CAD_PESSOA IN ($ip)";
+$ic = fRequest("ic");
+if (isset($ic) && !empty($ic)):
+	$where .= " AND cd.ID_TAB_APREND IN ($ic)";
 endif;
 
-$pdf = new OCORRENCIAS();
+$it = fRequest("it");
+if (isset($it) && !empty($it)):
+	$where .= " AND cd.ID_TAB_APR_ITEM IN ($it)";
+endif;
+
+$pdf = new DIARIO();
 $result = $GLOBALS['conn']->Execute("
- 	 SELECT co.*, cu.DS_USUARIO, cp.NM
-	   FROM CAD_OCORRENCIA co
- INNER JOIN CAD_USUARIOS cu ON (cu.ID_USUARIO = co.ID_USUARIO_INS)
- INNER JOIN CAD_PESSOA cp ON (cp.ID = co.ID_CAD_PESSOA)
-	  WHERE co.FG_PEND = 'N'
-	 $where
-   ORDER BY co.DH
+		SELECT cd.ID, cd.SQ, ta.DS_ITEM, taa.CD AS CD_AREA, taa.DS AS DS_AREA, tap.CD_REQ_INTERNO, tap.DS, cd.DH, cd.FG_PEND, cd.TXT
+		FROM CAD_DIARIO cd
+	INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = cd.ID_TAB_APREND)
+	LEFT JOIN TAB_APR_ITEM tap ON (tap.ID = cd.ID_TAB_APR_ITEM)
+	LEFT JOIN TAB_APR_AREA taa ON (taa.ID = tap.ID_TAB_APR_AREA)
+	".(empty($where) ? "" : "WHERE ".substr($where,5) )." 
+	ORDER BY cd.SQ
 ");
 if (!$result->EOF):
 	$pdf->newPage();
 	foreach ($result as $k => $fields):
-		$pdf->addOcorrencia( $fields );
+		$pdf->addRegistro( $fields );
 	endforeach;
 	$pdf->download();
 endif;
