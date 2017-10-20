@@ -245,6 +245,22 @@ function updateMember( $parameters ) {
 						?,
 						?
 					)", array( $id, $unid, $cargo, $cargo2, $tpCami, $tpAgas, $instr, $reun ) );
+
+					/*
+1 ADMINISTRADOR
+2 SECRETARIA
+3 REGIONAL
+4 DIRETORIA
+5 INSTRUTOR
+6 CONSELHEIRO
+7 TESOURARIA
+8 SECRETARIA ASSOCIADA
+12 GUEST
+9 DIRETORES ASSOCIADOS
+10 RESPONSAVEL LEGAL
+11 RESPONSAVEL FINANCEIRO
+
+					*/
 					
 				return getMember( array( "id" => $id ) );
 			endif;
