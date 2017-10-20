@@ -1,6 +1,8 @@
 <?php
 @require_once("../include/functions.php");
+@require_once("../include/profile.php");
 @require_once("sendmailMestrado.php");
+
 fConnDB();
 //******* INICIO DA ROTINA DIARIA
 
@@ -119,6 +121,19 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
     	endforeach;
 	endforeach;
 
+//******* SECRETARIA - MESTRADOS
+$GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.02-Excluindo Perfis de Membros Inativos...')");
+$profile = new PROFILE();
+$result = $GLOBALS['conn']->Execute("
+		SELECT cu.ID_USUARIO
+		FROM CAD_PESSOA cp 
+  INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = cp.ID)
+  INNER JOIN CAD_USU_PERFIL cup ON (cup.ID_CAD_USUARIOS = cu.ID_USUARIO)
+		WHERE NOT EXISTS (SELECT 1 FROM CAD_ATIVOS WHERE ID = cp.ID AND NR_ANO = YEAR(NOW())) 
+");
+foreach($result as $l => $fields):
+	$profile->deleteAllByUserID( $fields['ID_USUARIO'] );
+endforeach;
 
 $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.99-Rotina de secretaria finalizada com Sucesso.')");
 
