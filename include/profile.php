@@ -28,12 +28,24 @@ class PROFILE {
 
 	public function deleteByPessoaID( $pessoaID, $profileID ){
 		$rs = $GLOBALS['conn']->Execute("
-			SELECT ID FROM CAD_USU_PERFIL
-			WHERE ID_CAD_PESSOA = ?
-		", array( $userCD ) );
+			SELECT ID_USUARIO
+			FROM CAD_USUARIOS
+			WHERE ID_CAD_PESSOA = ? 
+		", array( $pessoaID ) );
 		if (!$rs->EOF):
-			$this->deleteByUserID( $rs->fields["ID"], $profileID );
+			$this->deleteByUserID( $rs->fields["ID_USUARIO"], $profileID );
 		endif;
+	}
+
+	public function insertByPessoaID( $pessoaID, $profileID ) {
+		$rs = $GLOBALS['conn']->Execute("
+			SELECT cu.ID_USUARIO
+			  FROM CAD_USUARIOS cu
+			 WHERE cu.ID_CAD_PESSOA = ? 
+		", array( $pessoaID ) );
+		if (!$rs->EOF):
+			$this->insert( $rs->fields["ID_USUARIOID"], $profileID );
+		endif;		
 	}
 
 	public function insert( $userID, $profileID ) {
@@ -108,8 +120,10 @@ class PROFILE {
 
 			endif;
 
-			
-
+			$this->deleteAllByPessoaID($pessoaID);
+			foreach ($arr as $k => $l):
+				$this->insertByPessoaID( $pessoaID, $l );
+			endforeach;
 		endif;
 	}
 }
