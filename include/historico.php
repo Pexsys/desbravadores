@@ -158,30 +158,30 @@ function updateHistorico( $barpessoaid, $barfnid, $paramDates, $compras = null )
 	//VERIFICA SE ITEM É UMA ESPECIALIDADE E SE EXISTE ALGUM MESTRADO COMPLETADO COM A CONCLUSAO ESSA ESPECIALIDADE.
     if ( $tpItem == "ES" && $cdInte != "ME" && $paramDates["dt_conclusao"] != "N" ):
         
-    	$rg = $GLOBALS['conn']->Execute("SELECT ID, MIN_AREA, DS_ITEM FROM CON_APR_REQ WHERE ID_RQ = ? ORDER BY CD_ITEM_INTERNO", array($barfnid) );
-    	foreach ($rg as $lg => $fg):
+    		$rg = $GLOBALS['conn']->Execute("SELECT ID, MIN_AREA, DS_ITEM FROM CON_APR_REQ WHERE ID_RQ = ? ORDER BY CD_ITEM_INTERNO", array($barfnid) );
+    		foreach ($rg as $lg => $fg):
             $min = $fg["MIN_AREA"];
             $dsItem = $fg["DS_ITEM"];
     
             $feitas = 0;
             //LE PARAMETRO MINIMO E HISTORICO PARA A REGRA
-    	    $rR = $GLOBALS['conn']->Execute("
+    	    		$rR = $GLOBALS['conn']->Execute("
                     SELECT tar.ID, tar.QT_MIN, COUNT(*) AS QT_FEITAS
                       FROM TAB_APR_REQ tar
                 INNER JOIN CON_APR_REQ car ON (car.ID_TAB_APR_REQ = tar.ID AND car.TP_ITEM_RQ = ?)
                 INNER JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = car.ID_RQ AND ah.ID_CAD_PESSOA = ? AND ah.DT_CONCLUSAO IS NOT NULL)
                      WHERE tar.ID_TAB_APREND = ?
                   GROUP BY tar.ID, tar.QT_MIN
-        	", array( "ES", $barpessoaid, $fg["ID"] ) );
-    	    foreach($rR as $lR => $fR):
+        		", array( "ES", $barpessoaid, $fg["ID"] ) );
+    	    		foreach($rR as $lR => $fR):
                 $feitas += min( $fR["QT_MIN"], $fR["QT_FEITAS"] );
             endforeach;
     	    
-    		$pct = floor( ( $feitas / $min ) * 100 );
-    		
-    		//VERIFICA SE AINDA NÃO CONCLUIDO
-    		if ( $pct >= 100 ):
-        	    $rI = $GLOBALS['conn']->Execute("
+	    		$pct = floor( ( $feitas / $min ) * 100 );
+	    		
+	    		//VERIFICA SE AINDA NÃO CONCLUIDO
+	    		if ( $pct >= 100 ):
+	        	    $rI = $GLOBALS['conn']->Execute("
                     SELECT DT_CONCLUSAO
                     FROM APR_HISTORICO
                     WHERE ID_CAD_PESSOA = ?
@@ -259,7 +259,9 @@ function updateHistorico( $barpessoaid, $barfnid, $paramDates, $compras = null )
 		"ar" => $consulta["ar"],
 		"cd" => $consulta["cd"],
 		"ap" => $consulta["ap"],
-		"nm" => $consulta["nm"] );
+		"nm" => $consulta["nm"],
+		"pg" => $consulta["pg"]
+	);
 }
 
 function podeAtualizarDtInvestidura($pessoaID,$aprendID){

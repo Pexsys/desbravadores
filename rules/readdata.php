@@ -88,7 +88,7 @@ function setAprendizado( $parm ){
 		//A-CARTAO
 		if ($parm["barfn"] == 10):
 			$arrRetorno = updateHistorico( $parm["barpessoaid"], $parm["barfnid"], $paramDates );
-			$str = $arrRetorno["nm"] ."<br/>". ($arrRetorno["ap"]);
+			$str = $arrRetorno["ap"] ."<br/>". $arrRetorno["nm"];
 			
 			if ($arrRetorno["ar"] == "REGULAR"):
 				$rs = $GLOBALS['conn']->Execute("
@@ -107,7 +107,7 @@ function setAprendizado( $parm ){
 		//ESPECIALIDADE
 		elseif ($parm["barfn"] == 14):
 			$arrRetorno = updateHistorico( $parm["barpessoaid"], $parm["barfnid"], $paramDates );
-			$arr['result'] = $arrRetorno["nm"] ."<br/>". ($arrRetorno["ap"]);
+			$arr['result'] =  $arrRetorno["ap"]." - ".$arrRetorno["cd"]." - #".$arrRetorno["pg"]."<br/>". $arrRetorno["nm"];
 			$arr['logged'] = true;
 		endif;
 	endif;

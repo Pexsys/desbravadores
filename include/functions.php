@@ -572,15 +572,17 @@ function getMacroArea( $tpItem, $areaInterno ){
 function consultaAprendizadoPessoa( $tabAprendID, $pessoaID ){
 	$arr = array( "ap" => "", "ar" => "", "cd" => "", "nm" => "" );
 	$rs = $GLOBALS['conn']->Execute("
-		SELECT *
-		  FROM TAB_APRENDIZADO
-		 WHERE ID = ?
+		SELECT ta.CD_COR, ta.DS_ITEM, ta.CD_AREA_INTERNO, ta.CD_ITEM_INTERNO, tm.NR_PG_ASS
+		  FROM TAB_APRENDIZADO ta
+	 LEFT JOIN TAB_MATERIAIS tm ON (tm.ID_TAB_APREND = ta.ID)
+		 WHERE ta.ID = ?
 	", array( $tabAprendID ) );
 	if (!$rs->EOF):
 		$arr["cr"] = $rs->fields["CD_COR"];
 		$arr["ap"] = $rs->fields["DS_ITEM"];
 		$arr["ar"] = $rs->fields["CD_AREA_INTERNO"];
 		$arr["cd"] = $rs->fields["CD_ITEM_INTERNO"];
+		$arr["pg"] = $rs->fields["NR_PG_ASS"];
 	endif;
 
 	$rp = $GLOBALS['conn']->Execute("
