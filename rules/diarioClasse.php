@@ -15,7 +15,7 @@ function getQueryByFilter( $parameters ) {
 		INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = cd.ID_TAB_APREND)
 		 LEFT JOIN TAB_APR_ITEM tap ON (tap.ID = cd.ID_TAB_APR_ITEM)
 		 LEFT JOIN TAB_APR_AREA taa ON (taa.ID = tap.ID_TAB_APR_AREA)
-			 WHERE YEAR(cd.DH) = ? $where 
+			 WHERE YEAR(cd.DH) >= ? $where 
 			ORDER BY cd.SQ DESC
 	",$aWhere);
 }
