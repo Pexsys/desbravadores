@@ -77,7 +77,8 @@ endif;
 </div>
 <?php
 $pendNome = $GLOBALS['conn']->Execute("
-	SELECT cap.ID_TAB_APREND, cap.CD_ITEM_INTERNO, cap.CD_REQ_INTERNO, cap.CD_AP_AREA, cap.DS_AP_AREA, cap.DS_ITEM, at.NM, cap.CD_COR
+	SELECT cap.ID_TAB_APREND, cap.CD_ITEM_INTERNO, cap.CD_REQ_INTERNO, cap.CD_AP_AREA, cap.DS_AP_AREA, cap.DS_ITEM, cap.DS, cap.CD_COR,
+	       at.NM
 	FROM CON_APR_PESSOA cap
 	INNER JOIN CON_ATIVOS at ON (at.ID = cap.ID_CAD_PESSOA)
 	INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = cap.ID_TAB_APREND)
@@ -89,7 +90,8 @@ $pendNome = $GLOBALS['conn']->Execute("
 ");
 
 $pendItens = $GLOBALS['conn']->Execute("
-	SELECT cap.ID_TAB_APREND, cap.CD_ITEM_INTERNO, cap.CD_REQ_INTERNO, cap.CD_AP_AREA, cap.DS_AP_AREA, cap.DS_ITEM, at.NM, cap.CD_COR
+	SELECT cap.ID_TAB_APREND, cap.CD_ITEM_INTERNO, cap.CD_REQ_INTERNO, cap.CD_AP_AREA, cap.DS_AP_AREA, cap.DS_ITEM, cap.DS, cap.CD_COR,
+			at.NM
 	FROM CON_APR_PESSOA cap
 	INNER JOIN CON_ATIVOS at ON (at.ID = cap.ID_CAD_PESSOA)
 	INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = cap.ID_TAB_APREND)
@@ -138,7 +140,7 @@ if (!$pendNome->EOF || !$pendItens->EOF):
 						endif;
 						$first = true;
 					endif;
-					echo (!$first ? ", " : "&nbsp;&nbsp;"). substr($line["CD_REQ_INTERNO"],-2);
+					echo (!$first ? ", " : "&nbsp;&nbsp;"). "<span title=\"".$line["DS"]."\">". substr($line["CD_REQ_INTERNO"],-2) ."</span>";
 					$first = false;
 				endforeach;
 				?>
@@ -174,7 +176,7 @@ if (!$pendNome->EOF || !$pendItens->EOF):
 					endif;
 					if ($line["CD_REQ_INTERNO"] <> $reqAtu):
 						$reqAtu = $line["CD_REQ_INTERNO"];
-						echo "<div class=\"well well-sm\" style=\"padding:4px;margin-bottom:0px;font-size:11px;color:#000000;background-color:#C8C8C8\"><b>".substr($line["CD_REQ_INTERNO"],-2)."</b></div>";
+						echo "<div class=\"well well-sm\" style=\"padding:4px;margin-bottom:0px;font-size:11px;color:#000000;background-color:#C8C8C8\"><b>".substr($line["CD_REQ_INTERNO"],-2)."</b> - ".$line["DS"]."</div>";
 						$first = true;
 						$areaAtu = "";
 					endif;
