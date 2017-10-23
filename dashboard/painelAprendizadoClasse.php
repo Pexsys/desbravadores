@@ -129,7 +129,7 @@ if (!$pendNome->EOF || !$pendItens->EOF):
 					endif;
 					if ($line["NM"] <> $nomeAtu):
 						$nomeAtu = $line["NM"];
-						echo "<div class=\"well well-sm\" style=\"padding:4px;margin-bottom:0px;font-size:11px;color:#000000;background-color:#C8C8C8\"><b>$nomeAtu</b></div>";
+						echo "<div class=\"well well-sm\" style=\"padding:4px;margin-bottom:0px;font-size:11px;color:#000000;background-color:#C8C8C8\"><b>".titleCase($nomeAtu)."</b></div>";
 						$first = true;
 						$areaAtu = "";
 					endif;
@@ -180,7 +180,7 @@ if (!$pendNome->EOF || !$pendItens->EOF):
 						$first = true;
 						$areaAtu = "";
 					endif;
-					echo (!$first ? ", " : ""). $line["NM"];
+					echo (!$first ? ", " : ""). titleCase($line["NM"]);
 					$first = false;
 				endforeach;
 				?>
