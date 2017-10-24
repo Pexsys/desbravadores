@@ -1,15 +1,4 @@
 <nav class="navbar navbar-inverse navbar-static-top" role="navigation" style="margin:0">
-	<div class="navbar-header">
-		<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-			<span class="sr-only">Toggle navigation</span>
-			<span class="icon-bar"></span>
-			<span class="icon-bar"></span>
-			<span class="icon-bar"></span>
-		</button>
-		<a class="navbar-brand" href="index.php" style="margin:0">
-			<img class="img-responsive" src="<?php echo $GLOBALS['VirtualDir'];?>img/logos.png" width="60" height="5" alt="Clube de Desbravadores Pioneiros">
-		</a>
-	</div>
 	<ul class="nav navbar-top-links navbar-right">
 		<li class="dropdown" style="display:none" id="notifyTasks">
 			<a class="dropdown-toggle" data-toggle="dropdown" href="#" style="color:#777777">
@@ -40,5 +29,16 @@
 			</ul>
 		</li>
 	</ul>
+	<div class="navbar-header navbar-left">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="index.php" style="margin:0">
+				<img class="img-responsive" src="<?php echo $GLOBALS['VirtualDir'];?>img/logos.png" width="60" height="5" alt="Clube de Desbravadores Pioneiros">
+			</a>
+		</div>
 	<?php @include_once("menu.php");?>
 </nav>
