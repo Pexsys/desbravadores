@@ -109,31 +109,31 @@ class LISTAINVESTIDURASEC extends TCPDF {
 	    $this->writeGroupFooter();
 	    
 	    $this->startTransaction();
-    	$start_page = $this->getPage();
-    	$start_col  = $this->getColumn();
-    	$YInicial   = $this->getY();
-    	$this->writeHTML($this->finalHTML, false, false, false, true);
-    	
-    	if  ( (($start_col % 2) == 1) && $this->getNumPages() != $start_page ):
-    		$this->rollbackTransaction(true);
-    		$this->newPage();
-    		$this->selectColumn();
-    		$this->writeHTML($this->finalHTML, false, false, false, true);
-    		
-   	    elseif ( $YInicial > $this->heightHeader && $this->getNumPages() != $start_page ):
-    		$this->rollbackTransaction(true);
-    	    $this->selectColumn($start_col+1);
-    		$this->writeHTML($this->finalHTML, false, false, false, true);
-    		
-    	elseif ( $YInicial > $this->heightHeader && $start_col != $this->getColumn() ):
-    		$this->rollbackTransaction(true);
-    	    $this->selectColumn($start_col+1);
-    		$this->writeHTML($this->finalHTML, false, false, false, true);
-    		
-    	else:
-    		$this->commitTransaction();
-    		
-    	endif;
+	    	$start_page = $this->getPage();
+	    	$start_col  = $this->getColumn();
+	    	$YInicial   = $this->getY();
+	    	$this->writeHTML($this->finalHTML, false, false, false, true);
+	    	
+	    	if  ( (($start_col % 2) == 1) && $this->getNumPages() != $start_page ):
+	    		$this->rollbackTransaction(true);
+	    		$this->newPage();
+	    		$this->selectColumn();
+	    		$this->writeHTML($this->finalHTML, false, false, false, true);
+	    		
+	   	    elseif ( $YInicial > $this->heightHeader && $this->getNumPages() != $start_page ):
+	    		$this->rollbackTransaction(true);
+	    	    $this->selectColumn($start_col+1);
+	    		$this->writeHTML($this->finalHTML, false, false, false, true);
+	    		
+	    	elseif ( $YInicial > $this->heightHeader && $start_col != $this->getColumn() ):
+	    		$this->rollbackTransaction(true);
+	    	    $this->selectColumn($start_col+1);
+	    		$this->writeHTML($this->finalHTML, false, false, false, true);
+	    		
+	    	else:
+	    		$this->commitTransaction();
+	    		
+	    	endif;
 
         $this->lineAlt = false;
         $this->finalHTML = "";
@@ -168,7 +168,7 @@ class LISTAINVESTIDURASEC extends TCPDF {
 		endif;
 	    $fundo = $this->getFundo($f["FUNDO"]);
 	    if ($f["TP_ITEM"] == "ES"):
-	        $desc = $f["DS_ITEM"];
+	    		$desc = $f["CD_ITEM_INTERNO"] ." - ". $f["DS_ITEM"];
         else:
 	        $desc = ($f["TP"] ." DE ". $f["DS"]. ($f["CMPL"] == "S" && $f["FG_IM"] =="N" ? " - ".$f["DS_ITEM"] : "") . ( !empty($fundo) ? " - FUNDO $fundo" : "" ));
         endif;
@@ -211,23 +211,23 @@ $pdf->newPage();
 fConnDB();
 
 $result = $GLOBALS['conn']->Execute("
-    SELECT NM, TP_ITEM, CD, DS_ITEM, TP, DS, FUNDO, FG_IM, COUNT(*) AS QT_ITENS
+    SELECT NM, TP_ITEM, CD, DS_ITEM, TP, DS, FUNDO, FG_IM, CD_AREA_INTERNO, CD_ITEM_INTERNO, COUNT(*) AS QT_ITENS
     FROM CON_COMPRAS
     WHERE FG_IM = 'N'
       AND FG_COMPRA = 'S'
       AND FG_ENTREGUE = 'N'
-    GROUP BY NM, TP_ITEM, CD, DS_ITEM, TP, DS, FUNDO, FG_IM
+    GROUP BY NM, TP_ITEM, CD, DS_ITEM, TP, DS, FUNDO, FG_IM, CD_AREA_INTERNO, CD_ITEM_INTERNO
     
     UNION ALL
     
-    SELECT NM, TP_ITEM, CD, DS_ITEM, TP, DS, FUNDO, FG_IM, COUNT(*) AS QT_ITENS
+    SELECT NM, TP_ITEM, CD, DS_ITEM, TP, DS, FUNDO, FG_IM, CD_AREA_INTERNO, CD_ITEM_INTERNO, COUNT(*) AS QT_ITENS
     FROM CON_COMPRAS
     WHERE FG_IM = 'S'
       AND FG_COMPRA = 'S'
       AND FG_ENTREGUE = 'N'
-    GROUP BY NM, TP_ITEM, CD, DS_ITEM, TP, DS, FUNDO, FG_IM
+    GROUP BY NM, TP_ITEM, CD, DS_ITEM, TP, DS, FUNDO, FG_IM, CD_AREA_INTERNO, CD_ITEM_INTERNO
     
-    ORDER BY 1, 2, 3, 4
+    ORDER BY 1, 2, 9, 3, 4
 ");
 foreach ( $result as $ra => $f ):
 	$pdf->addLine($f);
