@@ -16,11 +16,6 @@ function login( $parameters ) {
 	$pag = mb_strtoupper($parameters["page"]);
 	$usr = mb_strtoupper($parameters["username"]);
 	$psw = strtolower($parameters["password"]);
-	
-	if ($usr == "" && $_SERVER['SERVER_ADDR'] == "192.168.1.249"):
-		$usr = "ADMINISTRADOR";
-		$psw = "875956ec37f04402692c88f35bccf39e89c03a21";
-	endif;
 
 	//Verificacao de Usuario/Senha
 	if ( isset($usr) && !empty($usr) ):
@@ -34,7 +29,7 @@ function login( $parameters ) {
 		fConnDB();
 		$result = checkUser($usr, $pag);
 
-		//SE NAO ENCONTROU E O CODIGO CODIGO TEM OS CARACTERES MINIMOS PARA USUARIO DO CLUBE
+		//SE NAO ENCONTROU E O CODIGO TEM OS CARACTERES MINIMOS PARA USUARIO DO CLUBE
 		if ($result->EOF && $usrClube):
 			$usrClube = (sha1(strtolower($usr)) == $psw);
 		
@@ -79,11 +74,7 @@ function login( $parameters ) {
 			$barpessoa10 = base_convert( $barpessoa36, 36, 10 );
 
 			//VERIFICA SE ESTÁ ATIVO
-			$rsHA = $GLOBALS['conn']->Execute("
-				SELECT NM
-				  FROM CON_ATIVOS
-				 WHERE ID = ?
-			", array( $barpessoa10 ) );
+			$rsHA = $GLOBALS['conn']->Execute("SELECT NM FROM CON_ATIVOS WHERE ID = ?", array( $barpessoa10 ) );
 			if (!$rsHA->EOF):
 				fInsertUserProfile( fInsertUser( $usr, $rsHA->fields['NM'], $psw, $barpessoa10 ), 0 );
 			
@@ -91,13 +82,18 @@ function login( $parameters ) {
 					"page" =>		$pag, 
 					"username" =>	$usr, 
 					"password" =>	$psw ) );
-
 			endif;
 
 		//SE EXISTE O USUARIO DIGITADO.
 		elseif (!$result->EOF):
 		
-			if (!$usrClube):
+			if ($usrClube):
+				//VERIFICA SE ESTÁ ATIVO
+				$rsHA = $GLOBALS['conn']->Execute("SELECT 1 FROM CON_ATIVOS WHERE ID = ?", array( base_convert( $barpessoa36, 36, 10 ) ) );
+				if ($rsHA->EOF):
+					$psw = null;
+				endif;
+			else:
 				$resp = verificaRespByCPF($usr);
 				if (!is_null($resp) && !existeMenorByRespID($resp["ID"])):
 					fDeleteUserAndProfile( $result->fields["ID_USUARIO"], 10 );
