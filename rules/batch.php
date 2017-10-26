@@ -125,7 +125,7 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
 $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.02-Excluindo Perfis de Membros Inativos...')");
 $profile = new PROFILE();
 $result = $GLOBALS['conn']->Execute("
-		SELECT cu.ID_USUARIO
+		SELECT DISTINCT cu.ID_USUARIO
 		FROM CAD_PESSOA cp 
   INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = cp.ID)
   INNER JOIN CAD_USU_PERFIL cup ON (cup.ID_CAD_USUARIOS = cu.ID_USUARIO)

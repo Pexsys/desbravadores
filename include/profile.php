@@ -1,4 +1,6 @@
 <?php
+@require_once('functions.php');
+
 class PROFILE {
 
 	public function deleteAllByUserID( $userID ) {
@@ -10,11 +12,11 @@ class PROFILE {
 
 	public function deleteAllByPessoaID( $pessoaID ){
 		$rs = $GLOBALS['conn']->Execute("
-			SELECT ID FROM CAD_USU_PERFIL
+			SELECT ID_USUARIO FROM CAD_USUARIOS
 			WHERE ID_CAD_PESSOA = ?
-		", array( $userCD ) );
+		", array( $pessoaID ) );
 		if (!$rs->EOF):
-			$this->deleteAllByUserID( $rs->fields["ID"] );
+			$this->deleteAllByUserID( $rs->fields["ID_USUARIO"] );
 		endif;
 	}
 
@@ -26,7 +28,7 @@ class PROFILE {
 		", array( $userID, $profileID ) );		
 	}
 
-	public function deleteByPessoaID( $pessoaID, $profileID ){
+	 public function deleteByPessoaID( $pessoaID, $profileID ){
 		$rs = $GLOBALS['conn']->Execute("
 			SELECT ID_USUARIO
 			FROM CAD_USUARIOS
@@ -37,18 +39,18 @@ class PROFILE {
 		endif;
 	}
 
-	public function insertByPessoaID( $pessoaID, $profileID ) {
+	 public function insertByPessoaID( $pessoaID, $profileID ) {
 		$rs = $GLOBALS['conn']->Execute("
-			SELECT cu.ID_USUARIO
-			  FROM CAD_USUARIOS cu
-			 WHERE cu.ID_CAD_PESSOA = ? 
+			SELECT ID_USUARIO
+			  FROM CAD_USUARIOS
+			 WHERE ID_CAD_PESSOA = ? 
 		", array( $pessoaID ) );
 		if (!$rs->EOF):
-			$this->insert( $rs->fields["ID_USUARIOID"], $profileID );
+			$this->insert( $rs->fields["ID_USUARIO"], $profileID );
 		endif;		
 	}
 
-	public function insert( $userID, $profileID ) {
+	 public function insert( $userID, $profileID ) {
 		$rs = $GLOBALS['conn']->Execute("
 			SELECT 1 FROM CAD_USU_PERFIL
 			WHERE ID_CAD_USUARIOS = ? 
@@ -67,22 +69,20 @@ class PROFILE {
 		endif;
 	}
 
-	public function rulesCargos( $pessoaID, $cargoCD, $cargo2CD ) {
-		/*
-		0 TODOS - LOGIN
-		1 ADMINISTRADOR
-		2 SECRETARIA
-		3 REGIONAL
-		4 DIRETORIA
-		5 INSTRUTOR
-		6 CONSELHEIRO
-		7 TESOURARIA
-		8 SECRETARIA ASSOCIADA
-		12 GUEST
-		9 DIRETORES ASSOCIADOS
-		10 RESPONSAVEL LEGAL
-		11 RESPONSAVEL FINANCEIRO
-		*/
+	 public function rulesCargos( $pessoaID, $cargoCD, $cargo2CD ) {
+		//0 TODOS - LOGIN
+		//1 ADMINISTRADOR
+		//2 SECRETARIA
+		//3 REGIONAL
+		//4 DIRETORIA
+		//5 INSTRUTOR
+		//6 CONSELHEIRO
+		//7 TESOURARIA
+		//8 SECRETARIA ASSOCIADA
+		//9 DIRETORES ASSOCIADOS
+		//10 RESPONSAVEL LEGAL
+		//11 RESPONSAVEL FINANCEIRO
+		//12 GUEST
 
 		$arr = array();
 
@@ -125,6 +125,10 @@ class PROFILE {
 				$this->insertByPessoaID( $pessoaID, $l );
 			endforeach;
 		endif;
-	}
+	 }
 }
+
+//$PROFILE = new PROFILE();
+//fConnDB();
+//$PROFILE->rulesCargos( 40, "2-02-00", null );
 ?>
