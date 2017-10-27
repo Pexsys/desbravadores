@@ -87,7 +87,7 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
         				    <br/>
         				    Entre no sistema do clube (www.iasd-capaoredondo.com.br/desbravadores) e confira na op&ccedil;&atilde;o <i>Minha P&aacute;gina / Meu Aprendizado</i>. Caso n&atilde;o consiga ou n&atilde;o tenha acesso, procure seu conselheiro(a), instrutor(a) ou a secretaria do clube.<br/>
         				    <br/>
-        				    Fiquei orgulhoso ao saber que se tornou um".($rA->fields["SEXO"] == "F"?"a":"")." especialista nessa &aacute;rea. Isso &eacute; bom pra voc&circ; e tamb&eacute;m para o clube. Meus Parab&eacute;ns!<br/>
+        				    Fiquei orgulhoso ao saber que se tornou um".($rA->fields["SEXO"] == "F"?"a":"")." especialista nessa &aacute;rea. Isso &eacute; bom pra voc&ecirc; e tamb&eacute;m para o clube. Meus Parab&eacute;ns!<br/>
         				    <br/>
         				    Com carinho,<br/>
         				    <br/>
