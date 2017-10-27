@@ -87,7 +87,7 @@ function nextEvents(){
 				$result->MoveNext();
 			endwhile;
 			?>
-			<p><a class="btn btn-danger pull-right" href="agenda.php" role="button">&nbsp;Ver mais... &raquo;</a></p>
+			<p><a class="btn btn-danger pull-right" href="agenda.php" role="button">Ver mais... &raquo;</a></p>
 		</div>
 	</div>
 </div>
@@ -130,10 +130,10 @@ function about(){
 	?>
 	<div class="col-md-4">
 		<div class="panel panel-info">
-			<div class="panel-heading"><h4><i class="fa fa-fw fa-question"></i>&nbsp;Quem somos</h4></div>
+			<div class="panel-heading"><h4><i class="fa fa-fw fa-history"></i>&nbsp;Voltando no tempo...</h4></div>
 			<div class="panel-body">
 				<p>Quem são os Pioneiros? Quer saber como tudo começou? A história real contada em detalhes.</p>
-				<p><a class="btn btn-info pull-right" href="about.php" role="button">Saiba mais</a></p>
+				<p><a class="btn btn-info pull-right" href="about.php" role="button">Saiba mais... &raquo;</a></p>
 			</div>
 		</div>
 	</div>
@@ -171,13 +171,14 @@ function insDocs(){
 			nextEvents();
            
             if ( date("m") < 3 ):
-                insDocs();
+				insDocs();
+				about();
                 myUnit();
             else:
                 myUnit();
-                insDocs();
-			endif;
-			about();
+				insDocs();
+				about();
+			endif;	
             ?>
         </div>
         <!-- /.row -->
