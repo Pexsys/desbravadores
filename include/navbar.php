@@ -25,6 +25,9 @@ $activeLogin = ($showLogin && !$temPerfil);
 							<a href="#" class="dropdown active" data-toggle="dropdown" style="background-color:#222">O Clube<b class="caret"></b></a>
 							<ul class="dropdown-menu">
 								<li>
+									<a href="about.php">Quem somos</a>
+								</li>
+								<li>
 									<a href="unidades.php">Nossas Unidades</a>
 								</li>
 								<li>
@@ -40,9 +43,6 @@ $activeLogin = ($showLogin && !$temPerfil);
 						</li>
 						<?php
 						/*
-						<li class="active">
-							<a href="about.php">Quem somos</a>
-						</li>
 						<li class="active">
 							<a href="contact.php">Fale conosco</a>
 						</li>
