@@ -441,7 +441,7 @@ function fGetDetailClass( $class, $titulo, $icon, $result ) {
 		$str .= "<div class=\"col-lg-6 col-xs-6\">";
 		$str .= "<div class=\"row\">";
 		$str .= "<div class=\"panel $class\">";
-		$str .= "<div class=\"panel-heading\" style=\"padding:3px 10px\">$titulo</div>";
+		$str .= "<div class=\"panel-heading\" style=\"padding:3px 10px\"><i class=\"fa $icon\" aria-hidden=\"true\"></i>&nbsp;$titulo</div>";
 		$str .= "<div class=\"panel-body\" style=\"padding:5px 10px\">";
 		$areaAtu = "";
 		$first = true;
@@ -451,9 +451,7 @@ function fGetDetailClass( $class, $titulo, $icon, $result ) {
 				$str .= "<div class=\"well well-sm\" style=\"padding:4px;margin-bottom:0px;font-size:11px\"><b>".$line["CD_AP_AREA"]." - ".titleCase($line["DS_AP_AREA"])."</b></div>";
 				$first = true;
 			endif;
-			if ($first):
-				$str .= "&nbsp;<i class=\"fa $icon\" aria-hidden=\"true\"></i>&nbsp;&nbsp;";
-			else:
+			if (!$first):
 				$str .= ", ";
 			endif;
 			$str .= "<span title=\"".$line["DS"]."\">". substr($line["CD_REQ_INTERNO"],-2) ."</span>";
