@@ -389,7 +389,7 @@ function getClasses( $parameters ) {
 			 AND h.DT_INVESTIDURA IS NULL 
 			ORDER BY a.CD_AREA_INTERNO, a.CD_ITEM_INTERNO
 	", array( $id, "ES" ) );
-	$str .= fGetDetailEspClass("panel-warning","Especialidades Pendentes de Avaliação Regional","fa-smile-o",$result);
+	$str .= fGetDetailEspClass("panel-warning","Especialidades Pendentes de Avaliação Regional",$result);
 	
 	//ESPECIALIDADES A RECEBER
 	$result = $GLOBALS['conn']->Execute("
@@ -404,32 +404,17 @@ function getClasses( $parameters ) {
 			 AND h.DT_INVESTIDURA IS NULL 
 			ORDER BY a.CD_AREA_INTERNO, a.CD_ITEM_INTERNO
 	", array( $id, "ES" ) );
-	$str .= fGetDetailEspClass("panel-success","Especialidades Pendentes de Investidura","fa-smile-o",$result);
-	
+	$str .= fGetDetailEspClass("panel-success","Especialidades Pendentes de Investidura",$result);
+
 	//ITENS INVESTIDOS
-	$rs = $GLOBALS['conn']->Execute("
-		  SELECT ta.ID_TAB_APREND, ta.TP_ITEM, ta.CD_AREA_INTERNO, ta.CD_ITEM_INTERNO, ta.DS_ITEM, COUNT(*) AS QT_REQ
+	$result = $GLOBALS['conn']->Execute("
+		SELECT ta.ID_TAB_APREND, ta.TP_ITEM, ta.CD_AREA_INTERNO, ta.CD_ITEM_INTERNO, ta.DS_ITEM, COUNT(*) AS QT_REQ
 			FROM CON_APR_PESSOA ta
-		   WHERE ta.ID_CAD_PESSOA = ? AND YEAR(ta.DT_INVESTIDURA) = YEAR(NOW()) $where
+		WHERE ta.ID_CAD_PESSOA = ? AND YEAR(ta.DT_INVESTIDURA) = YEAR(NOW()) $where
 		GROUP BY ta.ID_TAB_APREND, ta.TP_ITEM, ta.CD_AREA_INTERNO, ta.CD_ITEM_INTERNO, ta.DS_ITEM
 		ORDER BY ta.TP_ITEM, ta.CD_ITEM_INTERNO
 	", array( $id ) );
-	if (!$rs->EOF):
-		$str .= "<div class=\"row\">";
-		$str .= "<div class=\"panel panel-success\">";
-		$str .= "<div class=\"panel-heading\" style=\"padding:3px 10px\"><b>&Iacute;tens recebidos</b></div>";
-		$str .= "<div class=\"panel-body\" style=\"padding:5px 10px\">";
-		
-		foreach ($rs as $ks2 => $det):
-			$str .= "<i class=\"".getIconAprendizado( $det["TP_ITEM"], $det["CD_AREA_INTERNO"] )."\"></i>&nbsp;".titleCase($det["DS_ITEM"])."<br/>";
-		endforeach;
-		$str .= "</div>";
-		$str .= "</div>";
-		$str .= "</div>";
-	endif;	
-	
-
-	$str .= "</div>";
+	$str .= fGetDetailEspClass("panel-success","&Iacute;tens recebidos",$result);
 
 	$arr["detail"] = $str;
 	return $arr;
@@ -462,7 +447,7 @@ function fGetDetailClass( $class, $titulo, $icon, $result ) {
 	return $str;
 }
 
-function fGetDetailEspClass( $class, $titulo, $icon, $result ) {
+function fGetDetailEspClass( $class, $titulo, $result ) {
 	$str = "";
 	if (!$result->EOF):
 		$str .= "<div class=\"row\">";
@@ -475,7 +460,7 @@ function fGetDetailEspClass( $class, $titulo, $icon, $result ) {
 				$areaAtu = $line["DS_ITEM_AREA"];
 				$str .= "<div class=\"well well-sm\" style=\"padding:4px;margin-bottom:0px;font-size:12px\"><b>".titleCase($line["DS_ITEM_AREA"])."</b></div>";
 			endif;
-			$str .= "&nbsp;<i class=\"fa fa-check-circle\"></i> ".$line["CD_ITEM_INTERNO"]." ".titleCase($line["DS_ITEM"])."<br/>";
+			$str .= "&nbsp;<i class=\"".getIconAprendizado( $line["TP_ITEM"], $line["CD_AREA_INTERNO"] )."\"></i> ".titleCase($line["DS_ITEM"])."<br/>";
 		endforeach;
 		$str .= "</div>";
 		$str .= "</div>";
