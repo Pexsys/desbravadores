@@ -126,6 +126,21 @@ function myUnit(){
 <?php
 }
 
+function about(){
+	?>
+	<div class="col-md-4">
+		<div class="panel panel-info">
+			<div class="panel-heading"><h4><i class="fa fa-fw fa-question"></i>&nbsp;Quem somos</h4></div>
+			<div class="panel-body">
+				<p>Quem são os Pioneiros? Quer saber como tudo começou? A história real contada em detalhes.</p>
+				<p><a class="btn btn-info pull-right" href="about.php" role="button">Saiba mais</a></p>
+			</div>
+		</div>
+	</div>
+<?php
+}
+	
+
 function insDocs(){
 ?>
 	<div class="col-md-4">
@@ -153,7 +168,7 @@ function insDocs(){
                 </h3>
             </div>
             <?php
-            nextEvents();
+			nextEvents();
            
             if ( date("m") < 3 ):
                 insDocs();
@@ -161,7 +176,8 @@ function insDocs(){
             else:
                 myUnit();
                 insDocs();
-            endif;
+			endif;
+			about();
             ?>
         </div>
         <!-- /.row -->
