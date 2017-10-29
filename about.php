@@ -19,7 +19,7 @@ fHeaderPage();
         </div>
         <div class="row">
             <div class="col-md-9">
-                <h2>Quem são os desbravadores?</h2>
+                <h3>Quem são os desbravadores?</h3>
                 <p style="text-align:justify">Meninos e meninas com idades entre 10 e 15 anos, de diferentes classes sociais, cor, ou religião. Reunem-se uma vez por semana para aprender a desenvolver talentos, habilidades, percepções e o gosto pela natureza. Vibram com atividades ao ar livre. Gostam de acampamentos, caminhadas, escaladas, explorações nas matas e cavernas. Sabem cozinhar ao ar livre, fazendo fogo sem fósforo. Demonstram habilidade com a disciplina através de ordem unida, e têm a criatividade despertada pelas artes manuais. Combatem, também, o uso do fumo, álcool e drogas. Trabalham em equipe procurando sempre serem úteis à comunidade. Prestam, também, socorro em calamidades e participam ativamente de campanhas comunitárias para ajudar pessoas carentes. Em tudo o que fazem procuram desenvolver amor a Deus e à Pátria e, além disso, fazem muitos amigos! O Clube de Desbravadores está presente em mais de 160 países, com 90.000 sedes e mais de dois milhões de participantes. Existem oficialmente desde 1950, como um programa oficial da Igreja Adventista do 7º Dia. Meninos e meninas de qualquer fé religiosa podem participar deste movimento que tira da diversidade, o colorido da energia juvenil.</p>
                 <small><b>Fonte</b>: <i>http://www.adventistas.org/pt/desbravadores/sobre-nos/</i></small>
             </div>
@@ -174,7 +174,7 @@ fHeaderPage();
         <br/>
         <div class="row">
             <div class="col-lg-12">
-                <h2 class="page-header">O tempo não apagou...</h2>
+                <h3 class="page-header">O tempo não apagou...</h3>
             </div>
             <div class="col-md-4 text-center">
                 <div class="thumbnail">
