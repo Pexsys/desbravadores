@@ -265,6 +265,7 @@ if ( isset($eventoID) && strlen($eventoID) > 0 ):
 else:
 	$eventoID = fRequest("eve");
 endif;
+
 if ( ( !isset($eventoID) || empty($eventoID) || stristr($eventoID, "indispon") ) && ( !isset($pID) || empty($pID) ) ):
 	echo "AUTORIZA&Ccedil;&Atilde;O N&Atilde;O ENCONTRADA!";
 	exit;
@@ -279,7 +280,6 @@ if ( (!isset($eventoID) || empty($eventoID)) && (isset($pID) || !empty($pID)) ):
     	  FROM EVE_SAIDA es
     INNER JOIN EVE_SAIDA_PESSOA esp ON (esp.ID_EVE_SAIDA = es.ID AND esp.FG_AUTORIZ = 'S')
          WHERE es.DH_R > NOW() 
-           AND es.FG_IMPRIMIR = 'S' 
     	   AND esp.ID_CAD_PESSOA IN ($pID)
       ORDER BY 1
     ");
