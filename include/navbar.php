@@ -21,20 +21,21 @@ $activeLogin = ($showLogin && !$temPerfil);
 				<!-- Collect the nav links, forms, and other content for toggling -->
 				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 					<ul class="nav navbar-nav navbar-right">
-						<li class="dropdown active">
-							<a href="#" class="dropdown active" data-toggle="dropdown" style="background-color:#222">O Clube<b class="caret"></b></a>
+						<li>
+							<a href="about.php">História</a>
+						</li>
+						<li>
+							<a href="agenda.php">Eventos</a>
+						</li>
+						<li>
+							<a href="unidades.php">Unidades</a>
+						</li>
+						<li class="dropdown">
+							<a href="#" class="dropdown" data-toggle="dropdown" style="background-color:#222">Outros<b class="caret"></b></a>
 							<ul class="dropdown-menu">
+
 								<li>
-									<a href="about.php">Nossa História</a>
-								</li>
-								<li>
-									<a href="unidades.php">Nossas Unidades</a>
-								</li>
-								<li>
-									<a href="agenda.php">Nossos Eventos</a>
-								</li>
-								<li>
-									<a href="fornecedores.php">Nossos Fornecedores</a>
+									<a href="fornecedores.php">Fornecedores</a>
 								</li>
 								<li>
 									<a href="capas.php">Gerar Capas</a>
