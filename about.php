@@ -6,7 +6,7 @@ fHeaderPage();
 	<?php @include_once("include/navbar.php");?>
     <div class="container">
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-md-12 col-lg-12">
                 <h1 class="page-header">Nossa História
                     <small>Como tudo começou</small>
                 </h1>
@@ -24,13 +24,13 @@ fHeaderPage();
                 <small><b>Fonte</b>: <i>http://www.adventistas.org/pt/desbravadores/sobre-nos/</i></small>
             </div>
             <div class="col-md-3">
-                <img class="img-responsive" src="img/D1.png" width="750px" height="450px"/>
+                <img class="img-responsive" src="img/D1.png" width="450px" height="450px"/>
             </div>
         </div>
         <br/>
         <br/>
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-md-12 col-lg-12">
                 <h3 class="page-header">Nosso Logo</h3>
             </div>
             <div class="col-md-5">
@@ -53,7 +53,7 @@ fHeaderPage();
         <br/>
         <br/>
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-md-12 col-lg-12">
                 <h3 class="page-header">A Ave Símbolo</h3>
             </div>
             <div class="col-md-8">
@@ -69,7 +69,7 @@ fHeaderPage();
         <br/>
         <br/>
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-md-12 col-lg-12">
                 <h3 class="page-header">Nossa Bandeira</h3>
             </div>
             <div class="col-md-7">
@@ -86,7 +86,7 @@ fHeaderPage();
         <br/>
         <br/>
         <div class="row">
-            <div class="col-lg-6">
+            <div class="col-md-6 col-lg-6">
                 <h3 class="page-header">Gritos de Guerra</h3>
                 <div class="col-md-6">
                     <b><u>Quais-Quais</u></b><br/>
@@ -95,17 +95,18 @@ fHeaderPage();
                     Escatinga alagoara,<br/>
                     Escatinga alagoara, Sim Senhor!<br/>
                     Debaixo de chuva, debaixo de trovão,<br/>
-                    O Clube Pioneiros fazendo boa ação.<br/>
+                    O Clube Pioneiros fazendo boa ação!<br/>
                     Alpha!
                 </div>
                 <div class="col-md-6">
                     <b><u>Carcará</u></b><br/>
-                    Carcará! Voador! Carcará! Voador!<br/>
+                    Carcará! Voador!<br/>
+                    Carcará! Voador!<br/>
                     Vem nos ensinar, a nunca desistir,<br/>
                     E sempre a lutar, Carcará!
                 </div>
             </div>
-            <div class="col-lg-6">
+            <div class="col-md-6 col-lg-6">
                 <h3 class="page-header">Hino</h3>
                 <div class="col-md-6">
                     Nós somos os Pioneiros<br/>
@@ -132,7 +133,7 @@ fHeaderPage();
         <br/>
         <br/>
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-md-12 col-lg-12">
                 <h3 class="page-header">A história em resumo</h3>
             </div>
             <div class="col-md-8">
@@ -149,7 +150,7 @@ fHeaderPage();
         <br/>
         <br/>
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-md-12 col-lg-12">
                 <h3 class="page-header">A história em mais detalhes</h3>
             </div>
             <div class="col-md-5">
@@ -173,7 +174,7 @@ fHeaderPage();
         <br/>
         <br/>
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-md-12 col-lg-12">
                 <h3 class="page-header">O tempo não apagou...</h3>
             </div>
             <div class="col-md-4 text-center">
