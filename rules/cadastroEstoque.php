@@ -92,7 +92,7 @@ function getEstoque( $parameters ) {
 
 function setEstoque( $parameters ){
 	$frm = $parameters["frm"];
-	$qtItens = max( $frm["qt_itens"], 1 );
+	$qtItens = max( $frm["qt_itens"], 0 );
 	
 	fConnDB();
 	$materiais = new MATERIAIS();
