@@ -64,15 +64,11 @@ class MATERIAIS {
 	}
 	
 	public function setQtdEstoque( $matID, $qtd ){
-		if ( $qtd == 0 ):
-			$this->deleteByID( $matID );
-		else:
-			$GLOBALS['conn']->Execute("
-				UPDATE TAB_MATERIAIS
-				SET QT_EST = ?
-				WHERE ID = ?
-			", array($qtd, $matID) );
-		endif;
+		$GLOBALS['conn']->Execute("
+			UPDATE TAB_MATERIAIS
+			SET QT_EST = ?
+			WHERE ID = ?
+		", array($qtd, $matID) );
 	}
 }
 ?>
