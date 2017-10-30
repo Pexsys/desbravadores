@@ -58,7 +58,7 @@
 							<div class="row" id="divItem" style="display:none">
 								<div class="form-group col-xs-4">
 									<div class="well well-sm" style="padding:4px;margin-bottom:0px;font-size:11px"><b>Quantidade</b></div>
-									<input type="text" name="qtItens" id="qtItens" field="qt_itens" class="form-control" placeholder="Uniformes" data-min="1"/>
+									<input type="text" name="qtItens" id="qtItens" field="qt_itens" class="form-control" placeholder="Uniformes" data-min="0"/>
 								</div>
 								<div class="form-group col-xs-8">
 									<div class="well well-sm" style="padding:4px;margin-bottom:0px;font-size:11px"><b>Item</b></div>
