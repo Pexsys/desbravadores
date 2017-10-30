@@ -16,11 +16,64 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.01.
 //******* SECRETARIA
 $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.00-Analisando Secretaria...')");
 
-//******* SECRETARIA - MESTRADOS
-$GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.01-Analisando Mestrados Completados...')");
+$rA = $GLOBALS['conn']->Execute("SELECT * FROM CON_DIRETOR");
+$nomeDiretor = htmlentities(titleCase($rA->fields["NOME_DIRETOR"]));
 
-    $rA = $GLOBALS['conn']->Execute("SELECT * FROM CON_DIRETOR");
-    $nomeDiretor = htmlentities(titleCase($rA->fields["NOME_DIRETOR"]));
+//******* SECRETARIA - FELIZ ANIVERSADIO
+$GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.01-Analisando Aniversário...')");
+	$rA = $GLOBALS['conn']->Execute("
+		SELECT cp.NM, cp.TP_SEXO, Year(NOW())-Year(cp.DT_NASC) AS IDADE_ANO, EMAIL
+		  FROM CAD_PESSOA cp
+		 WHERE cp.DT_NASC IS NOT NULL
+		  AND cp.EMAIL IS NOT NULL
+		  AND MONTH(cp.DT_NASC) = MONTH(NOW())
+		  AND DAY(cp.DT_NASC) = DAY(NOW())
+	");
+	foreach ($rA as $lA => $fA):
+		$a = explode(" ",titleCase($fA["NM"]));
+		$nomePessoa = htmlentities($a[0]);
+		$_oa = ($fA["TP_SEXO"] == "F"?"a":"o");
+		$idade = $fA["IDADE_ANO"];
+
+		$obra = ($idade > 16 ? "com a obra de Deus" : "com as coisas de Deus");
+
+		$mensagem = "
+			Querid$_oa amig$_oa $nomePessoa,<br/>
+			<br/>
+			Feliz anivers&aacute;rio!<br/>
+			<br/>
+			Desejo que a cada dia voc&ecirc; possa continuar animad$_oa, permitindo que o Esp&iacute;rito Santo te guie, te ilumine, te unja com Seu &oacute;leo santo, lhe dando sabedoria.<br/>
+			<br/>
+			Hoje faz <b>$idade</b> anos que o mundo se tornou mais feliz desde que voc&ecirc; chegou... e n&atilde;o importa a idade, continue a ser sempre am&aacute;vel, amig$_oa, prestativ$_oa e cuidados$_oa $obra.<br/>
+			<br/>
+			Muitas felicidades!<br/>
+			<br/>
+			<br/>
+			MARANATA!
+			<br/>
+			<br/>
+			Com carinho,<br/>
+			<br/>
+			$nomeDiretor<br/>
+			Diretor do Clube Pioneiros<br/>
+			IASD Cap&atilde;o Redondo
+			</p>
+		";
+
+		$GLOBALS['mail']->ClearAllRecipients();
+		$GLOBALS['mail']->AddAddress( $fA["EMAIL"] );
+		$GLOBALS['mail']->Subject = utf8_decode("Feliz Aniversário!");
+		$GLOBALS['mail']->MsgHTML( $mensagem );
+			
+		if ( $GLOBALS['mail']->Send() ):
+			echo "parabens enviado para ". $fA["EMAIL"]."<br/>";
+		else:
+			echo "parabens não enviado para ". $fA["EMAIL"]."<br/>";
+		endif;
+	endforeach;
+
+//******* SECRETARIA - MESTRADOS
+$GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.02-Analisando Mestrados Completados...')");
 
     $rA = $GLOBALS['conn']->Execute("SELECT * FROM CON_ATIVOS");
     foreach ($rA as $lA => $fA):
@@ -89,6 +142,10 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
         				    <br/>
         				    Fiquei orgulhoso ao saber que se tornou um".($rA->fields["SEXO"] == "F"?"a":"")." especialista nessa &aacute;rea. Isso &eacute; bom pra voc&ecirc; e tamb&eacute;m para o clube. Meus Parab&eacute;ns!<br/>
         				    <br/>
+							<br/>
+							MARANATA!
+							<br/>
+							<br/>
         				    Com carinho,<br/>
         				    <br/>
         				    $nomeDiretor<br/>
@@ -111,9 +168,9 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
         						 WHERE ID = ?
         						   AND TP = ?
         					", array( $l1["ID"], "M" ) );
-        					echo "email enviado para ". $fA["EMAIL"]."<br/>";
+        					echo "email mestrado enviado para ". $fA["EMAIL"]."<br/>";
         				else:
-        					echo "email não enviado para ". $fA["EMAIL"]."<br/>";
+        					echo "email mestrado não enviado para ". $fA["EMAIL"]."<br/>";
         				endif;
         			endif;
         	    endif;
@@ -121,8 +178,8 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
     	endforeach;
 	endforeach;
 
-//******* SECRETARIA - MESTRADOS
-$GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.02-Excluindo Perfis de Membros Inativos...')");
+//******* EXCLUSAO DE ACESSOS DE MEMBROS INATIVOS
+$GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.03-Excluindo Perfis de Membros Inativos...')");
 $profile = new PROFILE();
 $result = $GLOBALS['conn']->Execute("
 		SELECT DISTINCT cu.ID_USUARIO
