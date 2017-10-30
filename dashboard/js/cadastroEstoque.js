@@ -92,9 +92,14 @@ $(document).ready(function(){
 				frm: jsLIB.getJSONFields( $('#cadListaForm') ),
 				tp: save
 			};
-			jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/cadastroEstoque.php", { MethodName : 'setEstoque', data : parameter } );
-			dataTable.ajax.reload();
-			$("#listaModal").modal('hide');
+			jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/cadastroEstoque.php", { MethodName : 'setEstoque', data : parameter },
+				function(){
+					dataTable.ajax.reload();
+					if (save != "add"){
+						$("#listaModal").modal('hide');
+					}
+				}
+			 );
 		})
 	;
 	
