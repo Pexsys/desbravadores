@@ -94,7 +94,6 @@ $(document).ready(function(){
 			};
 			jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/cadastroEstoque.php", { MethodName : 'setEstoque', data : parameter } );
 			dataTable.ajax.reload();
-			$("#listaModal").modal('hide');
 		})
 	;
 	
