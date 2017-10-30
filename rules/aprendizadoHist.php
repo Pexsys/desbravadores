@@ -90,7 +90,7 @@ function getQueryByFilter( $parameters ) {
 	if (!empty($where)):
 		$query = "
 			SELECT DISTINCT
-				cp.ID,
+				ah.ID,
 				cp.NM,
 				ap.TP_ITEM,
 				ta.DS,
