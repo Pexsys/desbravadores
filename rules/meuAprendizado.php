@@ -146,7 +146,7 @@ function getMasterRulesPessoa( $ruleID, $pessoaID ){
                       FROM CON_APR_REQ car
                  LEFT JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = car.ID_RQ AND ah.ID_CAD_PESSOA = ?)
                      WHERE car.ID_TAB_APR_REQ = ?
-            ORDER BY car.CD_AREA_INTERNO_RQ, car.CD_ITEM_INTERNO_RQ
+            ORDER BY car.DS_ITEM_RQ
             	", array( $pessoaID, $fR["ID"] ) );
 		foreach($rS as $lS => $fS):
 			$arr[ $fR["ID"] ]["hist"][] = $fS;
