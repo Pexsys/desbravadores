@@ -1,7 +1,8 @@
 <?php
 @require_once("../include/functions.php");
 @require_once("../include/profile.php");
-@require_once("sendmailMestrado.php");
+@require_once("../include/birthdayMsg.php");
+@require_once("../include/sendmailMestrado.php");
 
 fConnDB();
 //******* INICIO DA ROTINA DIARIA
@@ -17,7 +18,7 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.01.
 $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.00-Analisando Secretaria...')");
 
 $rA = $GLOBALS['conn']->Execute("SELECT * FROM CON_DIRETOR");
-$nomeDiretor = htmlentities(titleCase($rA->fields["NOME_DIRETOR"]));
+$nomeDiretor = titleCase($rA->fields["NOME_DIRETOR"]);
 
 //******* SECRETARIA - FELIZ ANIVERSADIO
 $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.01-Analisando Aniversário...')");
@@ -31,39 +32,13 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
 	");
 	foreach ($rA as $lA => $fA):
 		$a = explode(" ",titleCase($fA["NM"]));
-		$nomePessoa = htmlentities($a[0]);
-		$_oa = ($fA["TP_SEXO"] == "F"?"a":"o");
-		$idade = $fA["IDADE_ANO"];
 
-		$obra = ($idade > 16 ? "com a obra de Deus" : "com as coisas de Deus");
-
-		$mensagem = "
-			Querid$_oa amig$_oa $nomePessoa,<br/>
-			<br/>
-			Feliz anivers&aacute;rio!<br/>
-			<br/>
-			Desejo que a cada dia voc&ecirc; possa continuar animad$_oa, permitindo que o Esp&iacute;rito Santo te guie, te ilumine, te unja com Seu &oacute;leo santo, lhe dando sabedoria.<br/>
-			<br/>
-			Hoje faz <b>$idade</b> anos que o mundo se tornou mais feliz desde que voc&ecirc; chegou... e n&atilde;o importa a idade, continue a ser sempre am&aacute;vel, amig$_oa, prestativ$_oa e cuidados$_oa $obra.<br/>
-			<br/>
-			Muitas felicidades!<br/>
-			<br/>
-			<br/>
-			MARANATA!
-			<br/>
-			<br/>
-			Com carinho,<br/>
-			<br/>
-			$nomeDiretor<br/>
-			Diretor do Clube Pioneiros<br/>
-			IASD Cap&atilde;o Redondo
-			</p>
-		";
+		$bm = getBirthdayMessage( array( "np" => $a[0], "id" => $fA["IDADE_ANO"], "sx" => $fA["TP_SEXO"], "nd" => $nomeDiretor ) );
 
 		$GLOBALS['mail']->ClearAllRecipients();
 		$GLOBALS['mail']->AddAddress( $fA["EMAIL"] );
-		$GLOBALS['mail']->Subject = utf8_decode("Feliz Aniversário!");
-		$GLOBALS['mail']->MsgHTML( $mensagem );
+		$GLOBALS['mail']->Subject = utf8_decode( $bm["sub"] );
+		$GLOBALS['mail']->MsgHTML( $bm["msg"] );
 			
 		if ( $GLOBALS['mail']->Send() ):
 			echo "parabens enviado para ". $fA["EMAIL"]."<br/>";
@@ -79,7 +54,6 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
     foreach ($rA as $lA => $fA):
         
         $a = explode(" ",titleCase($fA["NM"]));
-        $nomePessoa = htmlentities($a[0]);
 
         //LE REGRAS
     	$rg = $GLOBALS['conn']->Execute("
@@ -90,7 +64,6 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
     	", array("ME") );
     	foreach ($rg as $lg => $fg):
             $min = $fg["MIN_AREA"];
-            $dsItem = ($fg["DS_ITEM"]);
     
             $feitas = 0;
             //LE PARAMETRO MINIMO E HISTORICO PARA A REGRA
@@ -128,36 +101,11 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
         				   AND NOT EXISTS (SELECT 1 FROM LOG_MENSAGEM WHERE ID_ORIGEM = ? AND TP = 'M' AND ID_USUARIO = cu.ID_USUARIO)
         			", array( $fg["ID"], $fA["ID"], $fg["ID"] ) );
         			
-        			if (!empty($fA["EMAIL"])):
-        			    
-        			    $mensagem = "
-        				    <p><br/>
-        				    Ol&aacute; $nomePessoa,<br/>
-        				    <br/>
-        				    Em nome do Clube Pioneiros, quero lhe agradecer pelo seu esfor&ccedil;o e por mais esta etapa conclu&iacute;da.<br/>
-        				    <br/>
-        				    No intuito de melhorar cada dia mais os registros da secretaria, nosso sistema detectou automaticamente que voc&ecirc; concluiu o <b>$dsItem</b>.<br/>
-        				    <br/>
-        				    Entre no sistema do clube (www.iasd-capaoredondo.com.br/desbravadores) e confira na op&ccedil;&atilde;o <i>Minha P&aacute;gina / Meu Aprendizado</i>. Caso n&atilde;o consiga ou n&atilde;o tenha acesso, procure seu conselheiro(a), instrutor(a) ou a secretaria do clube.<br/>
-        				    <br/>
-        				    Fiquei orgulhoso ao saber que se tornou um".($rA->fields["SEXO"] == "F"?"a":"")." especialista nessa &aacute;rea. Isso &eacute; bom pra voc&ecirc; e tamb&eacute;m para o clube. Meus Parab&eacute;ns!<br/>
-        				    <br/>
-							<br/>
-							MARANATA!
-							<br/>
-							<br/>
-        				    Com carinho,<br/>
-        				    <br/>
-        				    $nomeDiretor<br/>
-        				    Diretor do Clube Pioneiros<br/>
-        				    IASD Cap&atilde;o Redondo
-        				    </p>
-        				";
-
+					if (!empty($fA["EMAIL"])):
             			$GLOBALS['mail']->ClearAllRecipients();
         				$GLOBALS['mail']->AddAddress( $fA["EMAIL"] );
         				$GLOBALS['mail']->Subject = utf8_decode("Clube Pioneiros - Aviso de Conclusão");
-        				$GLOBALS['mail']->MsgHTML( $mensagem );
+        				$GLOBALS['mail']->MsgHTML( getConclusaoMsg( array( "np" => $a[0], "nm" => $fg["DS_ITEM"], "sx" => $fA["SEXO"], "nd" => $nomeDiretor ) ) );
         					
         				if ( $GLOBALS['mail']->Send() ):
         					$nrEnviados++;
