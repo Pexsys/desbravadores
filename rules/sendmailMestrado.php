@@ -1,6 +1,29 @@
 <?php
 @require_once("../include/sendmail.php");
 
+function getConclusaoMsg( $p ){
+	return str_replace( array("&lt;", "&gt;"), array("<", ">"), htmlentities("<p>Olá ".$p["np"].",<br/>
+		<br/>
+		Em nome do Clube Pioneiros, quero lhe agradecer pelo seu esforço e por mais esta etapa concluída.<br/>
+		<br/>
+		No intuito de melhorar cada dia mais os registros da secretaria, nosso sistema detectou automaticamente que você concluiu o <b>".$p["nm"]."</b>.<br/>
+		<br/>
+		Entre no sistema do clube (www.iasd-capaoredondo.com.br/desbravadores) e confira na opção <i>Minha Página / Meu Aprendizado</i>. Caso não consiga ou não tenha acesso, procure seu conselheiro(a), instrutor(a) ou a secretaria do clube.<br/>
+		<br/>
+		Fiquei orgulhoso ao saber que se tornou um".($p["sx"] == "F"?"a":"")." especialista nessa área. Isso é bom pra você e também para o clube. Meus Parabéns!<br/>
+		<br/>
+		<br/>
+		MARANATA!
+		<br/>
+		<br/>
+		Com carinho,<br/>
+		<br/>
+		".$p["nd"]."<br/>
+		<small>Clube Pioneiros - IASD Capão Redondo<small>
+		</p>", ENT_NOQUOTES, 'UTF-8', false));
+}
+//echo getConclusaoMsg( array( "np" => "Ricardo", "nm" => "MESTRADO", "sx" => "M", "nd" => "Ricardo Jonadabs C&eacute;sar" )  );
+
 function sendMestradoByID($mestradoID){
 	$rs = $GLOBALS['conn']->Execute("
 			SELECT DISTINCT ta.*

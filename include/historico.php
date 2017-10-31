@@ -1,5 +1,5 @@
 <?php
-@require_once("../include/sendmail.php");
+@require_once("../include/sendmailMestrado.php");
 @require_once("compras.php");
 
 function dateDefaultInicio($date = null){
@@ -160,11 +160,11 @@ function updateHistorico( $barpessoaid, $barfnid, $paramDates, $compras = null )
         
     		$rg = $GLOBALS['conn']->Execute("SELECT ID, MIN_AREA, DS_ITEM FROM CON_APR_REQ WHERE ID_RQ = ? ORDER BY CD_ITEM_INTERNO", array($barfnid) );
     		foreach ($rg as $lg => $fg):
-            $min = $fg["MIN_AREA"];
-            $dsItem = $fg["DS_ITEM"];
-    
-            $feitas = 0;
-            //LE PARAMETRO MINIMO E HISTORICO PARA A REGRA
+				$min = $fg["MIN_AREA"];
+				$dsItem = ;
+		
+				$feitas = 0;
+				//LE PARAMETRO MINIMO E HISTORICO PARA A REGRA
     	    		$rR = $GLOBALS['conn']->Execute("
                     SELECT tar.ID, tar.QT_MIN, COUNT(*) AS QT_FEITAS
                       FROM TAB_APR_REQ tar
@@ -211,36 +211,15 @@ function updateHistorico( $barpessoaid, $barfnid, $paramDates, $compras = null )
                         
                     $rA = $GLOBALS['conn']->Execute("SELECT * FROM CON_ATIVOS WHERE ID = ?",array($barpessoaid));
                     $a = explode(" ",titleCase($rA->fields["NM"]));
-                    $nomePessoa = htmlentities($a[0]);
                         
                     if (!empty($rA->fields["EMAIL"])):
                         $rD = $GLOBALS['conn']->Execute("SELECT * FROM CON_DIRETOR");
-                        $nomeDiretor = htmlentities(titleCase($rD->fields["NOME_DIRETOR"]));
-                    
-        			    $mensagem = "
-        				    <p><br/>
-        				    Ol&aacute; $nomePessoa,<br/>
-        				    <br/>
-        				    Em nome do Clube Pioneiros, quero lhe agradecer pelo seu esfor&ccedil;o e por mais esta etapa conclu&iacute;da.<br/>
-        				    <br/>
-        				    No intuito de melhorar cada dia mais os registros da secretaria, nosso sistema detectou automaticamente que voc&ecirc; concluiu o <b>$dsItem</b>.<br/>
-        				    <br/>
-        				    Entre no sistema do clube (www.iasd-capaoredondo.com.br/desbravadores) e confira na op&ccedil;&atilde;o <i>Minha P&aacute;gina / Meu Aprendizado</i>. Caso n&atilde;o consiga ou n&atilde;o tenha acesso, procure seu conselheiro(a), instrutor(a) ou a secretaria do clube.<br/>
-        				    <br/>
-        				    Fiquei orgulhoso ao saber que se tornou um".($rA->fields["SEXO"] == "F"?"a":"")." especialista nessa &aacute;rea. Isso &eacute; bom pra voc&ecirc; e tamb&eacute;m para o clube. Meus Parab&eacute;ns!<br/>
-        				    <br/>
-        				    Com carinho,<br/>
-        				    <br/>
-        				    $nomeDiretor<br/>
-        				    Diretor do Clube Pioneiros<br/>
-        				    IASD Cap&atilde;o Redondo
-        				    </p>
-        				";
+                        $nomeDiretor = titleCase($rD->fields["NOME_DIRETOR"]);
         			
             			$GLOBALS['mail']->ClearAllRecipients();
         				$GLOBALS['mail']->AddAddress( $rA->fields["EMAIL"] );
         				$GLOBALS['mail']->Subject = utf8_decode("Clube Pioneiros - Aviso de Conclusão");
-        				$GLOBALS['mail']->MsgHTML($mensagem);
+        				$GLOBALS['mail']->MsgHTML( getConclusaoMsg( array( "np" => $a[0], "nm" => $fg["DS_ITEM"], "sx" => $rA->fields["SEXO"], "nd" => $nomeDiretor ) ) );
         					
         				if ( $GLOBALS['mail']->Send() ):
         					$GLOBALS['conn']->Execute("UPDATE LOG_MENSAGEM SET DH_SEND = NOW() WHERE ID = ?", array( $logID ) );
