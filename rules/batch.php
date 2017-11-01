@@ -1,8 +1,8 @@
 <?php
 @require_once("../include/functions.php");
 @require_once("../include/profile.php");
-@require_once("../include/birthdayMsg.php");
-@require_once("sendmailMestrado.php");
+@require_once("../include/sendmail.php");
+@require_once("../include/messages.php");
 
 fConnDB();
 //******* INICIO DA ROTINA DIARIA
