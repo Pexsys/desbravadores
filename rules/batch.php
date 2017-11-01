@@ -2,7 +2,7 @@
 @require_once("../include/functions.php");
 @require_once("../include/profile.php");
 @require_once("../include/birthdayMsg.php");
-@require_once("../include/sendmailMestrado.php");
+@require_once("sendmailMestrado.php");
 
 fConnDB();
 //******* INICIO DA ROTINA DIARIA

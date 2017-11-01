@@ -1,5 +1,5 @@
 <?php
-@require_once("../include/sendmailMestrado.php");
+@require_once("../rules/sendmailMestrado.php");
 @require_once("compras.php");
 
 function dateDefaultInicio($date = null){
@@ -161,7 +161,6 @@ function updateHistorico( $barpessoaid, $barfnid, $paramDates, $compras = null )
     		$rg = $GLOBALS['conn']->Execute("SELECT ID, MIN_AREA, DS_ITEM FROM CON_APR_REQ WHERE ID_RQ = ? ORDER BY CD_ITEM_INTERNO", array($barfnid) );
     		foreach ($rg as $lg => $fg):
 				$min = $fg["MIN_AREA"];
-				$dsItem = ;
 		
 				$feitas = 0;
 				//LE PARAMETRO MINIMO E HISTORICO PARA A REGRA
