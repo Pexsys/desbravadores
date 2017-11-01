@@ -105,7 +105,7 @@ INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
 	  AND ah.DT_AVALIACAO IS NULL
 	ORDER BY ta.TP_ITEM, ta.CD_ITEM_INTERNO
 ", array($membroID) );
-drawBoxesArea("Itens concluídos e pendentes de avaliação regional",$result,"panel-yellow");
+drawBoxesArea("Itens não avaliados pelo regional",$result,"panel-yellow");
 
 $result = $GLOBALS['conn']->Execute("
    SELECT ta.TP_ITEM, ta.CD_ITEM_INTERNO, ta.DS_ITEM, ta.CD_AREA_INTERNO, ah.DT_AVALIACAO AS DT
@@ -117,7 +117,7 @@ INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
 	  AND ah.DT_INVESTIDURA IS NULL
 	ORDER BY ta.TP_ITEM, ta.CD_ITEM_INTERNO
 ", array($membroID) );
-drawBoxesArea("Itens concluídos, avaliados e pendentes de investidura",$result,"panel-success");
+drawBoxesArea("Itens a receber na próxima investidura",$result,"panel-success");
 
 $result = $GLOBALS['conn']->Execute("
    SELECT ta.TP_ITEM, ta.CD_ITEM_INTERNO, ta.DS_ITEM, ta.CD_AREA_INTERNO, ah.DT_INVESTIDURA AS DT
