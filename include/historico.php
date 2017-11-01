@@ -1,5 +1,6 @@
 <?php
-@require_once("../rules/sendmailMestrado.php");
+@require_once("sendmail.php");
+@require_once("messages.php");
 @require_once("compras.php");
 
 function dateDefaultInicio($date = null){
