@@ -1010,6 +1010,10 @@ function arrayToObject($d) {
 	}
 }
 
+function fArrayStr($d){
+	return("'".$d."'");
+}
+
 function fStrStartWith($str,$s){
 	return (strpos($str, $s, 0) === 0);
 }

@@ -93,6 +93,33 @@
 							</div>
 						</div>	
 					</div>
+					<div class="panel panel-warning">
+						<div class="panel-heading" style="padding:4px 10px 0px">
+							<label>Filtro - Datas de Avaliação</label>
+						</div>
+						<div class="panel-body" style="padding:4px 10px 0px">
+							<div>
+								<div class="row">
+									<div class="form-group col-xs-12">
+										<select name="cmFiltro" id="cmFiltro" class="selectpicker form-control input-sm" multiple data-actions-box="true" data-selected-text-format="count > 3" data-container="body" data-width="100%">
+											<?php
+											$result = $GLOBALS['conn']->Execute("
+												SELECT DISTINCT DT_AVALIACAO
+												FROM APR_HISTORICO
+												WHERE DT_AVALIACAO IS NOT NULL
+												  AND YEAR(DT_AVALIACAO) = YEAR(NOW())
+												ORDER BY 1 DESC
+											");
+											foreach($result as $k => $f):
+												echo("<option value=\"".$f["DT_AVALIACAO"]."\"". ($f["DT_AVALIACAO"] <= date('Y-m-d') ? " selected" : "") .">". strftime("%d/%m/%Y",strtotime($f['DT_AVALIACAO'])) ."</option>");
+											endforeach;
+											?>
+										</select>
+									</div>
+								</div>
+							</div>
+						</div>	
+					</div>
 				</div>
 				<div class="panel-footer">
 					<div class="row">
@@ -135,7 +162,7 @@
 
 <div class="modal fade" id="listaModal" role="dialog" data-backdrop="static">
 	<form method="post" id="cadListaForm">
-		<div class="modal-dialog"> <!---->
+		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button aria-hidden="true" data-dismiss="modal" class="close" type="button" id="btnX">&times;</button>
