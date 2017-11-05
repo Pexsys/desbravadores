@@ -219,6 +219,7 @@ $(document).ready(function(){
 				} else if (opt == "LC-SEC"){
 					url += 'geraListaInvestSec.php?';
 				}
+				url += 'filter='+$("#cmFiltro").val()
 				window.open(url,'_blank','top=50,left=50,height=750,width=550,menubar=no,status=no,titlebar=no',true);
 			}
 		})
