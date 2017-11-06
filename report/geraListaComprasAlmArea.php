@@ -212,13 +212,10 @@ $pdf->newPage();
 
 fConnDB();
 
-$filter = implode(",",array_map("fArrayStr", explode(",",fRequest("filter"))));
-
 $result = $GLOBALS['conn']->Execute("
 	SELECT * FROM (
 		SELECT cp.ID_TAB_MATERIAIS, cp.TP_GRP, cp.DS_GRP, cp.CD_ITEM_INTERNO, cp.CD_AREA_INTERNO, ta.DS_ITEM AS DS_GRP_ESP, cp.NR_GAVETA_APS, cp.TP_ITEM, cp.DS, cp.DS_ITEM, cp.FUNDO, (COUNT(*)-cp.QT_EST) AS QT_ITENS
 		 FROM CON_COMPRAS cp
-	LEFT JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = cp.ID_TAB_APREND AND ah.ID_CAD_PESSOA = cp.ID_CAD_PESSOA AND ah.DT_AVALIACAO IN ($filter))
 	LEFT JOIN TAB_APRENDIZADO ta ON (ta.CD_AREA_INTERNO = cp.CD_AREA_INTERNO AND ta.CD_ITEM_INTERNO IS NULL)
 		WHERE cp.FG_ALMOX = 'S'
 		  AND cp.FG_COMPRA = 'N'
