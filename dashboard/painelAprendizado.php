@@ -42,10 +42,20 @@ $result = $GLOBALS['conn']->Execute("
 	AND YEAR(h.DT_CONCLUSAO) = YEAR(NOW())
 ", array("ES") );
 if (!$result->EOF):
+	$rs = $GLOBALS['conn']->Execute("
+		SELECT r.CD_ITEM_INTERNO, r.DS_ITEM, COUNT(*) AS QTD
+		FROM APR_HISTORICO h
+		INNER JOIN TAB_APRENDIZADO r ON (r.ID = h.ID_TAB_APREND)
+		INNER JOIN CON_ATIVOS a ON (a.ID = h.ID_CAD_PESSOA)
+		WHERE r.TP_ITEM = ?
+		AND YEAR(h.DT_CONCLUSAO) = YEAR(NOW())
+		GROUP BY r.CD_ITEM_INTERNO, r.DS_ITEM
+		ORDER BY r.CD_ITEM_INTERNO	
+	", array("ES") );
 	?>
 	<div class="row">
 		<div class="col-lg-12">
-			<h3 class="page-header"><?php echo $result->fields['QTD']?> Especialidades concluídas em <?echo date("Y");?></h3>
+			<h3 class="page-header"><?php echo $result->fields['QTD']?> Especialidades concluídas em <?echo date("Y");?><small> (<?php echo $rs->RecordCount();?> diferentes)</small></h3>
 		</div>
 	</div>
 	<div class="row">
