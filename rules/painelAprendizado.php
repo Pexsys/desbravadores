@@ -286,7 +286,7 @@ function getClasses( $parameters ) {
 		$str .= "<div class=\"panel panel-warning\">";
 		$str .= "<div class=\"panel-heading\" style=\"padding:3px 10px\"><b>Classes em Andamento</b></div>";
 		$str .= "<div class=\"panel-body\" style=\"padding:5px 10px\">";
-		
+				
 		foreach ($rs as $ks2 => $det):
 			$qtdReq =  $rs->fields["QT_REQ"];
 			$tabAprID =  $rs->fields["ID_TAB_APREND"];
