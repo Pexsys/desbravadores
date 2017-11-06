@@ -207,12 +207,17 @@ if (!$result->EOF):
 	echo "<div class=\"row\">";
 	foreach ($result as $k => $line):
 		$id = $line["ID"];
+
+		$pes = fStrZero(base_convert($id,10,36),3);
+		$barCODE = mb_strtoupper("P000$pes");
+
 		echo "<div class=\"col-md-12 col-xs-12 col-sm-12 col-lg-6\">";
 		echo "<div class=\"panel panel-info\" aria-expanded=\"false\" cad-id=\"$id\" itm-int-like=\"$like\">";
 		echo "<div class=\"panel-heading\" style=\"cursor:pointer\">";
 		echo "<h5 class=\"panel-title\" data-toggle=\"collapse\" href=\"#m$id\">";
+		echo "&nbsp;<i class=\"pull-left glyphicon glyphicon-chevron-down\"></i>";
 		echo titleCase($line["NM"]);
-		echo "<i class=\"pull-right glyphicon glyphicon-chevron-down\"></i>";
+		echo "<small class=\"pull-right\">$barCODE</small>";
 		echo "</h5>";
 		echo "</div>";
 		echo "<div id=\"m$id\" class=\"panel-body panel-collapse collapse\" style=\"padding-bottom:0px\"></div>";

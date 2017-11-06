@@ -84,7 +84,7 @@ class PROFILE {
 		//11 RESPONSAVEL FINANCEIRO
 		//12 GUEST
 
-		$arr = array();
+		$arr = array( 0 );
 
 		//DIRETORIA
 		if ( fStrStartWith($cargoCD,"2-") || fStrStartWith($cargo2CD,"2-") ):
