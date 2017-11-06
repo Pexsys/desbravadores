@@ -211,14 +211,11 @@ $pdf->newPage();
 
 fConnDB();
 
-$filter = implode(",",array_map("fArrayStr", explode(",",fRequest("filter"))));
-
 $result = $GLOBALS['conn']->Execute("
 	
 	SELECT * FROM (
 		SELECT cc.NR_GAVETA_APS, cc.TP_ITEM, cc.TP, cc.DS, cc.DS_ITEM, cc.FUNDO, cc.CMPL, cc.FG_IM, (COUNT(*)-QT_EST) AS QT_ITENS
 		 FROM CON_COMPRAS cc
-		LEFT JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = cc.ID_TAB_APREND AND ah.ID_CAD_PESSOA = cc.ID_CAD_PESSOA AND ah.DT_AVALIACAO IN ($filter))
 		WHERE cc.FG_ALMOX = 'S'
 		  AND cc.FG_COMPRA = 'N'
 		GROUP BY cc.NR_GAVETA_APS, cc.TP_ITEM, cc.TP, cc.DS, cc.DS_ITEM, cc.FUNDO, cc.CMPL, cc.FG_IM
@@ -231,7 +228,6 @@ $result = $GLOBALS['conn']->Execute("
 		SELECT * FROM (
 			SELECT cc.NR_GAVETA_APS, cc.TP_ITEM, cc.TP_GRP, cc.DS_GRP, cc.DS_ITEM, cc.FUNDO, cc.CMPL, cc.FG_IM, (COUNT(*)-QT_EST) AS QT_ITENS
 			 FROM CON_COMPRAS cc
-			INNER JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = cc.ID_TAB_APREND AND ah.ID_CAD_PESSOA = cc.ID_CAD_PESSOA AND ah.DT_AVALIACAO IN ($filter))
 			WHERE cc.FG_ALMOX = 'S'
 			  AND cc.FG_COMPRA = 'N'
 			GROUP BY cc.NR_GAVETA_APS, cc.TP_ITEM, cc.TP, cc.DS, cc.DS_ITEM, cc.FUNDO, cc.CMPL, cc.FG_IM
