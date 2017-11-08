@@ -245,6 +245,7 @@ function getData( $parameters ) {
 				  FROM TAB_MATERIAIS tm
 			 LEFT JOIN TAB_APRENDIZADO ta ON (ta.ID = tm.ID_TAB_APREND)
 				 WHERE tm.TP = ?
+				   AND tm.FG_IM <> 'G'
 				   AND (ta.CD_ITEM_INTERNO IS NOT NULL OR tm.ID_TAB_APREND IS NULL)
 				ORDER BY tm.FUNDO DESC, ta.CD_ITEM_INTERNO, tm.DS
 			", array($parameters["key"]));
