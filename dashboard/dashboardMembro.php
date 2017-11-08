@@ -13,7 +13,7 @@ function getClass( $pct ){
 	endif;
 }
 
-function drawBoxesArea($title,$result,$boxClass){
+function drawBoxesArea($title,$result,$boxClass = NULL){
 	if (!$result->EOF):
 		?>
 		<div class="row">
@@ -27,7 +27,8 @@ function drawBoxesArea($title,$result,$boxClass){
 				$value = ( $tp == "ES" ? $fields["CD_ITEM_INTERNO"] : "" );
 				$icon = getIconAprendizado( $fields["TP_ITEM"], $fields["CD_AREA_INTERNO"], "fa-4x" );
 				$area = getMacroArea( $fields["TP_ITEM"], $fields["CD_AREA_INTERNO"] );
-				fItemAprendizado( $boxClass, $icon, $value, titleCase( $fields["DS_ITEM"] ), titleCase( $area ), strftime("%d/%m/%Y",strtotime($fields["DT"])) );
+				$class = (isset($boxClass) ? $boxClass : (empty($fields["BOX_CLASS"]) ? "panel-default" : $fields["BOX_CLASS"]));
+				fItemAprendizado( $class, $icon, $value, titleCase( $fields["DS_ITEM"] ), titleCase( $area ), strftime("%d/%m/%Y",strtotime($fields["DT"])), null, null, null, $fields["BOX_HINT"]);
 			endforeach;
 			?>
 		</div>
@@ -108,16 +109,20 @@ INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
 drawBoxesArea("Itens não avaliados pelo regional",$result,"panel-yellow");
 
 $result = $GLOBALS['conn']->Execute("
-   SELECT ta.TP_ITEM, ta.CD_ITEM_INTERNO, ta.DS_ITEM, ta.CD_AREA_INTERNO, ah.DT_AVALIACAO AS DT
+   SELECT DISTINCT ta.TP_ITEM, ta.CD_ITEM_INTERNO, ta.DS_ITEM, ta.CD_AREA_INTERNO, ah.DT_AVALIACAO AS DT, 
+			 IF(cc.FG_COMPRA = 'S' OR ccag.ID IS NOT NULL,'panel-success','panel-warning') AS BOX_CLASS, 
+			 IF(cc.FG_COMPRA = 'S' OR ccag.ID IS NOT NULL,'Item comprado','Item ainda não comprado') AS BOX_HINT
 	 FROM APR_HISTORICO ah
 INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
+ LEFT JOIN CON_COMPRAS cc ON (cc.ID_CAD_PESSOA = ah.ID_CAD_PESSOA AND cc.ID_TAB_APREND = ah.ID_TAB_APREND AND cc.FG_COMPRA = 'S')
+ LEFT JOIN CON_COMPRAS ccag ON (ccag.ID_CAD_PESSOA = ah.ID_CAD_PESSOA AND cc.FG_COMPRA IS NULL AND ta.TP_ITEM = 'CL' AND (ccag.CD = '04-02-01-07' OR ccag.CD = '04-02-02-07'))
 	WHERE ah.ID_CAD_PESSOA = ?
 	  AND ah.DT_CONCLUSAO IS NOT NULL
 	  AND ah.DT_AVALIACAO IS NOT NULL
 	  AND ah.DT_INVESTIDURA IS NULL
 	ORDER BY ta.TP_ITEM, ta.CD_ITEM_INTERNO
 ", array($membroID) );
-drawBoxesArea("Itens a receber na próxima investidura",$result,"panel-success");
+drawBoxesArea("Itens a receber na próxima investidura",$result);
 
 $result = $GLOBALS['conn']->Execute("
    SELECT ta.TP_ITEM, ta.CD_ITEM_INTERNO, ta.DS_ITEM, ta.CD_AREA_INTERNO, ah.DT_INVESTIDURA AS DT
