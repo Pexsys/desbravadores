@@ -210,12 +210,15 @@ $pdf->newPage();
 
 fConnDB();
 
-$filter = implode(",",array_map("fArrayStr", explode(",",fRequest("filter"))));
+$request = fRequest("filter");
+
+$filter = implode(",",array_map("fArrayStr", explode(",",$request)));
+$innerJoinDA = ($request == "null" || empty($request) || empty($filter) ? "" : "INNER JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = cc.ID_TAB_APREND AND ah.ID_CAD_PESSOA = cc.ID_CAD_PESSOA AND ah.DT_AVALIACAO IN ($filter))");
 
 $result = $GLOBALS['conn']->Execute("
     SELECT cc.NM, cc.TP_ITEM, cc.CD, cc.DS_ITEM, cc.TP, cc.DS, cc.FUNDO, cc.FG_IM, cc.CD_AREA_INTERNO, cc.CD_ITEM_INTERNO, COUNT(*) AS QT_ITENS
     FROM CON_COMPRAS cc
-	INNER JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = cc.ID_TAB_APREND AND ah.ID_CAD_PESSOA = cc.ID_CAD_PESSOA AND ah.DT_AVALIACAO IN ($filter))
+	$innerJoinDA 
     WHERE cc.FG_IM = 'N'
       AND cc.FG_COMPRA = 'S'
       AND cc.FG_ENTREGUE = 'N'
@@ -225,7 +228,7 @@ $result = $GLOBALS['conn']->Execute("
     
     SELECT cc.NM, cc.TP_ITEM, cc.CD, cc.DS_ITEM, cc.TP, cc.DS, cc.FUNDO, cc.FG_IM, cc.CD_AREA_INTERNO, cc.CD_ITEM_INTERNO, COUNT(*) AS QT_ITENS
     FROM CON_COMPRAS cc
-	INNER JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = cc.ID_TAB_APREND AND ah.ID_CAD_PESSOA = cc.ID_CAD_PESSOA AND ah.DT_AVALIACAO IN ($filter))
+	$innerJoinDA 
     WHERE cc.FG_IM = 'S'
       AND cc.FG_COMPRA = 'S'
       AND cc.FG_ENTREGUE = 'N'
