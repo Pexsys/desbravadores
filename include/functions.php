@@ -613,40 +613,40 @@ function getIconAprendizado( $tpItem, $areaInterno, $sizeClass = "" ){
 	return $retorno;
 }
 
-function fItemAprendizado( $panelClass, $iconLeft, $value, $titulo, $detalhes = null, $detalhes2 = "", $style = "", $fields = null, $panelClassSize = null, $hint = null ) {
-	if (!isset($panelClassSize) || isnull($panelClassSize)):
-		$panelClassSize = "col-md-6 col-xs-12 col-sm-6 col-lg-4 col-xl-3";
+function fItemAprendizado($aP) {
+	if (!isset($aP["classSize"])):
+		$aP["classSize"] = "col-md-6 col-xs-12 col-sm-6 col-lg-4 col-xl-3";
 	endif;
-	echo "<div class=\"$panelClassSize\"". (!empty($hint) ? " title=\"$hint\"" : "") .">";
-	if ( isset($fields) ):
-		echo "  <div class=\"panel $panelClass\"";
-		foreach ($fields as $k => $i):
+	echo "<div class=\"".$aP["classSize"]."\"". (isset($aP["hint"]) ? " title=\"".$aP["hint"]."\"" : "") .">";
+	echo "  <div class=\"panel ".$aP["classPanel"]."\"";
+	if ( isset($aP["fields"]) ):
+		foreach ($aP["fields"] as $k => $i):
 		    echo " $k=\"$i\"";
 		endforeach;
-		echo "><div class=\"panel-heading\"". (empty($style)?" style=\"cursor:pointer;\"":" style=\"cursor:pointer;$style\"").">";
+		echo "><div class=\"panel-heading\"". (isset($aP["style"])?" style=\"cursor:pointer;\"":" style=\"cursor:pointer;".$aP["style"]."\"").">";
 	else:
-		echo "  <div class=\"panel $panelClass\">";
-		echo "	<div class=\"panel-heading\"". (empty($style)?"":" style=\"$style\"").">";
+		echo "><div class=\"panel-heading\"". (isset($aP["style"])?"":" style=\"".$aP["style"]."\"").">";
 	endif;
 	echo "	<div class=\"row\">
-					<div class=\"col-xs-3\"><i class=\"$iconLeft\"></i></div>
-					<div class=\"col-xs-9 text-right\">
-						<div class=\"huge\">$value</div>
-					</div>
-					<div class=\"col-xs-12 text-right\">$titulo</div>
-				</div>";
+				<div class=\"col-xs-3\"><i class=\"".$aP["leftIcon"]."\"></i></div>
+				<div class=\"col-xs-9 text-right\">
+					<div class=\"huge\">".$aP["value"]."</div>
+				</div>
+				<div class=\"col-xs-12 text-right\">".$aP["title"]."</div>
+			</div>";
+
 	echo "	</div>";
-	if ( isset($fields) ):
+	if ( isset($aP["fields"]) ):
 		echo "<div id=\"detalhes\" class=\"panel-body panel-collapse collapse\"></div>";
 	endif;
-	if ( isset($detalhes) || isset($detalhes2) ):
+	if ( isset($aP["strBL"]) || isset($aP["strBR"]) ):
     	echo "<div class=\"panel-footer\">
-    				<span class=\"pull-left\">$detalhes</span>
-    				<span class=\"pull-right\">$detalhes2</span>
-    				<div class=\"clearfix\"></div>
-    			</div>";
+				<span class=\"pull-left\">".$aP["strBL"]."</span>
+				<span class=\"pull-right\">".$aP["strBR"]."</span>
+				<div class=\"clearfix\"></div>
+			</div>";
     endif;
-    echo "</div></div>";
+	echo "</div></div>";
 }
 
 function fFormataData($data,$formato){

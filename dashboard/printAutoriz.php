@@ -15,7 +15,13 @@ function drawBoxesArea($title,$result,$boxClass){
 				$value = ( $tp == "ES" ? $fields["CD_ITEM_INTERNO"] : "" );
 				$icon = getIconAprendizado( $fields["TP_ITEM"], $fields["CD_AREA_INTERNO"], "fa-4x" );
 				$area = getMacroArea( $fields["TP_ITEM"], $fields["CD_AREA_INTERNO"] );
-				fItemAprendizado( $boxClass, $icon, $value, titleCase( $fields["DS_ITEM"] ), titleCase( $area ), "" );
+				fItemAprendizado(array(
+					"classPanel" => $boxClass,
+					"leftIcon" => $icon, 
+					"value" => $value, 
+					"title" => titleCase( $fields["DS_ITEM"] ), 
+					"strBL" => titleCase( $area )
+				));
 			endforeach;
 			?>
 		</div>

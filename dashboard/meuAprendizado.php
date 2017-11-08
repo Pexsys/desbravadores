@@ -209,8 +209,15 @@ endif;
 	    	        );
 	    	    endif;
 		endif;
-		
-		fItemAprendizado( $class, $icon, $fg["CD_ITEM_INTERNO"], titleCase( substr($fg["DS_ITEM"],12), array(" "), array("ADRA", "em", "e") ) . "<br/>$feitas / $min", $advise, null, null, $fields, $sizeClass );
+		fItemAprendizado(array(
+			"classPanel" 	=> $class,
+			"leftIcon"		=> $icon,
+			"value"			=> $fg["CD_ITEM_INTERNO"],
+			"title"			=> titleCase( substr($fg["DS_ITEM"],12), array(" "), array("ADRA", "em", "e") ) . "<br/>$feitas / $min",
+			"strBL"			=> $advise,
+			"fields"		=> $fields,
+			"classSize"		=> $sizeClass
+		));
 	endforeach;
 	?>
 </div>
