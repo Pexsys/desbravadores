@@ -613,14 +613,17 @@ function getIconAprendizado( $tpItem, $areaInterno, $sizeClass = "" ){
 	return $retorno;
 }
 
-function fItemAprendizado( $panelClass, $iconLeft, $value, $titulo, $detalhes = null, $detalhes2 = "", $style = "", $fields = null, $panelClassSize = "col-md-6 col-xs-12 col-sm-6 col-lg-4 col-xl-3" ) {
-	echo "<div class=\"$panelClassSize\">";
+function fItemAprendizado( $panelClass, $iconLeft, $value, $titulo, $detalhes = null, $detalhes2 = "", $style = "", $fields = null, $panelClassSize = null, $hint = null ) {
+	if (!isset($panelClassSize) || isnull($panelClassSize)):
+		$panelClassSize = "col-md-6 col-xs-12 col-sm-6 col-lg-4 col-xl-3";
+	endif;
+	echo "<div class=\"$panelClassSize\"". (!empty($hint) ? " title=\"$hint\"" : "") .">";
 	if ( isset($fields) ):
 		echo "  <div class=\"panel $panelClass\"";
 		foreach ($fields as $k => $i):
 		    echo " $k=\"$i\"";
 		endforeach;
-		echo "><div class=\"panel-heading\"". (empty($style)?"style=\"cursor:pointer;\"":" style=\"cursor:pointer;$style\"").">";
+		echo "><div class=\"panel-heading\"". (empty($style)?" style=\"cursor:pointer;\"":" style=\"cursor:pointer;$style\"").">";
 	else:
 		echo "  <div class=\"panel $panelClass\">";
 		echo "	<div class=\"panel-heading\"". (empty($style)?"":" style=\"$style\"").">";
