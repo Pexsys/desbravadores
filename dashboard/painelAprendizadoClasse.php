@@ -57,7 +57,15 @@ if (!$result->EOF):
 			$icon = getIconAprendizado( $line["TP_ITEM"], $line["CD_AREA_INTERNO"], "fa-4x" );
 			$area = getMacroArea( $line["TP_ITEM"], $line["CD_AREA_INTERNO"] );
 			$color = (fStrStartWith($line["CD_ITEM_INTERNO"],"01-06") ? "#000000" : "#FFFFFF");
-			fItemAprendizado( "panel-info", $icon, $line["QTD"], titleCase( $line["DS_ITEM"] ), titleCase( $area ), "Inscritos", "color:$color;background-color:".$line["CD_COR"] );
+			fItemAprendizado(array(
+				"classPanel" => "panel-info",
+				"leftIcon" => $icon, 
+				"value" => $line["QTD"], 
+				"title" => titleCase( $line["DS_ITEM"] ), 
+				"strBL" => titleCase( $area ), 
+				"strBR" => "Inscritos", 
+				"style" => "color:$color;background-color:".$line["CD_COR"]
+			));
 		endforeach;
 		?>
 	</div>

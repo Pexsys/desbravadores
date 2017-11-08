@@ -28,7 +28,15 @@ function drawBoxesArea($title,$result,$boxClass = NULL){
 				$icon = getIconAprendizado( $fields["TP_ITEM"], $fields["CD_AREA_INTERNO"], "fa-4x" );
 				$area = getMacroArea( $fields["TP_ITEM"], $fields["CD_AREA_INTERNO"] );
 				$class = (isset($boxClass) ? $boxClass : (empty($fields["BOX_CLASS"]) ? "panel-default" : $fields["BOX_CLASS"]));
-				fItemAprendizado( $class, $icon, $value, titleCase( $fields["DS_ITEM"] ), titleCase( $area ), strftime("%d/%m/%Y",strtotime($fields["DT"])), null, null, null, $fields["BOX_HINT"]);
+				fItemAprendizado(array(
+					"classPanel" => $class,
+					"leftIcon" => $icon, 
+					"value" => $value, 
+					"title" => titleCase( $fields["DS_ITEM"] ), 
+					"strBL" => titleCase( $area ), 
+					"strBR" => strftime("%d/%m/%Y",strtotime($fields["DT"])), 
+					"hint" => $fields["BOX_HINT"]
+				));
 			endforeach;
 			?>
 		</div>
@@ -63,7 +71,14 @@ if (!$result->EOF):
 			$area = getMacroArea( $fields["TP_ITEM"], $fields["CD_AREA_INTERNO"] );
 			
 			if ($fields["TP_ITEM"] == "ES"):
-				fItemAprendizado( "panel-danger", $icon, $fields["CD_ITEM_INTERNO"], titleCase( $fields["DS_ITEM"] ), titleCase( $area ), strftime("%d/%m/%Y",strtotime($fields["DT_INICIO"])) );
+				fItemAprendizado(array(
+					"classPanel" => "panel-danger",
+					"leftIcon" => $icon, 
+					"value" => $fields["CD_ITEM_INTERNO"], 
+					"title" => titleCase( $fields["DS_ITEM"] ), 
+					"strBL" => titleCase( $area ), 
+					"strBR" => strftime("%d/%m/%Y",strtotime($fields["DT_INICIO"]))
+				));
 			else:
 				$qtdReq =  $fields["QT_REQ"];
 				$tabAprID =  $fields["ID_TAB_APREND"];
@@ -83,13 +98,19 @@ if (!$result->EOF):
 				endif;
 				
 				$pct = floor( ( $qtd / $qtdReq ) * 100);
-				fItemAprendizado( getClass( $pct ), $icon, "$pct%", titleCase( $fields["DS_ITEM"] ), titleCase( $area ), "$qtd / $qtdReq", null, 
-				    array( 
-		    			    "name" => "progress",
-		    			    "cad-id" => $fields["ID_CAD_PESSOA"],
-		    			    "req-id" => $fields["ID_TAB_APREND"]
-		    			) 
-				);
+				fItemAprendizado(array(
+					"classPanel" => getClass( $pct ),
+					"leftIcon" => $icon, 
+					"value" => "$pct%", 
+					"title" => titleCase( $fields["DS_ITEM"] ), 
+					"strBL" => titleCase( $area ), 
+					"strBR" => "$qtd / $qtdReq", 
+					"fields" => array( 
+						"name" => "progress",
+						"cad-id" => $fields["ID_CAD_PESSOA"],
+						"req-id" => $fields["ID_TAB_APREND"]
+					)
+				));
 			endif;
 		endforeach;
 		?>
