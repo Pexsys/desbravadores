@@ -192,10 +192,11 @@ class LISTAINVESTIDURADSA extends TCPDF {
 $pdf = new LISTAINVESTIDURADSA();
 $pdf->newPage();
 
+$request = fRequest("filter");
+$filter = implode(",",array_map("fArrayStr", explode(",",$request)));
+$innerJoinDA = ($request == "null" || empty($request) || empty($filter) ? "" : " AND ah.DT_AVALIACAO IN ($filter)");
+
 fConnDB();
-
-$filter = implode(",",array_map("fArrayStr", explode(",",fRequest("filter"))));
-
 $result = $GLOBALS['conn']->Execute("
 	SELECT DISTINCT
 		1 AS ORD,
@@ -203,7 +204,7 @@ $result = $GLOBALS['conn']->Execute("
 		ta.DS_ITEM,
 		at.NM
 	FROM CON_ATIVOS at
-	INNER JOIN APR_HISTORICO ah ON (ah.ID_CAD_PESSOA = at.ID AND ah.DT_AVALIACAO IS NOT NULL AND ah.DT_INVESTIDURA IS NULL AND ah.DT_AVALIACAO IN ($filter))
+	INNER JOIN APR_HISTORICO ah ON (ah.ID_CAD_PESSOA = at.ID AND ah.DT_AVALIACAO IS NOT NULL AND ah.DT_INVESTIDURA IS NULL$innerJoinDA)
 	INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
 	INNER JOIN TAB_MATERIAIS tm ON (tm.ID_TAB_APREND = ta.ID)
 	  WHERE ta.TP_ITEM = 'CL'
@@ -216,7 +217,7 @@ $result = $GLOBALS['conn']->Execute("
 		ta.DS_ITEM,
 		at.NM
 	FROM CON_ATIVOS at
-	INNER JOIN APR_HISTORICO ah ON (ah.ID_CAD_PESSOA = at.ID AND ah.DT_AVALIACAO IS NOT NULL AND ah.DT_INVESTIDURA IS NULL AND ah.DT_AVALIACAO IN ($filter))
+	INNER JOIN APR_HISTORICO ah ON (ah.ID_CAD_PESSOA = at.ID AND ah.DT_AVALIACAO IS NOT NULL AND ah.DT_INVESTIDURA IS NULL$innerJoinDA)
 	INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
 	INNER JOIN TAB_MATERIAIS tm ON (tm.ID_TAB_APREND = ta.ID)
 	  WHERE ta.TP_ITEM = 'ES'
@@ -230,7 +231,7 @@ $result = $GLOBALS['conn']->Execute("
 		ta.DS_ITEM,
 		at.NM
 	FROM CON_ATIVOS at
-	INNER JOIN APR_HISTORICO ah ON (ah.ID_CAD_PESSOA = at.ID AND ah.DT_AVALIACAO IS NOT NULL AND ah.DT_INVESTIDURA IS NULL AND ah.DT_AVALIACAO IN ($filter))
+	INNER JOIN APR_HISTORICO ah ON (ah.ID_CAD_PESSOA = at.ID AND ah.DT_AVALIACAO IS NOT NULL AND ah.DT_INVESTIDURA IS NULL$innerJoinDA)
 	INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
 	INNER JOIN TAB_MATERIAIS tm ON (tm.ID_TAB_APREND = ta.ID)
 	  WHERE ta.TP_ITEM = 'ES'
