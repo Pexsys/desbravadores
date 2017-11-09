@@ -195,10 +195,11 @@ class LISTAINVESTIDURAMDA extends TCPDF {
 $pdf = new LISTAINVESTIDURAMDA();
 $pdf->newPage();
 
+$request = fRequest("filter");
+$filter = implode(",",array_map("fArrayStr", explode(",",$request)));
+$innerJoinDA = ($request == "null" || empty($request) || empty($filter) ? "" : " AND ah.DT_AVALIACAO IN ($filter)");
+
 fConnDB();
-
-$filter = implode(",",array_map("fArrayStr", explode(",",fRequest("filter"))));
-
 $result = $GLOBALS['conn']->Execute("
 	SELECT DISTINCT
 		at.NM,
@@ -207,7 +208,7 @@ $result = $GLOBALS['conn']->Execute("
 		ta.CD_ITEM_INTERNO,
 		ta.DS_ITEM
 	FROM CON_ATIVOS at
-	INNER JOIN APR_HISTORICO ah ON (ah.ID_CAD_PESSOA = at.ID AND ah.DT_INVESTIDURA IS NULL AND ah.DT_AVALIACAO IN ($filter))
+	INNER JOIN APR_HISTORICO ah ON (ah.ID_CAD_PESSOA = at.ID AND ah.DT_INVESTIDURA IS NULL$innerJoinDA)
 	INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
 	 LEFT JOIN TAB_MATERIAIS tm ON (tm.ID_TAB_APREND = ta.ID)
 	ORDER BY 1, 2, 3, 4
