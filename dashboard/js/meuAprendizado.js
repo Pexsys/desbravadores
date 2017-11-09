@@ -7,16 +7,16 @@ $(document).ready(function(){
     $("[name=detail]").on('click',function(){
         var what = $(this).attr('what');
         if (what == 'rules'){
-        		var parameter = {
-        			id : $(this).attr('id-rule')
-        		};
-        		
-        		var objReturn = jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/meuAprendizado.php", { MethodName : 'getMasterRules', data : parameter }, 'RETURN' );
+			var parameter = {
+				id : $(this).attr('id-rule')
+			};
+			
+			var objReturn = jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/meuAprendizado.php", { MethodName : 'getMasterRules', data : parameter }, 'RETURN' );
             
             BootstrapDialog.show({
 	    			title: objReturn.title,
 	    			message: objReturn.message,
-	    			type: BootstrapDialog.TYPE_INFO,
+	    			type: $(this).attr('cl-bar'),
 	    			size: BootstrapDialog.SIZE_WIDE,
 	    			draggable: true,
 	    			closable: true,
