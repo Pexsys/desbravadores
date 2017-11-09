@@ -1,13 +1,15 @@
 <?php
 function getClassPainelMestrado( $pct ){
-	if ($pct < 50):
-		return "panel-default";
+	if ($pct < 25):
+		return array( "panel" => "panel-default", "title" => "type-default" );
+	elseif ($pct < 50):
+		return array( "panel" => "panel-info", "title" => "type-info" );
 	elseif ($pct < 75):
-		return "panel-yellow";
+		return array( "panel" => "panel-yellow", "title" => "type-warning" );
 	elseif ($pct < 100):
-		return "panel-red";
+		return array( "panel" => "panel-red", "title" => "type-danger" );
 	else:
-		return "panel-success";
+		return array( "panel" => "panel-success", "title" => "type-success" );
 	endif;
 }
 $membroID = $_SESSION['USER']['id_cad_pessoa'];
@@ -164,9 +166,9 @@ endif;
 		$pct = floor( ( $feitas / $min ) * 100 );
 		
 		$advise = null;
-		$class = "panel-default";
+		$class = array( "panel" => "panel-default", "title" => "type-default" );
 		if ( $pct < 100 && !is_null($fg["DT_CONCLUSAO"]) ):
-		    $class = "panel-info";
+		    $class = array( "panel" => "panel-primary", "title" => "type-primary" );
 		    $advise = "Concluído pela regra antiga. Atualize seu mestrado para a regra nova.";
 		else:
 		    $class = getClassPainelMestrado( $pct );
@@ -176,6 +178,7 @@ endif;
 		$fields = array(
 			"name" => "detail",
 			"what" => "rules",
+			"cl-bar" => $class["title"],
 			"id-rule" => $fg["ID"]
 		);
 		
@@ -188,7 +191,7 @@ endif;
 	                  AND ID_TAB_APREND = ?
 	    	    ", array( $membroID, $fg["ID"] ) );	
 	    	    if ($rI->EOF || is_null($rI->fields["DT_CONCLUSAO"]) ):
-	    	        $class = "panel-green";
+	    	        $class = array( "panel" => "panel-green", "title" => "type-success" );
 	    	        $sizeClass = "col-md-4 col-xs-12 col-sm-6 col-xl-3 col-lg-4 blink";
 	    	        
 	    	        //INSERE NOTIFICAÇOES SE NÃO EXISTIR.
@@ -210,7 +213,7 @@ endif;
 	    	    endif;
 		endif;
 		fItemAprendizado(array(
-			"classPanel" 	=> $class,
+			"classPanel" 	=> $class["panel"],
 			"leftIcon"		=> $icon,
 			"value"			=> $fg["CD_ITEM_INTERNO"],
 			"title"			=> titleCase( substr($fg["DS_ITEM"],12), array(" "), array("ADRA", "em", "e") ) . "<br/>$feitas / $min",
