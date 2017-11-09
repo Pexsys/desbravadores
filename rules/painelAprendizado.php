@@ -352,14 +352,17 @@ function getClasses( $parameters ) {
 
 	//CLASSES A RECEBER
 	$rs = $GLOBALS['conn']->Execute("
-			SELECT ta.ID_TAB_APREND, ta.TP_ITEM, ta.CD_AREA_INTERNO, ta.CD_ITEM_INTERNO, ta.DS_ITEM, COUNT(*) AS QT_REQ
+			SELECT DISTINCT ta.ID_TAB_APREND, ta.TP_ITEM, ta.CD_AREA_INTERNO, ta.CD_ITEM_INTERNO, ta.DS_ITEM,
+				IF(cc.FG_COMPRA = 'S' OR ccag.ID IS NOT NULL,'OK','NOK') AS TP_BUY
 			FROM CON_APR_PESSOA ta
+			INNER JOIN TAB_MATERIAIS tm ON (tm.ID_TAB_APREND = ta.ID_TAB_APREND)
+			LEFT JOIN CON_COMPRAS cc ON (cc.ID_CAD_PESSOA = ta.ID_CAD_PESSOA AND cc.FG_COMPRA = 'S' AND cc.ID_TAB_APREND = ta.ID_TAB_APREND)
+			LEFT JOIN CON_COMPRAS ccag ON (ccag.ID_CAD_PESSOA = ta.ID_CAD_PESSOA AND ccag.FG_COMPRA = 'S' AND ccag.ID_TAB_APREND = tm.ID_AGRUPADA)
 			WHERE ta.ID_CAD_PESSOA = ? AND ta.TP_ITEM = ? 
 			 AND ta.DT_CONCLUSAO IS NOT NULL 
 			 AND ta.DT_AVALIACAO IS NOT NULL 
 			 AND ta.DT_INVESTIDURA IS NULL 
 			$where
-			GROUP BY ta.ID_TAB_APREND, ta.TP_ITEM, ta.CD_AREA_INTERNO, ta.CD_ITEM_INTERNO, ta.DS_ITEM
 			ORDER BY ta.TP_ITEM, ta.CD_ITEM_INTERNO
 			", array( $id, "CL" ) );
 	if (!$rs->EOF):
@@ -369,7 +372,9 @@ function getClasses( $parameters ) {
 		$str .= "<div class=\"panel-body\" style=\"padding:5px 10px\">";
 		
 		foreach ($rs as $ks2 => $det):
-			$str .= "<i class=\"".getIconAprendizado( $det["TP_ITEM"], $det["CD_AREA_INTERNO"] )."\"></i>&nbsp;".titleCase($det["DS_ITEM"])."<br/>";
+			$str .= "<i class=\"".getIconAprendizado( $det["TP_ITEM"], $det["CD_AREA_INTERNO"] )."\"></i>&nbsp;".titleCase($det["DS_ITEM"]);
+			$str .= "<i class=\"fa ".($det["TP_BUY"] == "OK"?"fa-check":"fa-times")." pull-right\" title=\"".($det["TP_BUY"] == "OK"?"Item comprado":"Item ainda não comprado")."\" style=\"".($det["TP_BUY"] == "OK"?"color:green":"color:red")."\"></i>";
+			$str .= "<br/>";
 		endforeach;
 		$str .= "</div>";
 		$str .= "</div>";
@@ -393,11 +398,13 @@ function getClasses( $parameters ) {
 	
 	//ESPECIALIDADES A RECEBER
 	$result = $GLOBALS['conn']->Execute("
-		SELECT a.CD_AREA_INTERNO, ae.DS_ITEM AS DS_ITEM_AREA, a.CD_ITEM_INTERNO, a.DS_ITEM
+		SELECT a.CD_AREA_INTERNO, ae.DS_ITEM AS DS_ITEM_AREA, a.CD_ITEM_INTERNO, a.DS_ITEM,
+				IF(cc.FG_COMPRA = 'S' OR cc.ID IS NOT NULL,'OK','NOK') AS TP_BUY
 		  FROM APR_HISTORICO h
 	    INNER JOIN TAB_APRENDIZADO a ON (a.ID = h.ID_TAB_APREND)
 		INNER JOIN TAB_APRENDIZADO ae ON (ae.TP_ITEM = a.TP_ITEM AND ae.CD_AREA_INTERNO = a.CD_AREA_INTERNO AND ae.CD_ITEM_INTERNO IS NULL)
-		 WHERE h.ID_CAD_PESSOA = ?
+		LEFT JOIN CON_COMPRAS cc ON (cc.ID_CAD_PESSOA = h.ID_CAD_PESSOA AND cc.FG_COMPRA = 'S' AND cc.ID_TAB_APREND = h.ID_TAB_APREND)
+		WHERE h.ID_CAD_PESSOA = ?
 		   AND a.TP_ITEM = ?
 			 AND h.DT_CONCLUSAO IS NOT NULL 
 			 AND h.DT_AVALIACAO IS NOT NULL 
@@ -460,7 +467,11 @@ function fGetDetailEspClass( $class, $titulo, $result ) {
 				$areaAtu = $line["DS_ITEM_AREA"];
 				$str .= "<div class=\"well well-sm\" style=\"padding:4px;margin-bottom:0px;font-size:12px\"><b>".titleCase($line["DS_ITEM_AREA"])."</b></div>";
 			endif;
-			$str .= "&nbsp;<i class=\"".getIconAprendizado( $line["TP_ITEM"], $line["CD_AREA_INTERNO"] )."\"></i> ".titleCase($line["DS_ITEM"])."<br/>";
+			$str .= "&nbsp;<i class=\"".getIconAprendizado( $line["TP_ITEM"], $line["CD_AREA_INTERNO"] )."\"></i> ".titleCase($line["DS_ITEM"]);
+			if (isset($line["TP_BUY"])):
+				$str .= "<i class=\"fa ".($line["TP_BUY"] == "OK"?"fa-check":"fa-times")." pull-right\" title=\"".($line["TP_BUY"] == "OK"?"Item comprado":"Item ainda não comprado")."\" style=\"".($line["TP_BUY"] == "OK"?"color:green":"color:red")."\"></i>";
+			endif;
+			$str .= "<br/>";
 		endforeach;
 		$str .= "</div>";
 		$str .= "</div>";
