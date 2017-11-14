@@ -16,7 +16,7 @@ class LISTACOMPRASALM extends TCPDF {
 	private $widthColumn;
 	private $heightHeader;
 	
-	function __construct() {
+	function __construct($title) {
 		parent::__construct(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 		
 		$this->stLine = array('width' => 1, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0));
@@ -40,7 +40,7 @@ class LISTACOMPRASALM extends TCPDF {
 
 		$this->SetCreator(PDF_CREATOR);
 		$this->SetAuthor('Ricardo J. Cesar');
-		$this->SetTitle('Listagem de Compras por Area');
+		$this->SetTitle($title);
 		$this->SetSubject('Clube Pioneiros');
 		$this->SetKeywords('Desbravadores, Especialidades, Pioneiros, Capão Redondo');
 		$this->setImageScale(PDF_IMAGE_SCALE_RATIO);
@@ -73,7 +73,7 @@ class LISTACOMPRASALM extends TCPDF {
 		
 		$this->setXY(20,5);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 20);
-		$this->Cell(185, 9, "Listagem de Compras Sintética por Área/Itens", 0, false, 'C', false, false, false, false, 'T', 'M');
+		$this->Cell(185, 9, $this->title, 0, false, 'C', false, false, false, false, 'T', 'M');
 		$this->setXY(20,15);
 		$this->SetTextColor(80,80,80);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 9);
@@ -207,25 +207,32 @@ class LISTACOMPRASALM extends TCPDF {
 	}
 }
 
-$pdf = new LISTACOMPRASALM();
+$fgCompra = fRequest("fc");
+$title = ($fgCompra == "S"
+	? "Listagem Sintética de Itens Comprados por Área"
+	: "Listagem Sintética de Compras por Área/Itens"
+);
+
+$pdf = new LISTACOMPRASALM($title);
 $pdf->newPage();
 
 fConnDB();
 
+$pdf->SetTitle($pdf->reportTitle);
 $result = $GLOBALS['conn']->Execute("
 	SELECT * FROM (
 		SELECT cp.ID_TAB_MATERIAIS, cp.TP_GRP, cp.DS_GRP, cp.CD_ITEM_INTERNO, cp.CD_AREA_INTERNO, ta.DS_ITEM AS DS_GRP_ESP, cp.NR_GAVETA_APS, cp.TP_ITEM, cp.DS, cp.DS_ITEM, cp.FUNDO, (COUNT(*)-cp.QT_EST) AS QT_ITENS
 		 FROM CON_COMPRAS cp
 	LEFT JOIN TAB_APRENDIZADO ta ON (ta.CD_AREA_INTERNO = cp.CD_AREA_INTERNO AND ta.CD_ITEM_INTERNO IS NULL)
 		WHERE cp.FG_ALMOX = 'S'
-		  AND cp.FG_COMPRA = 'N'
+		  AND cp.FG_COMPRA = ?
 		GROUP BY cp.TP_GRP, cp.DS_GRP, cp.CD_ITEM_INTERNO, cp.CD_AREA_INTERNO, ta.DS_ITEM, cp.NR_GAVETA_APS, cp.TP_ITEM, cp.DS, cp.DS_ITEM, cp.FUNDO
 		) X WHERE X.QT_ITENS > 0
 	
 	GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
 	
 	ORDER BY TP_ITEM, TP_GRP, CD_AREA_INTERNO DESC, FUNDO DESC, DS_GRP_ESP, IF(TP_ITEM = 'CL',CD_ITEM_INTERNO,DS_ITEM), ID_TAB_MATERIAIS
-");
+", array($fgCompra) );
 foreach ( $result as $ra => $f ):
 	$pdf->addLine($f);
 endforeach;

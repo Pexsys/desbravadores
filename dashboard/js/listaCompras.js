@@ -187,6 +187,14 @@ $(document).ready(function(){
 	    });
 	});
 
+	$('#cmLista').change(function(){
+		$("[name=rowFilter]").visible(false);
+		var show = $(this).find(":selected").attr('show'); 
+		if (show !== undefined) {
+			$("#"+show).visible(true);
+		}
+	});
+
 	$("#printForm")
 		.on('init.field.fv', function(e, data) {
 			var $parent = data.element.parents('.form-group'),
@@ -214,7 +222,9 @@ $(document).ready(function(){
 			if (opt !== ''){
 				var url = jsLIB.rootDir+'report/';
 				if (opt == "LC-ALM-AREA"){
-					url += 'geraListaComprasAlmArea.php?';
+					url += 'geraListaComprasAlmArea.php?fc=N&';
+				} else if (opt == "LC-ALM-COMP"){
+					url += 'geraListaComprasAlmArea.php?fc=S&';
 				} else if (opt == "LC-ALM-GAVETA"){
 					url += 'geraListaComprasAlmGaveta.php?';
 				} else if (opt == "LC-MDA"){

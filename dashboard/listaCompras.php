@@ -86,16 +86,17 @@
 										    <option value=""></option>
 											<option value="LC-ALM-AREA">LISTA DE COMPRAS - ALMOXARIFADO DA ASSOCIA&Ccedil;&Atilde;O - POR &Aacute;REA</option>
 											<option value="LC-ALM-GAVETA">LISTA DE COMPRAS - ALMOXARIFADO DA ASSOCIA&Ccedil;&Atilde;O - POR GAVETA</option>
-											<option value="LC-MDA">LISTA DE COMPRAS - SECRETARIA MDA ASSOCIA&Ccedil;&Atilde;O / EQUIPE REGIONAL</option>
-											<option value="LC-DSA">LISTA DE INVESTIDURAS - CADASTRO DSA</option>
-											<option value="LC-SEC">LISTA DE INVESTIDURAS - SECRETARIA DO CLUBE</option>
+											<option value="LC-ALM-COMP">LISTA DE COMPRAS - ITENS COMPRADOS - POR &Aacute;REA</option>
+											<option value="LC-MDA" show="divFilter">LISTA DE COMPRAS - SECRETARIA MDA ASSOCIA&Ccedil;&Atilde;O / EQUIPE REGIONAL</option>
+											<option value="LC-DSA" show="divFilter">LISTA DE INVESTIDURAS - CADASTRO DSA</option>
+											<option value="LC-SEC" show="divFilter">LISTA DE INVESTIDURAS - SECRETARIA DO CLUBE</option>
 										</select>
 									</div>
 								</div>
 							</div>
 						</div>	
 					</div>
-					<div class="panel panel-warning">
+					<div class="panel panel-warning" name="rowFilter" id="divFilter" style="display:none">
 						<div class="panel-heading" style="padding:4px 10px 0px">
 							<label>Filtro - Datas de Avaliação</label>
 						</div>
