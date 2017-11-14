@@ -50,13 +50,15 @@
 		<br/>
 	</div>
 	<div class="row">
-		<button class="btn btn-warning" id="btnProcess"><i class="fa fa-cog"></i>&nbsp;Processar Lista</button>
+		<button class="btn btn-default" id="btnProcess"><i class="fa fa-cog"></i>&nbsp;Processar Lista</button>
 		&nbsp;
-		<button class="btn btn-warning" id="btnAdd"><i class="fa fa-plus"></i>&nbsp;Adicionar Item</button>
+		<button class="btn btn-default" id="btnAdd"><i class="fa fa-plus"></i>&nbsp;Adicionar Item</button>
 		&nbsp;
 		<button class="btn btn-default" id="btnRedist"><i class="fa fa-cubes"></i>&nbsp;Distribuir Estoque</button>
 		&nbsp;
-		<button class="btn btn-default" id="btnEdit"><i class="fa fa-pencil"></i>&nbsp;Edi&ccedil;&atilde;o Manual</button>
+		<button class="btn btn-warning" id="btnEdit"><i class="fa fa-pencil"></i>&nbsp;Edi&ccedil;&atilde;o Manual</button>
+		&nbsp;
+		<button class="btn btn-success" id="btnEntrega"><i class="fa fa-pencil"></i>&nbsp;Atualizar Entrega</button>
 		&nbsp;
 		<button class="btn btn-danger" id="btnDel"><i class="fa fa-trash-o"></i>&nbsp;Excluir</button>
 		&nbsp;
@@ -169,7 +171,7 @@
 					<button aria-hidden="true" data-dismiss="modal" class="close" type="button" id="btnX">&times;</button>
 				</div>			
 				<div class="modal-body">
-					<div class="panel panel-warning">
+					<div class="panel panel-warning" id="divOQue" style="display:none">
 						<div class="panel-heading" style="padding:4px 10px 0px">
 							<label>O qu&ecirc;?</label>
 						</div>
@@ -198,14 +200,14 @@
 							</div>
 						</div>	
 					</div>
-					<div class="panel panel-warning">
+					<div class="panel panel-warning" id="divParaQuem" style="display:none">
 						<div class="panel-heading" style="padding:4px 10px 0px">
 							<label>Para quem?</label>
 						</div>
 						<div class="panel-body" style="padding:4px 10px 0px">
 							<div class="row">
 								<div class="form-group col-xs-12">
-									<select field="id_pessoa" name="cmNome" id="cmNome" opt-value="id" opt-label="ds" class="selectpicker form-control input-sm" multiple data-live-search="true" data-selected-text-format="count" data-container="body" data-width="100%"></select>
+									<select field="id_pessoa" name="cmNome" id="cmNome" opt-value="id" opt-label="ds" class="selectpicker form-control input-sm" multiple data-actions-box="true" data-live-search="true" data-selected-text-format="count" data-container="body" data-width="100%"></select>
 								</div>
 							</div>
 						</div>
