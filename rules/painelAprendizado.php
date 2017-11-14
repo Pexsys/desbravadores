@@ -373,7 +373,7 @@ function getClasses( $parameters ) {
 		
 		foreach ($rs as $ks2 => $det):
 			$str .= "<i class=\"".getIconAprendizado( $det["TP_ITEM"], $det["CD_AREA_INTERNO"] )."\"></i>&nbsp;".titleCase($det["DS_ITEM"]);
-			$str .= "<i class=\"fa ".($det["TP_BUY"] == "OK"?"fa-check":"fa-times")." pull-right\" title=\"".($det["TP_BUY"] == "OK"?"Item comprado":"Item ainda não comprado")."\" style=\"".($det["TP_BUY"] == "OK"?"color:green":"color:red")."\"></i>";
+			$str .= "<i class=\"fa ".($det["TP_BUY"] == "OK"?"fa-info-circle":"fa-question-circle")." pull-right\" title=\"".($det["TP_BUY"] == "OK"?"Item comprado":"Item ainda não comprado")."\" style=\"".($det["TP_BUY"] == "OK"?"color:green":"color:red")."\"></i>";
 			$str .= "<br/>";
 		endforeach;
 		$str .= "</div>";
@@ -469,7 +469,7 @@ function fGetDetailEspClass( $class, $titulo, $result ) {
 			endif;
 			$str .= "&nbsp;<i class=\"".getIconAprendizado( $line["TP_ITEM"], $line["CD_AREA_INTERNO"] )."\"></i> ".titleCase($line["DS_ITEM"]);
 			if (isset($line["TP_BUY"])):
-				$str .= "<i class=\"fa ".($line["TP_BUY"] == "OK"?"fa-check":"fa-times")." pull-right\" title=\"".($line["TP_BUY"] == "OK"?"Item comprado":"Item ainda não comprado")."\" style=\"".($line["TP_BUY"] == "OK"?"color:green":"color:red")."\"></i>";
+				$str .= "&nbsp;&nbsp;<i class=\"fa ".($line["TP_BUY"] == "OK"?"fa-info-circle":"fa-question-circle")."\" title=\"".($line["TP_BUY"] == "OK"?"Item comprado":"Item ainda não comprado")."\" style=\"".($line["TP_BUY"] == "OK"?"color:green":"color:red")."\"></i>";
 			endif;
 			$str .= "<br/>";
 		endforeach;
