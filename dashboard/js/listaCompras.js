@@ -64,12 +64,12 @@ $(document).ready(function(){
 		],
 		fnRowCallback: function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
 			if ( aData.ie == "S" ) {
-				$('td', nRow).css('background-color', '#b0ffb3');
+				$(nRow.cells[2]).css('background-color', '#b0ffb3' ).css('font-weight', 'bold');
+				$(nRow.cells[3]).css('background-color', '#b0ffb3' ).css('font-weight', 'bold');
 			} else if ( aData.ic == "S" ) {
-				$('td', nRow).css('background-color', '#fdedc4');
-			} else {
-				$('td', nRow).css('background-color', '');
+				$(nRow.cells[2]).css('background-color', '#fdedc4' ).css('font-weight', 'bold');
 			}
+
         },
 		select: {
 			style: 'multi',

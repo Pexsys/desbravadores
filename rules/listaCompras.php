@@ -412,23 +412,36 @@ function updateEstoque( $ln, $fd, $vl ){
 
 	if ($update):
 	    
-	    //SE ESTRELA FOI ENTREGUE, EXCLUIR DA LISTA DE COMPRAS
-		if ( $fd == "fg_entregue" && $vl == "S" && $ln["FG_LOG_MATERIAL"] == "S" ):
-		    $GLOBALS['conn']->Execute("DELETE FROM CAD_COMPRAS_PESSOA WHERE ID = ?", array( $ln["ID"] ) );
+	    //SE MATERIAL FOI ENTREGUE
+		if ( $fd == "fg_entregue" && $vl == "S"):
+
+			//EXCLUI SE INCLUSAO MANUAL.
+			if ($ln["TP_INCL"] == "M"):
+				$GLOBALS['conn']->Execute("DELETE FROM CAD_COMPRAS_PESSOA WHERE ID = ?", array( $ln["ID"] ) );
+				
+			else:
+				$GLOBALS['conn']->Execute("
+					UPDATE CAD_COMPRAS_PESSOA 
+					SET $fd = ?
+					WHERE ID = ?
+				", array( $vl, $ln["ID"] ) );
+			endif;
 		    
-		    //INSERE LOG DE ENTREGA DE MATERIAIS
-		    $materiais = new MATERIAIS();
-		    $materiais->forceInsert( array( $ln["ID_CAD_PESSOA"], $ln["ID_TAB_MATERIAIS"], date("Y-m-d") ) );
-		    $arr["close"] = "S";
-		
-	    else:
+			//INSERE LOG DE ENTREGA DE MATERIAIS
+			if ($ln["FG_LOG_MATERIAL"] == "S"):
+				$materiais = new MATERIAIS();
+				$materiais->forceInsert( array( $ln["ID_CAD_PESSOA"], $ln["ID_TAB_MATERIAIS"], date("Y-m-d") ) );
+				$arr["close"] = "S";
+			endif;
+
+		else:
+			
     		$GLOBALS['conn']->Execute("
     			UPDATE CAD_COMPRAS_PESSOA 
     			   SET $fd = ?
     			 WHERE ID = ?
     		", array( $vl, $ln["ID"] ) );
     	endif;
-		
 	endif;
 	return $arr;
 }

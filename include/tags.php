@@ -4,7 +4,7 @@
 class TAGS {
 	
 	public function deleteFila() {
-		$GLOBALS['conn']->Execute("DELETE FROM TMP_PRINT_TAGS");
+		$GLOBALS['conn']->Execute("TRUNCATE TABLE TMP_PRINT_TAGS");
 	}
 	
 	public function deleteFilaIDS( $ids ) {
@@ -32,15 +32,32 @@ class TAGS {
 		$option = getOptionTag( $tags, $tp );
 		$md = $option["md"];
 
-		if (is_null($aprendID) && $option["cl"] == "S"):
+		//SE NAO APONTADO APRENDIZADO, PROCURA MAIOR APRENDIZADO AVALIADO
+		if (empty($aprendID) || is_null($aprendID)):
 			$r = $GLOBALS['conn']->Execute("
-				SELECT MAX(ta.ID) AS ID_TAB_APREND
+				SELECT '1', MAX(ta.ID) AS ID_TAB_APREND
 				  FROM CON_ATIVOS ca
 			INNER JOIN APR_HISTORICO ah ON (ah.ID_CAD_PESSOA = ca.ID)
 			INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND AND ta.TP_ITEM = 'CL')
-				 WHERE YEAR(ah.DT_INICIO) = YEAR(NOW())
+				 WHERE YEAR(ah.DT_AVALIACAO) = YEAR(NOW()) 
 				   AND ca.ID = ?
-			", array($pessoaID) );
+			UNION 
+				SELECT '2', MAX(ta.ID) AS ID_TAB_APREND
+				FROM CON_ATIVOS ca
+		INNER JOIN APR_HISTORICO ah ON (ah.ID_CAD_PESSOA = ca.ID)
+		INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND AND ta.TP_ITEM = 'CL')
+			WHERE YEAR(ah.DT_INICIO) = YEAR(NOW())
+				AND ca.ID = ?
+			UNION 
+				SELECT '3', MAX(ta.ID) AS ID_TAB_APREND
+				FROM CON_ATIVOS ca
+		INNER JOIN APR_HISTORICO ah ON (ah.ID_CAD_PESSOA = ca.ID)
+		INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND AND ta.TP_ITEM = 'CL')
+			WHERE ah.DT_AVALIACAO IS NOT NULL
+				AND ca.ID = ?
+
+			ORDER BY 1
+			", array($pessoaID,$pessoaID,$pessoaID) );
 			if (!$r->EOF):
 				$aprendID = $r->fields["ID_TAB_APREND"];
 			endif;

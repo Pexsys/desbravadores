@@ -54,9 +54,9 @@
 		&nbsp;
 		<button class="btn btn-warning" id="btnAdd"><i class="fa fa-plus"></i>&nbsp;Adicionar Item</button>
 		&nbsp;
-		<button class="btn btn-secondary" id="btnRedist"><i class="fa fa-cubes"></i>&nbsp;Distribuir Estoque</button>
+		<button class="btn btn-default" id="btnRedist"><i class="fa fa-cubes"></i>&nbsp;Distribuir Estoque</button>
 		&nbsp;
-		<button class="btn btn-secondary" id="btnEdit"><i class="fa fa-pencil"></i>&nbsp;Edi&ccedil;&atilde;o Manual</button>
+		<button class="btn btn-default" id="btnEdit"><i class="fa fa-pencil"></i>&nbsp;Edi&ccedil;&atilde;o Manual</button>
 		&nbsp;
 		<button class="btn btn-danger" id="btnDel"><i class="fa fa-trash-o"></i>&nbsp;Excluir</button>
 		&nbsp;
