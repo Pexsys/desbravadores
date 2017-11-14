@@ -104,10 +104,11 @@
 										<select name="cmFiltro" id="cmFiltro" class="selectpicker form-control input-sm" multiple data-actions-box="true" data-selected-text-format="count > 3" data-container="body" data-width="100%">
 											<?php
 											$result = $GLOBALS['conn']->Execute("
-												SELECT DISTINCT DT_AVALIACAO
-												FROM APR_HISTORICO
-												WHERE DT_AVALIACAO IS NOT NULL
-												  AND YEAR(DT_AVALIACAO) = YEAR(NOW())
+												SELECT DISTINCT ah.DT_AVALIACAO
+												FROM APR_HISTORICO ah
+												INNER JOIN CON_ATIVOS ca ON (ca.ID = ah.ID_CAD_PESSOA)
+												WHERE ah.DT_AVALIACAO IS NOT NULL
+												  AND (ah.DT_INVESTIDURA IS NULL OR YEAR(ah.DT_AVALIACAO) = YEAR(NOW()))
 												ORDER BY 1 DESC
 											");
 											foreach($result as $k => $f):
