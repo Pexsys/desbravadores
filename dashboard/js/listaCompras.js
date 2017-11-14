@@ -141,11 +141,16 @@ $(document).ready(function(){
 		})
 		.submit( function(event) {
 			var parameter = {
+				act: $('#listaModal').attr('action'),
 				frm: jsLIB.getJSONFields( $('#cadListaForm') )
 			};
-			jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/listaCompras.php", { MethodName : 'addCompras', data : parameter } );
-			dataTable.ajax.reload();
-			$("#listaModal").modal('hide');
+			jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/listaCompras.php", { MethodName : 'addCompras', data : parameter },
+				function(){
+					dataTable.ajax.reload();
+					$("#listaModal").modal('hide');
+				}
+			);
+
 		})
 	;
 	
@@ -239,9 +244,25 @@ $(document).ready(function(){
 		jsLIB.populateOptions( $("#cmNome"), cg.nomes );
 		
 		$('#divItem').visible(false);
+		$('#divOQue').visible(true);
+		$('#divParaQuem').visible(true);
 		jsLIB.resetForm( $('#cadListaForm') );
 		$("#qtItens").val(1);
-		$("#listaModal").modal();
+		$("#listaModal").attr('action','ADD').modal();
+	});
+
+	$('#btnEntrega').click(function(){
+		var parameter = {
+			domains : [ "nomesEntrega" ]
+		};
+		var cg = jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/listaCompras.php", { MethodName : 'getData', data : parameter }, 'RETURN' );
+		jsLIB.populateOptions( $("#cmNome"), cg.nomes );
+		
+		$('#divItem').visible(false);
+		$('#divOQue').visible(false);
+		$('#divParaQuem').visible(true);
+		jsLIB.resetForm( $('#cadListaForm') );
+		$("#listaModal").attr('action','SET').modal();
 	});
 	
 	$('#btnEdit').click(function(){
@@ -320,9 +341,11 @@ $(document).ready(function(){
 						var parameter = {
 							ids: tmp
 						};
-						jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/listaCompras.php", { MethodName : 'distribuirEstoque' } );
-						dataTable.ajax.reload();
-						dialogRef.close();
+						jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/listaCompras.php", { MethodName : 'distribuirEstoque' },
+							function(){
+								dataTable.ajax.reload();
+								dialogRef.close();
+							});
 					}
 				}
 			]
@@ -363,9 +386,10 @@ $(document).ready(function(){
 						var parameter = {
 							ids: tmp
 						};
-						jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/listaCompras.php", { MethodName : 'delete', data : parameter } );
-						dataTable.ajax.reload();
-						dialogRef.close();
+						jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/listaCompras.php", { MethodName : 'delete', data : parameter }, function(){
+							dataTable.ajax.reload();
+							dialogRef.close();
+						});
 					}
 				}
 			]

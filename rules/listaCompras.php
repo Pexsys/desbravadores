@@ -261,6 +261,24 @@ function getData( $parameters ) {
 				);
 			endforeach;
 		endif;
+		if ( $f == "nomesEntrega" ):
+			$arr["nomes"] = array();
+			$qtdZeros = zeroSizeID();
+			$result = $GLOBALS['conn']->Execute("
+				SELECT DISTINCT ID_CAD_PESSOA, NM 
+				  FROM CON_COMPRAS 
+				 WHERE FG_COMPRA = 'S' 
+				   AND FG_ENTREGUE = 'N' 
+			  ORDER BY NM
+			");
+			foreach ($result as $k => $fields):
+				$id = str_pad($fields['ID_CAD_PESSOA'], $qtdZeros, "0", STR_PAD_LEFT);
+				$arr["nomes"][] = array( 
+					"id" => $fields['ID_CAD_PESSOA'],
+					"ds" => "$id ".$fields['NM']
+				);
+			endforeach;
+		endif;
 	endforeach;
 	
 	return $arr;
@@ -278,11 +296,13 @@ function delete( $parameters ) {
 }
 
 function addCompras( $parameters ) {
+	$act = $parameters["act"];
 	$frm = $parameters["frm"];
 	$cmpl = $frm["cmpl"];
 	$qtItens = max( $frm["qt_itens"], 1 );
 
-	if ( isset($frm["id"]) ):
+	//ADICIONA ITENS
+	if ( $act == "ADD" && isset($frm["id"]) ):
 		fConnDB();
 		$compras = new COMPRAS();
 		
@@ -321,6 +341,22 @@ function addCompras( $parameters ) {
 				);
 			endfor;
 		endif;
+
+	//SETAR ITENS ENTREGUES POR PESSOA
+	elseif ( $act == "SET" && isset($frm["id_pessoa"]) ):
+		fConnDB();
+		foreach ($frm["id_pessoa"] as $k => $pessoaID):
+			$result = $GLOBALS['conn']->Execute("
+				SELECT *
+				FROM CON_COMPRAS
+				WHERE FG_COMPRA = 'S'
+				AND FG_ENTREGUE = 'N'
+				AND ID_CAD_PESSOA = ?
+			", array($pessoaID) );
+			foreach ($result as $k => $ln):
+				updateEstoque( $ln, "fg_entregue", "S" );
+			endforeach;
+		endforeach;
 	endif;
 	
 	return array("result" => true);
