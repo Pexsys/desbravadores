@@ -102,7 +102,7 @@ $pendNome = $GLOBALS['conn']->Execute("
 	AND cap.DT_CONCLUSAO IS NULL $where
 	ORDER BY cap.CD_ITEM_INTERNO, cap.CD_REQ_INTERNO, at.NM
 ");
-
+/*
 $pendItens = $GLOBALS['conn']->Execute("
 	SELECT cap.ID_TAB_APREND, cap.CD_ITEM_INTERNO, cap.CD_REQ_INTERNO, cap.CD_AP_AREA, cap.DS_AP_AREA, cap.DS_ITEM, cap.DS, cap.CD_COR,
 			at.NM
@@ -115,7 +115,8 @@ $pendItens = $GLOBALS['conn']->Execute("
 	AND cap.DT_CONCLUSAO IS NULL $where
 	ORDER BY cap.CD_ITEM_INTERNO, at.NM, cap.CD_REQ_INTERNO
 ");
-if (!$pendNome->EOF || !$pendItens->EOF):
+*/
+if (!$pendNome->EOF):
 ?>
 <div class="row">
 	<div class="col-lg-12">
@@ -123,8 +124,10 @@ if (!$pendNome->EOF || !$pendItens->EOF):
 	</div>
 </div>
 <div class="row">
-	<?php if (!$pendItens->EOF):?>
-	<div class="col-xs-12 col-md-12 col-sm-12 col-xl-6 col-lg-6">
+	<?php
+	/*
+	if (!$pendItens->EOF):
+	<div class="col-xs-12 col-md-12 col-sm-12 col-xl-12 col-lg-12">
 		<div class="panel panel-danger">
 		<div class="panel-heading"><h5 class="panel-title"><i class="fa fa-frown-o"></i>&nbsp;Classe / Pessoa</h5></div>
 			<div class="panel-body" style="padding:5px 10px;font-size:12px">
@@ -161,9 +164,11 @@ if (!$pendNome->EOF || !$pendItens->EOF):
 			</div>
 		</div>
 	</div>
-	<?php endif;?>
+	<?php endif;
+	*/
+	?>
 	<?php if (!$pendNome->EOF):?>
-	<div class="col-xs-12 col-md-12 col-sm-12 col-xl-6 col-lg-6">
+	<div class="col-xs-12 col-md-12 col-sm-12 col-xl-12 col-lg-12">
 		<div class="panel panel-danger">
 			<div class="panel-heading"><h5 class="panel-title"><i class="fa fa-frown-o"></i>&nbsp;Classe / Item</h5></div>
 			<div class="panel-body" style="padding:5px 10px;font-size:12px">
