@@ -14,41 +14,40 @@ $(document).ready(function(){
 			var objReturn = jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/meuAprendizado.php", { MethodName : 'getMasterRules', data : parameter }, 'RETURN' );
             
             BootstrapDialog.show({
-	    			title: objReturn.title,
-	    			message: objReturn.message,
-	    			type: $(this).attr('cl-bar'),
-	    			size: BootstrapDialog.SIZE_WIDE,
-	    			draggable: true,
-	    			closable: true,
-	    			closeByBackdrop: true,
-	    			closeByKeyboard: true,
-	    			onshown: function(dialogRef){
-	    				mapPrint();
-                },
-	    			buttons: [
-	    				{ label: 'Fechar',
-	    					icon: 'glyphicon glyphicon-remove',
-	    					cssClass: 'btn-info',
-	    					autospin: true,
-	    					action: function(dialogRef){
-	    						dialogRef.enableButtons(false);
-	    						dialogRef.setClosable(false);
-	    						dialogRef.close();
-	    					}
-	    				}
-	    			]
-	    		});
+				title: objReturn.title,
+				message: objReturn.message,
+				type: $(this).attr('cl-bar'),
+				size: BootstrapDialog.SIZE_WIDE,
+				draggable: true,
+				closable: true,
+				closeByBackdrop: true,
+				closeByKeyboard: true,
+				onshown: function(dialogRef){
+					mapPrint();
+			},
+				buttons: [
+					{ label: 'Fechar',
+						icon: 'glyphicon glyphicon-remove',
+						cssClass: 'btn-info',
+						autospin: true,
+						action: function(dialogRef){
+							dialogRef.enableButtons(false);
+							dialogRef.setClosable(false);
+							dialogRef.close();
+						}
+					}
+				]
+			});
         }
 	});
     
 	datasets = jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/meuAprendizado.php", { MethodName : 'getGraphData' }, 'RETURN' );
-	if (datasets.ob) {
+	if (datasets.checkbox){
+		$("#divGraph").show(true);
 		choiceContainer = $("#choices");
-		$.each(datasets, function(key, val) {
-			if (val.checkbox){
-				choiceContainer.append('<label><input type="checkbox" name="'+ key +
-					'" checked="checked" id="op'+ key +'"/>'+ val.label +'</label>&nbsp;');
-			}
+		$.each(datasets.checkbox, function(key, val) {
+			choiceContainer.append('<label><input type="checkbox" name="'+ key +
+				'" checked="checked" id="op'+ key +'"/>'+ val.label +'</label>&nbsp;');
 		});
 		choiceContainer.find("input").click(plotAccordingToChoices);
 		plotAccordingToChoices();
@@ -121,16 +120,11 @@ function showTooltip(x, y, color, contents) {
 }
 
 function plotAccordingToChoices() {
-	var data = [];
-	$.each( datasets, function(key, val) {
-		if (!val.checkbox){
-			data.push(datasets[key]);
-		}
-	});
+	var data = [datasets.ob];
 	choiceContainer.find("input:checked").each(function () {
 		var key = $(this).attr("name");
-		if (key && datasets[key]) {
-			data.push(datasets[key]);
+		if (key && datasets.checkbox[key]) {
+			data.push(datasets.checkbox[key]);
 		}
 	});
 	if (data.length > 0) {

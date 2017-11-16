@@ -31,8 +31,7 @@ function getGraphData() {
 			"data"		=> array(), 
 			"color"		=> "#F5F5F5", 
 			"lines"		=> array( "show" => true ),
-			"dashes"	=> array( "show" => true, "lineWidth" => 1, "dashLength" => array( 10, 30 ) ),
-			"checkbox"	=> false
+			"dashes"	=> array( "show" => true, "lineWidth" => 1, "dashLength" => array( 10, 30 ) )
 		);
 
 		$dtAgora = date("Y-m-d");
@@ -73,6 +72,8 @@ function getGraphData() {
 	  ORDER BY CD_ITEM_INTERNO
 	", array($membroID) );
 	if (!$rsCls->EOF):
+		$arr["checkbox"] = array();
+
 		foreach($rsCls as $j => $lnc):
 			$result = $GLOBALS['conn']->Execute("
 				SELECT X.DT_ASSINATURA, Y.QTD, COUNT(*) AS QT
@@ -88,21 +89,18 @@ function getGraphData() {
 			", array($membroID, $lnc["ID_TAB_APREND"]) );
 			if (!$result->EOF):
 				$qtDt = 0;
-				
-				$iA = "apr".$lnc["ID_TAB_APREND"];
 
-				$arr[$iA] = array( 
+				$arr["checkbox"][$lnc["ID_TAB_APREND"]] = array( 
 					"label"		=> "&nbsp;".titleCase($lnc["DS_ITEM"]), 
 					"data"		=> array(), 
 					"color"		=> $lnc["CD_COR"], 
-					"lines"		=> array( "show" => true, "fill" => true ),
-					"checkbox"	=> true
+					"lines"		=> array( "show" => true, "fill" => true )
 				);
-				$arr[$iA]["data"][] = array(strtotime($dtInicio)."000", $qtDt );
+				$arr["checkbox"][$lnc["ID_TAB_APREND"]]["data"][] = array(strtotime($dtInicio)."000", $qtDt );
 
 				foreach($result as $k => $line):
 					$qtDt += $line["QT"];
-					$arr[$iA]["data"][] = array( 
+					$arr["checkbox"][$lnc["ID_TAB_APREND"]]["data"][] = array( 
 						strtotime($line["DT_ASSINATURA"])."000",
 						floor((100/$line["QTD"])*$qtDt)
 					);

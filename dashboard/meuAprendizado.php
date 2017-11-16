@@ -28,16 +28,18 @@ $membroID = $_SESSION['USER']['id_cad_pessoa'];
 		<a id="mestrados"></a><h3 class="page-header">Meu aprendizado</h3>
 	</div>
 </div>
-<div class="row">
-	<div class="col-lg-12">
-		<h4 class="page-header">An&aacute;lise gr&aacute;fica de <?echo date("Y");?></h4>
-		<div id="content">
-			<div id="placeholder" style="width:100%;height:400px"></div>
-			<div id="choices" style="width:100%"></div>
+<div id="divGraph" style="display:none">
+	<div class="row">
+		<div class="col-lg-12">
+			<h4 class="page-header">An&aacute;lise gr&aacute;fica de <?echo date("Y");?></h4>
+			<div id="content">
+				<div id="placeholder" style="width:100%;height:400px"></div>
+				<div id="choices" style="width:100%"></div>
+			</div>
 		</div>
 	</div>
+	<hr/>
 </div>
-<hr/>
 <div class="row">
 <?php
 $result = $GLOBALS['conn']->Execute("
