@@ -100,6 +100,7 @@ if (!$result->EOF):
 				$pct = floor( ( $qtd / $qtdReq ) * 100);
 				fItemAprendizado(array(
 					"classPanel" => getClass( $pct ),
+					"classSize" => "col-md-12 col-xs-12 col-sm-12 col-lg-6 col-xl-3",
 					"leftIcon" => $icon, 
 					"value" => "$pct%", 
 					"title" => titleCase( $fields["DS_ITEM"] ), 

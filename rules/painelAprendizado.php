@@ -283,7 +283,7 @@ function getClasses( $parameters ) {
 	", array( $id, "CL" ) );
 	if (!$rs->EOF):
 		$str .= "<div class=\"row\">";
-		$str .= "<div class=\"panel panel-warning\">";
+		$str .= "<div class=\"panel panel-warning\" style=\"padding-bottom:5px\">";
 		$str .= "<div class=\"panel-heading\" style=\"padding:3px 10px\"><b>Classes em Andamento</b></div>";
 		$str .= "<div class=\"panel-body\" style=\"padding:5px 10px\">";
 				
@@ -308,7 +308,7 @@ function getClasses( $parameters ) {
 
 			$str .= "<div class=\"row\">";
 			$str .= "<div class=\"col-lg-12\">";
-			$str .= "<div name=\"progress\" cad-id=\"$id\" req-id=\"$tabAprID\">";
+			$str .= "<div name=\"progress\" cad-id=\"$id\" req-id=\"$tabAprID\" style=\"padding-top:10px\">";
 			$str .= "<label class=\"control-label\"><i class=\"".getIconAprendizado( $det["TP_ITEM"], $det["CD_AREA_INTERNO"] )."\"></i>&nbsp;".titleCase($det["DS_ITEM"])." ($qtdReq assinaturas)</label>";
 			$str .= "<div class=\"progress\" style=\"margin-bottom:0px;cursor:pointer\">";
 			$str .= "<div class=\"progress-bar progress-bar-success\" role=\"progressbar\" style=\"width:$pctC%\">$pctC% ($qtd)</div>";
@@ -338,7 +338,7 @@ function getClasses( $parameters ) {
 	", array( $id, "CL" ) );
 	if (!$rs->EOF):
 		$str .= "<div class=\"row\">";
-		$str .= "<div class=\"panel panel-warning\">";
+		$str .= "<div class=\"panel panel-warning\" style=\"padding-bottom:5px\">";
 		$str .= "<div class=\"panel-heading\" style=\"padding:3px 10px\"><b>Classes Pendentes de Avalia&ccedil;&atilde;o Regional</b></div>";
 		$str .= "<div class=\"panel-body\" style=\"padding:5px 10px\">";
 		
@@ -367,7 +367,7 @@ function getClasses( $parameters ) {
 			", array( $id, "CL" ) );
 	if (!$rs->EOF):
 		$str .= "<div class=\"row\">";
-		$str .= "<div class=\"panel panel-success\">";
+		$str .= "<div class=\"panel panel-success\" style=\"padding-bottom:5px\">";
 		$str .= "<div class=\"panel-heading\" style=\"padding:3px 10px\"><b>Classes Pendentes de Investidura</b></div>";
 		$str .= "<div class=\"panel-body\" style=\"padding:5px 10px\">";
 		
@@ -430,9 +430,9 @@ function getClasses( $parameters ) {
 function fGetDetailClass( $class, $titulo, $icon, $result ) {
 	$str = "";
 	if (!$result->EOF):
-		$str .= "<div class=\"col-lg-6 col-xs-6\">";
+		$str .= "<div class=\"col-lg-12 col-xs-12 col-md-12 col-sm-12\">";
 		$str .= "<div class=\"row\">";
-		$str .= "<div class=\"panel $class\">";
+		$str .= "<div class=\"panel $class\" style=\"margin-bottom:1px\">";
 		$str .= "<div class=\"panel-heading\" style=\"padding:3px 10px\"><i class=\"fa $icon\" aria-hidden=\"true\"></i>&nbsp;$titulo</div>";
 		$str .= "<div class=\"panel-body\" style=\"padding:5px 10px\">";
 		$areaAtu = "";
@@ -488,6 +488,17 @@ function getPendentes( $parameters ) {
 
 	$result = $GLOBALS['conn']->Execute("
 		SELECT CD_REQ_INTERNO, CD_AP_AREA, DS_AP_AREA, DS
+		FROM CON_APR_PESSOA
+		WHERE ID_CAD_PESSOA = ?
+		AND ID_TAB_APREND = ?
+		AND DT_ASSINATURA IS NULL
+		AND DT_CONCLUSAO IS NULL
+	ORDER BY CD_REQ_INTERNO
+	", array( $parameters["id"], $parameters["req"] ) );
+	$str .= fGetDetailClass("panel-danger","Itens Pendentes","fa-frown-o",$result);
+
+	$result = $GLOBALS['conn']->Execute("
+		SELECT CD_REQ_INTERNO, CD_AP_AREA, DS_AP_AREA, DS
 		  FROM CON_APR_PESSOA
 		 WHERE ID_CAD_PESSOA = ?
 		   AND ID_TAB_APREND = ?
@@ -497,16 +508,6 @@ function getPendentes( $parameters ) {
 	", array( $parameters["id"], $parameters["req"] ) );
 	$str .= fGetDetailClass("panel-success","Itens Conclu&iacute;dos","fa-smile-o",$result);
 
-	$result = $GLOBALS['conn']->Execute("
-		SELECT CD_REQ_INTERNO, CD_AP_AREA, DS_AP_AREA, DS
-		  FROM CON_APR_PESSOA
-		 WHERE ID_CAD_PESSOA = ?
-		   AND ID_TAB_APREND = ?
-		   AND DT_ASSINATURA IS NULL
-		   AND DT_CONCLUSAO IS NULL
-	  ORDER BY CD_REQ_INTERNO
-	", array( $parameters["id"], $parameters["req"] ) );
-	$str .= fGetDetailClass("panel-danger","Itens Pendentes","fa-frown-o",$result);
 
 	$arr["pend"] = $str;
 	return $arr;
