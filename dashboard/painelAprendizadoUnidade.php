@@ -79,7 +79,7 @@ $result = $GLOBALS['conn']->Execute("
 	  FROM APR_HISTORICO ah
 	INNER JOIN CON_ATIVOS at ON (at.ID = ah.ID_CAD_PESSOA)
 	INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
-	 WHERE ah.DT_CONCLUSAO IS NULL AND ta.TP_ITEM = ?
+	 WHERE ah.DT_CONCLUSAO IS NULL AND ta.TP_ITEM = ?". (!empty($where)?" AND ($where)":"")." 
 	  GROUP BY ta.CD_AREA_INTERNO DESC
 ", array("CL"));
 if (!$result->EOF):
@@ -117,7 +117,14 @@ if (!$result->EOF):
 	foreach ($result as $k => $line):
 		$icon = getIconAprendizado( $line["TP_ITEM"], $line["CD_AREA_INTERNO"], "fa-4x" );
 		$area = getMacroArea( $line["TP_ITEM"], $line["CD_AREA_INTERNO"] );
-		$color = (fStrStartWith($line["CD_ITEM_INTERNO"],"01-06") ? "#000000" : "#FFFFFF");
+
+		$style = null;
+		if ($line["TP_ITEM"] == "CL"):
+			$back = $line["CD_COR"];
+			$color = (fStrStartWith($line["CD_ITEM_INTERNO"],"01-06") ? "#000000" : "#FFFFFF");
+			$style = "color:$color;background-color:$back";
+		endif;
+
 		fItemAprendizado(array(
 			"classPanel" => "panel-info",
 			"leftIcon" => $icon, 
@@ -125,7 +132,7 @@ if (!$result->EOF):
 			"title" => titleCase( $line["DS_ITEM"] ), 
 			"strBL" => titleCase( $area ), 
 			"strBR" => "Inscritos", 
-			"style" => "color:$color;background-color:".$line["CD_COR"]
+			"style" => $style
 		));
 	endforeach;
 endif;

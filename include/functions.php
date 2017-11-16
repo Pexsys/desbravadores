@@ -618,24 +618,25 @@ function fItemAprendizado($aP) {
 		$aP["classSize"] = "col-md-6 col-xs-12 col-sm-6 col-lg-4 col-xl-3";
 	endif;
 	echo "<div class=\"".$aP["classSize"]."\"". (isset($aP["hint"]) ? " title=\"".$aP["hint"]."\"" : "") .">";
-	echo "  <div class=\"panel ".$aP["classPanel"]."\"";
+	echo "<div class=\"panel ".$aP["classPanel"]."\"";
 	if ( isset($aP["fields"]) ):
 		foreach ($aP["fields"] as $k => $i):
 		    echo " $k=\"$i\"";
 		endforeach;
-		echo "><div class=\"panel-heading\"". (isset($aP["style"])?" style=\"cursor:pointer;\"":" style=\"cursor:pointer;".$aP["style"]."\"").">";
-	else:
-		echo "><div class=\"panel-heading\"". (isset($aP["style"])?"":" style=\"".$aP["style"]."\"").">";
 	endif;
-	echo "	<div class=\"row\">
+	echo "><div class=\"panel-heading\"";
+	$style = (isset($aP["style"]) && !is_null($aP["style"]) ? $aP["style"] : "");
+	if ( isset($aP["fields"]) ):
+		$style .= (empty($style) ? "" : ";")."cursor:pointer";
+	endif;
+	echo (empty($style) ? "" : "style=\"$style\"") . "><div class=\"row\">
 				<div class=\"col-xs-3\"><i class=\"".$aP["leftIcon"]."\"></i></div>
 				<div class=\"col-xs-9 text-right\">
 					<div class=\"huge\">".$aP["value"]."</div>
 				</div>
 				<div class=\"col-xs-12 text-right\">".$aP["title"]."</div>
 			</div>";
-
-	echo "	</div>";
+	echo "</div>";
 	if ( isset($aP["fields"]) ):
 		echo "<div id=\"detalhes\" class=\"panel-body panel-collapse collapse\"></div>";
 	endif;
