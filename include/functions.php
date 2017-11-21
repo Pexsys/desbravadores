@@ -110,6 +110,7 @@ function fTipoAlvo( $pTipoAlvo ) {
 
 function fHeaderPage( $aCssFiles = NULL, $aJsFiles = NULL ){
 ?>
+<!DOCTYPE html>
 <html>
 <head>
 <title>Clube Pioneiros - IASD Capão Redondo</title>
