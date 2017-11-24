@@ -192,7 +192,7 @@ class LISTAINVESTIDURADSA extends TCPDF {
 $pdf = new LISTAINVESTIDURADSA();
 $pdf->newPage();
 
-$request = fRequest("filter");
+$request = fRequest("cmFiltro");
 $filter = implode(",",array_map("fArrayStr", explode(",",$request)));
 $innerJoinDA = ($request == "null" || empty($request) || empty($filter) ? "" : " AND ah.DT_AVALIACAO IN ($filter)");
 

@@ -24,7 +24,7 @@ function rulesGeracao( obj ){
 		.attr('report-id', obj.val() )
 		.attr('report-cmpl', "" );
 	
-	var show = obj.find(":selected").attr('show'); 
+	var show = obj.find(":selected").attr('show');
 	if (show !== undefined) {
 		$("#"+show).visible(true);
 		$("#btnGerar").attr('report-cmpl', $("#"+show).find(".selectpicker").attr("id") );
