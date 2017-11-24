@@ -188,11 +188,7 @@ $(document).ready(function(){
 	});
 
 	$('#cmLista').change(function(){
-		$("[name=rowFilter]").visible(false);
-		var show = $(this).find(":selected").attr('show'); 
-		if (show !== undefined) {
-			$("#"+show).visible(true);
-		}
+		rulesGeracao( $(this) );
 	});
 
 	$("#printForm")
@@ -214,28 +210,6 @@ $(document).ready(function(){
 				valid: 'glyphicon glyphicon-ok',
 				invalid: 'glyphicon glyphicon-remove',
 				validating: 'glyphicon glyphicon-refresh'
-			}
-		})
-		.submit( function(event) {
-			event.preventDefault();
-			var opt = $("#cmLista").val();
-			if (opt !== ''){
-				var url = jsLIB.rootDir+'report/';
-				if (opt == "LC-ALM-AREA"){
-					url += 'geraListaComprasAlmArea.php?fc=N&';
-				} else if (opt == "LC-ALM-COMP"){
-					url += 'geraListaComprasAlmArea.php?fc=S&';
-				} else if (opt == "LC-ALM-GAVETA"){
-					url += 'geraListaComprasAlmGaveta.php?';
-				} else if (opt == "LC-MDA"){
-					url += 'geraListaComprasMDA.php?';
-				} else if (opt == "LC-DSA"){
-					url += 'geraListaInvestDSA.php?';
-				} else if (opt == "LC-SEC"){
-					url += 'geraListaInvestSec.php?';
-				}
-				url += 'filter='+$("#cmFiltro").val()
-				window.open(url,'_blank','top=50,left=50,height=750,width=550,menubar=no,status=no,titlebar=no',true);
 			}
 		})
 	;
@@ -404,7 +378,19 @@ $(document).ready(function(){
 				}
 			]
 	    });
-	});	
+	});
+
+	$("#btnGerar").click( function(e) {
+		var opt = $(this).attr('report-id');
+		var cmpl = jsLIB.getURIFields( $("#printForm") );
+		if (opt){
+			url = jsLIB.rootDir+'report/'+opt;
+			if (cmpl){
+				url += ( opt.substr(opt.length-4,4) == ".php" ? "?" : "&")+cmpl;
+			}
+			window.open(url,'_blank','top=50,left=50,height=750,width=550,menubar=no,status=no,titlebar=no',true);
+		}
+	});
 	
 	$('#comprasDatatable tbody').on('click', 'tr', function () {
 		$(this).toggleClass('selected');
@@ -413,7 +399,21 @@ $(document).ready(function(){
 	});	
 	ruleBtnDelete(false);
 	ruleBtnEdit(false);
+
+
 });
+
+function rulesGeracao( obj ){
+	$("[name=rowFilter]").visible(false);
+	$("#btnGerar")
+		.attr('report-id', obj.val() );
+	
+	var show = obj.find(":selected").attr('show');
+	if (show !== undefined) {
+		$("#"+show).visible(true);
+	}
+	$("#btnGerar").visible( $("#cbListagem").val() !== '' );
+}
 
 function ruleBtnDelete( force ){
 	var data = dataTable.rows('.selected').data();

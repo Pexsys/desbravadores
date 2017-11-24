@@ -224,6 +224,17 @@ var jsLIB = {
 		});
 		return retorno;
 	},
+
+	getURIFields : function( frm ) {
+		var retorno = "";
+		frm.find( $('[field]') ).each( function() {
+			var value = jsLIB.getValueFromField($(this));
+			if (value){
+				retorno += (retorno.length == 0?"":"&") + $(this).attr("field") +"="+ value;
+			}
+		});
+		return retorno;
+	},
 	
 	getValueFromField : function( inputField ) {
 		var value = "";

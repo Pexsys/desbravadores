@@ -208,7 +208,7 @@ class LISTAINVESTIDURASEC extends TCPDF {
 $pdf = new LISTAINVESTIDURASEC();
 $pdf->newPage();
 
-$request = fRequest("filter");
+$request = fRequest("cmFiltro");
 $filter = implode(",",array_map("fArrayStr", explode(",",$request)));
 $innerJoinDA = ($request == "null" || empty($request) || empty($filter) ? "" : "INNER JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = cc.ID_TAB_APREND AND ah.ID_CAD_PESSOA = cc.ID_CAD_PESSOA AND ah.DT_AVALIACAO IN ($filter))");
 

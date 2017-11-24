@@ -1,5 +1,19 @@
 <?php
 @require_once("../include/filters.php");
+
+function filtroDatasAvaliacao(){
+	$result = $GLOBALS['conn']->Execute("
+		SELECT DISTINCT ah.DT_AVALIACAO
+		FROM APR_HISTORICO ah
+		INNER JOIN CON_ATIVOS ca ON (ca.ID = ah.ID_CAD_PESSOA)
+		WHERE ah.DT_AVALIACAO IS NOT NULL
+		AND (ah.DT_INVESTIDURA IS NULL OR YEAR(ah.DT_AVALIACAO) = YEAR(NOW()))
+		ORDER BY 1 DESC
+	");
+	foreach($result as $k => $f):
+		echo("<option value=\"".$f["DT_AVALIACAO"]."\"". ($f["DT_AVALIACAO"] <= date('Y-m-d') ? " selected" : "") .">". strftime("%d/%m/%Y",strtotime($f['DT_AVALIACAO'])) ."</option>");
+	endforeach;
+}
 ?>
 <style>
 .btn-default.active { 
@@ -68,7 +82,7 @@
 
 <div class="modal fade" id="printModal" role="dialog" data-backdrop="static"> <!---->
 	<form method="post" id="printForm">
-		<div class="modal-dialog"> <!---->
+		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button aria-hidden="true" data-dismiss="modal" class="close" type="button" id="btnX">&times;</button>
@@ -82,14 +96,14 @@
 							<div>
 								<div class="row">
 									<div class="form-group col-xs-12">
-										<select field="cd_lista" name="cmLista" id="cmLista" opt-value="cd" opt-label="ds" class="selectpicker form-control input-sm" data-container="body" data-width="100%">
+										<select name="cmLista" id="cmLista" opt-value="cd" opt-label="ds" class="selectpicker form-control input-sm" data-container="body" data-width="100%">
 										    <option value=""></option>
-											<option value="LC-ALM-AREA">LISTA DE COMPRAS - ALMOXARIFADO DA ASSOCIA&Ccedil;&Atilde;O - POR &Aacute;REA</option>
-											<option value="LC-ALM-GAVETA">LISTA DE COMPRAS - ALMOXARIFADO DA ASSOCIA&Ccedil;&Atilde;O - POR GAVETA</option>
-											<option value="LC-ALM-COMP">LISTA DE COMPRAS - ITENS COMPRADOS - POR &Aacute;REA</option>
-											<option value="LC-MDA" show="divFilter">LISTA DE COMPRAS - SECRETARIA MDA ASSOCIA&Ccedil;&Atilde;O / EQUIPE REGIONAL</option>
-											<option value="LC-DSA" show="divFilter">LISTA DE INVESTIDURAS - CADASTRO DSA</option>
-											<option value="LC-SEC" show="divFilter">LISTA DE INVESTIDURAS - SECRETARIA DO CLUBE</option>
+											<option value="geraListaComprasAlmArea.php?fc=N">LISTA DE COMPRAS - ALMOXARIFADO DA ASSOCIA&Ccedil;&Atilde;O - POR &Aacute;REA</option>
+											<option value="geraListaComprasAlmGaveta.php">LISTA DE COMPRAS - ALMOXARIFADO DA ASSOCIA&Ccedil;&Atilde;O - POR GAVETA</option>
+											<option value="geraListaComprasAlmArea.php?fc=S">LISTA DE COMPRAS - ITENS COMPRADOS - POR &Aacute;REA</option>
+											<option value="geraListaComprasMDA.php" show="divMDA">LISTA DE COMPRAS - SECRETARIA MDA ASSOCIA&Ccedil;&Atilde;O / EQUIPE REGIONAL</option>
+											<option value="geraListaInvestDSA.php" show="divFilter">LISTA DE INVESTIDURAS - CADASTRO DSA</option>
+											<option value="geraListaInvestSec.php" show="divFilter">LISTA DE INVESTIDURAS - SECRETARIA DO CLUBE</option>
 										</select>
 									</div>
 								</div>
@@ -104,31 +118,51 @@
 							<div>
 								<div class="row">
 									<div class="form-group col-xs-12">
-										<select name="cmFiltro" id="cmFiltro" class="selectpicker form-control input-sm" multiple data-actions-box="true" data-selected-text-format="count > 3" data-container="body" data-width="100%">
-											<?php
-											$result = $GLOBALS['conn']->Execute("
-												SELECT DISTINCT ah.DT_AVALIACAO
-												FROM APR_HISTORICO ah
-												INNER JOIN CON_ATIVOS ca ON (ca.ID = ah.ID_CAD_PESSOA)
-												WHERE ah.DT_AVALIACAO IS NOT NULL
-												  AND (ah.DT_INVESTIDURA IS NULL OR YEAR(ah.DT_AVALIACAO) = YEAR(NOW()))
-												ORDER BY 1 DESC
-											");
-											foreach($result as $k => $f):
-												echo("<option value=\"".$f["DT_AVALIACAO"]."\"". ($f["DT_AVALIACAO"] <= date('Y-m-d') ? " selected" : "") .">". strftime("%d/%m/%Y",strtotime($f['DT_AVALIACAO'])) ."</option>");
-											endforeach;
-											?>
+										<select field="cmFiltro" class="selectpicker form-control input-sm" multiple data-actions-box="true" data-selected-text-format="count > 3" data-container="body" data-width="100%">
+											<?php filtroDatasAvaliacao();?>
 										</select>
 									</div>
 								</div>
 							</div>
 						</div>	
 					</div>
+					<div class="panel panel-warning" name="rowFilter" id="divMDA" style="display:none">
+							<div class="panel-heading" style="padding:4px 10px 0px">
+								<label>Filtro - Datas de Avaliação</label>
+							</div>
+							<div class="panel-body" style="padding:4px 10px 0px">
+								<div>
+									<div class="row">
+										<div class="form-group col-xs-12">
+											<select field="cmFiltroMDA" class="selectpicker form-control input-sm" multiple data-actions-box="true" data-selected-text-format="count > 3" data-container="body" data-width="100%">
+												<?php filtroDatasAvaliacao();?>
+											</select>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="panel-heading" style="padding:4px 10px 0px">
+								<label>Filtro - Investidos</label>
+							</div>
+							<div class="panel-body" style="padding:4px 10px 0px">
+								<div>
+									<div class="row">
+										<div class="form-group col-xs-12">
+											<select field="cmINV" class="selectpicker form-control input-sm" data-container="body" data-width="100%">
+												<option value=""></option>
+												<option value="S">SIM</option>
+												<option value="N" selected>N&Atilde;O</option>
+											</select>
+										</div>
+									</div>
+								</div>
+							</div>
+					</div>
 				</div>
 				<div class="panel-footer">
 					<div class="row">
 						<div class="col-lg-12">
-							<button type="submit" class="btn btn-success pull-right"><i class="fa fa-file-pdf-o"></i>&nbsp;Gerar PDF</button>
+							<button id="btnGerar" class="btn btn-success pull-right"><i class="fa fa-file-pdf-o"></i>&nbsp;Gerar PDF</button>
 						</div>	
 					</div>	
 				</div>
