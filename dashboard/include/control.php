@@ -70,5 +70,6 @@ function fFooterDashboardScript(){
 <script src="<?php echo $GLOBALS['pattern']->getVD();?>js/notifications.lib.js?<?php echo microtime();?>"></script>
 <script src="<?php echo $GLOBALS['pattern']->getVD();?>dashboard/js/index.js?<?php echo microtime();?>"></script>
 <?php
+@require_once("../../include/_phpjsVD.php");
 }
 ?>

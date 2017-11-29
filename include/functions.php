@@ -8,7 +8,7 @@ mb_http_output('UTF-8');
 mb_http_input('UTF-8');
 
 global $pattern, $conn, $DBType, $DBServerHost, $DBUser, $DBPassWord, $DBDataBase, $VirtualDir;
-@require_once("patterns.php");
+@require_once("_patterns.php");
 @require_once("_core/lib/adodb5/adodb.inc.php");
 @require_once("_core/lib/dbconnect/_base.php");
 
@@ -118,7 +118,7 @@ function fHeaderPage( $aCssFiles = NULL, $aJsFiles = NULL ){
 <link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/css/bootstrap-select.min.css" rel="stylesheet" type="text/css"/>
 <link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/css/modern-business.css" rel="stylesheet" type="text/css"/>
 <link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
-<?php 
+<?php
 if (isset($aCssFiles)):
 	foreach ($aCssFiles as &$file):
 	?><link href="<?php echo $file;?>" rel="stylesheet" type="text/css"><?php 
@@ -133,6 +133,7 @@ endif;
 <script type="text/javascript" src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/bootstrap-dialog.min.js"></script>
 <script type="text/javascript" src="<?php echo $GLOBALS['pattern']->getVD();?>js/functions.lib.js"></script>
 <?php
+@require_once("_phpjsVD.php");
 if (isset($aJsFiles)):
 	foreach ($aJsFiles as &$file):
 	?><script type="text/javascript" src="<?php echo $file;?>"></script><?php
