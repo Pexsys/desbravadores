@@ -8,13 +8,9 @@ mb_http_output('UTF-8');
 mb_http_input('UTF-8');
 
 global $pattern, $conn, $DBType, $DBServerHost, $DBUser, $DBPassWord, $DBDataBase, $VirtualDir;
-@require_once("_variables.php");
+@require_once("patterns.php");
 @require_once("_core/lib/adodb5/adodb.inc.php");
 @require_once("_core/lib/dbconnect/_base.php");
-
-function fClubeID() {
-    return $GLOBALS['pattern']["clubeDS"];
-}
 
 function fGetPerfil( $cd = NULL ) {
 	$arr = array();
@@ -52,7 +48,7 @@ function verificaPerfil(){
 	$temPerfil = isset($_SESSION['USER']['ssid']);
 	if (!$temPerfil):
 		session_destroy();
-		header("Location: ".$GLOBALS['VirtualDir']."index.php");
+		header("Location: ".$GLOBALS['pattern']->getVD()."index.php");
 		exit;
 	endif;
 }
@@ -117,11 +113,11 @@ function fHeaderPage( $aCssFiles = NULL, $aJsFiles = NULL ){
 <?php @require_once("_metaheader.php");?>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link href="<?php echo $GLOBALS['VirtualDir'];?>include/_core/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
-<link href="<?php echo $GLOBALS['VirtualDir'];?>include/_core/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css"/>
-<link href="<?php echo $GLOBALS['VirtualDir'];?>include/_core/css/bootstrap-select.min.css" rel="stylesheet" type="text/css"/>
-<link href="<?php echo $GLOBALS['VirtualDir'];?>include/_core/css/modern-business.css" rel="stylesheet" type="text/css"/>
-<link href="<?php echo $GLOBALS['VirtualDir'];?>include/_core/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+<link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+<link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css"/>
+<link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/css/bootstrap-select.min.css" rel="stylesheet" type="text/css"/>
+<link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/css/modern-business.css" rel="stylesheet" type="text/css"/>
+<link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
 <?php 
 if (isset($aCssFiles)):
 	foreach ($aCssFiles as &$file):
@@ -129,13 +125,13 @@ if (isset($aCssFiles)):
 	endforeach;
 endif;
 ?>
-<script type="text/javascript" src="<?php echo $GLOBALS['VirtualDir'];?>include/_core/js/jquery.min.js"></script>
-<script type="text/javascript" src="<?php echo $GLOBALS['VirtualDir'];?>include/_core/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="<?php echo $GLOBALS['VirtualDir'];?>include/_core/js/bootstrap-select.min.js"></script>
-<script type="text/javascript" src="<?php echo $GLOBALS['VirtualDir'];?>include/_core/js/formValidation/formValidation.min.js"></script>
-<script type="text/javascript" src="<?php echo $GLOBALS['VirtualDir'];?>include/_core/js/formValidation/bootstrap.min.js"></script>
-<script type="text/javascript" src="<?php echo $GLOBALS['VirtualDir'];?>include/_core/js/bootstrap-dialog.min.js"></script>
-<script type="text/javascript" src="<?php echo $GLOBALS['VirtualDir'];?>js/functions.lib.js"></script>
+<script type="text/javascript" src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/jquery.min.js"></script>
+<script type="text/javascript" src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/bootstrap-select.min.js"></script>
+<script type="text/javascript" src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/formValidation/formValidation.min.js"></script>
+<script type="text/javascript" src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/formValidation/bootstrap.min.js"></script>
+<script type="text/javascript" src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/bootstrap-dialog.min.js"></script>
+<script type="text/javascript" src="<?php echo $GLOBALS['pattern']->getVD();?>js/functions.lib.js"></script>
 <?php
 if (isset($aJsFiles)):
 	foreach ($aJsFiles as &$file):
@@ -295,7 +291,7 @@ function fDifDatas($pDataIni,$pDataFim,$pRetorno){
 }
 
 function fMontaCarrousel($relativePath,$extentions){
-	$capa = $GLOBALS['VirtualDir'] . $relativePath;
+	$capa = $GLOBALS['pattern']->getVD() . $relativePath;
 
 	$document_root = $_SERVER['DOCUMENT_ROOT'];
 	$fisico_capas = $aDocumentos[$nLocais][0];
@@ -375,8 +371,8 @@ function fMontaCarrousel($relativePath,$extentions){
 }
 
 function fListDocumentos($relativePath,$title,$extentions,$classPanel,$tagItem){
-	$capa = $GLOBALS['VirtualDir'] . $relativePath;
-	$capa_img = $GLOBALS['VirtualDir'] . $relativePath."img/";
+	$capa = $GLOBALS['pattern']->getVD() . $relativePath;
+	$capa_img = $GLOBALS['pattern']->getVD() . $relativePath."img/";
 	
 	$document_root = $_SERVER['DOCUMENT_ROOT'];
 	$fisico_capas = dirname(dirname(__FILE__)) . "/$relativePath";
@@ -461,8 +457,8 @@ function fListDocumentos($relativePath,$title,$extentions,$classPanel,$tagItem){
 }
 
 function fListFanfarra($relativePath,$title,$extentions){
-	$capa = $GLOBALS['VirtualDir'] . $relativePath;
-	$capa_img = $GLOBALS['VirtualDir'] . "img/";
+	$capa = $GLOBALS['pattern']->getVD() . $relativePath;
+	$capa_img = $GLOBALS['pattern']->getVD() . "img/";
 
 	$document_root = $_SERVER['DOCUMENT_ROOT'];
 	$fisico_repertorio = $relativePath;

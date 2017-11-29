@@ -92,7 +92,7 @@ class CHAMADA extends TCPDF {
 		
 		$this->setXY(20,15);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 7);
-		$this->Cell(185, 5, fClubeID(), 0, false, 'C', false, false, false, false, false, false, 'T', 'M');
+		$this->Cell(185, 5, $GLOBALS['pattern']->getCDS(), 0, false, 'C', false, false, false, false, false, false, 'T', 'M');
 		
 		$this->cdates = $this->mesAno->RecordCount();
 		$this->leftMin = 205-max($this->cdates*$this->xq, 40);

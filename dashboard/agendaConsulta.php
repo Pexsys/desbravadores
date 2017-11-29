@@ -13,4 +13,4 @@
 	<hr/>
 	<div class="row" id="content"></div>
 </form>
-<script src="<?php echo $GLOBALS['VirtualDir'];?>dashboard/js/agendaConsulta.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo $GLOBALS['pattern']->getVD();?>dashboard/js/agendaConsulta.js<?php echo "?".microtime();?>"></script>

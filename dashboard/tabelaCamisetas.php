@@ -58,4 +58,4 @@
 		</div>
 	</div>
 </div>
-<script src="<?php echo $GLOBALS['VirtualDir'];?>dashboard/js/tabelaCamisetas.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo $GLOBALS['pattern']->getVD();?>dashboard/js/tabelaCamisetas.js<?php echo "?".microtime();?>"></script>

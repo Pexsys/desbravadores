@@ -37,4 +37,4 @@
 		<br/>
 	</div>
 </div>
-<script src="<?php echo $GLOBALS['VirtualDir'];?>dashboard/js/consultaAniversarios.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo $GLOBALS['pattern']->getVD();?>dashboard/js/consultaAniversarios.js<?php echo "?".microtime();?>"></script>

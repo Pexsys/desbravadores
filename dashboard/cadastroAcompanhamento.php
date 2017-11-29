@@ -85,5 +85,5 @@
 		</div>
 	</div>
 </div>	
-<script src="<?php echo $GLOBALS['VirtualDir'];?>js/readdata.lib.js<?php echo "?".microtime();?>"></script>
-<script src="<?php echo $GLOBALS['VirtualDir'];?>dashboard/js/cadastroAcompanhamento.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo $GLOBALS['pattern']->getVD();?>js/readdata.lib.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo $GLOBALS['pattern']->getVD();?>dashboard/js/cadastroAcompanhamento.js<?php echo "?".microtime();?>"></script>
