@@ -113,13 +113,13 @@ class CHAMADA extends TCPDF {
 		$this->SetTextColor($colorR,$colorG,$colorB);
 		$this->setCellPaddings(0,0,0,0);
 		$this->mesAtu = strftime("%m",strtotime($this->mesAno->fields["DTHORA_EVENTO_INI"])); 
-		$this->Cell(205-$this->leftMin, 8, titleCase(strftime("%B/%Y",strtotime($this->mesAno->fields["DTHORA_EVENTO_INI"]))), 0, false, 'C', true);
+		$this->Cell(205-$this->leftMin, 8, titleCase(utf8_encode(strftime("%B/%Y",strtotime($this->mesAno->fields["DTHORA_EVENTO_INI"])))), 0, false, 'C', true);
 		$this->SetTextColor(0,0,0);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 5);
 		foreach ($this->mesAno as $k => $fm):
 			$hr = fDescHora($fm["DTHORA_EVENTO_INI"]);
 			$this->setXY($x,31);
-			$this->MultiCell($this->xq, 5, strftime("%d (%a)",strtotime($fm["DTHORA_EVENTO_INI"]))."\n$hr", 1, 'C', true, false, '', '', true, false, false, false, false);
+			$this->MultiCell($this->xq, 5, utf8_encode(strftime("%d (%a)",strtotime($fm["DTHORA_EVENTO_INI"])))."\n$hr", 1, 'C', true, false, '', '', true, false, false, false, false);
 			$x+=$this->xq;
 		endforeach;
 		$this->posY = 36;
