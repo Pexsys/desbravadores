@@ -290,5 +290,5 @@
 		</div>
 	</div>
 </div>
-<script src="<?php echo $GLOBALS['VirtualDir'];?>js/correios.lib.js<?php echo "?".microtime();?>"></script>
-<script src="<?php echo $GLOBALS['VirtualDir'];?>dashboard/js/cadastroMembros.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo $GLOBALS['pattern']->getVD();?>js/correios.lib.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo $GLOBALS['pattern']->getVD();?>dashboard/js/cadastroMembros.js<?php echo "?".microtime();?>"></script>

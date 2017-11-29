@@ -126,4 +126,4 @@ $classes = getDomainFilter( array( "type" => "C" ) );
 		<button id="btnGerar" class="btn btn-success pull-right"><i class="fa fa-print"></i>&nbsp;Gerar</button>
 	</div>
 </div>
-<script src="<?php echo $GLOBALS['VirtualDir'];?>dashboard/js/printListagens.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo $GLOBALS['pattern']->getVD();?>dashboard/js/printListagens.js<?php echo "?".microtime();?>"></script>

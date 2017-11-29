@@ -47,7 +47,7 @@ class ESPCR extends TCPDF {
 		if (!empty($this->params[0])):
 			$this->SetY(-20);
 			$this->SetFont(PDF_FONT_NAME_MAIN, 'I', 8);
-			$this->Cell(0, 10, fClubeID(), 0, false, 'C');
+			$this->Cell(0, 10, $GLOBALS['pattern']->getCDS(), 0, false, 'C');
 		endif;
 	}
 	

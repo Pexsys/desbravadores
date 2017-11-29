@@ -109,9 +109,9 @@ function login( $parameters ) {
 					array( $result->fields['ID_USUARIO'] ) );
 
 				if ( $pag == "READDATA" ):
-					$arr['page'] = $GLOBALS['VirtualDir']."readdata.php";
+					$arr['page'] = $GLOBALS['pattern']->getVD()."readdata.php";
 				else:
-					$arr['page'] = $GLOBALS['VirtualDir']."dashboard/index.php";
+					$arr['page'] = $GLOBALS['pattern']->getVD()."dashboard/index.php";
 				endif;
 				$arr['login'] = true;
 			endif;

@@ -268,4 +268,4 @@ $autorizIcon = "fa fa-circle";
 	</form>
 </div>
 
-<script src="<?php echo $GLOBALS['VirtualDir'];?>dashboard/js/cadastroSaidas.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo $GLOBALS['pattern']->getVD();?>dashboard/js/cadastroSaidas.js<?php echo "?".microtime();?>"></script>

@@ -280,9 +280,9 @@ if (!$result->EOF):
 endif;
 ?>
 </div>
-<script src="<?php echo $GLOBALS['VirtualDir'];?>include/_core/js/flot/jquery.flot.min.js"></script>
-<script src="<?php echo $GLOBALS['VirtualDir'];?>include/_core/js/flot/jquery.flot.time.min.js"></script>    
-<script src="<?php echo $GLOBALS['VirtualDir'];?>include/_core/js/flot/jquery.flot.symbol.min.js"></script>
-<script src="<?php echo $GLOBALS['VirtualDir'];?>include/_core/js/flot/jquery.flot.resize.min.js"></script>
-<script src="<?php echo $GLOBALS['VirtualDir'];?>include/_core/js/flot/jquery.flot.dashes.js"></script>
-<script src="<?php echo $GLOBALS['VirtualDir'];?>dashboard/js/meuAprendizado.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/flot/jquery.flot.min.js"></script>
+<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/flot/jquery.flot.time.min.js"></script>    
+<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/flot/jquery.flot.symbol.min.js"></script>
+<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/flot/jquery.flot.resize.min.js"></script>
+<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/flot/jquery.flot.dashes.js"></script>
+<script src="<?php echo $GLOBALS['pattern']->getVD();?>dashboard/js/meuAprendizado.js<?php echo "?".microtime();?>"></script>

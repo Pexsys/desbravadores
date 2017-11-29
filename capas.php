@@ -4,16 +4,16 @@ fConnDB();
 
 fHeaderPage(
 	array(  
-		$GLOBALS['VirtualDir']."include/_core/css/datatable/dataTables.bootstrap.min.css",
-		$GLOBALS['VirtualDir']."include/_core/css/datatable/jquery.dataTables.min.css"
+		$GLOBALS['pattern']->getVD()."include/_core/css/datatable/dataTables.bootstrap.min.css",
+		$GLOBALS['pattern']->getVD()."include/_core/css/datatable/jquery.dataTables.min.css"
 	),
 	array( 
-		$GLOBALS['VirtualDir']."include/_core/js/slimscroll/jquery.slimscroll.min.js",
-		$GLOBALS['VirtualDir']."include/_core/js/datatable/jquery.dataTables.min.js",
-		$GLOBALS['VirtualDir']."include/_core/js/datatable/ZeroClipboard.js",
-		$GLOBALS['VirtualDir']."include/_core/js/datatable/dataTables.tableTools.min.js",
-		$GLOBALS['VirtualDir']."include/_core/js/datatable/dataTables.bootstrap.min.js",
-		$GLOBALS['VirtualDir']."js/capas.js?".microtime()
+		$GLOBALS['pattern']->getVD()."include/_core/js/slimscroll/jquery.slimscroll.min.js",
+		$GLOBALS['pattern']->getVD()."include/_core/js/datatable/jquery.dataTables.min.js",
+		$GLOBALS['pattern']->getVD()."include/_core/js/datatable/ZeroClipboard.js",
+		$GLOBALS['pattern']->getVD()."include/_core/js/datatable/dataTables.tableTools.min.js",
+		$GLOBALS['pattern']->getVD()."include/_core/js/datatable/dataTables.bootstrap.min.js",
+		$GLOBALS['pattern']->getVD()."js/capas.js?".microtime()
 	)
 );
 ?>

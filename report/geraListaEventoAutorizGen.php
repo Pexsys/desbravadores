@@ -66,7 +66,7 @@ class LISTAEVENTOAUTORIZGENERO extends TCPDF {
 		$this->setXY(20,$this->posY);
 		$this->SetTextColor(80,80,80);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 8);
-		$this->Cell(185, 5, fClubeID(), 0, false, 'C', false, false, false, false, false, false, 'T', 'M');
+		$this->Cell(185, 5, $GLOBALS['pattern']->getCDS(), 0, false, 'C', false, false, false, false, false, false, 'T', 'M');
 		$this->posY += 5;
 		
 		$this->setXY(20,$this->posY);

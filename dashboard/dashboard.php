@@ -93,22 +93,22 @@ function fDashBoard( $panelClass, $iconLeft, $query, $showZero, $titulo, $urlDet
 				UNION ALL 
 				SELECT 'CARGO/FUNÇÃO' AS INCONSIST FROM CON_ATIVOS WHERE CD_CARGO IS NULL OR LENGTH(CD_CARGO)<=1
 			) c",
-			false, "Pend&ecirc;ncias", $GLOBALS['VirtualDir']."dashboard/index.php?id=5&flt=PC&op=ALL" );
+			false, "Pend&ecirc;ncias", $GLOBALS['pattern']->getVD()."dashboard/index.php?id=5&flt=PC&op=ALL" );
 			
 		fDashBoard( "panel-green", "fa fa-child  fa-4x", 
 			"SELECT COUNT(*) AS qtd FROM CON_ATIVOS", 
-			true, "Ativos", $GLOBALS['VirtualDir']."dashboard/index.php?id=5" );
+			true, "Ativos", $GLOBALS['pattern']->getVD()."dashboard/index.php?id=5" );
 
 		fDashBoard( "panel-yellow", "fa fa-check-circle fa-4x", 
 			"SELECT COUNT(*) AS qtd FROM CON_ATIVOS WHERE dt_bat IS NULL",
-			false, "N&atilde;o Batizados", $GLOBALS['VirtualDir']."dashboard/index.php?id=5&flt=B&op=N" );
+			false, "N&atilde;o Batizados", $GLOBALS['pattern']->getVD()."dashboard/index.php?id=5&flt=B&op=N" );
 
 		fDashBoard( "panel-primary", "fa fa-thumbs-up fa-4x", 
 			"SELECT COUNT(*) AS qtd FROM CON_ATIVOS WHERE dt_bat IS NOT NULL",
-			false, "Batizados", $GLOBALS['VirtualDir']."dashboard/index.php?id=5&flt=B&op=S" );
+			false, "Batizados", $GLOBALS['pattern']->getVD()."dashboard/index.php?id=5&flt=B&op=S" );
 			
 		fDashBoard( "panel-info", "fa fa-info-circle fa-4x", 
 			"SELECT COUNT(*) AS qtd FROM CAD_PESSOA",
-			true, "Cadastrados", $GLOBALS['VirtualDir']."dashboard/index.php?id=5&flt=ALL" );
+			true, "Cadastrados", $GLOBALS['pattern']->getVD()."dashboard/index.php?id=5&flt=ALL" );
 	?>
 </div>

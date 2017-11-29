@@ -1,5 +1,5 @@
-<script type="text/javascript" src="<?php echo $GLOBALS['VirtualDir'];?>include/_core/js/jquery.sha1.js"></script>
-<script type="text/javascript" src="<?php echo $GLOBALS['VirtualDir'];?>js/login.js?<?php echo microtime();?>"></script>
+<script type="text/javascript" src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/jquery.sha1.js"></script>
+<script type="text/javascript" src="<?php echo $GLOBALS['pattern']->getVD();?>js/login.js?<?php echo microtime();?>"></script>
 <!-- Modal -->
 <div class="modal fade" id="myLoginModal">
 	<div class="modal-dialog modal-sm">

@@ -189,9 +189,9 @@ if (!$result->EOF):
 	echo "</div>";
 endif;
 ?>
-<script src="<?php echo $GLOBALS['VirtualDir'];?>include/_core/js/flot/jquery.flot.min.js"></script>
-<script src="<?php echo $GLOBALS['VirtualDir'];?>include/_core/js/flot/jquery.flot.resize.min.js"></script>
-<script src="<?php echo $GLOBALS['VirtualDir'];?>include/_core/js/flot/jquery.flot.axislabels.js"></script>
-<script src="<?php echo $GLOBALS['VirtualDir'];?>include/_core/js/flot/jquery.flot.labels.js"></script>
-<script src="<?php echo $GLOBALS['VirtualDir'];?>dashboard/js/aprendizadoFunctions.js<?php echo "?".microtime();?>"></script>
-<script src="<?php echo $GLOBALS['VirtualDir'];?>dashboard/js/painelAprendizadoUnidade.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/flot/jquery.flot.min.js"></script>
+<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/flot/jquery.flot.resize.min.js"></script>
+<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/flot/jquery.flot.axislabels.js"></script>
+<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/flot/jquery.flot.labels.js"></script>
+<script src="<?php echo $GLOBALS['pattern']->getVD();?>dashboard/js/aprendizadoFunctions.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo $GLOBALS['pattern']->getVD();?>dashboard/js/painelAprendizadoUnidade.js<?php echo "?".microtime();?>"></script>

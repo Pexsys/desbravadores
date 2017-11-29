@@ -232,4 +232,4 @@
 		</div>
 	</div>
 </div>
-<script src="<?php echo $GLOBALS['VirtualDir'];?>dashboard/js/agenda.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo $GLOBALS['pattern']->getVD();?>dashboard/js/agenda.js<?php echo "?".microtime();?>"></script>

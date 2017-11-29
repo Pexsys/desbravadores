@@ -87,11 +87,11 @@ if (!$result->EOF):
 	<?php
 endif;
 ?>
-<script src="<?php echo $GLOBALS['VirtualDir'];?>include/_core/js/flot/jquery.flot.min.js"></script>
-<script src="<?php echo $GLOBALS['VirtualDir'];?>include/_core/js/flot/jquery.flot.resize.min.js"></script>
-<script src="<?php echo $GLOBALS['VirtualDir'];?>include/_core/js/flot/jquery.flot.pie.min.js"></script>
-<script src="<?php echo $GLOBALS['VirtualDir'];?>include/_core/js/flot/jquery.flot.axislabels.js"></script>
-<script src="<?php echo $GLOBALS['VirtualDir'];?>include/_core/js/flot/jquery.flot.labels.js"></script>
-<script src="<?php echo $GLOBALS['VirtualDir'];?>include/_core/js/flot/jquery.flot.orderBars.js"></script>
-<script src="<?php echo $GLOBALS['VirtualDir'];?>dashboard/js/aprendizadoFunctions.js<?php echo "?".microtime();?>"></script>
-<script src="<?php echo $GLOBALS['VirtualDir'];?>dashboard/js/painelAprendizado.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/flot/jquery.flot.min.js"></script>
+<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/flot/jquery.flot.resize.min.js"></script>
+<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/flot/jquery.flot.pie.min.js"></script>
+<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/flot/jquery.flot.axislabels.js"></script>
+<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/flot/jquery.flot.labels.js"></script>
+<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/flot/jquery.flot.orderBars.js"></script>
+<script src="<?php echo $GLOBALS['pattern']->getVD();?>dashboard/js/aprendizadoFunctions.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo $GLOBALS['pattern']->getVD();?>dashboard/js/painelAprendizado.js<?php echo "?".microtime();?>"></script>

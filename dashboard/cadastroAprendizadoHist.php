@@ -46,4 +46,4 @@
 		<button class="btn btn-danger" id="btnDelHist"><i class="fa fa-trash-o"></i>&nbsp;Excluir</button>
 	</div>
 </div>
-<script src="<?php echo $GLOBALS['VirtualDir'];?>dashboard/js/cadastroAprendizadoHist.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo $GLOBALS['pattern']->getVD();?>dashboard/js/cadastroAprendizadoHist.js<?php echo "?".microtime();?>"></script>
