@@ -149,7 +149,7 @@ $.fn.selectpicker.defaults = {
 
 
 var jsLIB = {
-	rootDir : "/desbravadores/",
+	rootDir : "/",
 	parameters : {},
 	
 	watingDialog : new BootstrapDialog({
