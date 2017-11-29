@@ -70,7 +70,7 @@ $(document).ready(function(){
 	$("#addTagsForm").submit( function(e) {
 		e.preventDefault();
 		e.stopPropagation();
-		updateSaida();
+		update();
 	});
 	
 	$('#btnNovo').click(function(){
@@ -108,8 +108,9 @@ $(document).ready(function(){
 				var parameters = {
 					filtro: aValues
 				}	
-				var sd = jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/printTags.php", { MethodName : 'getClasse', data : parameters }, 'RETURN' );
-				jsLIB.populateOptions( $("#cbAprend"), sd );
+				jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/printTags.php", { MethodName : 'getClasse', data : parameters }, function(data){
+					jsLIB.populateOptions( $("#cbAprend"), data );
+				});
 			}
 			$($(this.options).not("[cl="+attrCL+"]")).each(function(){
 				$(this).attr('disabled', true);
@@ -132,7 +133,7 @@ $(document).ready(function(){
 	});
 	
 	$("#addList").click(function(){
-		updateSaida();
+		update();
 	});
 	
 	$('[tab-function]').on('click', function(event){
@@ -300,9 +301,10 @@ function modalDelete(sAct,sMsg){
 						action: sAct,
 						ids: tmp
 					};
-					jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/printTags.php", { MethodName : 'delete', data : parameter } );
-					dialogRef.close();
-					refreshAndButtons();
+					jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/printTags.php", { MethodName : 'delete', data : parameter }, function(data){
+						dialogRef.close();
+						refreshAndButtons();
+					});
 				}
 			}
 		]
@@ -329,35 +331,38 @@ function populateFilters(){
 		filtro: 'A',
 		filters: jsFilter.jSON()
 	}	
-	var mb = jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/printTags.php", { MethodName : 'getMembrosFilter', data : parameters }, 'RETURN' );
-	if ( mb.filter && mb.filter.length > 0 ) {
-		$("#cbNomes").selectpicker('deselectAll');
-		$("#cbNomes").selectpicker('val', mb.filter);
-	} else {
-		$("#cbNomes").selectpicker('selectAll');
-	}
+	jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/printTags.php", { MethodName : 'getMembrosFilter', data : parameters }, function(data){
+		if ( data.filter && data.filter.length > 0 ) {
+			$("#cbNomes").selectpicker('deselectAll');
+			$("#cbNomes").selectpicker('val', data.filter);
+		} else {
+			$("#cbNomes").selectpicker('selectAll');
+		}
+	});
 }
 
 function populateMembers( tpDialog ) {
 	var parameters = {
 		filtro: tpDialog
 	}	
-	var sd = jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/printTags.php", { MethodName : 'getData', data : parameters }, 'RETURN' );
-	if (tpDialog == 'A') {
-		jsLIB.populateOptions( $("#cbTags"), sd.tags );
-		jsLIB.populateOptions( $("#cbNomes"), sd.membros );
-		$("#cbNomes").selectpicker('selectAll');
-	} else if (tpDialog == 'P') {
-		jsLIB.populateOptions( $("#cmForm"), sd.forms );
-		jsLIB.populateOptions( $("#cmNome"), sd.membros );
-		$("#cmNome").selectpicker('selectAll');
-	}
+	var sd = jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/printTags.php", { MethodName : 'getData', data : parameters }, function(data){
+		if (tpDialog == 'A') {
+			jsLIB.populateOptions( $("#cbTags"), data.tags );
+			jsLIB.populateOptions( $("#cbNomes"), data.membros );
+			$("#cbNomes").selectpicker('selectAll');
+		} else if (tpDialog == 'P') {
+			jsLIB.populateOptions( $("#cmForm"), data.forms );
+			jsLIB.populateOptions( $("#cmNome"), data.membros );
+			$("#cmNome").selectpicker('selectAll');
+		}
+	});
 }
 
-function updateSaida(){
+function update(){
 	var parameter = {
 		frm: jsLIB.getJSONFields( $('#addTagsForm') )
 	};
-	var sd = jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/printTags.php", { MethodName : 'addTags', data : parameter }, 'RETURN' );
-	refreshAndButtons();
+	jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/printTags.php", { MethodName : 'addTags', data : parameter }, function(data){
+		refreshAndButtons();
+	});
 }

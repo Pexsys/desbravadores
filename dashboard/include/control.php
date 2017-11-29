@@ -67,9 +67,9 @@ function fFooterDashboardScript(){
 <script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/datatable/plugins.js"></script>
 <script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/metisMenu.min.js"></script>
 <script src="<?php echo $GLOBALS['pattern']->getVD();?>js/functions.lib.js?<?php echo microtime();?>"></script>
+<script>jsLIB.rootDir = '<?php echo $GLOBALS['pattern']->getVD();?>';</script>
 <script src="<?php echo $GLOBALS['pattern']->getVD();?>js/notifications.lib.js?<?php echo microtime();?>"></script>
 <script src="<?php echo $GLOBALS['pattern']->getVD();?>dashboard/js/index.js?<?php echo microtime();?>"></script>
 <?php
-@require_once("../../include/_phpjsVD.php");
 }
 ?>

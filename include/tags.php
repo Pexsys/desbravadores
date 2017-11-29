@@ -28,13 +28,12 @@ class TAGS {
 	}
 	
 	public function insertItemTag( $tp, $pessoaID, $aprendID = null ) {
-		$tags = getTagsTipo();
-		$option = getOptionTag( $tags, $tp );
-		$md = $option["md"];
+		$option = $GLOBALS['pattern']->getOptionsTag($tp);
 
 		//SE NAO APONTADO APRENDIZADO, PROCURA MAIOR APRENDIZADO AVALIADO
 		if (empty($aprendID) || is_null($aprendID)):
 			$r = $GLOBALS['conn']->Execute("
+			SELECT * FROM (
 				SELECT '1', MAX(ta.ID) AS ID_TAB_APREND
 				  FROM CON_ATIVOS ca
 			INNER JOIN APR_HISTORICO ah ON (ah.ID_CAD_PESSOA = ca.ID)
@@ -55,7 +54,8 @@ class TAGS {
 		INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND AND ta.TP_ITEM = 'CL')
 			WHERE ah.DT_AVALIACAO IS NOT NULL
 				AND ca.ID = ?
-
+			) x
+			WHERE x.ID_TAB_APREND IS NOT NULL
 			ORDER BY 1
 			", array($pessoaID,$pessoaID,$pessoaID) );
 			if (!$r->EOF):
@@ -63,7 +63,7 @@ class TAGS {
 			endif;
 		endif;
 
-		$arr = array( $tp, $md, $pessoaID );
+		$arr = array( $tp, $option["md"], $pessoaID );
 		if ( !is_null($aprendID) ):
 			$arr[] = $aprendID;
 		endif;
@@ -83,7 +83,7 @@ class TAGS {
 				array(
 					$pessoaID,
 					$tp,
-					$md,
+					$option["md"],
 					$aprendID,
 					$barCODE
 				)
