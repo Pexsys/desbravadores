@@ -32,7 +32,7 @@ function drawBoxesArea($title,$result,$boxClass = NULL){
 					"classPanel" => $class,
 					"leftIcon" => $icon, 
 					"value" => $value, 
-					"title" => titleCase( $fields["DS_ITEM"] ), 
+					"title" => titleCase( $fields["DS_ITEM"], array(" "), array("OU", "COU", "APS") ), 
 					"strBL" => titleCase( $area ), 
 					"strBR" => strftime("%d/%m/%Y",strtotime($fields["DT"])), 
 					"hint" => $fields["BOX_HINT"]
@@ -146,6 +146,37 @@ INNER JOIN TAB_MATERIAIS tm ON (tm.ID_TAB_APREND = ta.ID)
 	ORDER BY ta.TP_ITEM, ta.CD_ITEM_INTERNO
 ", array($membroID) );
 drawBoxesArea("Itens a receber na próxima investidura",$result);
+
+$result = $GLOBALS['conn']->Execute("
+SELECT TP, CM
+  FROM CON_COMPRAS cc 
+ WHERE cc.TP_INCL = 'M'
+   AND cc.FG_COMPRA = 'S'
+   AND cc.FG_ENTREGUE = 'N'
+   AND cc.ID_CAD_PESSOA = ?
+", array($membroID) );
+if (!$result->EOF):
+	?>
+	<div class="row">
+		<div class="col-lg-12">
+			<h4 class="page-header">Itens a retirar na secretaria</h4>
+		</div>
+		<?php
+		//TOTAL DE REQUISITOS POR CLASSE.
+		foreach ($result as $k => $fields):
+			$icon = getIconAprendizado( $fields["TP"], "", "fa-4x" );
+			$area = getMacroArea( $fields["TP"], "" );
+			fItemAprendizado(array(
+				"classPanel" => "panel-red",
+				"leftIcon" => $icon, 
+				"value" => $area, 
+				"title" => titleCase( $fields["CM"], array(" "), array("OU", "COU", "APS") )
+			));
+		endforeach;
+		?>
+	</div>
+	<?php
+endif;
 
 $result = $GLOBALS['conn']->Execute("
    SELECT ta.TP_ITEM, ta.CD_ITEM_INTERNO, ta.DS_ITEM, ta.CD_AREA_INTERNO, ah.DT_INVESTIDURA AS DT

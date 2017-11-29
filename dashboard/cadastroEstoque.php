@@ -62,7 +62,7 @@
 								</div>
 								<div class="form-group col-xs-8">
 									<div class="well well-sm" style="padding:4px;margin-bottom:0px;font-size:11px"><b>Item</b></div>
-									<select field="id" name="cmItem" id="cmItem" opt-value="id" opt-links="cm" opt-label="ds" class="selectpicker form-control input-sm" data-live-search="true" title="(NENHUM)" data-container="body" data-width="100%"></select>
+									<select field="id" name="cmItem" id="cmItem" opt-value="id" opt-links="cm" opt-label="ds" opt-search="sb" opt-subtext="sb" data-show-subtext="true" class="selectpicker form-control input-sm" data-live-search="true" title="(NENHUM)" data-container="body" data-width="100%"></select>
 								</div>
 							</div>
 						</div>	

@@ -112,12 +112,13 @@ function filtroDatasAvaliacao(){
 					</div>
 					<div class="panel panel-warning" name="rowFilter" id="divFilter" style="display:none">
 						<div class="panel-heading" style="padding:4px 10px 0px">
-							<label>Filtro - Datas de Avaliação</label>
+							<label>Filtros</label>
 						</div>
 						<div class="panel-body" style="padding:4px 10px 0px">
 							<div>
 								<div class="row">
 									<div class="form-group col-xs-12">
+										<label class="control-label">Datas de Avalia&ccedil;&atilde;o</label>
 										<select field="cmFiltro" class="selectpicker form-control input-sm" multiple data-actions-box="true" data-selected-text-format="count > 3" data-container="body" data-width="100%">
 											<?php filtroDatasAvaliacao();?>
 										</select>
@@ -128,30 +129,25 @@ function filtroDatasAvaliacao(){
 					</div>
 					<div class="panel panel-warning" name="rowFilter" id="divMDA" style="display:none">
 							<div class="panel-heading" style="padding:4px 10px 0px">
-								<label>Filtro - Datas de Avaliação</label>
+								<label>Filtros</label>
 							</div>
 							<div class="panel-body" style="padding:4px 10px 0px">
 								<div>
 									<div class="row">
 										<div class="form-group col-xs-12">
+											<label class="control-label">Datas de Avalia&ccedil;&atilde;o</label>
 											<select field="cmFiltroMDA" class="selectpicker form-control input-sm" multiple data-actions-box="true" data-selected-text-format="count > 3" data-container="body" data-width="100%">
 												<?php filtroDatasAvaliacao();?>
 											</select>
 										</div>
 									</div>
-								</div>
-							</div>
-							<div class="panel-heading" style="padding:4px 10px 0px">
-								<label>Filtro - Investidos</label>
-							</div>
-							<div class="panel-body" style="padding:4px 10px 0px">
-								<div>
 									<div class="row">
 										<div class="form-group col-xs-12">
+											<label class="control-label">Status de Investidura</label>
 											<select field="cmINV" class="selectpicker form-control input-sm" data-container="body" data-width="100%">
-												<option value=""></option>
-												<option value="S">SIM</option>
-												<option value="N" selected>N&Atilde;O</option>
+												<option value="">AMBOS</option>
+												<option value="S">J&Aacute; INVESTIDOS</option>
+												<option value="N" selected="selected">N&Atilde;O INVESTIDOS</option>
 											</select>
 										</div>
 									</div>
@@ -224,7 +220,7 @@ function filtroDatasAvaliacao(){
 								</div>
 								<div class="form-group col-xs-8">
 									<div class="well well-sm" style="padding:4px;margin-bottom:0px;font-size:11px"><b>Item</b></div>
-									<select field="id" name="cmItem" id="cmItem" opt-value="id" opt-links="cm" opt-label="ds" class="selectpicker form-control input-sm" data-live-search="true" title="(NENHUM)" data-container="body" data-width="100%"></select>
+									<select field="id" name="cmItem" id="cmItem" opt-value="id" opt-links="cm" opt-label="ds" opt-search="sb" opt-subtext="sb" data-show-subtext="true" class="selectpicker form-control input-sm" data-live-search="true" title="(NENHUM)" data-container="body" data-width="100%"></select>
 								</div>
 							</div>
 							<div class="row" id="divCmpl" style="display:none">

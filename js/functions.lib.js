@@ -321,9 +321,27 @@ var jsLIB = {
 		var value = ( objSelect.hasAttr("opt-value") ? objSelect.attr("opt-value") : "value" );
 		var label = ( objSelect.hasAttr("opt-label") ? objSelect.attr("opt-label") : "label" );
 		var search = ( objSelect.hasAttr("opt-search") ? objSelect.attr("opt-search") : label );
-		var links = ( objSelect.hasAttr("opt-links") ? objSelect.attr("opt-links").split(";") : null );
-		var linksColor = ( objSelect.hasAttr("opt-link-color") ? objSelect.attr("opt-link-color").split(";") : null );
+		var subtext = ( objSelect.hasAttr("opt-subtext") ? objSelect.attr("opt-subtext") : null );
 		var selected = ( objSelect.hasAttr("opt-selected") ? objSelect.attr("opt-selected") : null );
+		var links = ( objSelect.hasAttr("opt-links") ? objSelect.attr("opt-links").split(";") : null );
+		
+		var oLinkIcon = null;
+		if (objSelect.hasAttr("opt-link-icons")){
+			oLinkIcon = [];
+			objSelect.attr("opt-link-icons").split(";").forEach(function(linkIcon){
+				var lk = linkIcon.split('=');
+				oLinkIcon[lk[0]] = lk[1];
+			});
+		}		
+
+		var oLinkClass = null;
+		if (objSelect.hasAttr("opt-link-class")){
+			oLinkClass = [];
+			objSelect.attr("opt-link-class").split(";").forEach(function(linkClass){
+				var lk = linkClass.split('=');
+				oLinkClass[lk[0]] = lk[1];
+			});
+		}
 		
 		objSelect.children().remove();
 		if ( !objSelect.hasClass("selectpicker") ) {
@@ -337,23 +355,22 @@ var jsLIB = {
 			if (search && search != label){
 				obj.attr("data-tokens",option[search]+' '+option[label]);
 			}
+			if (subtext){
+				obj.attr("data-subtext",option[subtext]);
+			}
 			if (selected && option[selected] == 'S'){
 				obj.attr("selected","selected");
 			}
 			if (links) {
-				for (var i=0;i<links.length;i++){
-					var link = links[i];
+				links.forEach(function(link){
 					obj.attr(link,option[link]);
-					
-					if (linksColor){
-						for (var y=0;y<linksColor.length;y++){
-							var linkColor = linksColor[i].split('=');
-							if (linkColor[0] == option[link]){
-								obj.attr('class',linkColor[1]);
-							}
-						}
+					if (oLinkClass){
+						obj.attr('class', oLinkClass[option[link]] );
 					}
-				}
+					if (oLinkIcon){
+						obj.attr('data-icon', oLinkIcon[option[link]] );
+					}
+				});
 			}
 			objSelect.append(obj)
 		});

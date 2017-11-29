@@ -196,10 +196,16 @@ $pdf = new LISTAINVESTIDURAMDA();
 $pdf->newPage();
 
 $request = fRequest("cmFiltroMDA");
+$tpInves = fRequest("cmINV");
 $filter = implode(",",array_map("fArrayStr", explode(",",$request)));
 $innerJoinDA = ($request == "null" || empty($request) || empty($filter) ? "" : " AND ah.DT_AVALIACAO IN ($filter)");
 
-$innerNaoInvest = (fRequest("cmINV") !== "S" ? " AND ah.DT_INVESTIDURA IS NULL" : "");
+$innerNaoInvest = "";
+if ($tpInves == "S"):
+	$innerNaoInvest = " AND ah.DT_INVESTIDURA IS NOT NULL";
+elseif ($tpInves == "N"):
+	$innerNaoInvest = " AND ah.DT_INVESTIDURA IS NULL";
+endif;
 
 fConnDB();
 $result = $GLOBALS['conn']->Execute("

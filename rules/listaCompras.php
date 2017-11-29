@@ -218,7 +218,7 @@ function getData( $parameters ) {
 				$id = str_pad($fields['ID'], $qtdZeros, "0", STR_PAD_LEFT);
 				$arr["nomes"][] = array( 
 					"id" => $id,
-					"ds" => "$id ".($fields['NM'])
+					"ds" => "$id ".$fields['NM']
 				);
 			endforeach;
 		endif;
@@ -234,7 +234,8 @@ function getData( $parameters ) {
 				$arr["itens"][] = array( 
 					"id" => $fields['ID'],
 					"cm" => $fields['CMPL'],
-					"ds" => ($fields['DS']) . ( !is_null($fields['FUNDO']) ? " - FUNDO ". ($fields['FUNDO'] == "BR" ? "BRANCO" : "CAQUI") : "")
+					"ds" => $fields['DS'],
+					"sb" => ( !is_null($fields['FUNDO']) ? "FUNDO ". ($fields['FUNDO'] == "BR" ? "BRANCO" : "CAQUI") : "")
 				);
 			endforeach;
 		endif;
@@ -250,14 +251,21 @@ function getData( $parameters ) {
 				ORDER BY tm.FUNDO DESC, ta.CD_ITEM_INTERNO, tm.DS
 			", array($parameters["key"]));
 			foreach ($result as $k => $fields):
-			    $ds = $fields['DS'] . ( !is_null($fields['FUNDO']) ? " - FUNDO ". ($fields['FUNDO'] == "BR" ? "BRANCO" : "CAQUI") : "");
+				$sb = "";
+				$ds = $fields['DS'];
+				
+				if (!is_null($fields['FUNDO'])):
+					$sb =  "FUNDO ". ($fields['FUNDO'] == "BR" ? "BRANCO" : "CAQUI");
+				endif;
 			    if ($fields["TP_ITEM"] == "ES"):
-			        $ds = $fields["DS"] ." ". $fields["CD_ITEM_INTERNO"] ."-". $fields["DS_ITEM"];
+					$ds = $fields["DS"] ." ". $fields["DS_ITEM"];
+					$sb = $fields["CD_ITEM_INTERNO"];
 			    endif;
 				$arr["itens"][] = array( 
 					"id" => $fields['ID'],
 					"cm" => $fields['CMPL'],
-					"ds" => ($ds)
+					"ds" => $ds,
+					"sb" => $sb
 				);
 			endforeach;
 		endif;
@@ -370,7 +378,7 @@ function getAttrPerm( $parameters ) {
 		SELECT 1
 		FROM CON_COMPRAS 
 		WHERE ID = ?
-		  AND (QT_EST > 0 OR FG_COMPRA = 'S')
+		  AND (QT_EST > 0 OR FG_COMPRA = 'S' OR (FG_COMPRA = 'N' AND TP_INCL = 'M'))
 	", array($parameters["id"]) );
 	$edit = (!$result->EOF);
 	
@@ -410,7 +418,7 @@ function setAttr( $parameters ) {
 		SELECT *
 		  FROM CON_COMPRAS
 		WHERE ID = ?
-		  AND (QT_EST > 0 OR FG_COMPRA = 'S')
+		  AND (QT_EST > 0 OR FG_COMPRA = 'S' OR (FG_COMPRA = 'N' AND TP_INCL = 'M'))
 	", array( $parameters["id"]) );
 	if (!$result->EOF):
 		$qt = updateEstoque( $result->fields, $fd, $vl );
@@ -442,6 +450,8 @@ function updateEstoque( $ln, $fd, $vl ){
 			$GLOBALS['conn']->Execute("UPDATE TAB_MATERIAIS SET QT_EST = ? WHERE ID = ?
 			", array( $arr["qt"] + $movEstoque, $ln["ID_TAB_MATERIAIS"] ) );
 			$arr["qt"] += $movEstoque;
+			$update = true;
+		elseif ($ln["FG_COMPRA"] == "N" && $ln["TP_INCL"] == "M"):
 			$update = true;
 		endif;
 	endif;

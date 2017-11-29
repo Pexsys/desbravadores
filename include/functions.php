@@ -561,7 +561,9 @@ function fGetClassTipoEvento($strTipoEvento){
 }
 
 function getMacroArea( $tpItem, $areaInterno ){
-	if ($tpItem == "CL"):
+	if ($tpItem == "TRUNFO" || $tpItem == "MEDALHA"):
+		return $tpItem;
+	elseif ($tpItem == "CL"):
 		return "CLASSE $areaInterno";
 	elseif ($tpItem == "ES" && $areaInterno == "ME"):
 		return "MESTRADO";
@@ -603,8 +605,12 @@ function getIconAprendizado( $tpItem, $areaInterno, $sizeClass = "" ){
 		$retorno = "fa fa-check-square";
 	elseif ($tpItem == "CL" && fStrStartWith($areaInterno, "AVAN")):
 		$retorno = "fa fa-check-square-o";
-	elseif ( $tpItem == "ES" && $areaInterno == "ME" ):
+	elseif ($tpItem == "ES" && $areaInterno == "ME" ):
 		$retorno = "fa fa-check-circle";
+	elseif ($tpItem == "TRUNFO"):
+		$retorno = "fa fa-picture-o";
+	elseif ($tpItem == "MEDALHA"):
+		$retorno = "fa fa-trophy";
 	else:
 		$retorno = "fa fa-check-circle-o";
 	endif;
