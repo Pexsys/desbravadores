@@ -252,7 +252,7 @@ class ETIQUETAS extends TCPDF {
 			if (!is_null($ln["ID_TAB_APREND"])):
 				$this->setXY($x+34,$y+8);
 				$this->SetFillColor($colorR, $colorG, $colorB);
-				if ($ln["ID_TAB_APREND"] > 10):
+				if ($ln["ID_TAB_APREND"] == 11 || $ln["ID_TAB_APREND"] == 12):
 					$this->SetTextColor(0,0,0);
 				else:
 					$this->SetTextColor(255,255,255);

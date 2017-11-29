@@ -7,7 +7,7 @@ mb_internal_encoding('UTF-8');
 mb_http_output('UTF-8');
 mb_http_input('UTF-8');
 
-global $pattern, $conn, $DBType, $DBServerHost, $DBUser, $DBPassWord, $DBDataBase, $VirtualDir;
+global $pattern, $conn, $DBType, $DBServerHost, $DBUser, $DBPassWord, $DBDataBase;
 @require_once("_patterns.php");
 @require_once("_core/lib/adodb5/adodb.inc.php");
 @require_once("_core/lib/dbconnect/_base.php");
@@ -132,8 +132,9 @@ endif;
 <script type="text/javascript" src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/formValidation/bootstrap.min.js"></script>
 <script type="text/javascript" src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/bootstrap-dialog.min.js"></script>
 <script type="text/javascript" src="<?php echo $GLOBALS['pattern']->getVD();?>js/functions.lib.js"></script>
+<script>jsLIB.rootDir = '<?php echo $GLOBALS['pattern']->getVD();?>';</script>
+<script type="text/javascript" src="<?php echo $GLOBALS['pattern']->getVD();?>include/_virtualPath.js.php?<?php echo microtime();?>"></script>
 <?php
-@require_once("_phpjsVD.php");
 if (isset($aJsFiles)):
 	foreach ($aJsFiles as &$file):
 	?><script type="text/javascript" src="<?php echo $file;?>"></script><?php
@@ -693,28 +694,6 @@ function fFormataData($data,$formato){
 
 function fStrZero($n,$q){
 	return str_pad($n, $q, "0", STR_PAD_LEFT);
-}
-
-function getOptionTag($array,$option){
-	$arr = array();
-	foreach ($array as $k):
-		if ($k["id"] == $option):
-			return $k;
-		endif;
-	endforeach;
-	return $arr;
-}
-
-function getTagsTipo(){
-	$arr = array();
-	$arr[] = array("id"	=> "0",	"cl" => "N", "md" => "1", "ds"=> "0-BÁSICA/NOME" );
-	$arr[] = array("id"	=> "1",	"cl" => "S", "md" => "3", "ds"=> "1-CAPA DA PASTA DE AVALIAÇÃO" );
-	$arr[] = array("id"	=> "2",	"cl" => "S", "md" => "3", "ds"=> "2-CAPA DE LEITURA BÍBLICA" );
-	$arr[] = array("id"	=> "A",	"cl" => "S", "md" => "1", "ds"=> "A-CARTÃO DE CLASSE" );
-	$arr[] = array("id"	=> "B",	"cl" => "S", "md" => "1", "ds"=> "B-CADERNO DE ATIVIDADES" );
-	$arr[] = array("id"	=> "C",	"cl" => "S", "md" => "2", "ds"=> "C-PASTA DE CLASSE" );
-	$arr[] = array("id"	=> "E",	"cl" => "N", "md" => "1", "ds"=> "E-CARTÃO DE ESPECIALIDADES" );
-	return $arr;
 }
 
 function getFormsTipo(){
