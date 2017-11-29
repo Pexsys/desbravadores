@@ -561,15 +561,16 @@ function fGetClassTipoEvento($strTipoEvento){
 }
 
 function getMacroArea( $tpItem, $areaInterno ){
-	if ($tpItem == "TRUNFO" || $tpItem == "MEDALHA"):
-		return $tpItem;
-	elseif ($tpItem == "CL"):
+	if ($tpItem == "CL"):
 		return "CLASSE $areaInterno";
-	elseif ($tpItem == "ES" && $areaInterno == "ME"):
-		return "MESTRADO";
-	else:
-		return "ESPECIALIDADE";
+	elseif ($tpItem == "ES"):
+		if ($areaInterno == "ME"):
+			return "MESTRADO";
+		else:
+			return "ESPECIALIDADE";
+		endif;
 	endif;
+	return $tpItem;
 }
 
 function consultaAprendizadoPessoa( $tabAprendID, $pessoaID ){
@@ -600,19 +601,23 @@ function consultaAprendizadoPessoa( $tabAprendID, $pessoaID ){
 }
 
 function getIconAprendizado( $tpItem, $areaInterno, $sizeClass = "" ){
-        $retorno = "";
+    $retorno = "fa fa-info";
 	if ($tpItem == "CL" && $areaInterno == "REGULAR"):
 		$retorno = "fa fa-check-square";
 	elseif ($tpItem == "CL" && fStrStartWith($areaInterno, "AVAN")):
 		$retorno = "fa fa-check-square-o";
-	elseif ($tpItem == "ES" && $areaInterno == "ME" ):
-		$retorno = "fa fa-check-circle";
+	elseif ($tpItem == "ES"):
+		if ($areaInterno == "ME" ):
+			$retorno = "fa fa-check-circle";
+		else:
+			$retorno = "fa fa-check-circle-o";
+		endif;
 	elseif ($tpItem == "TRUNFO"):
 		$retorno = "fa fa-picture-o";
 	elseif ($tpItem == "MEDALHA"):
 		$retorno = "fa fa-trophy";
-	else:
-		$retorno = "fa fa-check-circle-o";
+	elseif ($tpItem == "TIRA"):
+		$retorno = "fa fa-square-o";
 	endif;
 	if (!empty($sizeClass)):
 		$retorno = "$retorno $sizeClass";
