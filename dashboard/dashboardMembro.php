@@ -148,7 +148,54 @@ INNER JOIN TAB_MATERIAIS tm ON (tm.ID_TAB_APREND = ta.ID)
 drawBoxesArea("Itens a receber na próxima investidura",$result);
 
 $result = $GLOBALS['conn']->Execute("
-SELECT TP, CM
+SELECT TP, CM, DS, CMPL, FG_IM, DS_ITEM, FUNDO
+  FROM CON_COMPRAS cc 
+ WHERE cc.TP_INCL = 'M'
+   AND cc.FG_COMPRA = 'N'
+   AND cc.FG_ENTREGUE = 'N'
+   AND cc.FG_ALMOX = 'N'
+   AND cc.ID_CAD_PESSOA = ?
+", array($membroID) );
+if (!$result->EOF):
+	?>
+	<div class="row">
+		<div class="col-lg-12">
+			<h4 class="page-header">Itens solicitados/encomendados</h4>
+		</div>
+		<?php
+		//TOTAL DE REQUISITOS POR CLASSE.
+		foreach ($result as $k => $fields):
+			$ds = $fields['DS'];
+			
+			if ( $fields['CMPL'] == "S" && $fields['FG_IM'] == 'N'):
+				$ds .= " - ". $fields['DS_ITEM'];
+			endif;
+			
+			if ( !empty($fields['FUNDO']) ):
+				$ds .= " - FUNDO ". ($fields['FUNDO'] == "BR" ?  "BRANCO" : "CAQUI");
+			endif;
+	
+			if ( !empty($fields['CM']) ):
+				$ds .= " [ ".$fields['CM']." ]";
+			endif;
+
+			$icon = getIconAprendizado( $fields["TP"], "", "fa-4x" );
+			$area = getMacroArea( $fields["TP"], "" );
+			fItemAprendizado(array(
+				"classPanel" => "panel-warning",
+				"leftIcon" => $icon, 
+				"value" => $area, 
+				"title" => titleCase( $ds, array(" "), array("OU", "COU", "APS") )
+			));
+		endforeach;
+		?>
+	</div>
+	<?php
+endif;
+
+
+$result = $GLOBALS['conn']->Execute("
+SELECT TP, CM, DS, CMPL, FG_IM, DS_ITEM, FUNDO
   FROM CON_COMPRAS cc 
  WHERE cc.TP_INCL = 'M'
    AND cc.FG_COMPRA = 'S'
@@ -164,13 +211,27 @@ if (!$result->EOF):
 		<?php
 		//TOTAL DE REQUISITOS POR CLASSE.
 		foreach ($result as $k => $fields):
+			$ds = $fields['DS'];
+			
+			if ( $fields['CMPL'] == "S" && $fields['FG_IM'] == 'N'):
+				$ds .= " - ". $fields['DS_ITEM'];
+			endif;
+			
+			if ( !empty($fields['FUNDO']) ):
+				$ds .= " - FUNDO ". ($fields['FUNDO'] == "BR" ?  "BRANCO" : "CAQUI");
+			endif;
+	
+			if ( !empty($fields['CM']) ):
+				$ds .= " [ ".$fields['CM']." ]";
+			endif;
+
 			$icon = getIconAprendizado( $fields["TP"], "", "fa-4x" );
 			$area = getMacroArea( $fields["TP"], "" );
 			fItemAprendizado(array(
 				"classPanel" => "panel-red",
 				"leftIcon" => $icon, 
 				"value" => $area, 
-				"title" => titleCase( $fields["CM"], array(" "), array("OU", "COU", "APS") )
+				"title" => titleCase( $ds, array(" "), array("OU", "COU", "APS") )
 			));
 		endforeach;
 		?>

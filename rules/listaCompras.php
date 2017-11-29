@@ -141,8 +141,8 @@ function getLista( $parameters ) {
 		$arr[] = array( 
 			"tp" => $fields['TP_INCL'],
 			"id" => $fields['ID'],
-			"nm" => ($fields['NM']),
-			"ds" => ($ds),
+			"nm" => $fields['NM'],
+			"ds" => $ds,
 			"ic" => $fields['FG_COMPRA'],
 			"ie" => $fields['FG_ENTREGUE']
 		);
@@ -446,13 +446,17 @@ function updateEstoque( $ln, $fd, $vl ){
 			$arr["qt"] = $re->fields["QT_EST"];
 		endif;
 
-		if ($arr["qt"] > 0 || $movEstoque > 0):
+		//PARA ITENS SEM ESTOQUE / TRUNFOS / MEDALHAS / EVENTOS DIVERSOS
+		if ($ln["TP_INCL"] == "M" && $ln["FG_ALMOX"] == "N"):
+			$update = true;
+			
+		//PARA ITENS COM ESTOQUE / COMPRAS NO ALMOXARIFADO
+		elseif ($arr["qt"] > 0 || $movEstoque > 0):
 			$GLOBALS['conn']->Execute("UPDATE TAB_MATERIAIS SET QT_EST = ? WHERE ID = ?
 			", array( $arr["qt"] + $movEstoque, $ln["ID_TAB_MATERIAIS"] ) );
 			$arr["qt"] += $movEstoque;
 			$update = true;
-		elseif ($ln["FG_COMPRA"] == "N" && $ln["TP_INCL"] == "M"):
-			$update = true;
+		
 		endif;
 	endif;
 
@@ -466,11 +470,7 @@ function updateEstoque( $ln, $fd, $vl ){
 				$GLOBALS['conn']->Execute("DELETE FROM CAD_COMPRAS_PESSOA WHERE ID = ?", array( $ln["ID"] ) );
 				
 			else:
-				$GLOBALS['conn']->Execute("
-					UPDATE CAD_COMPRAS_PESSOA 
-					SET $fd = ?
-					WHERE ID = ?
-				", array( $vl, $ln["ID"] ) );
+				updateCADCompras( $fd, array( $vl, $ln["ID"] ) );
 			endif;
 		    
 			//INSERE LOG DE ENTREGA DE MATERIAIS
@@ -481,15 +481,18 @@ function updateEstoque( $ln, $fd, $vl ){
 			endif;
 
 		else:
-			
-    		$GLOBALS['conn']->Execute("
-    			UPDATE CAD_COMPRAS_PESSOA 
-    			   SET $fd = ?
-    			 WHERE ID = ?
-    		", array( $vl, $ln["ID"] ) );
+			updateCADCompras( $fd, array( $vl, $ln["ID"] ) );
     	endif;
 	endif;
 	return $arr;
+}
+
+function updateCADCompras($fd, $arr){
+	$GLOBALS['conn']->Execute("
+		UPDATE CAD_COMPRAS_PESSOA 
+		SET $fd = ?
+		WHERE ID = ?
+	", $arr );
 }
 
 function distribuirEstoque(){
