@@ -255,4 +255,4 @@ function filtroDatasAvaliacao(){
 		</div>
 	</form>
 </div>
-<script src="<?php echo $GLOBALS['VirtualDir'];?>dashboard/js/listaCompras.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo $GLOBALS['pattern']->getVD();?>dashboard/js/listaCompras.js<?php echo "?".microtime();?>"></script>

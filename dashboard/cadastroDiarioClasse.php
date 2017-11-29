@@ -156,6 +156,6 @@
 		</div>
 	</form>
 </div>
-<script src="<?php echo $GLOBALS['VirtualDir'];?>include/_core/js/tinymce/tinymce.min.js"></script>
-<script src="<?php echo $GLOBALS['VirtualDir'];?>include/_core/js/tinymce/jquery.tinymce.min.js"></script>
-<script src="<?php echo $GLOBALS['VirtualDir'];?>dashboard/js/cadastroDiarioClasse.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/tinymce/tinymce.min.js"></script>
+<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/tinymce/jquery.tinymce.min.js"></script>
+<script src="<?php echo $GLOBALS['pattern']->getVD();?>dashboard/js/cadastroDiarioClasse.js<?php echo "?".microtime();?>"></script>

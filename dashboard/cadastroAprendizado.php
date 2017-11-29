@@ -271,5 +271,5 @@
 		</div>
 	</div>
 </div>	
-<script src="<?php echo $GLOBALS['VirtualDir'];?>js/readdata.lib.js"></script>
-<script src="<?php echo $GLOBALS['VirtualDir'];?>dashboard/js/cadastroAprendizado.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo $GLOBALS['pattern']->getVD();?>js/readdata.lib.js"></script>
+<script src="<?php echo $GLOBALS['pattern']->getVD();?>dashboard/js/cadastroAprendizado.js<?php echo "?".microtime();?>"></script>

@@ -92,6 +92,6 @@
 		</div>
 	</div>
 </div>
-<script src="<?php echo $GLOBALS['VirtualDir'];?>include/_core/js/tinymce/tinymce.min.js"></script>
-<script src="<?php echo $GLOBALS['VirtualDir'];?>include/_core/js/tinymce/jquery.tinymce.min.js"></script>
-<script src="<?php echo $GLOBALS['VirtualDir'];?>dashboard/js/cadastroComunicados.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/tinymce/tinymce.min.js"></script>
+<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/tinymce/jquery.tinymce.min.js"></script>
+<script src="<?php echo $GLOBALS['pattern']->getVD();?>dashboard/js/cadastroComunicados.js<?php echo "?".microtime();?>"></script>

@@ -14,7 +14,7 @@ $activeLogin = ($showLogin && !$temPerfil);
 				</button>
 				<a class="active" href="index.php">
 					<!-- Logo area -->
-					<div class="logo"><img class="img-responsive" src="<?php echo $GLOBALS['VirtualDir'];?>img/logos.png" alt="Clube de Desbravadores Pioneiros"></div>
+					<div class="logo"><img class="img-responsive" src="<?php echo $GLOBALS['pattern']->getVD();?>img/logos.png" alt="Clube de Desbravadores Pioneiros"></div>
 				</a>
 			</div>
 			<div class="col-md-8 col-sm-7">

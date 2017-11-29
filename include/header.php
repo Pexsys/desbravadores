@@ -3,7 +3,7 @@
 	<?php
 	$relativePath = "img/carrousel/index/";
 	$extentions = ".jpg.jpeg.gif.png";
-	$capa = $GLOBALS['VirtualDir'] . $relativePath;
+	$capa = $GLOBALS['pattern']->getVD() . $relativePath;
 
 	$document_root = $_SERVER['DOCUMENT_ROOT'];
 	$fisico_repertorio = $relativePath;
