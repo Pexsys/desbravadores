@@ -166,7 +166,7 @@ function getMasterRulesPessoa( $ruleID, $pessoaID ){
 			$dsItem = titleCase($z['DS_ITEM_RQ'])." ($cdItem)";
 			if (!is_null($z['DT_CONCLUSAO'])):
 				++$plus;
-				$dsItem = "<mark><u>$dsItem</u><sup>$plus</sup></mark>";
+				$dsItem = "<mark><b>$dsItem</b>&nbsp;<sup>$plus</sup></mark>";
 			elseif (!is_null($z['DT_INICIO'])):
 				$dsItem = "<u>$dsItem</u>";
 			else:

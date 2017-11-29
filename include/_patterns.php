@@ -26,7 +26,7 @@ class PATTERNS {
             "FN" => array( 
                 "size" => 1, 
                 "types" => array(
-                    //ID ETIQUETA           //TAG ETIQUETA  //OBR.CLASSE    //MODELO FORM   //DESCRICAO
+                    //ID ETIQUETA           //IMPR.ETIQ     //OBR.CLASSE    //MODELO FORM   //DESCRICAO
                     array(  "id" => "0",    "tg" => "S",    "cl" => "N",    "md" => "1",    "ds" => "0-BÁSICA/NOME" ),
                     array(  "id" => "1",    "tg" => "S",    "cl" => "S",    "md" => "3",    "ds" => "1-CAPA DA PASTA DE AVALIAÇÃO" ),
                     array(  "id" => "2",	"tg" => "S",    "cl" => "S",    "md" => "3",    "ds" => "2-CAPA DE LEITURA BÍBLICA" ),
@@ -34,7 +34,7 @@ class PATTERNS {
                     array(  "id" => "B",	"tg" => "S",    "cl" => "S",    "md" => "1",    "ds" => "B-CADERNO DE ATIVIDADES" ),
                     array(  "id" => "C",	"tg" => "S",    "cl" => "S",    "md" => "2",    "ds" => "C-PASTA DE CLASSE" ),
                     array(  "id" => "D",	"tg" => "N",    "cl" => "N",                    "ds" => "D-AUTORIZAÇÃO DE SAÍDA" ),
-                    array(  "id" => "E",	"tg" => "S",    "cl" => "N",    "md" => "1",    "ds" => "E-CARTÃO DE ESPECIALIDADES" ),
+                    array(  "id" => "E",	"tg" => "S",    "cl" => "N",    "md" => "1",    "ds" => "E-CARTÃO / ESPECIALIDADES" ),
                     array(  "id" => "F",	"tg" => "N",    "cl" => "N",                    "ds" => "F-AUTORIZAÇÃO ESPECIAL" )
                 )
             ),
