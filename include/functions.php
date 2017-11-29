@@ -7,13 +7,13 @@ mb_internal_encoding('UTF-8');
 mb_http_output('UTF-8');
 mb_http_input('UTF-8');
 
-global $conn, $DBType, $DBServerHost, $DBUser, $DBPassWord, $DBDataBase, $DBRegras, $VirtualDir;
+global $pattern, $conn, $DBType, $DBServerHost, $DBUser, $DBPassWord, $DBDataBase, $VirtualDir;
 @require_once("_variables.php");
 @require_once("_core/lib/adodb5/adodb.inc.php");
 @require_once("_core/lib/dbconnect/_base.php");
 
 function fClubeID() {
-    return "Clube de Desbravadores Pioneiros - IASD Capão Redondo - 6ª Região - APS - UCB - DSA";
+    return $GLOBALS['pattern']["clubeDS"];
 }
 
 function fGetPerfil( $cd = NULL ) {
