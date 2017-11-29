@@ -49,8 +49,98 @@ function drawBoxesArea($title,$result,$boxClass = NULL){
 		<h3 class="page-header">Meu Painel</h3>
 	</div>
 </div>
-
 <?php
+$result = $GLOBALS['conn']->Execute("
+SELECT TP, CM, DS, CMPL, FG_IM, DS_ITEM, FUNDO
+  FROM CON_COMPRAS cc 
+ WHERE cc.TP_INCL = 'M'
+   AND cc.FG_COMPRA = 'S'
+   AND cc.FG_ENTREGUE = 'N'
+   AND cc.ID_CAD_PESSOA = ?
+", array($membroID) );
+if (!$result->EOF):
+	?>
+	<div class="row">
+		<div class="col-lg-12">
+			<h4 class="page-header">Itens a retirar na secretaria</h4>
+		</div>
+		<?php
+		//TOTAL DE REQUISITOS POR CLASSE.
+		foreach ($result as $k => $fields):
+			$ds = $fields['DS'];
+			
+			if ( $fields['CMPL'] == "S" && $fields['FG_IM'] == 'N'):
+				$ds .= " - ". $fields['DS_ITEM'];
+			endif;
+			
+			if ( !empty($fields['FUNDO']) ):
+				$ds .= " - FUNDO ". ($fields['FUNDO'] == "BR" ?  "BRANCO" : "CAQUI");
+			endif;
+	
+			if ( !empty($fields['CM']) ):
+				$ds .= " [ ".$fields['CM']." ]";
+			endif;
+
+			$icon = getIconAprendizado( $fields["TP"], "", "fa-4x" );
+			$area = getMacroArea( $fields["TP"], "" );
+			fItemAprendizado(array(
+				"classPanel" => "panel-red",
+				"leftIcon" => $icon, 
+				"value" => $area, 
+				"title" => titleCase( $ds, array(" "), array("OU", "COU", "APS") )
+			));
+		endforeach;
+		?>
+	</div>
+	<?php
+endif;
+
+$result = $GLOBALS['conn']->Execute("
+	SELECT TP, CM, DS, CMPL, FG_IM, DS_ITEM, FUNDO
+	FROM CON_COMPRAS cc 
+	WHERE cc.TP_INCL = 'M'
+	AND cc.FG_COMPRA = 'N'
+	AND cc.FG_ENTREGUE = 'N'
+	AND cc.FG_ALMOX = 'N'
+	AND cc.ID_CAD_PESSOA = ?
+	", array($membroID) );
+if (!$result->EOF):
+	?>
+	<div class="row">
+		<div class="col-lg-12">
+			<h4 class="page-header">Itens solicitados/encomendados</h4>
+		</div>
+		<?php
+		//TOTAL DE REQUISITOS POR CLASSE.
+		foreach ($result as $k => $fields):
+			$ds = $fields['DS'];
+			
+			if ( $fields['CMPL'] == "S" && $fields['FG_IM'] == 'N'):
+				$ds .= " - ". $fields['DS_ITEM'];
+			endif;
+			
+			if ( !empty($fields['FUNDO']) ):
+				$ds .= " - FUNDO ". ($fields['FUNDO'] == "BR" ?  "BRANCO" : "CAQUI");
+			endif;
+	
+			if ( !empty($fields['CM']) ):
+				$ds .= " [ ".$fields['CM']." ]";
+			endif;
+
+			$icon = getIconAprendizado( $fields["TP"], "", "fa-4x" );
+			$area = getMacroArea( $fields["TP"], "" );
+			fItemAprendizado(array(
+				"classPanel" => "panel-warning",
+				"leftIcon" => $icon, 
+				"value" => $area, 
+				"title" => titleCase( $ds, array(" "), array("OU", "COU", "APS") )
+			));
+		endforeach;
+		?>
+	</div>
+	<?php
+endif;
+
 $result = $GLOBALS['conn']->Execute("
 	SELECT ID_CAD_PESSOA, ID_TAB_APREND, TP_ITEM, CD_AREA_INTERNO, CD_ITEM_INTERNO, DS_ITEM, DT_INICIO, COUNT(*) AS QT_REQ
 	FROM CON_APR_PESSOA
@@ -148,98 +238,6 @@ INNER JOIN TAB_MATERIAIS tm ON (tm.ID_TAB_APREND = ta.ID)
 drawBoxesArea("Itens a receber na próxima investidura",$result);
 
 $result = $GLOBALS['conn']->Execute("
-SELECT TP, CM, DS, CMPL, FG_IM, DS_ITEM, FUNDO
-  FROM CON_COMPRAS cc 
- WHERE cc.TP_INCL = 'M'
-   AND cc.FG_COMPRA = 'N'
-   AND cc.FG_ENTREGUE = 'N'
-   AND cc.FG_ALMOX = 'N'
-   AND cc.ID_CAD_PESSOA = ?
-", array($membroID) );
-if (!$result->EOF):
-	?>
-	<div class="row">
-		<div class="col-lg-12">
-			<h4 class="page-header">Itens solicitados/encomendados</h4>
-		</div>
-		<?php
-		//TOTAL DE REQUISITOS POR CLASSE.
-		foreach ($result as $k => $fields):
-			$ds = $fields['DS'];
-			
-			if ( $fields['CMPL'] == "S" && $fields['FG_IM'] == 'N'):
-				$ds .= " - ". $fields['DS_ITEM'];
-			endif;
-			
-			if ( !empty($fields['FUNDO']) ):
-				$ds .= " - FUNDO ". ($fields['FUNDO'] == "BR" ?  "BRANCO" : "CAQUI");
-			endif;
-	
-			if ( !empty($fields['CM']) ):
-				$ds .= " [ ".$fields['CM']." ]";
-			endif;
-
-			$icon = getIconAprendizado( $fields["TP"], "", "fa-4x" );
-			$area = getMacroArea( $fields["TP"], "" );
-			fItemAprendizado(array(
-				"classPanel" => "panel-warning",
-				"leftIcon" => $icon, 
-				"value" => $area, 
-				"title" => titleCase( $ds, array(" "), array("OU", "COU", "APS") )
-			));
-		endforeach;
-		?>
-	</div>
-	<?php
-endif;
-
-
-$result = $GLOBALS['conn']->Execute("
-SELECT TP, CM, DS, CMPL, FG_IM, DS_ITEM, FUNDO
-  FROM CON_COMPRAS cc 
- WHERE cc.TP_INCL = 'M'
-   AND cc.FG_COMPRA = 'S'
-   AND cc.FG_ENTREGUE = 'N'
-   AND cc.ID_CAD_PESSOA = ?
-", array($membroID) );
-if (!$result->EOF):
-	?>
-	<div class="row">
-		<div class="col-lg-12">
-			<h4 class="page-header">Itens a retirar na secretaria</h4>
-		</div>
-		<?php
-		//TOTAL DE REQUISITOS POR CLASSE.
-		foreach ($result as $k => $fields):
-			$ds = $fields['DS'];
-			
-			if ( $fields['CMPL'] == "S" && $fields['FG_IM'] == 'N'):
-				$ds .= " - ". $fields['DS_ITEM'];
-			endif;
-			
-			if ( !empty($fields['FUNDO']) ):
-				$ds .= " - FUNDO ". ($fields['FUNDO'] == "BR" ?  "BRANCO" : "CAQUI");
-			endif;
-	
-			if ( !empty($fields['CM']) ):
-				$ds .= " [ ".$fields['CM']." ]";
-			endif;
-
-			$icon = getIconAprendizado( $fields["TP"], "", "fa-4x" );
-			$area = getMacroArea( $fields["TP"], "" );
-			fItemAprendizado(array(
-				"classPanel" => "panel-red",
-				"leftIcon" => $icon, 
-				"value" => $area, 
-				"title" => titleCase( $ds, array(" "), array("OU", "COU", "APS") )
-			));
-		endforeach;
-		?>
-	</div>
-	<?php
-endif;
-
-$result = $GLOBALS['conn']->Execute("
    SELECT ta.TP_ITEM, ta.CD_ITEM_INTERNO, ta.DS_ITEM, ta.CD_AREA_INTERNO, ah.DT_INVESTIDURA AS DT
 	 FROM APR_HISTORICO ah
 INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
@@ -248,6 +246,115 @@ INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
 	ORDER BY ta.TP_ITEM, ta.CD_ITEM_INTERNO
 ", array($membroID) );
 drawBoxesArea("Itens recebidos em ".date("Y"),$result,"panel-green");
+
+$matAnteriores = $GLOBALS['conn']->Execute("
+	SELECT COMPL, DT_ENTREGA, TP, DS, FUNDO, CMPL, FG_ALMOX, FG_IM
+	FROM CON_MAT_HISTORICO
+	WHERE ID_CAD_PESSOA = ?
+	  AND YEAR(DT_ENTREGA) < YEAR(NOW())
+	ORDER BY TP, DT_ENTREGA DESC
+", array($membroID) );
+
+$matAno = $GLOBALS['conn']->Execute("
+	SELECT COMPL, DT_ENTREGA, TP, DS, FUNDO, CMPL, FG_ALMOX, FG_IM
+	FROM CON_MAT_HISTORICO
+	WHERE ID_CAD_PESSOA = ?
+	AND YEAR(DT_ENTREGA) = YEAR(NOW())
+	ORDER BY TP, DT_ENTREGA DESC
+", array($membroID) );
+
+if (!$matAnteriores->EOF || !$matAno->EOF):
+?>
+<div class="row">
+	<div class="col-md-12 col-xs-12 col-sm-12 col-lg-12 col-xl-6">
+		<h4 class="page-header">Materiais recebidos</h4>
+	</div>
+	<?php if (!$matAno->EOF):?>
+	<div class="col-md-12 col-xs-12 col-sm-12 col-lg-12 col-xl-6">
+		<div class="panel panel-green">
+			<div class="panel-heading">
+				<label>Em <?php echo date("Y");?></label>
+			</div>
+			<div class="panel-body">
+				<?php
+				foreach ($matAno as $key => $line):
+					$ds = $line['DS'];
+					
+					if ( $line['CMPL'] == "S" && $line['FG_IM'] == 'N'):
+						$ds .= " - ". $line['DS_ITEM'];
+					endif;
+					
+					if ( !empty($fields['FUNDO']) ):
+						$ds .= " - FUNDO ". ($line['FUNDO'] == "BR" ?  "BRANCO" : "CAQUI");
+					endif;
+			
+					if ( !empty($line['COMPL']) ):
+						$ds .= " [ ".$line['COMPL']." ]";
+					endif;
+			
+					$icon = getIconAprendizado( $line["TP"], "", "fa-4x" );
+					$area = getMacroArea( $line["TP"], "" );
+					fItemAprendizado(array(
+						"leftIcon" => $icon, 
+						"value" => $area, 
+						"title" => titleCase( $ds, array(" "), array("OU", "COU", "APS") )
+					));
+				endforeach;
+				?>
+			</div>
+		</div>
+	</div>
+	<?php endif;?>
+	<?php if (!$matAnteriores->EOF):?>
+	<div class="col-md-12 col-xs-12 col-sm-12 col-lg-12 col-xl-6">
+		<div class="panel panel-success">
+			<div class="panel-heading">
+				<label>Anteriores</label>
+			</div>
+			<div class="panel-body" style="height:300px;overflow-y:scroll;">
+				<div class="table-responsive">
+					<table class="table">
+						<thead>
+							<tr>
+								<th style="width:200px">Tipo</th>
+								<th>Descri&ccedil;&atilde;o</th>
+								<th style="width:100px">Data</th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php
+							foreach ($matAnteriores as $key => $line):
+								$ds = $line['DS'];
+								
+								if ( $line['CMPL'] == "S" && $line['FG_IM'] == 'N'):
+									$ds .= " - ". $line['DS_ITEM'];
+								endif;
+								
+								if ( !empty($fields['FUNDO']) ):
+									$ds .= " - FUNDO ". ($line['FUNDO'] == "BR" ?  "BRANCO" : "CAQUI");
+								endif;
+						
+								if ( !empty($line['COMPL']) ):
+									$ds .= " [ ".$line['COMPL']." ]";
+								endif;
+						
+								echo "<tr>
+									<td><i class=\"".getIconAprendizado( $line["TP"], "" )."\"></i>&nbsp;".$line["TP"]."</td>
+									<td>$ds</td>
+									<td>".date( 'd/m/Y', strtotime($line["DT_ENTREGA"]) )."</td>
+								</tr>";
+							endforeach;
+							?>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<?php endif;?>
+</div>
+<?php
+endif;
 ?>
 <script src="<?php echo $GLOBALS['VirtualDir'];?>dashboard/js/aprendizadoFunctions.js<?php echo "?".microtime();?>"></script>
 <script src="<?php echo $GLOBALS['VirtualDir'];?>dashboard/js/dashboardMembro.js<?php echo "?".microtime();?>"></script>
