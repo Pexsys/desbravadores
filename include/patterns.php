@@ -10,7 +10,7 @@ class PATTERNS {
         $this->virtualDir = "/desbravadores/";
 
         //DESCRICAO DO CLUBE
-        $this->$clubeDS = "Clube de Desbravadores Pioneiros - IASD Capão Redondo - 6ª Região - APS - UCB - DSA";
+        $this->clubeDS = "Clube de Desbravadores Pioneiros - IASD Capão Redondo - 6ª Região - APS - UCB - DSA";
 
         /*
         array(
