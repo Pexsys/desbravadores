@@ -26,6 +26,7 @@ class PATTERNS {
             "FN" => array( 
                 "size" => 1, 
                 "types" => array(
+                    //ID ETIQUETA           //TAG ETIQUETA  //OBR.CLASSE    //MODELO FORM   //DESCRICAO
                     array(  "id" => "0",    "tg" => "S",    "cl" => "N",    "md" => "1",    "ds" => "0-BÁSICA/NOME" ),
                     array(  "id" => "1",    "tg" => "S",    "cl" => "S",    "md" => "3",    "ds" => "1-CAPA DA PASTA DE AVALIAÇÃO" ),
                     array(  "id" => "2",	"tg" => "S",    "cl" => "S",    "md" => "3",    "ds" => "2-CAPA DE LEITURA BÍBLICA" ),
