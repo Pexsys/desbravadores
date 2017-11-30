@@ -36,11 +36,11 @@ $(document).ready(function(){
 						stringLength: {
 							min: 7,
 							max: 7,
-							message: 'O c&oacute;digo do usu&aacute;rio deve conter 7 caracteres'
+							message: 'O c&oacute;digo deve conter 7 caracteres'
 						},
 						regexp: {
-							regexp: /^[a-zA-Z0-9]+$/,
-							message: 'O c&oacute;digo do usu&aacute;rio s&oacute; pode conter letras e n&uacute;meros'
+							regexp: /^[Pp]{1}[AaBbCc]{1}[a-zA-Z0-9]{5}$/,
+							message: 'C&oacute;digo inv&aacute;lido'
 						}
 					}
 				},
@@ -86,16 +86,15 @@ $(document).ready(function(){
 		var parameter = {
 			codigo: $(this).val()
 		};
-		jsLIB.ajaxCall( false, jsLIB.rootDir+'rules/capas.php', { MethodName : 'getName', data : parameter }, 
-			function( data, jqxhr ){
-				if ( data.ok == true ) {
-					$("#nmMembro").val(data.nome);
-					$("#id").val(data.id);
-				} else {
-					resetNome();
-				}
-				updateFields();
-			});
+		jsLIB.ajaxCall( false, jsLIB.rootDir+'rules/capas.php', { MethodName : 'getName', data : parameter }, function(data){
+			if ( data.ok == true ) {
+				$("#nmMembro").val(data.nome);
+				$("#id").val(data.id);
+			} else {
+				resetNome();
+			}
+			updateFields();
+		});
 	});
 	
 	$("#nmMembro").change(function() {
