@@ -16,7 +16,6 @@ class ESPCR extends TCPDF {
 	function __construct() {
 		parent::__construct(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
-		// define barcode style
 		$this->stLine = array(
 		    'position' => '',
 		    'align' => 'C',

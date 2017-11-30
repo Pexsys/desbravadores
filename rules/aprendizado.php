@@ -341,7 +341,7 @@ function getData(){
 	$arr["especialidade"] = getEspecialidade();
 	$arr["mestrado"] = getMestrado();
 	$arr["merito"] = getMerito();
-	$arr["tags"] = $GLOBALS['pattern']->getTagsTipo("tg","S");
+	$arr["tags"] = $GLOBALS['pattern']->getBars()->getTagsTipo("tg","S");
 	
 	return $arr;
 }
