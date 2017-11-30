@@ -15,28 +15,28 @@ $classes = getDomainFilter( array( "type" => "C" ) );
 <div class="row">
 	<div class="col-lg-8">
 		<select name="cbListagem" id="cbListagem" class="selectpicker form-control input-sm" title="Escolha uma Listagem" data-width="100%" data-container="body" data-actions-box="true">
-			<option show="divRegistro" value="geraRegistro.php?filter=">REGISTRO DE HISTÓRICO DE MEMBROS</option>
+			<option data-icon="fa fa-history" show="divRegistro" value="geraRegistro.php?filter=">REGISTRO DE HISTÓRICO DE MEMBROS</option>
 			<option data-divider="true"></option>
-			<option value="geraListaAtivos.php?">LISTAGEM DE MEMBROS</option>
-			<option show="divBatismo" value="geraListaBatismos.php?filter=">LISTAGEM DE MEMBROS - SITUACAO DE BATISMO</option>
-			<option show="divClasses" value="geraListaClasse.php?filter=">LISTAGEM DE MEMBROS - CLASSE</option>
-			<option show="divUnidades" value="geraListaUnidade.php?filter=">LISTAGEM DE MEMBROS - UNIDADE</option>
-			<option show="divFanfarra" value="geraListaFanfarra.php?filter=">LISTAGEM DE MEMBROS - FANFARRA</option>
-			<option show="divUniformes" value="geraListaUniformes.php?filter=">LISTAGEM DE MEMBROS - UNIFORMES</option>
+			<option data-icon="fa fa-address-card-o" value="geraListaAtivos.php?">LISTAGEM DE MEMBROS</option>
+			<option data-icon="fa fa-bath" show="divBatismo" value="geraListaBatismos.php?filter=">LISTAGEM DE MEMBROS - SITUACAO DE BATISMO</option>
+			<option data-icon="fa fa-graduation-cap" show="divClasses" value="geraListaClasse.php?filter=">LISTAGEM DE MEMBROS - CLASSE</option>
+			<option data-icon="fa fa-universal-access" show="divUnidades" value="geraListaUnidade.php?filter=">LISTAGEM DE MEMBROS - UNIDADE</option>
+			<option data-icon="fa fa-music" show="divFanfarra" value="geraListaFanfarra.php?filter=">LISTAGEM DE MEMBROS - FANFARRA</option>
+			<option data-icon="fa fa-user-circle-o" show="divUniformes" value="geraListaUniformes.php?filter=">LISTAGEM DE MEMBROS - UNIFORMES</option>
 			<option data-divider="true"></option>
-			<option value="geraListaPresencaPais.php?">LISTAGEM DE PRESEN&Ccedil;A - REUNI&Atilde;O DE PAIS</option>
+			<option data-icon="fa fa-hand-o-up" value="geraListaPresencaPais.php?">LISTAGEM DE PRESEN&Ccedil;A - REUNI&Atilde;O DE PAIS</option>
 			<option data-divider="true"></option>
-			<option value="geraListaEstrelas.php?">REQUISI&Ccedil;&Atilde;O DE ESTRELAS DE TEMPO DE SERVI&Ccedil;O</option>
+			<option data-icon="fa fa-star" value="geraListaEstrelas.php?">REQUISI&Ccedil;&Atilde;O DE ESTRELAS DE TEMPO DE SERVI&Ccedil;O</option>
 			<option data-divider="true"></option>
-			<option show="divEventos" value="geraListaEvento.php?eve=">LISTAGEM DE SA&Iacute;DA - ALFAB&Eacute;TICA</option>
-			<option show="divEventos" value="geraListaEventoAutoriz.php?eve=">LISTAGEM DE SA&Iacute;DA - CONTROLE DE AUTORIZA&Ccedil;&Otilde;ES - GERAL</option>
-			<option show="divEventos" value="geraListaEventoAutorizGen.php?eve=">LISTAGEM DE SA&Iacute;DA - CONTROLE DE AUTORIZA&Ccedil;&Otilde;ES - G&Ecirc;NERO</option>
-			<option show="divEventos" value="geraListaDispensaEscola.php?eve=">LISTAGEM DE SA&Iacute;DA - DISPENSA ESCOLAR</option>
-			<option show="divEventos" value="geraListaEventoTent.php?eve=">LISTAGEM DE SA&Iacute;DA - BARRACAS</option>
-			<option show="divEventos" value="geraListaEventoKitchen.php?eve=">LISTAGEM DE SA&Iacute;DA - COZINHA</option>
-			<option show="divEventos" value="geraListaEventoBus.php?eve=">LISTAGEM DE SA&Iacute;DA - PASSAGEIROS</option>
-			<option show="divEventos" value="geraListaUniformes.php?filter=C&eve=">LISTAGEM DE SA&Iacute;DA - CAMISETAS - GERAL</option>
-			<option show="divEventos" value="geraListaUniformes.php?filter=A&eve=">LISTAGEM DE SA&Iacute;DA - AGASALHOS - GERAL</option>
+			<option data-icon="fa fa-sort-alpha-asc" show="divEventos" value="geraListaEvento.php?eve=">LISTAGEM DE SA&Iacute;DA - ALFAB&Eacute;TICA</option>
+			<option data-icon="fa fa-list" show="divEventos" value="geraListaEventoAutoriz.php?eve=">LISTAGEM DE SA&Iacute;DA - CONTROLE DE AUTORIZA&Ccedil;&Otilde;ES - GERAL</option>
+			<option data-icon="fa fa-venus-mars" show="divEventos" value="geraListaEventoAutorizGen.php?eve=">LISTAGEM DE SA&Iacute;DA - CONTROLE DE AUTORIZA&Ccedil;&Otilde;ES - G&Ecirc;NERO</option>
+			<option data-icon="fa fa-leanpub" show="divEventos" value="geraListaDispensaEscola.php?eve=">LISTAGEM DE SA&Iacute;DA - DISPENSA ESCOLAR</option>
+			<option data-icon="glyphicon glyphicon-tent" show="divEventos" value="geraListaEventoTent.php?eve=">LISTAGEM DE SA&Iacute;DA - BARRACAS</option>
+			<option data-icon="fa fa-cutlery" show="divEventos" value="geraListaEventoKitchen.php?eve=">LISTAGEM DE SA&Iacute;DA - COZINHA</option>
+			<option data-icon="fa fa-bus" show="divEventos" value="geraListaEventoBus.php?eve=">LISTAGEM DE SA&Iacute;DA - PASSAGEIROS</option>
+			<option data-icon="fa fa fa-user" show="divEventos" value="geraListaUniformes.php?filter=C&eve=">LISTAGEM DE SA&Iacute;DA - CAMISETAS - GERAL</option>
+			<option data-icon="fa fa-male" show="divEventos" value="geraListaUniformes.php?filter=A&eve=">LISTAGEM DE SA&Iacute;DA - AGASALHOS - GERAL</option>
 		</select>
 	</div>
 </div>
