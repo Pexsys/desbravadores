@@ -28,7 +28,7 @@ class TAGS {
 	}
 	
 	public function insertItemTag( $tp, $pessoaID, $aprendID = null ) {
-		$option = $GLOBALS['pattern']->getOptionsTag($tp);
+		$option = $GLOBALS['pattern']->getBars()->getTagByID($tp);
 
 		//SE NAO APONTADO APRENDIZADO, PROCURA MAIOR APRENDIZADO AVALIADO
 		if (empty($aprendID) || is_null($aprendID)):

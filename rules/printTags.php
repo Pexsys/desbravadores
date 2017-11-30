@@ -97,7 +97,7 @@ function getQueryByFilter( $parameters ) {
 }
 
 function getTags( $parameters ) {
-	$tags = $GLOBALS['pattern']->getTagsTipo("tg","S");
+	$tags = $GLOBALS['pattern']->getBars()->getTagsTipo("tg","S");
 	$arr = array();
 	
 	fConnDB();
@@ -118,7 +118,7 @@ function getTags( $parameters ) {
 	 ORDER BY pt.BC, ap.CD_ITEM_INTERNO, at.NM
 	");
 	foreach ($result as $k => $fields):
-		$option = $GLOBALS['pattern']->getOptionsTag($fields['TP']);
+		$option = $GLOBALS['pattern']->getBars()->getTagByID($fields['TP']);
 		$ds = substr($option["ds"],2);
 		
 		if ($option["cl"] == "S" || !is_null($fields['DS_ITEM'])):
@@ -138,7 +138,7 @@ function getTags( $parameters ) {
 function getData( $parameters ){
 	return array(	"result"	=> true, 
 					"membros"	=> getMembros( $parameters ),
-					"tags"		=> $GLOBALS['pattern']->getTagsTipo("tg","S"),
+					"tags"		=> $GLOBALS['pattern']->getBars()->getTagsTipo("tg","S"),
 					"forms"		=> getFormsTipo()
 	) ;
 }
