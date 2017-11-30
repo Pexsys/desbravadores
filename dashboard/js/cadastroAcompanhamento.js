@@ -185,15 +185,13 @@ $(document).ready(function(){
 });
 
 function update(){
-	
 	var parameter = {
 		frm: jsLIB.getJSONFields( $('#cadAcompForm') )
 	};
-	
-	jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/acompanhamento.php", { MethodName : 'setRequisito', data : parameter } );
-
-	$("#divResultado").empty().hide();
-	$("#cdBar").val('').change().focus();
-	$('#btnGravar').visible(false);
-	dataTable.ajax.reload();
+	jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/acompanhamento.php", { MethodName : 'setRequisito', data : parameter }, function(){
+		$("#divResultado").empty().hide();
+		$("#cdBar").val('').change().focus();
+		$('#btnGravar').visible(false);
+		dataTable.ajax.reload();
+	});
 }

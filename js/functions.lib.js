@@ -197,7 +197,7 @@ var jsLIB = {
 				}
 				if ( typeof( callBackSucess ) == 'function' ) {
 					callBackSucess( data, jqxhr );
-				} else if ( callBackSucess === 'RETURN' ) {
+				} else if ( callBackSucess === undefined ) {
 					retorno = data;
 				}
 			},
@@ -458,14 +458,15 @@ var jsFilter = {
 		var value = obj.val();
 
 		if (value != ""){
-			var flt = jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/addFilter.php", { MethodName : 'addFilter', data : { type : value, desc : label } }, 'RETURN' );
-			if ( flt.result ) {
-				$("#divFilters").append(flt.obj);
-				$("#optFilter"+value).selectpicker();
-				$("#addFilter option[value='"+value+"']").remove();
-				$("#addFilter").selectpicker('refresh');
-				$("#applyFilter").show();
-			}
+			jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/addFilter.php", { MethodName : 'addFilter', data : { type : value, desc : label } }, function(flt){
+				if ( flt.result ) {
+					$("#divFilters").append(flt.obj);
+					$("#optFilter"+value).selectpicker();
+					$("#addFilter option[value='"+value+"']").remove();
+					$("#addFilter").selectpicker('refresh');
+					$("#applyFilter").show();
+				}
+			});
 		}
 	}
 };

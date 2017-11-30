@@ -72,25 +72,26 @@ $(document).ready(function(){
 	});
 	
 	$('#btnCiente').on('click', function(){
-		jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/ocorrencias.php", { MethodName : 'fSetRead', data : { id : $(this).attr("ocorr-id") } }, 'RETURN' );
-		ocoDataTable.ajax.reload();
-		$("#ocoModal").modal('hide');
-
-		updateNotifications();
+		jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/ocorrencias.php", { MethodName : 'fSetRead', data : { id : $(this).attr("ocorr-id") } }, function(data){
+			ocoDataTable.ajax.reload();
+			$("#ocoModal").modal('hide');
+			updateNotifications();
+		});
 	});
 });
 
 function populateOcorrencias( data ) {
 	$("#btnCiente").visible(false);
-	var cm = jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/ocorrencias.php", { MethodName : 'fOcorrencia', data : { id : data.id, nomes : 'N' } }, 'RETURN' );
-	if (cm.ocorrencia){
-		$("#ocorrenciaTitle").html("<b>Ocorr&ecirc;ncia #"+cm.ocorrencia.cd+" - Data:"+moment.unix(cm.ocorrencia.dh/1000).format("DD/MM/YYYY")+" - Inserido por:&nbsp;"+cm.ocorrencia.owner+"</b>");
-		$("#ocorrenciaBody").html(cm.ocorrencia.txt);
-		
-		if (data.st == 'S'){
-			setTimeout(function(){
-				$("#btnCiente").attr("ocorr-id",data.id).visible(true);
-			}, 5000);			
+	jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/ocorrencias.php", { MethodName : 'fOcorrencia', data : { id : data.id, nomes : 'N' } }, function(cm){
+		if (cm.ocorrencia){
+			$("#ocorrenciaTitle").html("<b>Ocorr&ecirc;ncia #"+cm.ocorrencia.cd+" - Data:"+moment.unix(cm.ocorrencia.dh/1000).format("DD/MM/YYYY")+" - Inserido por:&nbsp;"+cm.ocorrencia.owner+"</b>");
+			$("#ocorrenciaBody").html(cm.ocorrencia.txt);
+			
+			if (data.st == 'S'){
+				setTimeout(function(){
+					$("#btnCiente").attr("ocorr-id",data.id).visible(true);
+				}, 5000);			
+			}
 		}
-	}
+	});
 }

@@ -183,10 +183,11 @@ $(document).ready(function(){
 							id: $('#comID').val(),
 							op: "DELETE"
 						};
-						jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/comunicados.php", { MethodName : 'fComunicado', data : parameter } );
-						comDataTable.ajax.reload();
-						dialogRef.close();
-						$("#comModal").modal('hide');
+						jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/comunicados.php", { MethodName : 'fComunicado', data : parameter }, function(){
+							comDataTable.ajax.reload();
+							dialogRef.close();
+							$("#comModal").modal('hide');
+						});
 					}
 				}
 			]
@@ -262,12 +263,13 @@ function rulefields(){
 }
 
 function populateComunicado( comunicadoID ) {
-	var cm = jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/comunicados.php", { MethodName : 'fComunicado', data : { id : comunicadoID } }, 'RETURN' );
-	jsLIB.populateForm( $("#cadComForm"), cm.comunicado );
-	valuePendOrig = cm.comunicado.fg_pend;
-	valuePend = jsLIB.getValueFromField( $("#fgPend") );
-	rulefields();
-	buttons();
+	jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/comunicados.php", { MethodName : 'fComunicado', data : { id : comunicadoID } }, function(cm){
+		jsLIB.populateForm( $("#cadComForm"), cm.comunicado );
+		valuePendOrig = cm.comunicado.fg_pend;
+		valuePend = jsLIB.getValueFromField( $("#fgPend") );
+		rulefields();
+		buttons();
+	});
 }
 
 function updateComunicado(){
@@ -275,11 +277,12 @@ function updateComunicado(){
 		op: "UPDATE",
 		frm: jsLIB.getJSONFields( $('#cadComForm') )
 	};
-	var cm = jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/comunicados.php", { MethodName : 'fComunicado', data : parameter }, 'RETURN' );
-	$("#comID").val(cm.id);
-	valuePendOrig = cm.so;
-	valuePend = jsLIB.getValueFromField( $("#fgPend") );
-	buttons();
-	rulefields();
-	comDataTable.ajax.reload();
+	var cm = jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/comunicados.php", { MethodName : 'fComunicado', data : parameter }, function(cm){
+		$("#comID").val(cm.id);
+		valuePendOrig = cm.so;
+		valuePend = jsLIB.getValueFromField( $("#fgPend") );
+		buttons();
+		rulefields();
+		comDataTable.ajax.reload();
+	});
 }

@@ -74,25 +74,26 @@ $(document).ready(function(){
 	});
 	
 	$('#btnCiente').on('click', function(){
-		jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/comunicados.php", { MethodName : 'fSetRead', data : { id : $(this).attr("comunic-id") } }, 'RETURN' );
-		comDataTable.ajax.reload();
-		$("#comModal").modal('hide');
-
-		updateNotifications();
+		jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/comunicados.php", { MethodName : 'fSetRead', data : { id : $(this).attr("comunic-id") } }, function(data){
+			comDataTable.ajax.reload();
+			$("#comModal").modal('hide');
+			updateNotifications();
+		});
 	});
 });
 
 function populateComunicado( data ) {
 	$("#btnCiente").visible(false);
-	var cm = jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/comunicados.php", { MethodName : 'fComunicado', data : { id : data.id } }, 'RETURN' );
-	if (cm.comunicado){
-		$("#comunicadoTitle").html("<b>Comunicado&nbsp;#"+cm.comunicado.cd+"&nbsp;&nbsp;&nbsp;[&nbsp;"+moment.unix(cm.comunicado.dh/1000).format("DD/MM/YYYY")+"&nbsp;]</b>");
-		$("#comunicadoBody").html(cm.comunicado.txt);
-		
-		if (data.st == 'S'){
-			setTimeout(function(){
-				$("#btnCiente").attr("comunic-id",data.id).visible(true);
-			}, 5000);			
+	jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/comunicados.php", { MethodName : 'fComunicado', data : { id : data.id } }, function(cm){
+		if (cm.comunicado){
+			$("#comunicadoTitle").html("<b>Comunicado&nbsp;#"+cm.comunicado.cd+"&nbsp;&nbsp;&nbsp;[&nbsp;"+moment.unix(cm.comunicado.dh/1000).format("DD/MM/YYYY")+"&nbsp;]</b>");
+			$("#comunicadoBody").html(cm.comunicado.txt);
+			
+			if (data.st == 'S'){
+				setTimeout(function(){
+					$("#btnCiente").attr("comunic-id",data.id).visible(true);
+				}, 5000);			
+			}
 		}
-	}
+	});
 }

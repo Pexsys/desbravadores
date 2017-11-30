@@ -1,64 +1,62 @@
-var datasets = undefined;
-
 $(document).ready(function(){
-	datasets = jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/painelAprendizadoUnidade.php", { MethodName : 'getGraphData' }, 'RETURN' );
-
-	if (datasets.cls){
-		var optionBar = {
-			series: {
-				stack: false,
-				shadowSize: false,
-				bars: {
+	jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/painelAprendizadoUnidade.php", { MethodName : 'getGraphData' }, function(data){
+		if (data.cls){
+			var optionBar = {
+				series: {
+					stack: false,
+					shadowSize: false,
+					bars: {
+						show: true,
+						barWidth: 0.7,
+						align: "center",
+						zero: true,
+						horizontal: false,
+						fillColor: {
+						colors:	[
+								{opacity: 0.9},
+								{opacity: 0.75}
+							]
+						},
+						fill: true,
+						lineWidth: 2
+					}
+				},
+				legend: {
 					show: true,
-					barWidth: 0.7,
-					align: "center",
-					zero: true,
-					horizontal: false,
-					fillColor: {
-					colors:	[
-							{opacity: 0.9},
-							{opacity: 0.75}
-						]
+					labelFormatter: function(v, axis) {
+						return "&nbsp;" + v + "%&nbsp;";
 					},
-					fill: true,
-					lineWidth: 2
-				}
-			},
-			legend: {
-				show: true,
-				labelFormatter: function(v, axis) {
-					return "&nbsp;" + v + "%&nbsp;";
+					noColumns: 12,
+					backgroundOpacity: 1
 				},
-				noColumns: 12,
-				backgroundOpacity: 1
-			},
-			xaxis: {
-				show: true,
-				axisLabelUseCanvas: true,
-				axisLabelFontSizePixels: 10,
-				axisLabelFontFamily: 'Verdana, Arial',
-				axisLabelPadding: 10,
-				tickFormatter: function(v, axis) {
-					return "";
+				xaxis: {
+					show: true,
+					axisLabelUseCanvas: true,
+					axisLabelFontSizePixels: 10,
+					axisLabelFontFamily: 'Verdana, Arial',
+					axisLabelPadding: 10,
+					tickFormatter: function(v, axis) {
+						return "";
+					},
+					ticks: data.ticks
 				},
-				ticks: datasets.ticks
-			},
-			yaxis: {
-				show: true,
-				axisLabel: "ITENS ASSINADOS",
-				axisLabelUseCanvas: true,
-				axisLabelFontSizePixels: 10,
-				axisLabelFontFamily: 'Verdana, Arial',
-				min: 0,
-				max: 100,
-				tickFormatter: function(v, axis) {
-					return v + "%";
+				yaxis: {
+					show: true,
+					axisLabel: "ITENS ASSINADOS",
+					axisLabelUseCanvas: true,
+					axisLabelFontSizePixels: 10,
+					axisLabelFontFamily: 'Verdana, Arial',
+					min: 0,
+					max: 100,
+					tickFormatter: function(v, axis) {
+						return v + "%";
+					}
 				}
-			}
-		};
-			
-		$.plot("#phGhaphC", datasets.cls, optionBar );
-	}
+			};
+				
+			$.plot("#phGhaphC", data.cls, optionBar );
+		}
+	});
 
 	$('.panel')
 		.on('click', function (e) {

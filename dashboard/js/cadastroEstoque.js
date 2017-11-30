@@ -92,14 +92,12 @@ $(document).ready(function(){
 				frm: jsLIB.getJSONFields( $('#cadListaForm') ),
 				tp: save
 			};
-			jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/cadastroEstoque.php", { MethodName : 'setEstoque', data : parameter },
-				function(){
-					dataTable.ajax.reload();
-					if (save != "add"){
-						$("#listaModal").modal('hide');
-					}
+			jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/cadastroEstoque.php", { MethodName : 'setEstoque', data : parameter },function(dt){
+				dataTable.ajax.reload();
+				if (save != "add"){
+					$("#listaModal").modal('hide');
 				}
-			 );
+			});
 		})
 	;
 	
@@ -132,32 +130,33 @@ $(document).ready(function(){
 	
 	$('#matEstTable tbody').on('click', 'tr', function () {
 		var matID = dataTable.row( this ).data().id;
-		var es = jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/cadastroEstoque.php", { MethodName : 'getItem', data : { id: matID } }, 'RETURN' );
-		if (es){
-			save = "edit";
-			
-			jsLIB.resetForm( $('#cadListaForm') );
-			$('#divItem').visible(false);
-			
-			populateTipos();
-			$("#cmTipo").prop('disabled', true).val(es.tp).change();
-
-			$("#qtItens").val(es.qt_est);
-
-			populateItens(es.tp);
-			$("#cmItem").prop('disabled', true).val(matID).change();
-			$("#listaModal").modal();
-		}
+		jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/cadastroEstoque.php", { MethodName : 'getItem', data : { id: matID } }, function(es){
+			if (es){
+				save = "edit";
+				
+				jsLIB.resetForm( $('#cadListaForm') );
+				$('#divItem').visible(false);
+				
+				populateTipos();
+				$("#cmTipo").prop('disabled', true).val(es.tp).change();
+	
+				$("#qtItens").val(es.qt_est);
+	
+				populateItens(es.tp);
+				$("#cmItem").prop('disabled', true).val(matID).change();
+				$("#listaModal").modal();
+			}
+		});
 	});	
-
 });
 
 function populateTipos(){
 	var parameter = {
 		domains : [ "tiposEst" ]
 	};
-	var cg = jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/listaCompras.php", { MethodName : 'getData', data : parameter }, 'RETURN' );
-	jsLIB.populateOptions( $("#cmTipo"), cg.tipos );
+	jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/listaCompras.php", { MethodName : 'getData', data : parameter }, function(cg){
+		jsLIB.populateOptions( $("#cmTipo"), cg.tipos );
+	});
 }
 
 function populateItens(tp){
@@ -165,6 +164,7 @@ function populateItens(tp){
 		key : tp,
 		domains : [ "itensEst" ]
 	};
-	var cg = jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/listaCompras.php", { MethodName : 'getData', data : parameter }, 'RETURN' );
-	jsLIB.populateOptions( $("#cmItem"), cg.itens );
+	jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/listaCompras.php", { MethodName : 'getData', data : parameter }, function(cg){
+		jsLIB.populateOptions( $("#cmItem"), cg.itens );
+	});
 }

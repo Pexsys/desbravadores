@@ -291,10 +291,11 @@ $(document).ready(function(){
 								sx: sexo,
 								dc: doc
 							}
-							var mb = jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/membros.php", { MethodName : 'insertMember', data : parameters }, 'RETURN' );
-							if (mb.result == true){
-								populateMember(mb);
-							}
+							jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/membros.php", { MethodName : 'insertMember', data : parameters }, function(mb){
+								if (mb.result == true){
+									populateMember(mb);
+								}
+							});
 						}
 						
 					//se mudou procura, se nao encontrar cpf, insere. se encontrar, retorna dados e popula.
@@ -303,10 +304,11 @@ $(document).ready(function(){
 							id	: membroID,
 							cpf	: value
 						}
-						var rs = jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/membros.php", { MethodName : 'verificaResp', data : parameters }, 'RETURN' );
-						formPopulated = false;
-						jsLIB.populateForm( $("#Resp"), rs);
-						formPopulated = true;
+						jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/membros.php", { MethodName : 'verificaResp', data : parameters }, function(rs){
+							formPopulated = false;
+							jsLIB.populateForm( $("#Resp"), rs);
+							formPopulated = true;
+						});
 						
 					} else {
 						var parameters = {
@@ -315,35 +317,35 @@ $(document).ready(function(){
 							val	: value
 						}
 						//gravar
-						var mb = jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/membros.php", { MethodName : 'updateMember', data : parameters }, 'RETURN' );
-
-						//tratamento de dependencias
-						if (field == "cad_pessoa-tp_sexo"){
-							populateUnidade(membroID);
-							populateCargos(membroID);
-						} else if (field == "cad_pessoa-dt_nasc"){
-							$("#nrIdade").val( mb.membro.nr_idade );
-							fMostraAba( mb.membro.nr_idade < 18, $("#abaResponsavel"), $("#Resp") );
-							populateUnidade(membroID);
-							populateCargos(membroID);
-						} else if (field == "cad_pessoa-cep"){
-							var ect = jsLIB.consultaCEP( value );
-							if (ect.cep){
-								$("#dsLogra").val(ect.cep.lg).attr('valid','ok').trigger("change");
-								$("#nrLog").val(ect.cep.nr).attr('valid','ok').trigger("change");
-								$("#dsBai").val(ect.cep.ba).attr('valid','ok').trigger("change");
-								$("#dsCid").val(ect.cep.cd).attr('valid','ok').trigger("change");
-								$("#cmUF").val(ect.cep.uf).attr('valid','ok').trigger("change");
+						jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/membros.php", { MethodName : 'updateMember', data : parameters }, function(mb){
+							//tratamento de dependencias
+							if (field == "cad_pessoa-tp_sexo"){
+								populateUnidade(membroID);
+								populateCargos(membroID);
+							} else if (field == "cad_pessoa-dt_nasc"){
+								$("#nrIdade").val( mb.membro.nr_idade );
+								fMostraAba( mb.membro.nr_idade < 18, $("#abaResponsavel"), $("#Resp") );
+								populateUnidade(membroID);
+								populateCargos(membroID);
+							} else if (field == "cad_pessoa-cep"){
+								var ect = jsLIB.consultaCEP( value );
+								if (ect.cep){
+									$("#dsLogra").val(ect.cep.lg).attr('valid','ok').trigger("change");
+									$("#nrLog").val(ect.cep.nr).attr('valid','ok').trigger("change");
+									$("#dsBai").val(ect.cep.ba).attr('valid','ok').trigger("change");
+									$("#dsCid").val(ect.cep.cd).attr('valid','ok').trigger("change");
+									$("#cmUF").val(ect.cep.uf).attr('valid','ok').trigger("change");
+								}
+							} else if (field == "cad_ativos-id_unidade"){
+								populateCargos(membroID);
+							} else if (field == "cad_ativos-cd_cargo"){
+								fMostraDiretoria();
+							} else if (field == "fg_ativo"){
+								if (mb.result == true){
+									populateMember(mb);
+								}
 							}
-						} else if (field == "cad_ativos-id_unidade"){
-							populateCargos(membroID);
-						} else if (field == "cad_ativos-cd_cargo"){
-							fMostraDiretoria();
-						} else if (field == "fg_ativo"){
-							if (mb.result == true){
-								populateMember(mb);
-							}
-						}
+						});
 					}
 				}
 			}
@@ -426,26 +428,29 @@ function ruleButtons() {
 function populateUnidade(membroID) {
 	formPopulated = false;
 	var value = $("#cmUnidade").val();
-	var un = jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/membros.php", { MethodName : 'getUnidades', data : { id : membroID } }, 'RETURN' );
-	jsLIB.populateOptions( $("#cmUnidade"), un );
-	$("#cmUnidade").val(value).change();
-	formPopulated = true;
+	jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/membros.php", { MethodName : 'getUnidades', data : { id : membroID } },function(un){
+		jsLIB.populateOptions( $("#cmUnidade"), un );
+		$("#cmUnidade").val(value).change();
+		formPopulated = true;
+	});
 }
 
 function populateCargos(membroID) {
 	formPopulated = false;
 	var value = $("#cmCargo").val();
-	var cg = jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/membros.php", { MethodName : 'getCargos', data : { id : membroID } }, 'RETURN' );
-	jsLIB.populateOptions( $("#cmCargo"), cg );
-	$("#cmCargo").val(value).change();
-
-	if ( value.startsWith("2-07") ) {
-		var cg = jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/membros.php", { MethodName : 'getCargos', data : { id : membroID, tp : true } }, 'RETURN' );
-		jsLIB.populateOptions( $("#cmCargo2"), cg );
-	}
+	jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/membros.php", { MethodName : 'getCargos', data : { id : membroID } }, function(){
+		jsLIB.populateOptions( $("#cmCargo"), cg );
+		$("#cmCargo").val(value).change();
 	
-	fMostraDiretoria();
-	formPopulated = true;
+		if ( value.startsWith("2-07") ) {
+			jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/membros.php", { MethodName : 'getCargos', data : { id : membroID, tp : true } }, function(cg){
+				jsLIB.populateOptions( $("#cmCargo2"), cg );
+			});
+		}
+		fMostraDiretoria();
+		formPopulated = true;
+	});
+
 }
 
 function getMember( membroID ) {
@@ -454,7 +459,7 @@ function getMember( membroID ) {
 		filtro: tpFiltro,
 		id : membroID
 	};
-	return jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/membros.php", { MethodName : 'getMember', data : parameters }, 'RETURN' );
+	return jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/membros.php", { MethodName : 'getMember', data : parameters } );
 	jsLIB.modalWaiting(false);
 }
 
