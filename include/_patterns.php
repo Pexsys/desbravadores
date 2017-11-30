@@ -1,23 +1,8 @@
 <?php
-class PATTERNS {
-
-    private $virtualDir;
-    private $clubeDS;
+class BARS {
     private $bars;
 
     function __construct() {
-
-        //VIRTUALDIR
-        $this->virtualDir = "/desbravadores/";
-
-        //DESCRICAO DO CLUBE
-        $this->clubeDS = "Clube de Desbravadores Pioneiros - IASD Capão Redondo - 6ª Região - APS - UCB - DSA";
-
-        /*
-        $arr[] = array("id"	=> "1",	"fi" => "S", "qt" => "20", "ds"=> "20 ETIQUETAS (02x10 - 25,4mm X 101,6mm - CARTA)" );
-        $arr[] = array("id"	=> "2",	"fi" => "S", "qt" => "4",  "ds"=> "04 ETIQUETAS (02x02 - 138,11mm X 106,36mm - CARTA)");
-        $arr[] = array("id"	=> "3",	"fi" => "N", "qt" => "1",  "ds"=> "FOLHAS A4" );
-        */
         $this->bars = array(
             //CLUBE ID
             "CI" => array( "fixed" => "P" ),
@@ -47,7 +32,6 @@ class PATTERNS {
         );
     }
 
-    //RETORNA TODAS AS TAGS PARA BARCODE
     public function getAllTags(){
         return $this->bars["FN"]["types"];
     }
@@ -60,11 +44,34 @@ class PATTERNS {
     }
 
     //RETORNA O OBJETO DE ACORDO COM O ID(TIPO)
-    public function getOptionsTag($id){
+    public function getTagByID($id){
         $arr = array_filter( $this->getAllTags(), function($e) use($id){
             return $e["id"] == $id;
         });
         return $arr[0];
+    }
+}
+
+class PATTERNS {
+
+    private $virtualDir;
+    private $clubeDS;
+    private $bars;
+
+    function __construct() {
+
+        //VIRTUALDIR
+        $this->virtualDir = "/desbravadores/";
+
+        //DESCRICAO DO CLUBE
+        $this->clubeDS = "Clube de Desbravadores Pioneiros - IASD Capão Redondo - 6ª Região - APS - UCB - DSA";
+
+        //DEFINICOES DO BARCODE
+        $this->bars = new BARS();
+    }
+
+    public function getBars(){
+        return $this->bars;
     }
 
     //RETORNA VIRTUAL DIR
