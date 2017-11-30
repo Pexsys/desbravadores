@@ -207,9 +207,10 @@ $(document).ready(function(){
 						var parameter = {
 							ids: tmp
 						};
-						jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/aprendizado.php", { MethodName : 'delete', data : parameter } );
-						dialogRef.close();
-						closeAndRefresh();
+						jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/aprendizado.php", { MethodName : 'delete', data : parameter }, function(){
+							dialogRef.close();
+							closeAndRefresh();
+						});
 					}
 				}
 			]
@@ -310,11 +311,12 @@ function closeAndRefresh(){
 }
 
 function populateData(){
-	var cg = jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/aprendizado.php", { MethodName : 'getData' }, 'RETURN' );
-	jsLIB.populateOptions( $("#cmNome"), cg.nomes );
-	jsLIB.populateOptions( $("#cmClasse"), cg.classe );
-	jsLIB.populateOptions( $("#cmIdent"), cg.tags );
-	jsLIB.populateOptions( $("#cmEspec"), cg.especialidade );
-	jsLIB.populateOptions( $("#cmMest"), cg.mestrado );
-	jsLIB.populateOptions( $("#cmMeri"), cg.merito );
+	jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/aprendizado.php", { MethodName : 'getData' }, function(cg){
+		jsLIB.populateOptions( $("#cmNome"), cg.nomes );
+		jsLIB.populateOptions( $("#cmClasse"), cg.classe );
+		jsLIB.populateOptions( $("#cmIdent"), cg.tags );
+		jsLIB.populateOptions( $("#cmEspec"), cg.especialidade );
+		jsLIB.populateOptions( $("#cmMest"), cg.mestrado );
+		jsLIB.populateOptions( $("#cmMeri"), cg.merito );
+	});
 }

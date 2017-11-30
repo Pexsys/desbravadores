@@ -9,14 +9,14 @@ $(document).ready(function(){
 		ruleBotaoGerar();
 	});
 	
-	var mb = jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/printChamada.php", { MethodName : 'getDomains' }, 'RETURN' );
-	if (mb){
-		jsLIB.populateOptions( $("#cbMeses"), mb.meses );
-		jsLIB.populateOptions( $("#cbUnidades"), mb.unidade );
-		$("#cbUnidades").selectpicker('selectAll');
-		ruleBotaoGerar();
-	}
-	
+	jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/printChamada.php", { MethodName : 'getDomains' }, function(mb){
+		if (mb){
+			jsLIB.populateOptions( $("#cbMeses"), mb.meses );
+			jsLIB.populateOptions( $("#cbUnidades"), mb.unidade );
+			$("#cbUnidades").selectpicker('selectAll');
+			ruleBotaoGerar();
+		}
+	});
 });
 
 function ruleBotaoGerar(){

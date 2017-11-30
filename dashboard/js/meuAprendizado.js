@@ -11,47 +11,49 @@ $(document).ready(function(){
 				id : $(this).attr('id-rule')
 			};
 			
-			var objReturn = jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/meuAprendizado.php", { MethodName : 'getMasterRules', data : parameter }, 'RETURN' );
-            
-            BootstrapDialog.show({
-				title: objReturn.title,
-				message: objReturn.message,
-				type: $(this).attr('cl-bar'),
-				size: BootstrapDialog.SIZE_WIDE,
-				draggable: true,
-				closable: true,
-				closeByBackdrop: true,
-				closeByKeyboard: true,
-				onshown: function(dialogRef){
-					mapPrint();
-			},
-				buttons: [
-					{ label: 'Fechar',
-						icon: 'glyphicon glyphicon-remove',
-						cssClass: 'btn-info',
-						autospin: true,
-						action: function(dialogRef){
-							dialogRef.enableButtons(false);
-							dialogRef.setClosable(false);
-							dialogRef.close();
+			jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/meuAprendizado.php", { MethodName : 'getMasterRules', data : parameter }, function(data){
+				BootstrapDialog.show({
+					title: data.title,
+					message: data.message,
+					type: $(this).attr('cl-bar'),
+					size: BootstrapDialog.SIZE_WIDE,
+					draggable: true,
+					closable: true,
+					closeByBackdrop: true,
+					closeByKeyboard: true,
+					onshown: function(dialogRef){
+						mapPrint();
+				},
+					buttons: [
+						{ label: 'Fechar',
+							icon: 'glyphicon glyphicon-remove',
+							cssClass: 'btn-info',
+							autospin: true,
+							action: function(dialogRef){
+								dialogRef.enableButtons(false);
+								dialogRef.setClosable(false);
+								dialogRef.close();
+							}
 						}
-					}
-				]
+					]
+				});
 			});
         }
 	});
     
-	datasets = jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/meuAprendizado.php", { MethodName : 'getGraphData' }, 'RETURN' );
-	if (datasets.checkbox){
-		$("#divGraph").show(true);
-		choiceContainer = $("#choices");
-		$.each(datasets.checkbox, function(key, val) {
-			choiceContainer.append('<label><input type="checkbox" name="'+ key +
-				'" checked="checked" id="op'+ key +'"/>'+ val.label +'</label>&nbsp;');
-		});
-		choiceContainer.find("input").click(plotAccordingToChoices);
-		plotAccordingToChoices();
-	}
+	jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/meuAprendizado.php", { MethodName : 'getGraphData' }, function(data){
+		datasets = data;
+		if (data.checkbox){
+			$("#divGraph").show(true);
+			choiceContainer = $("#choices");
+			$.each(data.checkbox, function(key, val) {
+				choiceContainer.append('<label><input type="checkbox" name="'+ key +
+					'" checked="checked" id="op'+ key +'"/>'+ val.label +'</label>&nbsp;');
+			});
+			choiceContainer.find("input").click(plotAccordingToChoices);
+			plotAccordingToChoices();
+		}
+	});
 	
 	mapPrint();
 });

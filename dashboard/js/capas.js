@@ -115,10 +115,12 @@ $(document).ready(function(){
 		$('#nmMembro').selectpicker('deselectAll');
 	});
 
-	var capas = jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/capas.php", { MethodName : 'getNames' }, 'RETURN' );
-	if (capas.names){
-		jsLIB.populateOptions( $("#nmMembro"), capas.names );
-	}
+	jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/capas.php", { MethodName : 'getNames' }, function(capas){
+		if (capas.names){
+			jsLIB.populateOptions( $("#nmMembro"), capas.names );
+		}
+	});
+
 });
 
 function lineChecked( row ) {

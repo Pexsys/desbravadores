@@ -71,13 +71,14 @@ $(document).ready(function(){
 		list = [];
 	});
 	
-	var saidas = jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/saidas.php", { MethodName : 'getNames' }, 'RETURN' );
-	if (saidas.names && saidas.names.length){
-		jsLIB.populateOptions( $("#nmMembro"), saidas.names );
-		$("#outrasAutoriz").show();
-		$("#alertAutoriz").hide();
-	} else if (!$("div#minhasAutoriz").length) {
-		$("#outrasAutoriz").hide();
-		$("#alertAutoriz").show();
-	}
+	jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/saidas.php", { MethodName : 'getNames' }, function(saidas){
+		if (saidas.names && saidas.names.length){
+			jsLIB.populateOptions( $("#nmMembro"), saidas.names );
+			$("#outrasAutoriz").show();
+			$("#alertAutoriz").hide();
+		} else if (!$("div#minhasAutoriz").length) {
+			$("#outrasAutoriz").hide();
+			$("#alertAutoriz").show();
+		}
+	});
 });

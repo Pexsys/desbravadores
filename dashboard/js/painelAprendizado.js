@@ -1,5 +1,3 @@
-var datasets = undefined;
-
 $(document).ready(function(){
 	var optionPie = {
 		series: {
@@ -126,25 +124,27 @@ $(document).ready(function(){
 		}
 	};	
 	
-	datasets = jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/painelAprendizado.php", { MethodName : 'getGraphData' }, 'RETURN' );
-	if (datasets.clsP){
-		$.plot("#phGhaphP", datasets.clsP, optionBarP );
-	}
-	if (datasets.rgP){
-		$.plot('#phRegularP', datasets.rgP, optionPie );
-	}
-	if (datasets.avP){
-		$.plot('#phAvancadaP', datasets.avP, optionPie );
-	}
-	if (datasets.clsC){
-		$.plot("#phGhaphC", datasets.clsC, optionBarC );
-	}
-	if (datasets.rgC){
-		$.plot('#phRegularC', datasets.rgC, optionPie );
-	}
-	if (datasets.avC){
-		$.plot('#phAvancadaC', datasets.avC, optionPie );
-	}
+	jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/painelAprendizado.php", { MethodName : 'getGraphData' }, function(data){
+		if (data.clsP){
+			$.plot("#phGhaphP", data.clsP, optionBarP );
+		}
+		if (data.rgP){
+			$.plot('#phRegularP', data.rgP, optionPie );
+		}
+		if (data.avP){
+			$.plot('#phAvancadaP', data.avP, optionPie );
+		}
+		if (data.clsC){
+			$.plot("#phGhaphC", data.clsC, optionBarC );
+		}
+		if (data.rgC){
+			$.plot('#phRegularC', data.rgC, optionPie );
+		}
+		if (data.avC){
+			$.plot('#phAvancadaC', data.avC, optionPie );
+		}
+	});
+
 
 	$('[cd-area]')
 		.on('click', function (e) {
