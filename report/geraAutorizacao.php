@@ -105,8 +105,13 @@ class ESPCR extends TCPDF {
 	public function Footer() {
  	    if ($this->campori):
 	 	    $dtS = strtotime($this->line["DH_S"]);
-	 	    $dtR = strtotime($this->line["DH_R"]);
-		    $barCODE = mb_strtoupper("PF". fStrZero(base_convert($this->line["ID"],10,36),2) . fStrZero(base_convert($this->line["ID_CAD_PESSOA"],10,36),3));
+			$dtR = strtotime($this->line["DH_R"]);
+			 
+			$barCODE = $GLOBALS['pattern']->getBars()->encode(array(
+				"id" => "F",
+				"fi" => $this->line["ID"],
+				"ni" => $this->line["ID_CAD_PESSOA"]
+			));
 	
 	 	    $this->SetXY(5,-20);
     		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 11);
@@ -143,7 +148,11 @@ class ESPCR extends TCPDF {
 		$dtS = strtotime($this->line["DH_S"]);
 		$dtR = strtotime($this->line["DH_R"]);
 		$linhaASS = trim($this->line["NM_RESP"]).", ".$this->line["DOC_RESP"].", CPF ".$this->line["CPF_RESP"]. (!empty($this->line["TEL_RESP"]) ? ", Fone ".$this->line["TEL_RESP"] : "");
-		$barCODE = mb_strtoupper("PD". fStrZero(base_convert($this->line["ID"],10,36),2) . fStrZero(base_convert($this->line["ID_CAD_PESSOA"],10,36),3));
+		$barCODE = $GLOBALS['pattern']->getBars()->encode(array(
+			"id" => "D",
+			"fi" => $this->line["ID"],
+			"ni" => $this->line["ID_CAD_PESSOA"]
+		));
 		
 		$lBase+=4;
 		$this->SetY($lBase);

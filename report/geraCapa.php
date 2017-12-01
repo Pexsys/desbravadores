@@ -114,7 +114,11 @@ class ESPCR extends TCPDF {
 		$this->Cell(0, 0, "$codEsp - #$pgAss", 0, false, 'C');
 		
 		if (!empty($idPessoa)):
-			$barCODE = mb_strtoupper("PE". fStrZero(base_convert($result->fields["ID"],10,36),2) . fStrZero(base_convert($this->params[0],10,36),3));
+			$barCODE = $GLOBALS['pattern']->getBars()->encode(array(
+				"id" => "E",
+				"fi" => $result->fields["ID"],
+				"ni" => $idPessoa
+			));
 			$this->write1DBarcode($barCODE, 'C39', 73, 178, '', 17, 0.4, $this->stLine3, 'N');
 		endif;
 		

@@ -133,7 +133,6 @@ endif;
 <script type="text/javascript" src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/bootstrap-dialog.min.js"></script>
 <script type="text/javascript" src="<?php echo $GLOBALS['pattern']->getVD();?>js/functions.lib.js"></script>
 <script>jsLIB.rootDir = '<?php echo $GLOBALS['pattern']->getVD();?>';</script>
-<script type="text/javascript" src="<?php echo $GLOBALS['pattern']->getVD();?>include/_virtualPath.js.php?<?php echo microtime();?>"></script>
 <?php
 if (isset($aJsFiles)):
 	foreach ($aJsFiles as &$file):

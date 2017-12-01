@@ -77,8 +77,12 @@ class TAGS {
 			   AND ID_TAB_APREND ". (!is_null($aprendID) ? "= ?" : "IS NULL") ."
 		", $arr );
 		if ($r->EOF):
-			$pes = fStrZero(base_convert($pessoaID,10,36),3);
-			$barCODE = mb_strtoupper("P$tp". (is_null($aprendID) ? "00" : fStrZero(base_convert($aprendID,10,36),2) ) . $pes);
+			$barCODE = $GLOBALS['pattern']->getBars()->encode(array(
+				"id" => $tp,
+				"fi" => $aprendID,
+				"ni" => $pessoaID
+			));
+
 			$this->forceInsert(
 				array(
 					$pessoaID,

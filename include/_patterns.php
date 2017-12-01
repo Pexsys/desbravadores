@@ -32,6 +32,15 @@ class BARS {
         );
     }
 
+    public function getLength(){
+        return 
+            strlen($this->getClubeID()) +
+            $this->getIDLength()+
+            $this->getFILength()+
+            $this->getNILength()
+        ;
+    }
+
     private function getNILength(){
         return $this->bars["NI"];
     }
@@ -44,7 +53,7 @@ class BARS {
         return $this->bars["ID"]["length"];
     }
 
-    private function getClubeID(){
+    public function getClubeID(){
         return $this->bars["CI"];
     }
 
@@ -68,6 +77,7 @@ class BARS {
     public function decode($s){
         $a = $this->split($s);
         return array(
+            "lg" => strlen($s),
             "split" => $a,
             "ci" => $a["ci"],
             "id" => base_convert($a["id"],36,10),
@@ -102,23 +112,25 @@ class BARS {
         return $this->bars["ID"]["types"];
     }
 
-    //RETORNA TODAS A LISTA DE BARCODES PARA ETIQUETAS DO TIPO ESPECIFICADO
     public function getTagsTipo($tg,$vl){
         return array_filter( $this->getAllTags(), function($e) use($tg,$vl){
             return $e[$tg] == $vl;
         });
     }
 
-    //RETORNA TODAS A LISTA DE BARCODES PARA ETIQUETAS DO TIPO ESPECIFICADO
     public function getFirstTag($tg,$vl){
         $arr = $this->getTagsTipo($tg,$vl);
         reset($arr);
         return current($arr);
     }
 
-    //RETORNA O OBJETO DE ACORDO COM O ID(TIPO)
     public function getTagByID($id){
         return $this->getFirstTag("id",$id);
+    }
+
+    public function has($tg,$vl){
+        $arr = $this->getTagsTipo($tg,$vl);
+        return (count($arr) > 0);
     }
 }
 
