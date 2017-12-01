@@ -9,7 +9,7 @@ class BARS {
 
             //FUNCTION ID
             "ID" => array( 
-                "lenght" => 1, 
+                "length" => 1, 
                 "types" => array(
                     //ID ETIQUETA           //FUNCTION          //IMPR.ETIQ     //OBR.CLASSE    //MODELO FORM   //DESCRICAO
                     array(  "id" => "0",    "fn" => "BS_NM",    "tg" => "S",    "cl" => "N",    "md" => "1",    "ds" => "0-BÁSICA/NOME" ),
@@ -41,7 +41,7 @@ class BARS {
     }
 
     private function getIDLength(){
-        return $this->bars["ID"]["lenght"];
+        return $this->bars["ID"]["length"];
     }
 
     private function getClubeID(){
