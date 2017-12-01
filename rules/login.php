@@ -19,13 +19,12 @@ function login( $parameters ) {
 
 	//Verificacao de Usuario/Senha
 	if ( isset($usr) && !empty($usr) ):
+		$barDecode	= $GLOBALS['pattern']->getBars()->decode($usr);
+		$usrClube	= ($barDecode["lg"] == $GLOBALS['pattern']->getBars()->getLength() && 
+					   $barDecode["ci"] == $GLOBALS['pattern']->getBars()->getClubeID() && 
+					   $GLOBALS['pattern']->getBars()->has("id",$barDecode["split"]["id"])
+					);
 
-		$barini 		= substr($usr, 0, 1);
-		$barfn			= substr($usr, 1, 1);
-		$barfnid		= substr($usr, 2, 2);
-		$barpessoa36	= substr($usr, 4, 3);
-		$usrClube		= (strlen($usr) == 7 && $barini == "P" && strpos("0ABCDEF", $barfn) > -1);
-		
 		fConnDB();
 		$result = checkUser($usr, $pag);
 
@@ -33,12 +32,14 @@ function login( $parameters ) {
 		if ($result->EOF && $usrClube):
 			$usrClube = (sha1(strtolower($usr)) == $psw);
 		
-			$usr = "P000$barpessoa36";
+			$usr = $GLOBALS['pattern']->getBars()->encode(array(
+				"ni" => $barDecode["ni"]
+			));
 			if ($usrClube):
 				$psw = sha1(strtolower($usr));
 			endif;
 			$result = checkUser($usr, $pag);
-		
+
 		//SE NAO ENCONTROU
 		elseif ($result->EOF):
 		
@@ -67,16 +68,16 @@ function login( $parameters ) {
 						"password"	=> $psw ) );
 				endif;
 			endif;
+
 		endif;
-		
+	
 		//SE NAO ENCONTROU USUARIO E SENHA E EH MEMBRO DO CLUBE COM APRENDIZADO OU HISTORICO.
 		if ($usrClube && $result->EOF):
-			$barpessoa10 = base_convert( $barpessoa36, 36, 10 );
 
 			//VERIFICA SE ESTÁ ATIVO
-			$rsHA = $GLOBALS['conn']->Execute("SELECT NM FROM CON_ATIVOS WHERE ID = ?", array( $barpessoa10 ) );
+			$rsHA = $GLOBALS['conn']->Execute("SELECT NM FROM CON_ATIVOS WHERE ID = ?", array( $barDecode["ni"] ) );
 			if (!$rsHA->EOF):
-				fInsertUserProfile( fInsertUser( $usr, $rsHA->fields['NM'], $psw, $barpessoa10 ), 0 );
+				fInsertUserProfile( fInsertUser( $usr, $rsHA->fields['NM'], $psw, $barDecode["ni"] ), 0 );
 			
 				return login( array( 
 					"page" =>		$pag, 
@@ -89,7 +90,7 @@ function login( $parameters ) {
 		
 			if ($usrClube):
 				//VERIFICA SE ESTÁ ATIVO
-				$rsHA = $GLOBALS['conn']->Execute("SELECT 1 FROM CON_ATIVOS WHERE ID = ?", array( base_convert( $barpessoa36, 36, 10 ) ) );
+				$rsHA = $GLOBALS['conn']->Execute("SELECT 1 FROM CON_ATIVOS WHERE ID = ?", array( $barDecode["ni"] ) );
 				if ($rsHA->EOF):
 					$psw = null;
 				endif;
@@ -116,8 +117,9 @@ function login( $parameters ) {
 				$arr['login'] = true;
 			endif;
 		endif;
-		
+
 	endif;
+
 	return $arr;
 }
 

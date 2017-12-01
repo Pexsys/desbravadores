@@ -6,23 +6,17 @@ responseMethod();
  * Methods defined for use. *
  ****************************/
 function getName( $parameters ) {
-	$brdt = strtoupper($parameters["codigo"]);
-	$barini 		= substr($brdt, 0, 1);
-	$barfn			= substr($brdt, 1, 1);
-	$barfnid 		= substr($brdt, 2, 2);
-	$barpessoaid	= substr($brdt, 4, 3);
-	$id = base_convert( $barpessoaid, 36, 10 );
-	
+	$barDecode	= $GLOBALS['pattern']->getBars()->decode($parameters["codigo"]);	
 	$arr = array();
 	$arr['ok'] = false;
 
 	//Verificacao de Usuario/Senha
-	if ( isset($id) && !empty($id) ):
+	if ( isset($barDecode["ni"]) && !empty($barDecode["ni"]) ):
 		fConnDB();
-		$result = $GLOBALS['conn']->Execute("SELECT nm FROM CAD_PESSOA WHERE id = ?", Array( $id ) );
+		$result = $GLOBALS['conn']->Execute("SELECT nm FROM CAD_PESSOA WHERE id = ?", Array( $barDecode["ni"] ) );
 		if (!$result->EOF):
-			$arr["id"] = $id;
-			$arr["nome"] = ($result->fields['nm']);
+			$arr["id"] = $barDecode["ni"];
+			$arr["nome"] = $result->fields['nm'];
 			$arr['ok'] = true;
 		endif;
 	endif;

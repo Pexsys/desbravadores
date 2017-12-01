@@ -57,16 +57,12 @@ $esp = 0;
 $result = $GLOBALS['conn']->Execute("SELECT * FROM TMP");
 while (!$result->EOF):
 	++$l;
-	$bar			= $result->fields['BAR'];
 	$req			= str_replace("--","-",$result->fields['REQ']);
 	$dtAssinat		= $result->fields['DT_ASSINAT'];
+
+	$barDecode	= $GLOBALS['pattern']->getBars()->decode($result->fields['BAR']);
 	
-	$barini 		= substr($bar, 0, 1);
-	$barfn			= substr($bar, 1, 1);
-	$barfnid		= base_convert( substr($bar, 2, 2), 36, 10 );
-	$barpessoaid	= base_convert( substr($bar, 4, 3), 36, 10 );
-	
-	$mr = marcaRequisito( $barpessoaid, $barfnid, $req, $dtAssinat );
+	$mr = marcaRequisito( $barDecode["ni"], $barDecode["fi"], $req, $dtAssinat );
 	if (!is_null($mr["idreq"])):
 		//ATUALIZADA TEMPORARIO COM PESSOA RECUPERADA + APRENDIZADO.
 		$GLOBALS['conn']->Execute("
@@ -84,7 +80,7 @@ while (!$result->EOF):
 		foreach ($aEspec as $value):
 			if (!empty($value)):
 				$rs = $GLOBALS['conn']->Execute("SELECT ID_TAB_APREND FROM TAB_APRENDIZADO WHERE CD_ITEM_INTERNO = ?", array( $value ) );
-				echo "ESPEC[$value],PESSOA[$barpessoaid],ASSINAT[$dtAssinat]";
+				echo "ESPEC[$value],PESSOA[".$barDecode["ni"]."],ASSINAT[$dtAssinat]";
 				
 				if (!$rs->EOF):
 					$uh = updateHistorico( 

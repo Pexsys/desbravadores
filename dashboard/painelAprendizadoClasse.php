@@ -226,8 +226,9 @@ if (!$result->EOF):
 	foreach ($result as $k => $line):
 		$id = $line["ID"];
 
-		$pes = fStrZero(base_convert($id,10,36),3);
-		$barCODE = mb_strtoupper("P000$pes");
+		$barCODE = $GLOBALS['pattern']->getBars()->encode(array(
+			"ni" => $id
+		));
 
 		echo "<div class=\"col-md-12 col-xs-12 col-sm-12 col-lg-6\">";
 		echo "<div class=\"panel panel-info\" aria-expanded=\"false\" cad-id=\"$id\" itm-int-like=\"$like\">";

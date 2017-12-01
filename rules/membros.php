@@ -441,10 +441,14 @@ function getMember( $parameters ) {
 		$arr["result"] = true;
 		
 		$idadeAtual = fIdadeAtual($result->fields['DT_NASC']);
+
+		$barCODE = $GLOBALS['pattern']->getBars()->encode(array(
+			"ni" => $id
+		));
 		
 		$arr["membro"] = array( 
 			"cad_pessoa-id"			    => str_pad($result->fields['ID'], $qtdZeros, "0", STR_PAD_LEFT),
-			"cad_pessoa-bc"			    => "P000".strtoupper(fStrZero(base_convert($result->fields['ID'],10,36),3)),
+			"cad_pessoa-bc"			    => $barCODE,
 			"cad_pessoa-nm"			    => (trim($result->fields['NM'])),
 			"cad_pessoa-email"		    => (trim($result->fields['EMAIL'])),
 			"cad_pessoa-nm_escola"		=> (trim($result->fields['NM_ESCOLA'])),
