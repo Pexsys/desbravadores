@@ -70,14 +70,19 @@ $(document).ready(function(){
 				username: jQuery('#usr').val(),
 				password: $.sha1(jQuery('#psw').val().toLowerCase())
 			};
-			jsLIB.ajaxCall( false, jsLIB.rootDir+'rules/login.php', { MethodName : 'login', data : parameter }, 
-				function( data, jqxhr ){
+			jsLIB.ajaxCallNew({
+				waiting : true,
+				url: jsLIB.rootDir+'rules/login.php',
+				data: { MethodName : 'login', data : parameter },
+				callBackSucess: function(data){
 					if ( data.login == true ) {
 						window.location.replace(data.page);
 					} else {
 						loginError();
 					}
-				}, loginError );
+				},
+				callBackError: loginError 
+			});
 		});
 	
 	$("#myBtnLogin").click(function(){
@@ -85,8 +90,9 @@ $(document).ready(function(){
 	});
 	
 	$("#myBtnLogout").click(function(){
-		jsLIB.ajaxCall( false, jsLIB.rootDir+'rules/login.php', { MethodName : 'logout' } );
-		window.location.replace( jsLIB.rootDir+'index.php' );
+		jsLIB.ajaxCall( true, jsLIB.rootDir+'rules/login.php', { MethodName : 'logout' }, function(dt){
+			window.location.replace( jsLIB.rootDir+'index.php' );
+		});
 	});
 });
 function loginError( jqxhr, errorMessage ){

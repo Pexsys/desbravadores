@@ -1,3 +1,9 @@
-jsLIB.consultaCEP = function( cep ){
-	return jsLIB.ajaxCall( false, jsLIB.rootDir+'rules/consultaECT.php', { MethodName : 'consultaCEP', data : { cep: cep } } );
+jsLIB.consultaCEP = function( objParam ){
+	jsLIB.ajaxCallNew({
+		waiting : false,
+		async: true,
+		url: jsLIB.rootDir+'rules/consultaECT.php',
+		data: { MethodName : 'consultaCEP', data : { cep: objParam.value } },
+		callBackSucess: objParam.success
+	});
 }

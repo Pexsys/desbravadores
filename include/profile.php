@@ -2,6 +2,57 @@
 @require_once('functions.php');
 
 class PROFILE {
+	
+	public function fGetPerfil( $cd = NULL ) {
+		$arr = array();
+		$query = "SELECT DISTINCT td.id, td.cd, td.iconm, td.iconf, td.ds_menu, tf.ds_url
+		    FROM CAD_USU_PERFIL cpp
+	      INNER JOIN TAB_PERFIL_ITEM tpi ON ( tpi.id_tab_perfil = cpp.id_perfil AND tpi.dh_ini_valid <= NOW() )
+	      INNER JOIN TAB_DASHBOARD td ON ( td.id = tpi.id_tab_dashboard )
+	       LEFT JOIN TAB_FUNCTION tf ON ( tf.id = td.id_tab_function )
+		   WHERE cpp.id_cad_usuarios = ?";
+		if ( isset($cd) && !empty($cd) ):
+			$query .= " AND td.cd LIKE '$cd.%' AND LENGTH(td.cd) = LENGTH('$cd')+3";
+		else:
+			$query .= " AND LENGTH(td.cd) = 2";
+		endif;
+		$query .= " ORDER BY td.cd";
+		$result = $GLOBALS['conn']->Execute($query, array($_SESSION['USER']['id_usuario']) );
+		while (!$result->EOF):
+			$child = $this->fGetPerfil( $result->fields['cd'] );
+			$arr[ $result->fields['id'] ] = array(
+					"opt"	 => ($result->fields['ds_menu']),
+					"ico"	 => ( $_SESSION['USER']['sexo'] == "F" && isset($result->fields['iconf']) ? $result->fields['iconf'] :  $result->fields['iconm'] ),
+					"active" => false
+			);
+			if ( count( $child ) > 0 ):
+				$arr[ $result->fields['id'] ]["child"] = $child;
+			else:
+				$arr[ $result->fields['id'] ]["url"] = $result->fields['ds_url'];
+			endif;
+			$result->MoveNext();
+		endwhile;
+		return $arr;
+	}
+	
+	public function verificaPerfil(){
+		$temPerfil = isset($_SESSION['USER']['ssid']);
+		if (!$temPerfil):
+			session_destroy();
+			header("Location: ".$GLOBALS['pattern']->getVD()."index.php");
+			exit;
+		endif;
+	}
+	
+	public function fSetSessionLogin( $result ){
+		session_start();
+		$_SESSION['USER']['ssid']			= session_id();
+		$_SESSION['USER']['cd_usuario']		= $result->fields['CD_USUARIO'];
+		$_SESSION['USER']['ds_usuario']		= $result->fields['DS_USUARIO'];
+		$_SESSION['USER']['id_usuario']		= $result->fields['ID_USUARIO'];
+		$_SESSION['USER']['id_cad_pessoa']	= $result->fields['ID_CAD_PESSOA'];
+		$_SESSION['USER']['sexo']			= (!is_null($result->fields['TP_SEXO_RESP']) ? $result->fields['TP_SEXO_RESP'] : $result->fields['TP_SEXO']);
+	}
 
 	public function deleteAllByUserID( $userID ) {
 		$GLOBALS['conn']->Execute("

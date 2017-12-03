@@ -65,7 +65,7 @@ function fSetActive( $perfil, $id = NULL ) {
 	return $perfil;
 }
 
-$perfil = fSetActive( fGetPerfil(), fRequest("id") );
+$perfil = fSetActive( $profile->fGetPerfil(), fRequest("id") );
 ?>
 <div class="navbar-default sidebar" role="navigation">
 	<div class="sidebar-nav navbar-collapse">

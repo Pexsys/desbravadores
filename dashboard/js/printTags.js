@@ -345,7 +345,7 @@ function populateMembers( tpDialog ) {
 	var parameters = {
 		filtro: tpDialog
 	}	
-	var sd = jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/printTags.php", { MethodName : 'getData', data : parameters }, function(data){
+	jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/printTags.php", { MethodName : 'getData', data : parameters }, function(data){
 		if (tpDialog == 'A') {
 			jsLIB.populateOptions( $("#cbTags"), data.tags );
 			jsLIB.populateOptions( $("#cbNomes"), data.membros );

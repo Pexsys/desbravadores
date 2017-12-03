@@ -11,47 +11,7 @@ global $pattern, $conn, $DBType, $DBServerHost, $DBUser, $DBPassWord, $DBDataBas
 @require_once("_patterns.php");
 @require_once("_core/lib/adodb5/adodb.inc.php");
 @require_once("_core/lib/dbconnect/_base.php");
-
-function fGetPerfil( $cd = NULL ) {
-	$arr = array();
-	$query = "SELECT DISTINCT td.id, td.cd, td.iconm, td.iconf, td.ds_menu, tf.ds_url
-		    FROM CAD_USU_PERFIL cpp
-	      INNER JOIN TAB_PERFIL_ITEM tpi ON ( tpi.id_tab_perfil = cpp.id_perfil AND tpi.dh_ini_valid <= NOW() ) 
-	      INNER JOIN TAB_DASHBOARD td ON ( td.id = tpi.id_tab_dashboard ) 
-	       LEFT JOIN TAB_FUNCTION tf ON ( tf.id = td.id_tab_function ) 
-		   WHERE cpp.id_cad_usuarios = ?";
-	if ( isset($cd) && !empty($cd) ):
-		$query .= " AND td.cd LIKE '$cd.%' AND LENGTH(td.cd) = LENGTH('$cd')+3";
-	else:
-		$query .= " AND LENGTH(td.cd) = 2";
-	endif;
-	$query .= " ORDER BY td.cd";
-	$result = $GLOBALS['conn']->Execute($query, array($_SESSION['USER']['id_usuario']) );
-	while (!$result->EOF):
-		$child = fGetPerfil( $result->fields['cd'] );
-		$arr[ $result->fields['id'] ] = array( 
-			"opt"	 => ($result->fields['ds_menu']),
-			"ico"	 => ( $_SESSION['USER']['sexo'] == "F" && isset($result->fields['iconf']) ? $result->fields['iconf'] :  $result->fields['iconm'] ),
-			"active" => false
-		);
-		if ( count( $child ) > 0 ):
-			$arr[ $result->fields['id'] ]["child"] = $child;
-		else:
-			$arr[ $result->fields['id'] ]["url"] = $result->fields['ds_url'];
-		endif;
-		$result->MoveNext();
-	endwhile;
-	return $arr;
-}
-
-function verificaPerfil(){
-	$temPerfil = isset($_SESSION['USER']['ssid']);
-	if (!$temPerfil):
-		session_destroy();
-		header("Location: ".$GLOBALS['pattern']->getVD()."index.php");
-		exit;
-	endif;
-}
+@require_once("profile.php");
 
 function zeroSizeID(){
 	if (!isset($_SESSION['USER']['sizeID'])):
@@ -62,16 +22,6 @@ function zeroSizeID(){
 		endif;
 	endif;
 	return $_SESSION['USER']['sizeID'];
-}
-
-function fSetSessionLogin( $result ){
-	session_start();
-	$_SESSION['USER']['ssid']			= session_id();
-	$_SESSION['USER']['cd_usuario']		= $result->fields['CD_USUARIO'];
-	$_SESSION['USER']['ds_usuario']		= $result->fields['DS_USUARIO'];
-	$_SESSION['USER']['id_usuario']		= $result->fields['ID_USUARIO'];
-	$_SESSION['USER']['id_cad_pessoa']	= $result->fields['ID_CAD_PESSOA'];
-	$_SESSION['USER']['sexo']			= (!is_null($result->fields['TP_SEXO_RESP']) ? $result->fields['TP_SEXO_RESP'] : $result->fields['TP_SEXO']);
 }
 
 function responseMethod() {
@@ -623,7 +573,7 @@ function fDomainStatic($a,$lWrite = true){
 }
 
 function fIdadeAtual($dData1){
-	return datediff("yyyy", $dData1, $dData2);
+	return datediff("yyyy", $dData1, date('Y-m-d'));
 }
 
 function datediff($interval, $datefrom, $dateto, $using_timestamps = false) {
@@ -919,16 +869,12 @@ function fDtHoraEvento($dhI, $dhF, $fmt = "%d de %B"){
 		if ($DHOJE >= $DATA_EVENTO_INI && $DHOJE <= $DATA_EVENTO_FIM && $HHOJE >= $HORA_EVENTO_INI && $HHOJE <= $HORA_EVENTO_FIM):
 			$sDataHora .= " at&eacute; ";
 		else:
-			$sDataHora .= " das ";
-			$sDataHora .= fDescHora($dhI);
+			$sDataHora = fConcatNoEmpty($sDataHora, " das ", fDescHora($dhI));
 		endif;
-		$sDataHora .= " &agrave;s ";
-		$sDataHora .= fDescHora($dhF);
+		$sDataHora = fConcatNoEmpty($sDataHora, " &agrave;s ", fDescHora($dhF));
 	else:
-		$sDataHora .= " &agrave;s ";
-		$sDataHora .= fDescHora($dhI);
+		$sDataHora = fConcatNoEmpty($sDataHora, " &agrave;s ", fDescHora($dhI));
 	endif;
 	return $sDataHora;
 }
-
 ?>

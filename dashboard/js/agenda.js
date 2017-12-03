@@ -81,7 +81,7 @@ $(document).ready(function(){
 			if (!addEvent) {
 				closeCollapseAll();
 				$('#btnDelete').show();
-				jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/agenda.php", { MethodName : 'events', data : { id : e.id } }, function(ev){
+				jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/agenda.php", { MethodName : 'events', data : { id : e.id } }, function(ev){
 					jsLIB.populateForm( $('#myCalendarForm'), ev.result[0].info );
 				});
 				return 'Evento';
@@ -93,8 +93,11 @@ $(document).ready(function(){
 				from: pFrom.toDateTime(),
 				to: pTo.toDateTime()
 			};
-			var retorno = jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/agenda.php", { MethodName : 'events', data : parameter } );
-			return retorno.result;
+			var retorno = undefined;
+			jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/agenda.php", { MethodName : 'events', data : parameter }, function(data){
+				retorno = data.result;
+			});
+			return retorno;
 		},
 		tmpl_path				: jsLIB.rootDir+"dashboard/tmpls/",
 		tmpl_cache				: false,
