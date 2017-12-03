@@ -11,7 +11,6 @@ function nextEvents(){
 		<div class="panel-heading"><h4><i class="fa fa-fw fa-calendar"></i>&nbsp;Pr&oacute;ximos Eventos</h4></div>
 		<div class="panel-body">
 			<?php
-			require_once("agenda/descdates.php");
 			$DATA_NOW = date('Y-m-d H:i:s');
 
 			$query = "SELECT e.*, c.tp_grupo, t.ds

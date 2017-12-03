@@ -6,7 +6,7 @@ function getDomainMembrosAtivos(){
 	$qtdZeros = zeroSizeID();
 	$result = $GLOBALS['conn']->Execute("SELECT ID, NM FROM CON_ATIVOS ORDER BY NM");
 	foreach($result as $l => $fields):
-		$id = str_pad($fields['ID'], $qtdZeros, "0", STR_PAD_LEFT);
+		$id = fStrZero($fields['ID'], $qtdZeros);
 		$arr[] = array(
 			"value" => $fields['ID'],
 			"label" => "$id ".($fields['NM'])
@@ -21,7 +21,7 @@ function getDomainMembrosInativos(){
 	$qtdZeros = zeroSizeID();
 	$result = $GLOBALS['conn']->Execute("SELECT cp.ID, cp.NM FROM CAD_PESSOA cp WHERE NOT EXISTS (SELECT 1 FROM CAD_ATIVOS WHERE ID = cp.ID AND NR_ANO = YEAR(NOW())) ORDER BY cp.NM");
 	foreach($result as $l => $fields):
-		$id = str_pad($fields['ID'], $qtdZeros, "0", STR_PAD_LEFT);
+		$id = fStrZero($fields['ID'], $qtdZeros);
 		$arr[] = array(
 			"value" => $fields['ID'],
 			"label" => "$id ".($fields['NM'])

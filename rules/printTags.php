@@ -150,7 +150,7 @@ function getMembros( $parameters ) {
 	
 	$result = getQueryByFilter( $parameters );
 	foreach ($result as $k => $fields):
-		$id = str_pad($fields['ID'], $qtdZeros, "0", STR_PAD_LEFT);
+		$id = fStrZero($fields['ID'], $qtdZeros);
 		$arr[] = array(
 			"id" => $id,
 			"nm" => "$id ".($fields['NM'])
@@ -166,7 +166,7 @@ function getMembrosFilter( $parameters ) {
 
 	$result = getQueryByFilter( $parameters );
 	foreach ($result as $k => $fields):
-		$arr[] = $id = str_pad($fields['ID'], $qtdZeros, "0", STR_PAD_LEFT);
+		$arr[] = $id = fStrZero($fields['ID'], $qtdZeros);
 	endforeach;
 	return array( "filter" => $arr );
 }

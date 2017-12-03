@@ -566,7 +566,7 @@ function getEspecPeople( $parameters ) {
 	$i = 0;
 	$str .= "<div class=\"col-sm-12 col-xs-12 col-md-12 col-lg-12\">";
 	foreach ($rs as $ks => $ls):
-		$str .= "<div class=\"row\" style=\"font-size:13px\">".str_pad(++$i, strlen($rs->RecordCount()), "0", STR_PAD_LEFT)." - ".titleCase($ls["NM"])."</div>";
+		$str .= "<div class=\"row\" style=\"font-size:13px\">".fStrZero(++$i, strlen($rs->RecordCount()))." - ".titleCase($ls["NM"])."</div>";
 	endforeach;
 	$str .= "</div>";
 

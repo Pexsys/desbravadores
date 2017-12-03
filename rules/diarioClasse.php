@@ -33,7 +33,7 @@ function fGetMembros(){
 	  ORDER BY a.NM
 	", array("N") );
 	foreach($result as $l => $fields):
-		$id = str_pad($fields['ID_CAD_PESSOA'], $qtdZeros, "0", STR_PAD_LEFT);
+		$id = fStrZero($fields['ID_CAD_PESSOA'], $qtdZeros);
 		$arr["nomes"][] = array(
 			"value" => $fields['ID_CAD_PESSOA'],
 			"label" => "$id ".($fields['NM'])

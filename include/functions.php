@@ -1,6 +1,6 @@
 <?php
 ini_set('memory_limit','200M');
-error_reporting (E_ALL & ~ E_NOTICE & ~ E_DEPRECATED); //
+error_reporting (E_ALL); // & ~ E_NOTICE & ~ E_DEPRECATED
 setlocale(LC_ALL, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
 date_default_timezone_set('America/Sao_Paulo');
 mb_internal_encoding('UTF-8');
@@ -158,11 +158,13 @@ function fConnDB(){
 }
 
 function zeroSizeID(){
-	$rs = $GLOBALS['conn']->Execute("SELECT COUNT(*) AS qtd FROM CAD_PESSOA");
-	if (!$rs->EOF):
-		return strlen($rs->fields['qtd']);
+	if (!isset($GLOBALS['sizeID'])):
+		$rs = $GLOBALS['conn']->Execute("SELECT COUNT(*) AS qtd FROM CAD_PESSOA");
+		if (!$rs->EOF):
+			$GLOBALS['sizeID'] = strlen($rs->fields['qtd']);
+		endif;
 	endif;
-	return 5;
+	return $GLOBALS['sizeID'];
 }
 
 function fDescMes($cMes){
@@ -195,6 +197,10 @@ function fDescMes($cMes){
 	return $cRet;
 }
 
+function fStrZero($n,$q){
+	return str_pad($n, $q, "0", STR_PAD_LEFT);
+}
+
 function fStrToDate($pValue, $pic = "Y-m-d H:i") {
 	$pValue = str_replace("/","-",$pValue);
 	return date($pic, strtotime($pValue) );
@@ -223,72 +229,6 @@ function getDateNull($vl){
 		return null;
 	endif;
 	return fStrToDate($vl,"Y-m-d");
-}
-
-function fFormatFromDB($pValue,$pTipo){
-	$retorno = $pValue;
-	if ($pValue == ""):
-		return "";
-	endif;
-	if ($GLOBALS['DBType'] == "access"):
-		if ($pTipo == "D"):
-			$retorno = substr($pValue,0,2) ."/". substr($pValue,3,2) ."/". substr($pValue,6,4);
-		elseif ($pTipo == "DHm"):
-			$retorno = substr($pValue,0,2) ."/". substr($pValue,3,2) ."/". substr($pValue,6,4) . " " . substr($pValue,11,5);
-		elseif ($pTipo == "DHms"):
-			$retorno = substr($pValue,0,2) ."/". substr($pValue,3,2) ."/". substr($pValue,6,4) . " " . substr($pValue,11,8);
-		endif;
-	else:
-		if ($pTipo == "D"):
-			$retorno = substr($pValue,8,2) ."/". substr($pValue,5,2) ."/". substr($pValue,0,4);
-		elseif ($pTipo == "DHm"):
-			$retorno = substr($pValue,8,2) ."/". substr($pValue,5,2) ."/". substr($pValue,0,4) . " " . substr($pValue,11,5);
-		elseif ($pTipo == "DHms"):
-			$retorno = substr($pValue,8,2) ."/". substr($pValue,5,2) ."/". substr($pValue,0,4) . " " . substr($pValue,11,8);
-		elseif ($pTipo == "DM"):
-			$retorno = substr($pValue,8,2) ."/". substr($pValue,5,2);
-		elseif ($pTipo == "DMr"):
-			$retorno = (substr($pValue,8,2)*1) ."/". (substr($pValue,5,2)*1);
-		elseif ($pTipo == "MDA"):
-			$retorno = substr($pValue,5,2) ."/". substr($pValue,8,2) ."/". substr($pValue,0,4);
-		endif;
-	endif;
-	return $retorno;
-}
-
-function fDifDatas($pDataIni,$pDataFim,$pRetorno){
-	$retorno = 0;
-
-	$nAnoIni = substr($pDataIni,0,4);
-	$nMesIni = substr($pDataIni,5,2);
-	$nDiaIni = substr($pDataIni,8,2);
-	$nHorIni = substr($pDataIni,11,2);
-	$nMinIni = substr($pDataIni,14,2);
-	$nSegIni = substr($pDataIni,17,2);
-	$dDataIni = mktime($nHorIni,$nMinIni,$nSegIni,$nMesIni,$nDiaIni,$nAnoIni);
-	if ($pDataFim == "ATU"):
-		$dDataFim = time();
-	else:
-		$nAnoFim = substr($pDataFim,0,4);
-		$nMesFim = substr($pDataFim,5,2);
-		$nDiaFim = substr($pDataFim,8,2);
-		$nHorFim = substr($pDataFim,11,2);
-		$nMinFim = substr($pDataFim,14,2);
-		$nSegFim = substr($pDataFim,17,2);
-		$dDataFim = mktime($nHorFim,$nMinFim,$nSegFim,$nMesFim,$nDiaFim,$nAnoFim);
-	endif;
-
-	//retorno em dias
-	if ($pRetorno == "D"):
-		$retorno = (int)(($dDataFim - $dDataIni) / 86400);
-	elseif ($pRetorno == "HH"):
-		$retorno = (int)(($dDataFim - $dDataIni) / 3600);
-	elseif ($pRetorno == "MM"):
-		$retorno = (int)(($dDataFim - $dDataIni) / 60);
-	elseif ($pRetorno == "SS"):
-		$retorno = ($dDataFim - $dDataIni);
-	endif;
-	return $retorno;
 }
 
 function fMontaCarrousel($relativePath,$extentions){
@@ -570,33 +510,6 @@ function getMacroArea( $tpItem, $areaInterno ){
 	return $tpItem;
 }
 
-function consultaAprendizadoPessoa( $tabAprendID, $pessoaID ){
-	$arr = array( "ap" => "", "ar" => "", "cd" => "", "nm" => "" );
-	$rs = $GLOBALS['conn']->Execute("
-		SELECT ta.CD_COR, ta.DS_ITEM, ta.CD_AREA_INTERNO, ta.CD_ITEM_INTERNO, tm.NR_PG_ASS
-		  FROM TAB_APRENDIZADO ta
-	 LEFT JOIN TAB_MATERIAIS tm ON (tm.ID_TAB_APREND = ta.ID)
-		 WHERE ta.ID = ?
-	", array( $tabAprendID ) );
-	if (!$rs->EOF):
-		$arr["cr"] = $rs->fields["CD_COR"];
-		$arr["ap"] = $rs->fields["DS_ITEM"];
-		$arr["ar"] = $rs->fields["CD_AREA_INTERNO"];
-		$arr["cd"] = $rs->fields["CD_ITEM_INTERNO"];
-		$arr["pg"] = $rs->fields["NR_PG_ASS"];
-	endif;
-
-	$rp = $GLOBALS['conn']->Execute("
-		SELECT *
-		  FROM CON_ATIVOS
-		 WHERE ID = ?
-	", array( $pessoaID ) );
-	if (!$rp->EOF):
-		$arr["nm"] = ($rp->fields["NM"]);
-	endif;
-	return $arr;
-}
-
 function getIconAprendizado( $tpItem, $areaInterno, $sizeClass = "" ){
     $retorno = "fa fa-info";
 	if ($tpItem == "CL" && $areaInterno == "REGULAR"):
@@ -659,113 +572,12 @@ function fItemAprendizado($aP) {
 	echo "</div></div>";
 }
 
-function fFormataData($data,$formato){
-	$dd = "";
-	$mm = "";
-	$yyyy = "";
-	$retorno = "";
-	if(!empty($data)){	
-		switch($formato){
-		case "DD/MM":
-			//FORMATO DE ENTRADA - YYYY-MM-DD
-			$dd = substr($data,8,2);
-			$mm = substr($data,5,2);
-			$retorno = $dd."/".$mm;
-			break;
-		case "DD/MM/YYYY":
-			//FORMATO DE ENTRADA - YYYY-MM-DD
-			$dd = substr($data,8,2);
-			$mm = substr($data,5,2);
-			$yyyy = substr($data,0,4);
-			$retorno = $dd."/".$mm."/".$yyyy;
-			break;
-		case "YYYY-MM-DD":
-			//FORMATO DE ENTRADA - DD/MM/YYYY
-			$dd = substr($data,0,2);
-			$mm = substr($data,3,2);
-			$yyyy = substr($data,6,4);
-			$retorno = $dd."/".$mm."/".$yyyy;
-			break;
-		}
-	}
-	return $retorno;
-}
-
-function fStrZero($n,$q){
-	return str_pad($n, $q, "0", STR_PAD_LEFT);
-}
-
 function getFormsTipo(){
 	$arr = array();
 	$arr[] = array("id"	=> "1",	"fi" => "S", "qt" => "20", "ds"=> "20 ETIQUETAS (02x10 - 25,4mm X 101,6mm - CARTA)" );
 	$arr[] = array("id"	=> "2",	"fi" => "S", "qt" => "4",  "ds"=> "04 ETIQUETAS (02x02 - 138,11mm X 106,36mm - CARTA)");
 	$arr[] = array("id"	=> "3",	"fi" => "N", "qt" => "1",  "ds"=> "FOLHAS A4" );
 	return $arr;
-}
-
-/************************************************************
-* FUNCAO COLOCAR MASCARA NO CEP, CPF, CGC, DDD, TEL e PLACA
-*************************************************************/
-function fMascara($numero,$tipo){
-	
-	$retorno=""; 
-	
-	$numero = trim($numero);
-	
-	switch($tipo){
-		case "CPF":
-			$numero = fStrZero($numero,11);
-			$retorno = substr($numero,0,3);
-			$retorno = $retorno . ".";
-			$retorno = $retorno . substr($numero,3,3);
-			$retorno = $retorno . ".";
-			$retorno = $retorno . substr($numero,6,3);
-			$retorno = $retorno . "-";
-			$retorno = $retorno . substr($numero,9,2);
-			break;
-		case "CGC":
-			$numero = fStrZero($numero,14);
-			$retorno = substr($numero,0,2);
-			$retorno = $retorno . ".";
-			$retorno = $retorno . substr($numero,2,3);
-			$retorno = $retorno . ".";
-			$retorno = $retorno . substr($numero,5,3);
-			$retorno = $retorno . "/";
-			$retorno = $retorno . substr($numero,8,4);
-			$retorno = $retorno . "-";
-			$retorno = $retorno . substr($numero,12,2);
-			break;
-		case "CEP":
-			$numero = fStrZero($numero,8);
-			$retorno = substr($numero,0,5);
-			$retorno = $retorno . "-";
-			$retorno = $retorno . substr($numero,5,3);
-			break;
-		case "DDD":
-			$retorno = "(".$numero.")";
-			break;
-		case "TEL":
-			$retorno = substr($numero,0,4) . "-" . substr($numero,4,4);
-			break;
-		case "CEL":
-			if(strlen($numero) == 8){
-				$retorno = substr($numero,0,4) . "-" . substr($numero,4,4);
-			}else{
-				$retorno = substr($numero,0,5) . "-" . substr($numero,5,4);
-			}
-			break;
-	}
-	return $retorno;
-}
-
-function fNormalizeStr($str,$charset){
-	if ($charset == "ISO-8859-1"):
-		$some_special_chars = array( "á", "â", "ã", "é", "ê", "í", "î", "ó", "ô", "õ", "ú", "ç", "Á", "Â", "Ã", "É", "Ê", "Í", "Î", "Ó", "Ô", "Õ", "Ú", "Ç" );
-	else:
-		$some_special_chars = array( "á", "â", "ã", "é", "ê", "í", "î", "ó", "ô", "õ", "ú", "ç", "Á", "Â", "Ã", "É", "Ê", "Í", "Î", "Ó", "Ô", "Õ", "Ú", "Ç" );
-	endif;
-	$replacement_chars  = array( "a", "a", "a", "e", "e", "i", "i", "o", "o", "o", "u", "c","A", "A", "A", "E", "E", "I", "I", "O", "O", "O", "U", "C" );
-	return str_replace( $some_special_chars, $replacement_chars, $str );
 }
 
 function fDomain($a){
@@ -809,29 +621,8 @@ function fDomainStatic($a,$lWrite = true){
 	endif;
 }
 
-function fCalculaAniversario($dData1, $dData2){
-	$nRetorno = datediff("yyyy", $dData1, $dData2);
-	if ($nRetorno > 0):
-		/*
-		$time1 = strtotime( $dData1 );
-		$time2 = strtotime( $dData2 );
-		$mes1 = date( 'm', $time1 );
-		$mes2 = date( 'm', $time2 );
-		$dia1 = date( 'd', $time1 );
-		$dia2 = date( 'd', $time2 );
-		echo "$nRetorno";
-		exit;
-		if ( ($mes2 < $mes1) || 
-			($mes1 == $mes2 && $dia1 < $dia2) ):
-			$nRetorno--;
-		endif;
-		*/
-	endif;
-	return $nRetorno;
-}
-
 function fIdadeAtual($dData1){
-  return fCalculaAniversario($dData1, date("Y-m-d"));
+	return datediff("yyyy", $dData1, $dData2);
 }
 
 function datediff($interval, $datefrom, $dateto, $using_timestamps = false) {
@@ -1056,4 +847,87 @@ function fDescHora($dtHora){
 	endif;
 	return $cRetorno;
 }
+
+function fDtHoraEvento($dhI, $dhF, $fmt = "%d de %B"){
+	
+	$D1 = date("Y-m-d", strtotime("+1 day"));
+	$NOW = strtotime("now");
+	$DHOJE = date("Y-m-d",$NOW);
+	$HHOJE = date("H:i",$NOW);
+	
+	$timeI = strtotime($dhI);
+	$timeF = strtotime($dhF);
+	
+	$DATA_EVENTO_INI = date("Y-m-d",$timeI);
+	$HORA_EVENTO_INI = date("H:i",$timeI);
+	$DATA_EVENTO_FIM = date("Y-m-d",$timeF);
+	$HORA_EVENTO_FIM = date("H:i",$timeF);
+
+	$sDataHora = "";
+
+	//******************************************************************
+	// SE TIVER SE DATA INICIO
+	// SE DATA INICIO E FIM SAO IGUAIS
+	//******************************************************************
+	if (empty($dhF) || $DATA_EVENTO_INI == $DATA_EVENTO_FIM):
+		if ($DATA_EVENTO_INI == $DHOJE):
+			$sDataHora = "Hoje";
+		elseif ($DATA_EVENTO_INI == $D1):
+			$sDataHora = "Amanh&atilde;";
+		elseif (datediff("d",$DHOJE,$dhI) <= 7):
+		 	$DIA_SEMANA = strftime("%w",$timeI);
+			if ($DIA_SEMANA == 0 || $DIA_SEMANA == 6):
+				$sDataHora .= "Pr&oacute;ximo ";
+			else:
+				$sDataHora .= "Pr&oacute;xima ";
+			endif;
+			$sDataHora .= strftime("%A",$timeI);
+		else:
+			$sDataHora .= strftime($fmt,$timeI);
+		endif;
+	
+	//******************************************************************
+	// SE DATAS INICIO E FIM SAO DIFERENTES
+	//******************************************************************
+	elseif ($DHOJE >= $DATA_EVENTO_INI && $DHOJE <= $DATA_EVENTO_FIM):
+		if ($HHOJE <= $HORA_EVENTO_INI || $HHOJE <= $HORA_EVENTO_FIM):
+			$sDataHora .= "Hoje";
+		elseif ($HHOJE >= $HORA_EVENTO_FIM):
+			$sDataHora .= "Amanh&aacute;";
+		endif;
+	else:
+		//Dentro do mes
+		if (strftime("%m",$timeI) == strftime("%m",$timeF)):
+			$sDataHora .= strftime("%d",$timeI);
+		else:
+			$sDataHora .= strftime($fmt,$timeI);
+		endif;
+		//se dia consecutivo
+		if ($D1 == $DATA_EVENTO_FIM):
+			$sDataHora .= " e ";
+		else:
+			$sDataHora .= " a ";
+		endif;
+		$sDataHora .= strftime($fmt,$timeF);
+	endif;
+
+	//******************************************************************
+	// SE O HORARIO FOR DIFERENTE ENTRE AS DATAS
+	//******************************************************************
+	if ($HORA_EVENTO_INI != $HORA_EVENTO_FIM && empty($DATA_EVENTO_FIM) && empty($HORA_EVENTO_FIM)):
+		if ($DHOJE >= $DATA_EVENTO_INI && $DHOJE <= $DATA_EVENTO_FIM && $HHOJE >= $HORA_EVENTO_INI && $HHOJE <= $HORA_EVENTO_FIM):
+			$sDataHora .= " at&eacute; ";
+		else:
+			$sDataHora .= " das ";
+			$sDataHora .= fDescHora($dhI);
+		endif;
+		$sDataHora .= " &agrave;s ";
+		$sDataHora .= fDescHora($dhF);
+	else:
+		$sDataHora .= " &agrave;s ";
+		$sDataHora .= fDescHora($dhI);
+	endif;
+	return $sDataHora;
+}
+
 ?>

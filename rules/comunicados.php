@@ -91,7 +91,7 @@ function fComunicado( $parameters ) {
 			$out["comunicado"] = array(
 				"id" => $parameters["id"],
 				"fg_pend" => "S",
-				"cd" => ( $result->fields['ANO']."-".str_pad($result->fields['CD'], 2, "0", STR_PAD_LEFT))
+				"cd" => $result->fields['ANO']."-".fStrZero($result->fields['CD'], 2)
 			);
 			
 		else:

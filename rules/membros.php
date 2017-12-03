@@ -144,7 +144,7 @@ function getMembros( $parameters ) {
 		endif;
 		
 		$arr[] = array( 
-			"id" => str_pad($result->fields['id'], $qtdZeros, "0", STR_PAD_LEFT),
+			"id" => fStrZero($result->fields['id'], $qtdZeros),
 			"nm" => ($result->fields['NM']),
 			"uni" => ($result->fields['DS_UNIDADE']),
 			"cgo" => ($result->fields['DS_CARGO']),
@@ -297,7 +297,7 @@ function updateMember( $parameters ) {
                 if ( $calcAtual > max( 1, $rs->fields["ESTR_DEVOL"]) ):
                     $compras = new COMPRAS();
                     
-                    $code = "03-01-".str_pad( $calcAtual+1, 2, "0", STR_PAD_LEFT);
+                    $code = "03-01-".fStrZero($calcAtual+1, 2);
                     $qtItens = $rs->fields["QT_UNIFORMES"];
                     for ($qtd=1;$qtd<=$qtItens;$qtd++):
 						if ($qtItens>1):
@@ -447,7 +447,7 @@ function getMember( $parameters ) {
 		));
 		
 		$arr["membro"] = array( 
-			"cad_pessoa-id"			    => str_pad($result->fields['ID'], $qtdZeros, "0", STR_PAD_LEFT),
+			"cad_pessoa-id"			    => fStrZero($result->fields['ID'], $qtdZeros),
 			"cad_pessoa-bc"			    => $barCODE,
 			"cad_pessoa-nm"			    => (trim($result->fields['NM'])),
 			"cad_pessoa-email"		    => (trim($result->fields['EMAIL'])),

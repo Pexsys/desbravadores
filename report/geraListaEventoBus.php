@@ -156,7 +156,7 @@ class LISTAEVENTOBUS extends TCPDF {
 			$this->SetFillColor(255,255,255);
 		endif;
 		$this->setXY(5, $this->posY);
-		$this->Cell(8, 5, str_pad( ++$this->seq, 2, "0", STR_PAD_LEFT), 0, false, 'C', true);
+		$this->Cell(8, 5, fStrZero( ++$this->seq, 2), 0, false, 'C', true);
 		$this->setX(13);
 		$this->Cell(87, 5, $f["NM"], 0, false, 'L', true, false, 1);
 		$this->setX(100);

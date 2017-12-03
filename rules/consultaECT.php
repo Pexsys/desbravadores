@@ -91,7 +91,7 @@ class HTTPRequest {
 } 
 
 function consultaCEP( $parameters ){
-	$r = new HTTPRequest("https://viacep.com.br/ws/". str_pad(str_replace("-","",$parameters["cep"]), 8, "0", STR_PAD_LEFT) ."/json/");
+	$r = new HTTPRequest("https://viacep.com.br/ws/". fStrZero(str_replace("-","",$parameters["cep"]), 8) ."/json/");
 	$cep = json_decode($r->DownloadToString());
 
 	$arr["cep"] = array( 
