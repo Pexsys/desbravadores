@@ -9,6 +9,8 @@ responseMethod();
 function login( $parameters ) {
 	unset($_SESSION);
 	
+	$profile = new PROFILE();
+	
 	$arr = array();
 	$arr['page'] = "";
 	$arr['login'] = false;
@@ -105,7 +107,7 @@ function login( $parameters ) {
 			$password = $result->fields['DS_SENHA'];
 				
 			if ($password == $psw):
-				fSetSessionLogin($result);
+				$profile->fSetSessionLogin($result);
 				$GLOBALS['conn']->Execute("UPDATE CAD_USUARIOS SET DH_ATUALIZACAO = NOW() WHERE ID_USUARIO = ?",
 					array( $result->fields['ID_USUARIO'] ) );
 

@@ -177,7 +177,51 @@ var jsLIB = {
 		}
 	},
 	
+	ajaxCallNew : function( objParam ) {
+		var retorno = undefined;
+		if (objParam.waiting !== false){
+			jsLIB.modalWaiting(true);
+		}
+		$.ajax({
+			url		: objParam.url,
+			async	: (objParam.async !== undefined ? objParam.async : true),
+			type		: (objParam.type !== undefined ? objParam.type : 'POST'),
+			data		: objParam.data,
+			dataType	: 'json',
+			
+			success	: function( data, textStatus, jqxhr ) {
+				if (objParam.waiting !== false){
+					jsLIB.modalWaiting(false);
+				}
+				if ( typeof( objParam.callBackSucess ) == 'function' ) {
+					objParam.callBackSucess( data, jqxhr );
+				} else if ( objParam.callBackSucess === undefined ) {
+					retorno = data;
+				}
+			},
+			
+			error	: function( jqxhr, textStatus, errorMessage ) {
+				if (objParam.waiting !== false){
+					jsLIB.modalWaiting(false);
+				}
+				if ( typeof( objParam.callBackError ) == 'function' ) {
+					objParam.callBackError( jqxhr, errorMessage );
+				}
+			}               
+		});
+		return retorno;
+	},
+		
 	ajaxCall : function( pasync, url, data, callBackSucess, callBackError ) {
+		return this.ajaxCallNew({
+			waiting : true,
+			async: pasync,
+			url: url,
+			data: data,
+			callBackSucess: callBackSucess,
+			callBackError: callBackError 
+		});
+		/*
 		var retorno;
 		if (pasync === false) {
 			jsLIB.modalWaiting(true);
@@ -186,7 +230,7 @@ var jsLIB = {
 		}
 		$.ajax({
 			url		: url,
-			async		: pasync,
+			async	: pasync,
 			type		: 'post',
 			data		: data,
 			dataType	: 'json',
@@ -215,6 +259,7 @@ var jsLIB = {
 			jsLIB.modalWaiting(false);
 		}
 		return retorno;
+		*/
 	},
 		
 	getJSONFields : function( frm ) {

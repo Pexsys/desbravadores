@@ -251,9 +251,9 @@ $(document).ready(function(){
 				cmFanfarra:		{validators: {}},
 				cmAnoDir:		{validators: {}},
 				nrUltEstrela:	{validators: {}},
-				nrUniformes:	{validators: {}},
+				nrUniformes:		{validators: {}},
 				dsReligiao:		{validators: {}},
-				cbAtivo:		{validators: {}}
+				cbAtivo:			{validators: {}}
 			}
 		})
 		.on("change", "[field]", function(e) {
@@ -317,7 +317,7 @@ $(document).ready(function(){
 							val	: value
 						}
 						//gravar
-						jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/membros.php", { MethodName : 'updateMember', data : parameters }, function(mb){
+						jsLIB.ajaxCall( true, jsLIB.rootDir+"rules/membros.php", { MethodName : 'updateMember', data : parameters }, function(mb){
 							//tratamento de dependencias
 							if (field == "cad_pessoa-tp_sexo"){
 								populateUnidade(membroID);
@@ -328,14 +328,18 @@ $(document).ready(function(){
 								populateUnidade(membroID);
 								populateCargos(membroID);
 							} else if (field == "cad_pessoa-cep"){
-								var ect = jsLIB.consultaCEP( value );
-								if (ect.cep){
-									$("#dsLogra").val(ect.cep.lg).attr('valid','ok').trigger("change");
-									$("#nrLog").val(ect.cep.nr).attr('valid','ok').trigger("change");
-									$("#dsBai").val(ect.cep.ba).attr('valid','ok').trigger("change");
-									$("#dsCid").val(ect.cep.cd).attr('valid','ok').trigger("change");
-									$("#cmUF").val(ect.cep.uf).attr('valid','ok').trigger("change");
-								}
+								jsLIB.consultaCEP({
+									value: value,
+									success: function(ect){
+										if (ect.cep){
+											$("#dsLogra").val(ect.cep.lg).attr('valid','ok').trigger("change");
+											$("#nrLog").val(ect.cep.nr).attr('valid','ok').trigger("change");
+											$("#dsBai").val(ect.cep.ba).attr('valid','ok').trigger("change");
+											$("#dsCid").val(ect.cep.cd).attr('valid','ok').trigger("change");
+											$("#cmUF").val(ect.cep.uf).attr('valid','ok').trigger("change");											
+										}
+									}
+								});
 							} else if (field == "cad_ativos-id_unidade"){
 								populateCargos(membroID);
 							} else if (field == "cad_ativos-cd_cargo"){
@@ -459,7 +463,7 @@ function getMember( membroID ) {
 		filtro: tpFiltro,
 		id : membroID
 	};
-	return jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/membros.php", { MethodName : 'getMember', data : parameters } );
+	return jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/membros.php", { MethodName : 'getMember', data : parameters });
 	jsLIB.modalWaiting(false);
 }
 

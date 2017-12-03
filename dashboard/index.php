@@ -2,7 +2,9 @@
 session_start();
 @require_once("../include/functions.php");
 @require_once("include/control.php");
-verificaPerfil();
+
+$profile = new PROFILE();
+$profile->verificaPerfil();
 fConnDB();
 fHeaderDashboard();
 ?>

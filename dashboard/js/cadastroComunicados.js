@@ -277,7 +277,7 @@ function updateComunicado(){
 		op: "UPDATE",
 		frm: jsLIB.getJSONFields( $('#cadComForm') )
 	};
-	var cm = jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/comunicados.php", { MethodName : 'fComunicado', data : parameter }, function(cm){
+	jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/comunicados.php", { MethodName : 'fComunicado', data : parameter }, function(cm){
 		$("#comID").val(cm.id);
 		valuePendOrig = cm.so;
 		valuePend = jsLIB.getValueFromField( $("#fgPend") );
