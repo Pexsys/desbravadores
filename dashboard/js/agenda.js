@@ -49,18 +49,18 @@ $(document).ready(function(){
 				}
 			},
 			dsInfo:			{ validators: {} },
-			dsLogra:		{ validators: {} },
+			dsLogra:			{ validators: {} },
 			nrLog:			{ validators: {} },
 			dsComp:			{ validators: {} },
 			dsBai:			{ validators: {} },
 			dsCid:			{ validators: {} },
 			cmUF:			{ validators: {} },
-			cmGrupo:		{ validators: {} },
-			cmRegra:		{ validators: {} },
+			cmGrupo:			{ validators: {} },
+			cmRegra:			{ validators: {} },
 			cmUniforme:		{ validators: {} },
-			cmInstrucao:	{ validators: {} },
+			cmInstrucao:		{ validators: {} },
 			cmPub:			{ validators: {} },
-			cmTPEve:		{ validators: {} }
+			cmTPEve:			{ validators: {} }
 		}
 	})
 	.on('success.form.fv', function(e) {
@@ -93,11 +93,8 @@ $(document).ready(function(){
 				from: pFrom.toDateTime(),
 				to: pTo.toDateTime()
 			};
-			var retorno = undefined;
-			jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/agenda.php", { MethodName : 'events', data : parameter }, function(data){
-				retorno = data.result;
-			});
-			return retorno;
+			var retorno = jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/agenda.php", { MethodName : 'events', data : parameter });
+			return retorno.result;
 		},
 		tmpl_path				: jsLIB.rootDir+"dashboard/tmpls/",
 		tmpl_cache				: false,

@@ -189,7 +189,7 @@ var jsLIB = {
 			data		: objParam.data,
 			dataType	: 'json',
 			
-			success	: function( data, textStatus, jqxhr ) {
+			success	: ( data, textStatus, jqxhr ) => {
 				if (objParam.waiting !== false){
 					jsLIB.modalWaiting(false);
 				}
@@ -200,7 +200,7 @@ var jsLIB = {
 				}
 			},
 			
-			error	: function( jqxhr, textStatus, errorMessage ) {
+			error	: ( jqxhr, textStatus, errorMessage ) => {
 				if (objParam.waiting !== false){
 					jsLIB.modalWaiting(false);
 				}
