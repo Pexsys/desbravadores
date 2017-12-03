@@ -14,7 +14,7 @@
 				<div class="modal-body" style="padding:40px 50px;">
 					<div class="form-group">
 					  <label for="usr"><span class="glyphicon glyphicon-user"></span>&nbsp;Usu&aacute;rio</label>
-					  <input type="text" class="form-control" id="usr" name="usr" placeholder="Digite aqui seu c&oacute;digo de usu&aacute;rio">
+					  <input type="text" class="form-control" id="usr" name="usr" placeholder="Digite aqui seu c&oacute;digo">
 					</div>
 					<div class="form-group">
 					  <label for="psw"><span class="glyphicon glyphicon-eye-open"></span>&nbsp;Senha</label>
