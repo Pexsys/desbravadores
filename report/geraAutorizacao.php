@@ -114,25 +114,25 @@ class ESPCR extends TCPDF {
 			));
 	
 	 	    $this->SetXY(5,-20);
-    		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 11);
-    		$this->SetTextColor(255,0,0);
-    		$this->Cell(20, 3, strftime("%Y",$dtS)."-".fStrZero($this->line["ID"],3), 0, false, 'L', false, false, 1, false, 'C', 'C');
-    		
-    		$this->SetXY(5,-16);
-    		$this->SetTextColor(180,180,180);
-    		$this->Cell(10, 3, $this->SEQ[$this->line["ID"]."|".fStrZero($this->line["ID_CAD_PESSOA"],zeroSizeID()], 0, false, 'L', false, false, 1, false, 'C', 'C');
-    		
-    		$this->setXY(62,-27);
-    		$this->SetTextColor(0,0,0);
-    		$this->write1DBarcode($barCODE, 'C39', '', '', '', 20, 0.5, $this->stLine, 'N');
-    		
-    		$this->SetTextColor(0,0,0);
-    		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 5);
-    		$this->SetY(-9);
-    		$this->Cell(205, 5, "Esta autorização perderá automaticamente o valor em caso de rasuras, dobras, ratificações, ressalvas ou adendos ao texto sem o prévio acordo com o DIRETOR.", 0, false, 'C');
-    		
-    		$this->Image("img/logo.jpg", 183, 263, 20, 25, 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
-    	endif;
+	    		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 11);
+	    		$this->SetTextColor(255,0,0);
+	    		$this->Cell(20, 3, strftime("%Y",$dtS)."-".fStrZero($this->line["ID"],3), 0, false, 'L', false, false, 1, false, 'C', 'C');
+	    		
+	    		$this->SetXY(5,-16);
+	    		$this->SetTextColor(180,180,180);
+	    		$this->Cell(10, 3, fStrZero($this->SEQ[$this->line["ID"]."|".$this->line["ID_CAD_PESSOA"]],zeroSizeID()), 0, false, 'L', false, false, 1, false, 'C', 'C');
+	    		
+	    		$this->setXY(62,-27);
+	    		$this->SetTextColor(0,0,0);
+	    		$this->write1DBarcode($barCODE, 'C39', '', '', '', 20, 0.5, $this->stLine, 'N');
+	    		
+	    		$this->SetTextColor(0,0,0);
+	    		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 5);
+	    		$this->SetY(-9);
+	    		$this->Cell(205, 5, "Esta autorização perderá automaticamente o valor em caso de rasuras, dobras, ratificações, ressalvas ou adendos ao texto sem o prévio acordo com o DIRETOR.", 0, false, 'C');
+	    		
+	    		$this->Image("img/logo.jpg", 183, 263, 20, 25, 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+	    	endif;
 	}
 
 	public function newPage() {
@@ -167,7 +167,7 @@ class ESPCR extends TCPDF {
 		
 		$this->SetX(195);
 		$this->SetTextColor(180,180,180);
-		$this->Cell(10, 0, $this->SEQ[$this->line["ID"]."|".fStrZero($this->line["ID_CAD_PESSOA"],zeroSizeID())], 0, false, 'R', false, false, 1, false, 'C', 'C');
+		$this->Cell(10, 0, fStrZero($this->SEQ[$this->line["ID"]."|".$this->line["ID_CAD_PESSOA"]],zeroSizeID()), 0, false, 'R', false, false, 1, false, 'C', 'C');
 		
 		$this->SetY($lBase+6);
 		$this->SetTextColor(0,0,0);
