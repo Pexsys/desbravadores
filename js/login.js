@@ -35,7 +35,7 @@ $(document).ready(function(){
 							message: 'O c&oacute;digo do usu&aacute;rio deve ter entre 7 e 30 caracteres'
 						},
 						regexp: {
-							regexp: /^[a-zA-Z0-9.]+$/,
+							regexp: new RegExp("^[a-zA-Z0-9.]+$"),
 							message: 'O c&oacute;digo do usu&aacute;rio s&oacute; pode conter letras, o ponto, e n&uacute;meros'
 						}
 					}
@@ -51,7 +51,7 @@ $(document).ready(function(){
 							message: 'Sua senha deve conter 1 e 30 caracteres'
 						},
 						regexp: {
-							regexp: /^[a-zA-Z0-9\.]+$/,
+							regexp: new RegExp("^[a-zA-Z0-9.]+$"),
 							message: 'O c&oacute;digo do usu&aacute;rio s&oacute; pode conter letras, n&uacute;meros e . (ponto)'
 						}
 					}

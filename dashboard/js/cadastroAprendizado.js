@@ -119,11 +119,7 @@ $(document).ready(function(){
 						},
 						notEmpty: {
                             message: 'Informe o pr&oacute;ximo c&oacute;digo'
-                        },
-						regexp: {
-							regexp: /^[Pp]{1}[AEae]{1}[a-zA-Z0-9]{5}$/,
-							message: 'C&oacute;digo inv&aacute;lido'
-						}
+                        }
 					}
 				}
 			}

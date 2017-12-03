@@ -161,9 +161,9 @@ function updateHistorico( $barpessoaid, $barfnid, $paramDates, $compras = null )
         
     		$rg = $GLOBALS['conn']->Execute("SELECT ID, MIN_AREA, DS_ITEM FROM CON_APR_REQ WHERE ID_RQ = ? ORDER BY CD_ITEM_INTERNO", array($barfnid) );
     		foreach ($rg as $lg => $fg):
-				$min = $fg["MIN_AREA"];
+			$min = $fg["MIN_AREA"];
 		
-				$feitas = 0;
+			$feitas = 0;
 				//LE PARAMETRO MINIMO E HISTORICO PARA A REGRA
     	    		$rR = $GLOBALS['conn']->Execute("
                     SELECT tar.ID, tar.QT_MIN, COUNT(*) AS QT_FEITAS
@@ -186,49 +186,49 @@ function updateHistorico( $barpessoaid, $barfnid, $paramDates, $compras = null )
                     FROM APR_HISTORICO
                     WHERE ID_CAD_PESSOA = ?
                       AND ID_TAB_APREND = ?
-        	    ", array( $barpessoaid, $fg["ID"] ) );	
-        	    if ($rI->EOF || is_null($rI->fields["DT_CONCLUSAO"]) ):
-        	        
-        	        //INSERE NOTIFICAÇOES SE NÃO EXISTIR.
-        	        $GLOBALS['conn']->Execute("
-        				INSERT INTO LOG_MENSAGEM ( ID_ORIGEM, TP, ID_USUARIO, EMAIL, DH_GERA )
-        				SELECT ?, 'M', cu.ID_USUARIO, ca.EMAIL, NOW()
-        				  FROM CON_ATIVOS ca
-        			INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID)
-        				 WHERE ca.ID = ?
-        				   AND NOT EXISTS (SELECT 1 FROM LOG_MENSAGEM WHERE ID_ORIGEM = ? AND TP = 'M' AND ID_USUARIO = cu.ID_USUARIO)
-        			", array( $fg["ID"], $barpessoaid, $fg["ID"] ) );
-        			$logID = $GLOBALS['conn']->Insert_ID();
-        			
-                    updateHistorico( $barpessoaid, $fg["ID"], 
-                        array(
-                    		"dt_inicio"			=> dateDefaultInicio(getDateNull($paramDates["dt_inicio"])),
-                    		"dt_conclusao"		=> "N",
-                    		"dt_avaliacao"		=> "N",
-                    		"dt_investidura"	=> "N"
-                    	    ), 
-                        $compras );
-                        
-                    $rA = $GLOBALS['conn']->Execute("SELECT * FROM CON_ATIVOS WHERE ID = ?",array($barpessoaid));
-                    $a = explode(" ",titleCase($rA->fields["NM"]));
-                        
-                    if (!empty($rA->fields["EMAIL"])):
-                        $rD = $GLOBALS['conn']->Execute("SELECT * FROM CON_DIRETOR");
-                        $nomeDiretor = titleCase($rD->fields["NOME_DIRETOR"]);
-        			
-            			$GLOBALS['mail']->ClearAllRecipients();
-        				$GLOBALS['mail']->AddAddress( $rA->fields["EMAIL"] );
-        				$GLOBALS['mail']->Subject = utf8_decode("Clube Pioneiros - Aviso de Conclusão");
-        				$GLOBALS['mail']->MsgHTML( getConclusaoMsg( array( "np" => $a[0], "nm" => $fg["DS_ITEM"], "sx" => $rA->fields["SEXO"], "nd" => $nomeDiretor ) ) );
-        					
-        				if ( $GLOBALS['mail']->Send() ):
-        					$GLOBALS['conn']->Execute("UPDATE LOG_MENSAGEM SET DH_SEND = NOW() WHERE ID = ?", array( $logID ) );
-        				endif;
-        			endif;
-        			
-        	    endif;
-    		endif;
-    	endforeach;
+	        	    ", array( $barpessoaid, $fg["ID"] ) );	
+	        	    if ($rI->EOF || is_null($rI->fields["DT_CONCLUSAO"]) ):
+	        	        
+	        	        //INSERE NOTIFICAÇOES SE NÃO EXISTIR.
+	        	        $GLOBALS['conn']->Execute("
+	        				INSERT INTO LOG_MENSAGEM ( ID_ORIGEM, TP, ID_USUARIO, EMAIL, DH_GERA )
+	        				SELECT ?, 'M', cu.ID_USUARIO, ca.EMAIL, NOW()
+	        				  FROM CON_ATIVOS ca
+	        			INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID)
+	        				 WHERE ca.ID = ?
+	        				   AND NOT EXISTS (SELECT 1 FROM LOG_MENSAGEM WHERE ID_ORIGEM = ? AND TP = 'M' AND ID_USUARIO = cu.ID_USUARIO)
+	        			", array( $fg["ID"], $barpessoaid, $fg["ID"] ) );
+	        			$logID = $GLOBALS['conn']->Insert_ID();
+	        			
+	                    updateHistorico( $barpessoaid, $fg["ID"], 
+	                        array(
+	                    		"dt_inicio"			=> dateDefaultInicio(getDateNull($paramDates["dt_inicio"])),
+	                    		"dt_conclusao"		=> "N",
+	                    		"dt_avaliacao"		=> "N",
+	                    		"dt_investidura"	=> "N"
+	                    	    ), 
+	                        $compras );
+	                        
+	                    $rA = $GLOBALS['conn']->Execute("SELECT * FROM CON_ATIVOS WHERE ID = ?",array($barpessoaid));
+	                    $a = explode(" ",titleCase($rA->fields["NM"]));
+	                        
+	                    if (!empty($rA->fields["EMAIL"])):
+	                        $rD = $GLOBALS['conn']->Execute("SELECT * FROM CON_DIRETOR");
+	                        $nomeDiretor = titleCase($rD->fields["NOME_DIRETOR"]);
+	        			
+	            			$GLOBALS['mail']->ClearAllRecipients();
+	        				$GLOBALS['mail']->AddAddress( $rA->fields["EMAIL"] );
+	        				$GLOBALS['mail']->Subject = utf8_decode("Clube Pioneiros - Aviso de Conclusão");
+	        				$GLOBALS['mail']->MsgHTML( getConclusaoMsg( array( "np" => $a[0], "nm" => $fg["DS_ITEM"], "sx" => $rA->fields["SEXO"], "nd" => $nomeDiretor ) ) );
+	        					
+	        				if ( $GLOBALS['mail']->Send() ):
+	        					$GLOBALS['conn']->Execute("UPDATE LOG_MENSAGEM SET DH_SEND = NOW() WHERE ID = ?", array( $logID ) );
+	        				endif;
+	        			endif;
+	        			
+	        	    endif;
+	    		endif;
+	    	endforeach;
     endif;
 	
 	$consulta = consultaAprendizadoPessoa( $barfnid, $barpessoaid );

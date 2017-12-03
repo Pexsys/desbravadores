@@ -37,10 +37,6 @@ $(document).ready(function(){
 							min: 7,
 							max: 7,
 							message: 'O c&oacute;digo deve conter 7 caracteres'
-						},
-						regexp: {
-							regexp: /^[Pp]{1}[AaBbCc]{1}[a-zA-Z0-9]{5}$/,
-							message: 'C&oacute;digo inv&aacute;lido'
 						}
 					}
 				},

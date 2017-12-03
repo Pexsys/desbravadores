@@ -18,7 +18,6 @@ fHeaderPage(
 );
 ?>
 <body>
-
     <!-- Navigation -->
 	<?php @include_once("include/navbar.php");?>
 	
@@ -53,7 +52,10 @@ fHeaderPage(
 							<div class="col-xs-4 inputGroupContainer">
 								<div class="input-group">
 									<div class="input-group-addon"><i class="fa fa-barcode form-group-sm"></i></div>
-									<input type="text" id="cdMembro" name="cdMembro" field="cd_membro" class="form-control" placeholder="Pasta/Caderno/Cart&atilde;o" maxlength="7" style="text-transform: uppercase"/>
+									<input type="text" id="cdMembro" name="cdMembro" field="cd_membro" class="form-control" placeholder="Pasta/Caderno/Cart&atilde;o" maxlength="7" style="text-transform: uppercase"
+										pattern="<?php echo $GLOBALS['pattern']->getBars()->getPattern(".");?>"
+						                data-fv-regexp-message="C&oacute;digo inv&aacute;lido"
+									/>
 								</div>
 							</div>
 						</div>
