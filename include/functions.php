@@ -53,6 +53,17 @@ function verificaPerfil(){
 	endif;
 }
 
+function zeroSizeID(){
+	if (!isset($_SESSION['USER']['sizeID'])):
+		session_start();
+		$rs = $GLOBALS['conn']->Execute("SELECT COUNT(*) AS qtd FROM CAD_PESSOA");
+		if (!$rs->EOF):
+			$_SESSION['USER']['sizeID'] = strlen($rs->fields['qtd']);
+		endif;
+	endif;
+	return $_SESSION['USER']['sizeID'];
+}
+
 function fSetSessionLogin( $result ){
 	session_start();
 	$_SESSION['USER']['ssid']			= session_id();
@@ -155,16 +166,6 @@ function fConnDB(){
 		return false;
 	}
 	return false;
-}
-
-function zeroSizeID(){
-	if (!isset($GLOBALS['sizeID'])):
-		$rs = $GLOBALS['conn']->Execute("SELECT COUNT(*) AS qtd FROM CAD_PESSOA");
-		if (!$rs->EOF):
-			$GLOBALS['sizeID'] = strlen($rs->fields['qtd']);
-		endif;
-	endif;
-	return $GLOBALS['sizeID'];
 }
 
 function fDescMes($cMes){
