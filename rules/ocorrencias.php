@@ -79,7 +79,7 @@ function fGetMembros(){
 	  ORDER BY a.NM
 	", array("N") );
 	foreach($result as $l => $fields):
-		$id = str_pad($fields['ID_CAD_PESSOA'], $qtdZeros, "0", STR_PAD_LEFT);
+		$id = fStrZero($fields['ID_CAD_PESSOA'], $qtdZeros);
 		$arr["nomes"][] = array(
 			"value" => $fields['ID_CAD_PESSOA'],
 			"label" => "$id ".($fields['NM'])
@@ -211,7 +211,7 @@ function fOcorrencia( $parameters ) {
 			$out["ocorrencia"] = array(
 				"id" => $parameters["id"],
 				"fg_pend" => "S",
-				"cd" => ( $result->fields['ANO']."-".str_pad($result->fields['CD'], 2, "0", STR_PAD_LEFT))
+				"cd" => $result->fields['ANO']."-".fStrZero($result->fields['CD'], 2)
 			);
 		else:
 			$result = $GLOBALS['conn']->Execute("
@@ -255,7 +255,7 @@ function fOcorrencia( $parameters ) {
 				ORDER BY at.NM
 			");
 			foreach ($result as $r => $f):
-				$id = str_pad($f['ID'], $qtdZeros, "0", STR_PAD_LEFT);
+				$id = fStrZero($f['ID'], $qtdZeros);
 				$out["nomes"][] = array(
 						"id_pessoa" => $id,
 						"nm" => "$id ".($f['NM'])

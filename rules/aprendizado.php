@@ -329,7 +329,7 @@ function getData(){
 	$qtdZeros = zeroSizeID();
 	$result = $GLOBALS['conn']->Execute("SELECT ID, NM FROM CON_ATIVOS ORDER BY NM");
 	while (!$result->EOF):
-		$id = str_pad($result->fields['ID'], $qtdZeros, "0", STR_PAD_LEFT);
+		$id = fStrZero($result->fields['ID'], $qtdZeros);
 		$arr["nomes"][] = array( 
 			"id" => $id,
 			"ds" => "$id ".($result->fields['NM'])

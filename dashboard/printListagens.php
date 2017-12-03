@@ -104,7 +104,7 @@ $classes = getDomainFilter( array( "type" => "C" ) );
 		<label for="cbMembros" class="control-label">Membros:</label>
 		<select name="cbMembros" id="cbMembros" class="selectpicker form-control input-sm" title="Escolha um ou mais membros" data-live-search="true" multiple data-selected-text-format="count > 2" data-width="100%" data-container="body" data-actions-box="true">
 		<?php
-			$qtdZeros = zeroSizeID();
+		$qtdZeros = zeroSizeID();
         	$result = $GLOBALS['conn']->Execute("
         	   SELECT DISTINCT cp.ID, cp.NM
                  FROM CAD_PESSOA cp
@@ -113,7 +113,7 @@ $classes = getDomainFilter( array( "type" => "C" ) );
                 ORDER BY cp.NM
             ");
         	foreach($result as $l => $fields):
-        		$id = str_pad($fields['ID'], $qtdZeros, "0", STR_PAD_LEFT);
+        		$id = fStrZero($fields['ID'], $qtdZeros);
         		echo "<option value=\"". $fields['ID'] ."\">$id ".($fields['NM']) ."</option>";
         	endforeach;
 		?>

@@ -164,13 +164,13 @@ class CHAMADA extends TCPDF {
 
 		if ( strftime("%m",strtotime($f["DT_NASC"])) == $this->mesAtu ):
 			$this->SetFillColor(255,255,0);
-			$this->Cell($x-39, $h, str_pad($f["ID"],4,"0",STR_PAD_LEFT)."-".$f["NM"], 0, false, 'L', true, false, 1);
+			$this->Cell($x-39, $h, fStrZero($f["ID"],zeroSizeID())."-".$f["NM"], 0, false, 'L', true, false, 1);
 			$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 7);
 			$this->setXY($x-34,$this->posY);
 			$this->Cell(34, $h, strftime("Dia %d", strtotime($f["DT_NASC"]))." (".$f["IDADE_ANO"]." anos, Parabéns!)", 0, false, 'C', true);
 		else:
 			$this->SetFillColor(230,230,230);
-			$this->Cell($x-27, $h, str_pad($f["ID"],4,"0",STR_PAD_LEFT)."-".$f["NM"], 0, false, 'L', true, false, 1);
+			$this->Cell($x-27, $h, fStrZero($f["ID"],zeroSizeID())."-".$f["NM"], 0, false, 'L', true, false, 1);
 			$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 8);
 			$this->setXY($x-22,$this->posY);
 			$this->Cell(22, $h, strftime("%d/%m",strtotime($f["DT_NASC"]))." - ".$f["IDADE_HOJE"]." anos", 0, false, 'C', true);

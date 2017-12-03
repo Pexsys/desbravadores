@@ -511,7 +511,7 @@ function getSaidas( $parameters ) {
 	$result = $GLOBALS['conn']->Execute($query);
 	foreach ($result as $k => $fields):
 		$arr[] = array( 
-			"id" => str_pad($fields['ID'], 3, "0", STR_PAD_LEFT),
+			"id" => fStrZero($fields['ID'], 3),
 			"ds" => ($fields['DS']),
 			"dst" => ($fields['DS_DEST']),
 			"dh_s" => strtotime($fields['DH_S']),

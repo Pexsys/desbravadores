@@ -215,7 +215,7 @@ function getData( $parameters ) {
 			$qtdZeros = zeroSizeID();
 			$result = $GLOBALS['conn']->Execute("SELECT ID, NM FROM CON_ATIVOS ORDER BY NM");
 			foreach ($result as $k => $fields):
-				$id = str_pad($fields['ID'], $qtdZeros, "0", STR_PAD_LEFT);
+				$id = fStrZero($fields['ID'], $qtdZeros);
 				$arr["nomes"][] = array( 
 					"id" => $id,
 					"ds" => "$id ".$fields['NM']
@@ -280,7 +280,7 @@ function getData( $parameters ) {
 			  ORDER BY NM
 			");
 			foreach ($result as $k => $fields):
-				$id = str_pad($fields['ID_CAD_PESSOA'], $qtdZeros, "0", STR_PAD_LEFT);
+				$id = fStrZero($fields['ID_CAD_PESSOA'], $qtdZeros);
 				$arr["nomes"][] = array( 
 					"id" => $fields['ID_CAD_PESSOA'],
 					"ds" => "$id ".$fields['NM']

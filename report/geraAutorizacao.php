@@ -120,7 +120,7 @@ class ESPCR extends TCPDF {
     		
     		$this->SetXY(5,-16);
     		$this->SetTextColor(180,180,180);
-    		$this->Cell(10, 3, fStrZero($this->SEQ[$this->line["ID"]."|".$this->line["ID_CAD_PESSOA"]],3), 0, false, 'L', false, false, 1, false, 'C', 'C');
+    		$this->Cell(10, 3, $this->SEQ[$this->line["ID"]."|".fStrZero($this->line["ID_CAD_PESSOA"],zeroSizeID()], 0, false, 'L', false, false, 1, false, 'C', 'C');
     		
     		$this->setXY(62,-27);
     		$this->SetTextColor(0,0,0);
@@ -167,7 +167,7 @@ class ESPCR extends TCPDF {
 		
 		$this->SetX(195);
 		$this->SetTextColor(180,180,180);
-		$this->Cell(10, 0, fStrZero($this->SEQ[$this->line["ID"]."|".$this->line["ID_CAD_PESSOA"]],3), 0, false, 'R', false, false, 1, false, 'C', 'C');
+		$this->Cell(10, 0, $this->SEQ[$this->line["ID"]."|".fStrZero($this->line["ID_CAD_PESSOA"],zeroSizeID())], 0, false, 'R', false, false, 1, false, 'C', 'C');
 		
 		$this->SetY($lBase+6);
 		$this->SetTextColor(0,0,0);
