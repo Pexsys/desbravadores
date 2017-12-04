@@ -89,7 +89,7 @@ $classes = getDomainFilter( array( "type" => "C" ) );
     </div>
 	<div class="col-lg-8" name="rowFilter" id="divEventos" style="display:none;">
     		<label for="cbEventos" class="control-label">Evento:</label>
-    		<select name="cbEventos" id="cbEventos" class="selectpicker form-control input-sm" title="Escolha o Evento" data-width="100%" data-container="body" data-actions-box="false">
+    		<select name="cbEventos" id="cbEventos" class="selectpicker form-control input-sm" title="Escolha o Evento" data-live-search="true" data-width="100%" data-container="body" data-actions-box="false">
     		<option></option>
 		<?php
     	   	$s = false;
