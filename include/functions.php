@@ -825,16 +825,19 @@ function fDtHoraEvento($dhI, $dhF, $fmt = "%d de %B"){
 			$sDataHora = "Hoje";
 		elseif ($DATA_EVENTO_INI == $D1):
 			$sDataHora = "Amanh&atilde;";
-		elseif (datediff("d",$DHOJE,$dhI) <= 7):
-		 	$DIA_SEMANA = strftime("%w",$timeI);
-			if ($DIA_SEMANA == 0 || $DIA_SEMANA == 6):
-				$sDataHora .= "Pr&oacute;ximo ";
-			else:
-				$sDataHora .= "Pr&oacute;xima ";
-			endif;
-			$sDataHora .= strftime("%A",$timeI);
 		else:
-			$sDataHora .= strftime($fmt,$timeI);
+			$dif = datediff("d",$DHOJE,$DATA_EVENTO_INI);
+			if ($dif > 0 && $dif <= 7):
+				$DIA_SEMANA = strftime("%w",$timeI);
+				if ($DIA_SEMANA == 0 || $DIA_SEMANA == 6):
+					$sDataHora .= "Pr&oacute;ximo ";
+				else:
+					$sDataHora .= "Pr&oacute;xima ";
+				endif;
+				$sDataHora .= strftime("%A",$timeI);
+			else:
+				$sDataHora .= strftime($fmt,$timeI);
+			endif;
 		endif;
 	
 	//******************************************************************
@@ -875,6 +878,6 @@ function fDtHoraEvento($dhI, $dhF, $fmt = "%d de %B"){
 	else:
 		$sDataHora = fConcatNoEmpty($sDataHora, " &agrave;s ", fDescHora($dhI));
 	endif;
-	return $sDataHora;
+	return utf8_encode($sDataHora);
 }
 ?>

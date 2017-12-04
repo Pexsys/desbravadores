@@ -37,7 +37,7 @@ function events( $parameters ) {
 		$dh_ini = $result->fields['DTHORA_EVENTO_INI'];
 		$dh_fim = $result->fields['DTHORA_EVENTO_FIM'];
 	
-		$dt_hora_eve = fDtHoraEvento( $dh_ini, $dh_fim );
+		$dt_hora_eve = fDtHoraEvento( $dh_ini, $dh_fim, "%d/%m" );
 		
 		$ds_info_add = trim($result->fields['INFO_ADIC']);
 		
@@ -301,45 +301,45 @@ function agendaConsulta( $parameters ) {
 				$str .= "<div id=\"m$nrMesAtu\" class=\"panel-body panel-collapse collapse\">";
 			endif;
 			$str .= "<div class=\"media row col-lg-12\">";
-			$str .= "<div class=\"pull-left\"><i class=\"fa ". fGetClassTipoEvento($result->fields['TIPO_EVENTO']) ." fa-2x\"></i></div>";
+			$str .= "<div class=\"pull-left\"><i class=\"fa ". fGetClassTipoEvento($line['TIPO_EVENTO']) ." fa-2x\"></i></div>";
 			$str .= "<div class=\"media-body\">";
-			$str .= "<h4 class=\"media-heading\"><b>".fDtHoraEvento($result->fields['DTHORA_EVENTO_INI'],$result->fields['DTHORA_EVENTO_FIM'])."</b></h4>";
+			$str .= "<h4 class=\"media-heading\"><b>".fDtHoraEvento($line['DTHORA_EVENTO_INI'],$line['DTHORA_EVENTO_FIM'],"%d/%m")."</b></h4>";
 			$str .= "<p>";
 			$info = "";
-			if (trim($result->fields['INFO_ADIC']) != ""):
-				$info .= trim($result->fields['INFO_ADIC']);
+			if (trim($line['INFO_ADIC']) != ""):
+				$info .= trim($line['INFO_ADIC']);
 			endif;
-			if (trim($result->fields['DESC_LOCAL']) != ""):
-				$info .= " - ".trim($result->fields['DESC_LOCAL']);
+			if (trim($line['DESC_LOCAL']) != ""):
+				$info .= " - ".trim($line['DESC_LOCAL']);
 			endif;
 			if ($info != ""):
 				$str .= "$info<br/>";
 			endif;
-			$endereco = trim($result->fields['DESC_LOGRADOURO']);
-			if (trim($result->fields['NUM_LOGRADOURO']) != ""):
-				$endereco .= ", ".trim($result->fields['NUM_LOGRADOURO']);
+			$endereco = trim($line['DESC_LOGRADOURO']);
+			if (trim($line['NUM_LOGRADOURO']) != ""):
+				$endereco .= ", ".trim($line['NUM_LOGRADOURO']);
 			endif;
-			if (trim($result->fields['DESC_COMPLEMENTO']) != ""):
-				$endereco .= " - ".trim($result->fields['DESC_COMPLEMENTO']);
+			if (trim($line['DESC_COMPLEMENTO']) != ""):
+				$endereco .= " - ".trim($line['DESC_COMPLEMENTO']);
 			endif;
 			if ($endereco != ""):
 				$str .=  "$endereco<br/>";
 			endif;
 			$cidade = "";
-			if (trim($result->fields['DESC_BAIRRO']) != ""):
-				$cidade .= trim($result->fields['DESC_BAIRRO']);
+			if (trim($line['DESC_BAIRRO']) != ""):
+				$cidade .= trim($line['DESC_BAIRRO']);
 			endif;
-			if (trim($result->fields['DESC_CIDADE']) != ""):
+			if (trim($line['DESC_CIDADE']) != ""):
 				if ($cidade != ""):
 					$cidade .= " - ";
 				endif;
-				$cidade .= trim($result->fields['DESC_CIDADE']);
+				$cidade .= trim($line['DESC_CIDADE']);
 			endif;
-			if (trim($result->fields['COD_UF']) != ""):
+			if (trim($line['COD_UF']) != ""):
 				if ($cidade != ""):
 					$cidade .= " - ";
 				endif;
-				$cidade .= trim($result->fields['COD_UF']);
+				$cidade .= trim($line['COD_UF']);
 			endif;
 			if ($cidade != ""):
 				$str .= "$cidade<br/>";

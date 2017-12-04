@@ -26,7 +26,6 @@ fConnDB();
         <!-- /.row -->
         
 	<?php
-	require_once("agenda/descdates.php");
 	$DATA_NOW = date('Y-m-d H:i:s');
 
 	$query = "SELECT e.*, c.tp_grupo, t.ds
@@ -59,7 +58,7 @@ fConnDB();
 				</span> 
 			</div>
 			<div class="media-body">
-				<h4 class="media-heading"><?php echo "<b>".fDtHoraEvento($result->fields['DTHORA_EVENTO_INI'],$result->fields['DTHORA_EVENTO_FIM'])."</b>";?></h4>
+				<h4 class="media-heading"><?php echo "<b>".fDtHoraEvento($result->fields['DTHORA_EVENTO_INI'],$result->fields['DTHORA_EVENTO_FIM'],"%d/%m")."</b>";?></h4>
 				<p>
 				<?php 
 				$info = "";
