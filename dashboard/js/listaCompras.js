@@ -31,12 +31,15 @@ $(document).ready(function(){
 				},
 			dataSrc: "compras"
 		},
-		order: [ 2, 'asc' ],
+		order: [ 3, 'asc' ],
 		columns: [
 			{	data: "tp",
 				visible: false
 			},
 			{	data: "id",
+				visible: false
+			},
+			{	data: "ip",
 				visible: false
 			},
 			{	data: "nm",
@@ -63,13 +66,14 @@ $(document).ready(function(){
 			}
 		],
 		fnRowCallback: function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-			if ( aData.ie == "S" ) {
+			if (aData.ip == "S") {
+				$('td', nRow).css('color', '#a0a0a0');
+			} else if ( aData.ie == "S" ) {
 				$(nRow.cells[2]).css('background-color', '#b0ffb3' ).css('font-weight', 'bold');
 				$(nRow.cells[3]).css('background-color', '#b0ffb3' ).css('font-weight', 'bold');
 			} else if ( aData.ic == "S" ) {
 				$(nRow.cells[2]).css('background-color', '#fdedc4' ).css('font-weight', 'bold');
 			}
-
         },
 		select: {
 			style: 'multi',
@@ -402,8 +406,6 @@ $(document).ready(function(){
 	});	
 	ruleBtnDelete(false);
 	ruleBtnEdit(false);
-
-
 });
 
 function rulesGeracao( obj ){
@@ -422,7 +424,7 @@ function ruleBtnDelete( force ){
 	var data = dataTable.rows('.selected').data();
 	var selected = false;
 	for (var i=0;i<data.length;i++){
-		selected = (data[i].tp == 'M');
+		selected = (data[i].tp == 'M' && data[0].ip == 'N');
 		if (!selected){
 			break;
 		}
@@ -434,7 +436,7 @@ function ruleBtnEdit( force ){
 	var data = dataTable.rows('.selected').data();
 	var selected = "";
 	if (force == undefined){
-		if (data.length == 1){
+		if (data.length == 1 && data[0].ip == 'N'){
 			selected = data[0].id;
 			jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/listaCompras.php", { MethodName : 'getAttrPerm', data : { id: selected } }, function(data){
 				if (!data || !data.edit){

@@ -98,20 +98,21 @@ function getQueryByFilter( $parameters ) {
 			ccp.TP AS TP_INCL,
 			ccp.FG_COMPRA,
 			ccp.FG_ENTREGUE,
+			ccp.FG_PREVISAO,
 			tm.TP,
 			tm.DS,
 			tm.FUNDO,
 			tm.CMPL,
 			tm.FG_IM,
-			at.NM,
+			ca.NM,
 			ap.TP_ITEM,
 			ap.DS_ITEM
 		FROM CAD_COMPRAS_PESSOA ccp
-		INNER JOIN CON_ATIVOS at ON (at.ID = ccp.id_cad_pessoa)
+		INNER JOIN CON_ATIVOS ca ON (ca.ID = ccp.id_cad_pessoa)
 		INNER JOIN TAB_MATERIAIS tm ON (tm.id = ccp.id_tab_materiais)
 		 LEFT JOIN TAB_APRENDIZADO ap ON (ap.id = tm.id_tab_aprend)
 		WHERE 1=1 $where
-	 ORDER BY at.NM, tm.CD, ccp.COMPL
+	 ORDER BY ca.NM, tm.CD, ccp.COMPL
 	";
 
 	return $GLOBALS['conn']->Execute( $query, $aWhere );
@@ -144,7 +145,8 @@ function getLista( $parameters ) {
 			"nm" => $fields['NM'],
 			"ds" => $ds,
 			"ic" => $fields['FG_COMPRA'],
-			"ie" => $fields['FG_ENTREGUE']
+			"ie" => $fields['FG_ENTREGUE'],
+			"ip" => $fields['FG_PREVISAO']
 		);
 	endforeach;
 
@@ -276,7 +278,8 @@ function getData( $parameters ) {
 				SELECT DISTINCT ID_CAD_PESSOA, NM 
 				  FROM CON_COMPRAS 
 				 WHERE FG_COMPRA = 'S' 
-				   AND FG_ENTREGUE = 'N' 
+				   AND FG_ENTREGUE = 'N'
+				   AND FG_PREVISAO = 'N'
 			  ORDER BY NM
 			");
 			foreach ($result as $k => $fields):
@@ -316,38 +319,10 @@ function addCompras( $parameters ) {
 		
 		if ( isset($frm["id_pessoa"]) ):
 			foreach ($frm["id_pessoa"] as $k => $pessoaID):
-				for ($qtd=1;$qtd<=$qtItens;$qtd++):
-					$cm = $cmpl;
-					if ($qtItens>1):
-						$cm = (is_null($cmpl) ? "" : $cmpl) ."$qtd/$qtItens";
-					endif;
-					$compras->forceInsert(
-						array(
-							fReturnNumberNull($pessoaID),
-							$frm["id"],
-							"M",
-							fReturnStringNull( $cm ),
-							"N"
-						) 
-					);
-				endfor;
+				batchInsert($compras, $qtItens, $cmpl, $pessoaID, $frm["id"]);
 			endforeach;
 		else:
-			for ($qtd=1;$qtd<=$qtItens;$qtd++):
-				$cm = $cmpl;
-				if ($qtItens>1):
-					$cm = (is_null($cmpl) ? "" : $cmpl) ."$qtd/$qtItens";
-				endif;
-				$compras->forceInsert(
-					array(
-						null,
-						$frm["id"],
-						"M",
-						fReturnStringNull( $cm ),
-						"N"
-					) 
-				);
-			endfor;
+			batchInsert($compras, $qtItens, $cmpl, null, $frm["id"]);
 		endif;
 
 	//SETAR ITENS ENTREGUES POR PESSOA
@@ -368,6 +343,24 @@ function addCompras( $parameters ) {
 	endif;
 	
 	return array("result" => true);
+}
+
+function batchInsert($compras, $qtItens, $cmpl, $pessoaID, $id){
+	for ($qtd=1;$qtd<=$qtItens;$qtd++):
+		$cm = $cmpl;
+		if ($qtItens>1):
+			$cm = (is_null($cmpl) ? "" : $cmpl) ."$qtd/$qtItens";
+		endif;
+		$compras->forceInsert(
+			array(
+				fReturnNumberNull($pessoaID),
+				$frm["id"],
+				"M",
+				fReturnStringNull( $cm ),
+				"N"
+			) 
+		);
+	endfor;
 }
 
 function getAttrPerm( $parameters ) {
