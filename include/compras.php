@@ -25,12 +25,13 @@ class COMPRAS {
 				ID_TAB_MATERIAIS,
 				TP,
 				COMPL,
-				FG_COMPRA
-			) VALUES (?,?,?,?,?)
+				FG_COMPRA,
+				FG_PREVISAO
+			) VALUES (?,?,?,?,?,?)
 		", $arr );
 	}
 	
-	public function insertItemCompra( $cd, $pessoaID, $tp, $compl = null ) {
+	public function insertItemCompra( $cd, $pessoaID, $tp, $compl = null, $previsao = "N" ) {
 		$r = $GLOBALS['conn']->Execute("
 			SELECT ID
 			  FROM TAB_MATERIAIS
@@ -57,7 +58,8 @@ class COMPRAS {
 						$item,
 						$tp,
 						$compl,
-						"N"
+						"N",
+						$previsao
 					) 
 				);
 			endif;
@@ -81,7 +83,8 @@ class COMPRAS {
 
 		//SELECIONA OS ITENS DE HISTORICO
 		$r1 = $GLOBALS['conn']->Execute("
-				SELECT ah.ID, ah.ID_TAB_APREND, ta.TP_ITEM, ta.TP_PARA, ta.CD_ITEM_INTERNO, ta.CD_AREA_INTERNO
+				SELECT ah.ID, ah.ID_TAB_APREND, ah.DT_AVALIACAO, 
+					   ta.TP_ITEM, ta.TP_PARA, ta.CD_ITEM_INTERNO, ta.CD_AREA_INTERNO
 				  FROM APR_HISTORICO ah
 			INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
 				 WHERE ah.ID_CAD_PESSOA = ?
@@ -92,6 +95,9 @@ class COMPRAS {
 		foreach ($r1 as $k1 => $l1):
 		
 			$aprendID = $l1["ID_TAB_APREND"];
+
+			//ainda nao alterei o select acima... - testar quando implementar
+			$previsao = (is_null($l1["DT_AVALIACAO"]) ? "S" : "N");
 
 			//SE O ITEM CLASSE
 			if ( $l1["TP_ITEM"] == "CL" ):
@@ -104,13 +110,13 @@ class COMPRAS {
 					$dtMax = "";
 					$concat = "";
 					$r2 = $GLOBALS['conn']->Execute("
-							SELECT ta.ID, ta.CD_ITEM_INTERNO, ah.DT_INVESTIDURA
-							  FROM APR_HISTORICO ah
-						INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND) 
-							 WHERE ta.CD_ITEM_INTERNO LIKE  '01%00'
-							   AND ah.DT_AVALIACAO IS NOT NULL
-							   AND ah.ID_CAD_PESSOA = ?
-						  ORDER BY ta.CD_ITEM_INTERNO
+						SELECT ta.ID, ta.CD_ITEM_INTERNO, ah.DT_INVESTIDURA
+						  FROM APR_HISTORICO ah
+					INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND) 
+						 WHERE ta.CD_ITEM_INTERNO LIKE  '01%00'
+						   AND ah.DT_AVALIACAO IS NOT NULL
+						   AND ah.ID_CAD_PESSOA = ?
+						ORDER BY ta.CD_ITEM_INTERNO
 					", array($pessoaID) );
 					if (!$r2->EOF):
 						$qtd = $r2->RecordCount();
@@ -127,7 +133,7 @@ class COMPRAS {
 					//TRATAR TIRA DE CLASSE REGULAR
 					//***************************************************************
 					$materialCD = ($fundo == "BR" ? "05-04-" : "05-03-").$a[1];
-					$this->insertItemCompra( $materialCD, $pessoaID, $tp );
+					$this->insertItemCompra( $materialCD, $pessoaID, $tp, null, $previsao );
 					
 					//***************************************************************
 					//TRATAR DISTINTIVO DE REGULARES
@@ -138,7 +144,7 @@ class COMPRAS {
 					else:
 						$materialCD = "04-02-01-".$a[1];
 					endif;
-					$this->insertItemCompra( $materialCD, $pessoaID, $tp );
+					$this->insertItemCompra( $materialCD, $pessoaID, $tp, null, $previsao );
 					
 					//***************************************************************
 					//TRATAR DIVISA DE CLASSE REGULAR
@@ -170,7 +176,7 @@ class COMPRAS {
 							if ($qtItens>1):
 								$compl = "$qtd/$qtItens";
 							endif;
-							$this->insertItemCompra( $materialCD, $pessoaID, $tp, $compl );
+							$this->insertItemCompra( $materialCD, $pessoaID, $tp, $compl, $previsao );
 						endfor;
 					endif;
 
@@ -228,7 +234,7 @@ class COMPRAS {
 								if ($qtItens>1):
 									$compl = "$qtd/$qtItens";
 								endif;
-								$this->insertItemCompra( $materialCD, $pessoaID, $tp, $compl );
+								$this->insertItemCompra( $materialCD, $pessoaID, $tp, $compl, $previsao );
 							endfor;
 						endif;
 					endif;
@@ -239,7 +245,7 @@ class COMPRAS {
 				$cd = ( $l1["CD_AREA_INTERNO"] == "ME" ? "07-03-" : "07-02-" ) . $l1["CD_ITEM_INTERNO"];
 				
 				//INSERE INSIGNIA DE ESPECIALIDADE/MESTRADO
-				$this->insertItemCompra( $cd, $pessoaID, $tp );
+				$this->insertItemCompra( $cd, $pessoaID, $tp, null, $previsao );
 			endif;
 		endforeach;
 	}		

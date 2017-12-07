@@ -54,6 +54,7 @@ function filtroDatasAvaliacao(){
 				<tr>
 					<th></th>
 					<th></th>
+					<th></th>
 					<th>Nome Completo</th>
 					<th>Item</th>
 					<th>Comprado</th>
