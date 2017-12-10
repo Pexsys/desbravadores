@@ -255,9 +255,10 @@
 							<div class="form-group col-lg-5">
 								<div class="input-group">
 									<div class="input-group-addon"><i class="fa fa-barcode fa-2x"></i></div>
-									<input type="text" id="cdBar" name="cdBar" field="cd_bar" class="form-control input-lg" placeholder="C&oacute;digo" maxlength="7" style="text-transform: uppercase"
+									<input type="text" id="cdBar" name="cdBar" field="cd_bar" class="form-control input-lg" placeholder="C&oacute;digo" style="text-transform: uppercase"
+										maxlength="<?php echo $GLOBALS['pattern']->getBars()->getLength();?>" 
 										pattern="<?php echo $GLOBALS['pattern']->getBars()->getPattern("AE");?>"
-						                data-fv-regexp-message="C&oacute;digo inv&aacute;lido"
+										data-fv-regexp-message="C&oacute;digo inv&aacute;lido"
 									/>
 								</div>
 							</div>

@@ -99,8 +99,8 @@ function filtroDatasAvaliacao(){
 									<div class="form-group col-xs-12">
 										<select name="cmLista" id="cmLista" opt-value="cd" opt-label="ds" class="selectpicker form-control input-sm" data-container="body" data-width="100%">
 										    <option value=""></option>
-											<option value="geraListaComprasAlmArea.php?fc=N">LISTA DE COMPRAS - ALMOXARIFADO DA ASSOCIA&Ccedil;&Atilde;O - POR &Aacute;REA</option>
-											<option value="geraListaComprasAlmGaveta.php">LISTA DE COMPRAS - ALMOXARIFADO DA ASSOCIA&Ccedil;&Atilde;O - POR GAVETA</option>
+											<option value="geraListaComprasAlmArea.php?fc=N" show="divLista">LISTA DE COMPRAS - ALMOXARIFADO DA ASSOCIA&Ccedil;&Atilde;O - POR &Aacute;REA</option>
+											<option value="geraListaComprasAlmGaveta.php" show="divLista">LISTA DE COMPRAS - ALMOXARIFADO DA ASSOCIA&Ccedil;&Atilde;O - POR GAVETA</option>
 											<option value="geraListaComprasAlmArea.php?fc=S">LISTA DE COMPRAS - ITENS COMPRADOS - POR &Aacute;REA</option>
 											<option value="geraListaComprasMDA.php" show="divMDA">LISTA DE COMPRAS - SECRETARIA MDA ASSOCIA&Ccedil;&Atilde;O / EQUIPE REGIONAL</option>
 											<option value="geraListaInvestDSA.php" show="divFilter">LISTA DE INVESTIDURAS - CADASTRO DSA</option>
@@ -129,31 +129,50 @@ function filtroDatasAvaliacao(){
 						</div>	
 					</div>
 					<div class="panel panel-warning" name="rowFilter" id="divMDA" style="display:none">
-							<div class="panel-heading" style="padding:4px 10px 0px">
-								<label>Filtros</label>
-							</div>
-							<div class="panel-body" style="padding:4px 10px 0px">
-								<div>
-									<div class="row">
-										<div class="form-group col-xs-12">
-											<label class="control-label">Datas de Avalia&ccedil;&atilde;o</label>
-											<select field="cmFiltroMDA" class="selectpicker form-control input-sm" multiple data-actions-box="true" data-selected-text-format="count > 3" data-container="body" data-width="100%">
-												<?php filtroDatasAvaliacao();?>
-											</select>
-										</div>
+						<div class="panel-heading" style="padding:4px 10px 0px">
+							<label>Filtros</label>
+						</div>
+						<div class="panel-body" style="padding:4px 10px 0px">
+							<div>
+								<div class="row">
+									<div class="form-group col-xs-12">
+										<label class="control-label">Datas de Avalia&ccedil;&atilde;o</label>
+										<select field="cmFiltroMDA" class="selectpicker form-control input-sm" multiple data-actions-box="true" data-selected-text-format="count > 3" data-container="body" data-width="100%">
+											<?php filtroDatasAvaliacao();?>
+										</select>
 									</div>
-									<div class="row">
-										<div class="form-group col-xs-12">
-											<label class="control-label">Status de Investidura</label>
-											<select field="cmINV" class="selectpicker form-control input-sm" data-container="body" data-width="100%">
-												<option value="">AMBOS</option>
-												<option value="S">J&Aacute; INVESTIDOS</option>
-												<option value="N" selected="selected">N&Atilde;O INVESTIDOS</option>
-											</select>
-										</div>
+								</div>
+								<div class="row">
+									<div class="form-group col-xs-12">
+										<label class="control-label">Status de Investidura</label>
+										<select field="cmINV" class="selectpicker form-control input-sm" data-container="body" data-width="100%">
+											<option value="">AMBOS</option>
+											<option value="S">J&Aacute; INVESTIDOS</option>
+											<option value="N" selected="selected">N&Atilde;O INVESTIDOS</option>
+										</select>
 									</div>
 								</div>
 							</div>
+						</div>
+					</div>
+					<div class="panel panel-warning" name="rowFilter" id="divLista" style="display:none">
+						<div class="panel-heading" style="padding:4px 10px 0px">
+							<label>Filtros</label>
+						</div>
+						<div class="panel-body" style="padding:4px 10px 0px">
+							<div>
+								<div class="row">
+									<div class="form-group col-xs-12">
+										<label class="control-label">Itens</label>
+										<select field="cmPREV" class="selectpicker form-control input-sm" data-container="body" data-width="100%">
+											<option value="T">TODOS OS ITENS</option>
+											<option value="P">SOMENTE OS PREVISTOS</option>
+											<option value="A">SOMENTE OS AVALIADOS</option>
+										</select>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 				<div class="panel-footer">

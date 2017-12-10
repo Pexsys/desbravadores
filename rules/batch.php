@@ -125,7 +125,7 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
     	endforeach;
 	endforeach;
 
-//******* EXCLUSAO DE ACESSOS DE MEMBROS INATIVOS
+//*******  SECRETARIA - EXCLUSAO DE ACESSOS/PERFIS DE MEMBROS INATIVOS
 $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.03-Excluindo Perfis de Membros Inativos...')");
 $profile = new PROFILE();
 $result = $GLOBALS['conn']->Execute("
@@ -138,6 +138,39 @@ $result = $GLOBALS['conn']->Execute("
 foreach($result as $l => $fields):
 	$profile->deleteAllByUserID( $fields['ID_USUARIO'] );
 endforeach;
+
+//*******  SECRETARIA - REORGANIZACAO DA BASE DE COMPRAS EM 01/JANEIRO
+if (date("m-d") == "01-01"):
+	$GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.04-Reorganizando base de compras...')");
+	$result = $GLOBALS['conn']->Execute("
+		SELECT * 
+		  FROM CAD_COMPRAS_PESSOA 
+		 WHERE FG_PREVISAO = 'N' 
+	  ORDER BY ID_CAD_PESSOA, ID_TAB_MATERIAIS, COMPL
+	");
+	$GLOBALS['conn']->Execute("TRUNCATE CAD_COMPRAS_PESSOA");
+	foreach($result as $l => $f):
+		$GLOBALS['conn']->Execute("
+			INSERT INTO CAD_COMPRAS_PESSOA(
+				ID_CAD_PESSOA,
+				ID_TAB_MATERIAIS,
+				TP,
+				COMPL,
+				FG_COMPRA,
+				FG_ENTREGUE,
+				FG_PREVISAO
+			) VALUES (?,?,?,?,?,?,?)
+		", array(
+			$f["ID_CAD_PESSOA"],
+			$f["ID_TAB_MATERIAIS"],
+			$f["TP"],
+			$f["COMPL"],
+			$f["FG_COMPRA"],
+			$f["FG_ENTREGUE"],
+			$f["FG_PREVISAO"]
+		));
+	endforeach;
+endif;
 
 $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.99-Rotina de secretaria finalizada com Sucesso.')");
 

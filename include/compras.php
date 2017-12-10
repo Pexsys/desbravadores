@@ -14,6 +14,13 @@ class COMPRAS {
 		", array( $pessoaID, $itemAprendID ) );
 	}
 	
+	public function deletePessoa( $pessoaID ) {
+		$GLOBALS['conn']->Execute("
+			DELETE FROM CAD_COMPRAS_PESSOA
+			 WHERE ID_CAD_PESSOA = ?
+		", array( $pessoaID ) );
+	}
+	
 	public function deleteByID( $id ) {
 		 $GLOBALS['conn']->Execute("DELETE FROM CAD_COMPRAS_PESSOA WHERE ID = ?", array($id) );
 	}
@@ -88,7 +95,6 @@ class COMPRAS {
 				  FROM APR_HISTORICO ah
 			INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
 				 WHERE ah.ID_CAD_PESSOA = ?
-				   AND ah.DT_AVALIACAO IS NOT NULL 
 				   AND ah.DT_INVESTIDURA IS NULL
 				  ORDER BY ta.CD_ITEM_INTERNO
 		", array($pessoaID) );

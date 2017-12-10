@@ -66,9 +66,10 @@
 								<div class="form-group col-md-4 col-xs-6 col-sm-6 col-lg-4">
 									<div class="input-group">
 										<div class="input-group-addon"><i class="fa fa-barcode"></i></div>
-										<input type="text" id="cdBar" name="cdBar" field="cd_bar" class="form-control input-sm" placeholder="C&oacute;digo" maxlength="7" style="text-transform: uppercase"
+										<input type="text" id="cdBar" name="cdBar" field="cd_bar" class="form-control input-sm" placeholder="C&oacute;digo" style="text-transform: uppercase"
+											maxlength="<?php echo $GLOBALS['pattern']->getBars()->getLength();?>" 
 											pattern="<?php echo $GLOBALS['pattern']->getBars()->getPattern("A");?>"
-							                data-fv-regexp-message="C&oacute;digo inv&aacute;lido"										
+											data-fv-regexp-message="C&oacute;digo inv&aacute;lido"										
 										/>
 									</div>
 								</div>
