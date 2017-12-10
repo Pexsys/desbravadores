@@ -74,7 +74,7 @@ class LISTAINVESTIDURAMDA extends TCPDF {
 		
 		$this->setXY(20,5);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 20);
-		$this->Cell(185, 9, "Listagem de Itens por Pessoa - MDA", 0, false, 'C', false, false, false, false, 'T', 'M');
+		$this->Cell(185, 9, "Listagem de Itens por Pessoa - MDA", 0, false, 'C', false, false, true, false, 'T', 'M');
 		$this->setXY(20,15);
 		$this->SetTextColor(80,80,80);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 9);

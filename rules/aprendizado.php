@@ -140,16 +140,13 @@ function getAprendizado( $parameters ) {
 
 function delete( $parameters ) {
 	$ids = $parameters["ids"];
+	$compras = new COMPRAS();
 	
 	fConnDB();
 	foreach ($ids as $k => $id):
 		$rs = $GLOBALS['conn']->Execute("SELECT ID_CAD_PESSOA, ID_TAB_APREND FROM APR_HISTORICO WHERE ID = ?", array($id) );
 		if (!$rs->EOF):
-			$GLOBALS['conn']->Execute("
-				DELETE FROM CAD_COMPRAS_PESSOA 
-				 WHERE ID_CAD_PESSOA = ? 
-				   AND ID_TAB_APREND = ?
-			", array( $rs->fields["ID_CAD_PESSOA"], $rs->fields["ID_TAB_APREND"]) );
+			$compras->deletePessoa($rs->fields["ID_CAD_PESSOA"]);
 			
             //REMOVE NOTIFICACOES, SE EXISTIREM.
             $GLOBALS['conn']->Execute("
@@ -158,6 +155,7 @@ function delete( $parameters ) {
     		", array( $rs->fields["ID_TAB_APREND"], "M", $rs->fields["ID_CAD_PESSOA"] ) );
 		endif;
 		$GLOBALS['conn']->Execute("DELETE FROM APR_HISTORICO WHERE ID = ?", array($id) );
+		
 		
 	endforeach;
 	return array( "result" => true );

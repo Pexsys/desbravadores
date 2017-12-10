@@ -73,7 +73,7 @@ class LISTACOMPRASALM extends TCPDF {
 		
 		$this->setXY(20,5);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 20);
-		$this->Cell(185, 9, $this->title, 0, false, 'C', false, false, false, false, 'T', 'M');
+		$this->Cell(185, 9, $this->title, 0, false, 'C', false, false, true, false, 'T', 'M')
 		$this->setXY(20,15);
 		$this->SetTextColor(80,80,80);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 9);
@@ -208,9 +208,10 @@ class LISTACOMPRASALM extends TCPDF {
 }
 
 $fgCompra = fRequest("fc");
+$tpPrevisao = fRequest("cmPREV");
 $title = ($fgCompra == "S"
 	? "Listagem Sintética de Itens Comprados por Área"
-	: "Listagem Sintética de Compras por Área/Itens"
+		: ($tpPrevisao != "A" ? "Listagem Sintética de Previsão de Compras por Área" : "Listagem Sintética de Compras por Área/Itens")
 );
 
 $pdf = new LISTACOMPRASALM($title);
@@ -226,6 +227,7 @@ $result = $GLOBALS['conn']->Execute("
 	LEFT JOIN TAB_APRENDIZADO ta ON (ta.CD_AREA_INTERNO = cp.CD_AREA_INTERNO AND ta.CD_ITEM_INTERNO IS NULL)
 		WHERE cp.FG_ALMOX = 'S'
 		  AND cp.FG_COMPRA = ?
+		". ($tpPrevisao == "T" || $fgCompra == "S" ? "" : ($tpPrevisao == "P" ? " AND cp.FG_PREVISAO = 'S'" : " AND cp.FG_PREVISAO = 'N'" ) ) ."
 		GROUP BY cp.TP_GRP, cp.DS_GRP, cp.CD_ITEM_INTERNO, cp.CD_AREA_INTERNO, ta.DS_ITEM, cp.NR_GAVETA_APS, cp.TP_ITEM, cp.DS, cp.DS_ITEM, cp.FUNDO
 		) X WHERE X.QT_ITENS > 0
 	

@@ -52,9 +52,10 @@ fHeaderPage(
 							<div class="col-xs-4 inputGroupContainer">
 								<div class="input-group">
 									<div class="input-group-addon"><i class="fa fa-barcode form-group-sm"></i></div>
-									<input type="text" id="cdMembro" name="cdMembro" field="cd_membro" class="form-control" placeholder="Pasta/Caderno/Cart&atilde;o" maxlength="7" style="text-transform: uppercase"
+									<input type="text" id="cdMembro" name="cdMembro" field="cd_membro" class="form-control" placeholder="Pasta/Caderno/Cart&atilde;o" style="text-transform: uppercase"
+										maxlength="<?php echo $GLOBALS['pattern']->getBars()->getLength();?>" 
 										pattern="<?php echo $GLOBALS['pattern']->getBars()->getPattern(".");?>"
-						                data-fv-regexp-message="C&oacute;digo inv&aacute;lido"
+										data-fv-regexp-message="C&oacute;digo inv&aacute;lido"
 									/>
 								</div>
 							</div>

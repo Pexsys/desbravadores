@@ -16,7 +16,7 @@ class LISTACOMPRASALM extends TCPDF {
 	private $widthColumn;
 	private $heightHeader;
 	
-	function __construct() {
+	function __construct($title) {
 		parent::__construct(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 		
 		$this->stLine = array('width' => 1, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0));
@@ -40,7 +40,7 @@ class LISTACOMPRASALM extends TCPDF {
 
 		$this->SetCreator(PDF_CREATOR);
 		$this->SetAuthor('Ricardo J. Cesar');
-		$this->SetTitle('Listagem de Compras por Gaveta');
+		$this->SetTitle($title);
 		$this->SetSubject('Clube Pioneiros');
 		$this->SetKeywords('Desbravadores, Especialidades, Pioneiros, Capão Redondo');
 		$this->setImageScale(PDF_IMAGE_SCALE_RATIO);
@@ -73,7 +73,7 @@ class LISTACOMPRASALM extends TCPDF {
 		
 		$this->setXY(20,5);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 20);
-		$this->Cell(185, 9, "Listagem de Compras Sintética por Gaveta/Itens", 0, false, 'C', false, false, false, false, 'T', 'M');
+		$this->Cell(185, 9, $this->title, 0, false, 'C', false, false, true, false, 'T', 'M');
 		$this->setXY(20,15);
 		$this->SetTextColor(80,80,80);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 9);
@@ -206,7 +206,9 @@ class LISTACOMPRASALM extends TCPDF {
 	}
 }
 
-$pdf = new LISTACOMPRASALM();
+$tpPrevisao = fRequest("cmPREV");
+$title = ($tpPrevisao != "A" ? "Listagem Sintética de Previsão de Compras por Gaveta/Itens" : "Listagem de Compras Sintética por Gaveta/Itens");
+$pdf = new LISTACOMPRASALM($title);
 $pdf->newPage();
 
 fConnDB();
@@ -218,6 +220,7 @@ $result = $GLOBALS['conn']->Execute("
 		 FROM CON_COMPRAS cc
 		WHERE cc.FG_ALMOX = 'S'
 		  AND cc.FG_COMPRA = 'N'
+		  ". ($tpPrevisao == "T" ? "" : ($tpPrevisao == "P" ? " AND cc.FG_PREVISAO = 'S'" : " AND cc.FG_PREVISAO = 'N'" ) ) ."
 		GROUP BY cc.NR_GAVETA_APS, cc.TP_ITEM, cc.TP, cc.DS, cc.DS_ITEM, cc.FUNDO, cc.CMPL, cc.FG_IM
 		) X WHERE X.QT_ITENS > 0
 		
@@ -230,6 +233,7 @@ $result = $GLOBALS['conn']->Execute("
 			 FROM CON_COMPRAS cc
 			WHERE cc.FG_ALMOX = 'S'
 			  AND cc.FG_COMPRA = 'N'
+			  ". ($tpPrevisao == "T" ? "" : ($tpPrevisao == "P" ? " AND cc.FG_PREVISAO = 'S'" : " AND cc.FG_PREVISAO = 'N'" ) ) ."
 			GROUP BY cc.NR_GAVETA_APS, cc.TP_ITEM, cc.TP, cc.DS, cc.DS_ITEM, cc.FUNDO, cc.CMPL, cc.FG_IM
 			) X WHERE X.QT_ITENS > 0
 		) Y 
