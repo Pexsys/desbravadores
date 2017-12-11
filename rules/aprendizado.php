@@ -61,6 +61,8 @@ function getQueryByFilter( $parameters ) {
 							$where .= (!$prim ? " OR " : "") ."cc.FG_ENTREGUE = 'S'";
 						elseif ( $value == "3" ):
 							$where .= (!$prim ? " OR " : "") ."cc.FG_ENTREGUE = 'N'";
+						elseif ( $value == "4" ):
+							$where .= (!$prim ? " OR " : "") ."cc.FG_PREVISAO = 'S'";
 						endif;
 					elseif ( $key == "HA" ):
 						if ( $value == "0" ):

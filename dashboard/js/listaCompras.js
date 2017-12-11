@@ -53,8 +53,12 @@ $(document).ready(function(){
 			{	data: "ic",
 				width: "5%",
 				sortable: true,
-				render: function (data) {
-					return (data == "S" ? "SIM" : "N&Atilde;O" );
+				render: function (data, type, row) {
+					if (row.ip == 'S'){
+						return "PREVISTO";
+					} else {
+						return (data == "S" ? "SIM" : "N&Atilde;O" );
+					}
 				}
 			},
 			{	data: "ie",
