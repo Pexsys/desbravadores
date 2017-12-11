@@ -105,6 +105,7 @@ function getDomainFilter( $parameters ) {
 		$domain = array(
 			array( "value" => "0", "label" => "ITENS COMPRADOS" ),
 			array( "value" => "1", "label" => "ITENS A COMPRAR" ),
+			array( "value" => "4", "label" => "ITENS PREVISTOS" ),
 			array( "value" => "2", "label" => "ITENS ENTREGUES" ),
 			array( "value" => "3", "label" => "ITENS A ENTREGAR" )
 		);

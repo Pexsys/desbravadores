@@ -68,6 +68,8 @@ function getQueryByFilter( $parameters ) {
 							$where .= (!$prim ? " OR " : "") ."ccp.FG_ENTREGUE = 'S'";
 						elseif ( $value == "3" ):
 							$where .= (!$prim ? " OR " : "") ."ccp.FG_ENTREGUE = 'N'";
+						elseif ( $value == "4" ):
+							$where .= (!$prim ? " OR " : "") ."ccp.FG_PREVISAO = 'S'";
 						endif;
 					elseif ( $key == "Z" ):
 						$where .= (!$prim ? " OR " : "") ."ap.TP_ITEM ". ( empty($value) ? "IS ".$notStr."NULL" : $notStr."LIKE '$value%'");

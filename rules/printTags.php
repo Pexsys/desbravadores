@@ -71,6 +71,8 @@ function getQueryByFilter( $parameters ) {
 							$where .= (!$prim ? " OR " : "") ."ccp.FG_ENTREGUE = 'S'";
 						elseif ( $value == "3" ):
 							$where .= (!$prim ? " OR " : "") ."ccp.FG_ENTREGUE = 'N'";
+						elseif ( $value == "4" ):
+							$where .= (!$prim ? " OR " : "") ."ccp.FG_PREVISAO = 'S'";
 						endif;
 					elseif ( empty($value) ):
 						$aWhere[] = "NULL";
