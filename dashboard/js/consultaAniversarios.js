@@ -62,10 +62,11 @@ $(document).ready(function(){
 			if ( mesAn < mesAtu ) {
                 $('td', nRow).css('color', '#d0d0d0');
             } else if (mesAn == mesAtu) {
-            	$('td', nRow).css('background-color', '#FFFF55');
             	if (diaAtu == moment.unix(aData.dm).format('DD')){
-            		 $('td', nRow).css('font-weight', 'bold');
-            	}
+					$('td', nRow).css('background-color', '#FFACAA');
+            	} else {
+					$('td', nRow).css('background-color', '#FFFFAA');
+				}
             }
        	}
 	}).order( [ 0, 'asc' ], [ 1, 'asc' ] );
