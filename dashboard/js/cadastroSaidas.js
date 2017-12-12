@@ -282,7 +282,7 @@ $(document).ready(function(){
 							id: $('#saidaID').val(),
 							op: "DELETE"
 						};
-						jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/saidas.php", { MethodName : 'fSaida', data : parameter }, function(data){
+						jsLIB.ajaxCallOld( false, jsLIB.rootDir+"rules/saidas.php", { MethodName : 'fSaida', data : parameter }, function(data){
 							saidaDataTable.ajax.reload();
 							dialogRef.close();
 							$("#saidasModal").modal('hide');
@@ -314,7 +314,7 @@ $(document).ready(function(){
 					fl: attrRule,
 					vl: $(this).val()
 				};
-				jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/saidas.php", { MethodName : 'setAttrib', data : parameter } );				
+				jsLIB.ajaxCallOld( undefined, jsLIB.rootDir+"rules/saidas.php", { MethodName : 'setAttrib', data : parameter } );				
 			});
 			
 		});
@@ -368,7 +368,7 @@ function populateMembers(){
 		id:  $("#saidaID").val(),
 		filters: jsFilter.jSON()
 	}	
-	jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/saidas.php", { MethodName : 'getMembrosFilter', data : parameters }, function(mb){
+	jsLIB.ajaxCallOld( false, jsLIB.rootDir+"rules/saidas.php", { MethodName : 'getMembrosFilter', data : parameters }, function(mb){
 		jsLIB.populateOptions( $("#cbParticip"), mb.membros );
 		if ( mb.filter && mb.filter.length > 0 ) {
 			$("#cbParticip").selectpicker('deselectAll');
@@ -380,7 +380,7 @@ function populateMembers(){
 }
 
 function populateSaida( saidaID ) {
-	jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/saidas.php", { MethodName : 'fSaida', data : { id : saidaID } }, function(sd){
+	jsLIB.ajaxCallOld( false, jsLIB.rootDir+"rules/saidas.php", { MethodName : 'fSaida', data : { id : saidaID } }, function(sd){
 		jsLIB.populateForm( $("#cadSaidasForm"), sd.saida );
 		jsLIB.populateOptions( $("#cbParticip"), sd.membros );
 		var filterArray = $.grep(sd.membros, function(e){ return e.pt == 'S'; });
@@ -395,7 +395,7 @@ function updateSaida(){
 		op: "UPDATE",
 		frm: jsLIB.getJSONFields( $('#cadSaidasForm') )
 	};
-	jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/saidas.php", { MethodName : 'fSaida', data : parameter }, function(sd){
+	jsLIB.ajaxCallOld( false, jsLIB.rootDir+"rules/saidas.php", { MethodName : 'fSaida', data : parameter }, function(sd){
 		$("#saidaID").val(sd.id);
 		buttons();
 		saidaDataTable.ajax.reload();	

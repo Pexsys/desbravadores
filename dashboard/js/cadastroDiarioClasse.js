@@ -195,7 +195,7 @@ $(document).ready(function(){
 							id: $('#regID').val(),
 							op: "DELETE"
 						};
-						jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/diarioClasse.php", { MethodName : 'fRegistro', data : parameter }, function(){
+						jsLIB.ajaxCallOld( false, jsLIB.rootDir+"rules/diarioClasse.php", { MethodName : 'fRegistro', data : parameter }, function(){
 							refreshAndButtons();
 							dialogRef.close();
 							$("#diaModal").modal('hide');
@@ -352,7 +352,7 @@ function rulefields(){
 
 function populateRegistro( diarioID ) {
 	formPopulated = false;
-	jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/diarioClasse.php", { MethodName : 'fRegistro', data : { id : diarioID } }, function(oc){
+	jsLIB.ajaxCallOld( false, jsLIB.rootDir+"rules/diarioClasse.php", { MethodName : 'fRegistro', data : { id : diarioID } }, function(oc){
 		jsLIB.populateOptions( $("#cmClasse"), oc.classe );
 		jsLIB.populateOptions( $("#cmReq"), oc.req );
 		jsLIB.populateForm( $("#cadRegForm"), oc.diario );
@@ -371,7 +371,7 @@ function refreshAndButtons(){
 }
 
 function populateMembers(){
-	jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/diarioClasse.php", { MethodName : 'fGetMembros' }, function(oc){
+	jsLIB.ajaxCallOld( false, jsLIB.rootDir+"rules/diarioClasse.php", { MethodName : 'fGetMembros' }, function(oc){
 		jsLIB.populateOptions( $("#cmName"), oc.nomes );
 	});
 }
@@ -380,7 +380,7 @@ function populateReqs(){
 	var parameter = {
 		id_classe: $("#cmClasse").val()
 	};
-	jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/diarioClasse.php", { MethodName : 'fGetCompl', data : parameter }, function(cm){
+	jsLIB.ajaxCallOld( false, jsLIB.rootDir+"rules/diarioClasse.php", { MethodName : 'fGetCompl', data : parameter }, function(cm){
 		jsLIB.populateOptions( $("#cmReq"), cm.req );
 		$("#seqID").val(cm.sq);
 	});

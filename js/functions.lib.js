@@ -177,7 +177,7 @@ var jsLIB = {
 		}
 	},
 	
-	ajaxCallNew : function( objParam ) {
+	ajaxCall : function( objParam ) {
 		var retorno = undefined;
 		if (objParam.waiting !== false){
 			jsLIB.modalWaiting(true);
@@ -212,8 +212,8 @@ var jsLIB = {
 		return retorno;
 	},
 		
-	ajaxCall : function( pasync, url, data, callBackSucess, callBackError ) {
-		return this.ajaxCallNew({
+	ajaxCallOld : function( pasync, url, data, callBackSucess, callBackError ) {
+		return this.ajaxCall({
 			waiting : true,
 			async: pasync,
 			url: url,
@@ -503,13 +503,20 @@ var jsFilter = {
 		var value = obj.val();
 
 		if (value != ""){
-			jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/addFilter.php", { MethodName : 'addFilter', data : { type : value, desc : label } }, function(flt){
-				if ( flt.result ) {
-					$("#divFilters").append(flt.obj);
-					$("#optFilter"+value).selectpicker();
-					$("#addFilter option[value='"+value+"']").remove();
-					$("#addFilter").selectpicker('refresh');
-					$("#applyFilter").show();
+			jsLIB.ajaxCall({
+				waiting : false,
+				async: false,
+				type: "GET",
+				url: jsLIB.rootDir+"rules/addFilter.php",
+				data: { MethodName : 'addFilter', data : { type : value, desc : label } },
+				callBackSucess: function(flt){
+					if ( flt.result ) {
+						$("#divFilters").append(flt.obj);
+						$("#optFilter"+value).selectpicker();
+						$("#addFilter option[value='"+value+"']").remove();
+						$("#addFilter").selectpicker('refresh');
+						$("#applyFilter").show();
+					}
 				}
 			});
 		}

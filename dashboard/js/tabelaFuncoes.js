@@ -10,7 +10,7 @@ $(document).ready(function(){
 			searching: false,
 			processing: true,
 			language: {
-				info: "_END_ perfis",
+				info: "_END_ funcoes",
 				search: "",
 				searchPlaceholder: "Procurar...",
 				infoFiltered: " de _MAX_",
@@ -71,9 +71,17 @@ $(document).ready(function(){
 			var parameter = {
 				frm: jsLIB.getJSONFields( $('#cadListaForm') )
 			};
-			jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/tabelaPerfis.php", { MethodName : 'addPerfil', data : parameter } );
-			dataTable.ajax.reload();
-			$("#listaModal").modal('hide');
+			jsLIB.ajaxCall({
+				waiting : true,
+				async: false,
+				url: jsLIB.rootDir+"rules/tabelaFuncoes.php",
+				data: { MethodName : 'addFuncao', data : parameter },
+				callBackSucess: function(data){
+					dataTable.ajax.reload( function(){
+						$("#listaModal").modal('hide');
+					});		
+				}
+			});
 		})
 	;
 });

@@ -11,47 +11,61 @@ $(document).ready(function(){
 				id : $(this).attr('id-rule')
 			};
 			
-			jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/meuAprendizado.php", { MethodName : 'getMasterRules', data : parameter }, function(data){
-				BootstrapDialog.show({
-					title: data.title,
-					message: data.message,
-					type: $(this).attr('cl-bar'),
-					size: BootstrapDialog.SIZE_WIDE,
-					draggable: true,
-					closable: true,
-					closeByBackdrop: true,
-					closeByKeyboard: true,
-					onshown: function(dialogRef){
-						mapPrint();
-				},
-					buttons: [
-						{ label: 'Fechar',
-							icon: 'glyphicon glyphicon-remove',
-							cssClass: 'btn-info',
-							autospin: true,
-							action: function(dialogRef){
-								dialogRef.enableButtons(false);
-								dialogRef.setClosable(false);
-								dialogRef.close();
+			jsLIB.ajaxCall({
+				waiting : false,
+				async: true,
+				type: "GET",
+				url: jsLIB.rootDir+"rules/meuAprendizado.php",
+				data: { MethodName : 'getMasterRules', data : parameter },
+				callBackSucess: function(data){
+					BootstrapDialog.show({
+						title: data.title,
+						message: data.message,
+						type: $(this).attr('cl-bar'),
+						size: BootstrapDialog.SIZE_WIDE,
+						draggable: true,
+						closable: true,
+						closeByBackdrop: true,
+						closeByKeyboard: true,
+						onshown: function(dialogRef){
+							mapPrint();
+						},
+						buttons: [
+							{ label: 'Fechar',
+								icon: 'glyphicon glyphicon-remove',
+								cssClass: 'btn-info',
+								autospin: true,
+								action: function(dialogRef){
+									dialogRef.enableButtons(false);
+									dialogRef.setClosable(false);
+									dialogRef.close();
+								}
 							}
-						}
-					]
-				});
+						]
+					});
+				}
 			});
         }
 	});
     
-	jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/meuAprendizado.php", { MethodName : 'getGraphData' }, function(data){
-		datasets = data;
-		if (data.checkbox){
-			$("#divGraph").show(true);
-			choiceContainer = $("#choices");
-			$.each(data.checkbox, function(key, val) {
-				choiceContainer.append('<label><input type="checkbox" name="'+ key +
-					'" checked="checked" id="op'+ key +'"/>'+ val.label +'</label>&nbsp;');
-			});
-			choiceContainer.find("input").click(plotAccordingToChoices);
-			plotAccordingToChoices();
+	jsLIB.ajaxCall({
+		waiting : false,
+		async: true,
+		type: "GET",
+		url: jsLIB.rootDir+"rules/meuAprendizado.php",
+		data: { MethodName : 'getGraphData' },
+		callBackSucess: function(data){
+			datasets = data;
+			if (data.checkbox){
+				$("#divGraph").show(true);
+				choiceContainer = $("#choices");
+				$.each(data.checkbox, function(key, val) {
+					choiceContainer.append('<label><input type="checkbox" name="'+ key +
+						'" checked="checked" id="op'+ key +'"/>'+ val.label +'</label>&nbsp;');
+				});
+				choiceContainer.find("input").click(plotAccordingToChoices);
+				plotAccordingToChoices();
+			}
 		}
 	});
 	

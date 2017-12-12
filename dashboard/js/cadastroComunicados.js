@@ -183,7 +183,7 @@ $(document).ready(function(){
 							id: $('#comID').val(),
 							op: "DELETE"
 						};
-						jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/comunicados.php", { MethodName : 'fComunicado', data : parameter }, function(){
+						jsLIB.ajaxCallOld( false, jsLIB.rootDir+"rules/comunicados.php", { MethodName : 'fComunicado', data : parameter }, function(){
 							comDataTable.ajax.reload();
 							dialogRef.close();
 							$("#comModal").modal('hide');
@@ -263,7 +263,7 @@ function rulefields(){
 }
 
 function populateComunicado( comunicadoID ) {
-	jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/comunicados.php", { MethodName : 'fComunicado', data : { id : comunicadoID } }, function(cm){
+	jsLIB.ajaxCallOld( false, jsLIB.rootDir+"rules/comunicados.php", { MethodName : 'fComunicado', data : { id : comunicadoID } }, function(cm){
 		jsLIB.populateForm( $("#cadComForm"), cm.comunicado );
 		valuePendOrig = cm.comunicado.fg_pend;
 		valuePend = jsLIB.getValueFromField( $("#fgPend") );
@@ -277,7 +277,7 @@ function updateComunicado(){
 		op: "UPDATE",
 		frm: jsLIB.getJSONFields( $('#cadComForm') )
 	};
-	jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/comunicados.php", { MethodName : 'fComunicado', data : parameter }, function(cm){
+	jsLIB.ajaxCallOld( false, jsLIB.rootDir+"rules/comunicados.php", { MethodName : 'fComunicado', data : parameter }, function(cm){
 		$("#comID").val(cm.id);
 		valuePendOrig = cm.so;
 		valuePend = jsLIB.getValueFromField( $("#fgPend") );

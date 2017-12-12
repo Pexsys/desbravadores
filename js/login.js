@@ -70,7 +70,7 @@ $(document).ready(function(){
 				username: jQuery('#usr').val(),
 				password: $.sha1(jQuery('#psw').val().toLowerCase())
 			};
-			jsLIB.ajaxCallNew({
+			jsLIB.ajaxCall({
 				waiting : true,
 				url: jsLIB.rootDir+'rules/login.php',
 				data: { MethodName : 'login', data : parameter },

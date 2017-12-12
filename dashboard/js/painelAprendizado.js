@@ -124,27 +124,33 @@ $(document).ready(function(){
 		}
 	};	
 	
-	jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/painelAprendizado.php", { MethodName : 'getGraphData' }, function(data){
-		if (data.clsP){
-			$.plot("#phGhaphP", data.clsP, optionBarP );
-		}
-		if (data.rgP){
-			$.plot('#phRegularP', data.rgP, optionPie );
-		}
-		if (data.avP){
-			$.plot('#phAvancadaP', data.avP, optionPie );
-		}
-		if (data.clsC){
-			$.plot("#phGhaphC", data.clsC, optionBarC );
-		}
-		if (data.rgC){
-			$.plot('#phRegularC', data.rgC, optionPie );
-		}
-		if (data.avC){
-			$.plot('#phAvancadaC', data.avC, optionPie );
+	jsLIB.ajaxCall({
+		waiting : true,
+		async: true,
+		type: "GET",
+		url: jsLIB.rootDir+"rules/painelAprendizado.php",
+		data: { MethodName : 'getGraphData' },
+		callBackSucess: function(data){
+			if (data.clsP){
+				$.plot("#phGhaphP", data.clsP, optionBarP );
+			}
+			if (data.rgP){
+				$.plot('#phRegularP', data.rgP, optionPie );
+			}
+			if (data.avP){
+				$.plot('#phAvancadaP', data.avP, optionPie );
+			}
+			if (data.clsC){
+				$.plot("#phGhaphC", data.clsC, optionBarC );
+			}
+			if (data.rgC){
+				$.plot('#phRegularC', data.rgC, optionPie );
+			}
+			if (data.avC){
+				$.plot('#phAvancadaC', data.avC, optionPie );
+			}
 		}
 	});
-
 
 	$('[cd-area]')
 		.on('click', function (e) {

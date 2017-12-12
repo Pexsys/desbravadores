@@ -114,10 +114,17 @@ $(document).ready(function(){
 		list = [];
 		$('#nmMembro').selectpicker('deselectAll');
 	});
-
-	jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/capas.php", { MethodName : 'getNames' }, function(capas){
-		if (capas.names){
-			jsLIB.populateOptions( $("#nmMembro"), capas.names );
+	
+	jsLIB.ajaxCall({
+		waiting : false,
+		true: false,
+		type: 'GET',
+		url: jsLIB.rootDir+'rules/capas.php',
+		data: { MethodName : 'getNames' },
+		callBackSucess: function(capas){
+			if (capas.names){
+				jsLIB.populateOptions( $("#nmMembro"), capas.names );
+			}
 		}
 	});
 

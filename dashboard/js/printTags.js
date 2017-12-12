@@ -108,7 +108,7 @@ $(document).ready(function(){
 				var parameters = {
 					filtro: aValues
 				}	
-				jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/printTags.php", { MethodName : 'getClasse', data : parameters }, function(data){
+				jsLIB.ajaxCallOld( false, jsLIB.rootDir+"rules/printTags.php", { MethodName : 'getClasse', data : parameters }, function(data){
 					jsLIB.populateOptions( $("#cbAprend"), data );
 				});
 			}
@@ -301,7 +301,7 @@ function modalDelete(sAct,sMsg){
 						action: sAct,
 						ids: tmp
 					};
-					jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/printTags.php", { MethodName : 'delete', data : parameter }, function(data){
+					jsLIB.ajaxCallOld( false, jsLIB.rootDir+"rules/printTags.php", { MethodName : 'delete', data : parameter }, function(data){
 						dialogRef.close();
 						refreshAndButtons();
 					});
@@ -331,7 +331,7 @@ function populateFilters(){
 		filtro: 'A',
 		filters: jsFilter.jSON()
 	}	
-	jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/printTags.php", { MethodName : 'getMembrosFilter', data : parameters }, function(data){
+	jsLIB.ajaxCallOld( false, jsLIB.rootDir+"rules/printTags.php", { MethodName : 'getMembrosFilter', data : parameters }, function(data){
 		if ( data.filter && data.filter.length > 0 ) {
 			$("#cbNomes").selectpicker('deselectAll');
 			$("#cbNomes").selectpicker('val', data.filter);
@@ -345,7 +345,7 @@ function populateMembers( tpDialog ) {
 	var parameters = {
 		filtro: tpDialog
 	}	
-	jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/printTags.php", { MethodName : 'getData', data : parameters }, function(data){
+	jsLIB.ajaxCallOld( false, jsLIB.rootDir+"rules/printTags.php", { MethodName : 'getData', data : parameters }, function(data){
 		if (tpDialog == 'A') {
 			jsLIB.populateOptions( $("#cbTags"), data.tags );
 			jsLIB.populateOptions( $("#cbNomes"), data.membros );
@@ -362,7 +362,7 @@ function update(){
 	var parameter = {
 		frm: jsLIB.getJSONFields( $('#addTagsForm') )
 	};
-	jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/printTags.php", { MethodName : 'addTags', data : parameter }, function(data){
+	jsLIB.ajaxCallOld( false, jsLIB.rootDir+"rules/printTags.php", { MethodName : 'addTags', data : parameter }, function(data){
 		refreshAndButtons();
 	});
 }

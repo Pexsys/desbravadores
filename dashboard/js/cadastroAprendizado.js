@@ -203,7 +203,7 @@ $(document).ready(function(){
 						var parameter = {
 							ids: tmp
 						};
-						jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/aprendizado.php", { MethodName : 'delete', data : parameter }, function(){
+						jsLIB.ajaxCallOld( false, jsLIB.rootDir+"rules/aprendizado.php", { MethodName : 'delete', data : parameter }, function(){
 							dialogRef.close();
 							closeAndRefresh();
 						});
@@ -259,7 +259,7 @@ function updateAprendizado(){
 		frm: jsLIB.getJSONFields( $('#cadAprendForm') )
 	};
 	getFunctions( parameter, "quem" );
-	jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/aprendizado.php", { MethodName : 'setAprendizado', data : parameter } );
+	jsLIB.ajaxCallOld( false, jsLIB.rootDir+"rules/aprendizado.php", { MethodName : 'setAprendizado', data : parameter } );
 }
 
 function getFunctions(parameter,fn){
@@ -307,7 +307,7 @@ function closeAndRefresh(){
 }
 
 function populateData(){
-	jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/aprendizado.php", { MethodName : 'getData' }, function(cg){
+	jsLIB.ajaxCallOld( false, jsLIB.rootDir+"rules/aprendizado.php", { MethodName : 'getData' }, function(cg){
 		jsLIB.populateOptions( $("#cmNome"), cg.nomes );
 		jsLIB.populateOptions( $("#cmClasse"), cg.classe );
 		jsLIB.populateOptions( $("#cmIdent"), cg.tags );

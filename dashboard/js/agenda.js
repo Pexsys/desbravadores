@@ -81,7 +81,7 @@ $(document).ready(function(){
 			if (!addEvent) {
 				closeCollapseAll();
 				$('#btnDelete').show();
-				jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/agenda.php", { MethodName : 'events', data : { id : e.id } }, function(ev){
+				jsLIB.ajaxCallOld( false, jsLIB.rootDir+"rules/agenda.php", { MethodName : 'events', data : { id : e.id } }, function(ev){
 					jsLIB.populateForm( $('#myCalendarForm'), ev.result[0].info );
 				});
 				return 'Evento';
@@ -93,7 +93,7 @@ $(document).ready(function(){
 				from: pFrom.toDateTime(),
 				to: pTo.toDateTime()
 			};
-			var retorno = jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/agenda.php", { MethodName : 'events', data : parameter });
+			var retorno = jsLIB.ajaxCallOld( false, jsLIB.rootDir+"rules/agenda.php", { MethodName : 'events', data : parameter });
 			return retorno.result;
 		},
 		tmpl_path				: jsLIB.rootDir+"dashboard/tmpls/",
@@ -232,7 +232,7 @@ $(document).ready(function(){
 							id: $('#eventID').val(),
 							op: "DELETE"
 						};
-						jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/agenda.php", { MethodName : 'fEvent', data : parameter }, function(){
+						jsLIB.ajaxCallOld( false, jsLIB.rootDir+"rules/agenda.php", { MethodName : 'fEvent', data : parameter }, function(){
 							dialogRef.close();
 							closeAndRefresh();
 						});
@@ -248,7 +248,7 @@ function updateEventDB(){
 		op: "UPDATE",
 		frm: jsLIB.getJSONFields( $('#myCalendarForm') )
 	};
-	jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/agenda.php", { MethodName : 'fEvent', data : parameter } );
+	jsLIB.ajaxCallOld( false, jsLIB.rootDir+"rules/agenda.php", { MethodName : 'fEvent', data : parameter } );
 }
 
 function closeAndRefresh(){

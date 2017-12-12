@@ -42,6 +42,13 @@ function onscan( bardata ) {
 }
 
 function logout(){
-	jsLIB.ajaxCall( false, jsLIB.rootDir+'rules/login.php', { MethodName : 'logout' } );
-	window.location.replace( jsLIB.rootDir+'readdata.php' );
+	jsLIB.ajaxCall({
+		waiting : false,
+		async: false,
+		url: jsLIB.rootDir+'rules/login.php',
+		data: { MethodName : 'logout' },
+		callBackSucess: function( data, jqxhr ) {
+			window.location.replace( jsLIB.rootDir+'readdata.php' );
+		}
+	});
 }

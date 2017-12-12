@@ -9,12 +9,19 @@ $(document).ready(function(){
 		ruleBotaoGerar();
 	});
 	
-	jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/printChamada.php", { MethodName : 'getDomains' }, function(mb){
-		if (mb){
-			jsLIB.populateOptions( $("#cbMeses"), mb.meses );
-			jsLIB.populateOptions( $("#cbUnidades"), mb.unidade );
-			$("#cbUnidades").selectpicker('selectAll');
-			ruleBotaoGerar();
+	jsLIB.ajaxCall({
+		waiting : true,
+		async: true,
+		type: "GET",
+		url: jsLIB.rootDir+"rules/printChamada.php",
+		data: { MethodName : 'getDomains' },
+		callBackSucess: function(mb){
+			if (mb){
+				jsLIB.populateOptions( $("#cbMeses"), mb.meses );
+				jsLIB.populateOptions( $("#cbUnidades"), mb.unidade );
+				$("#cbUnidades").selectpicker('selectAll');
+				ruleBotaoGerar();
+			}
 		}
 	});
 });

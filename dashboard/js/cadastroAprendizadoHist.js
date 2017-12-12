@@ -112,9 +112,15 @@ $(document).ready(function(){
 						var parameter = {
 							ids: tmp
 						};
-						jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/aprendizado.php", { MethodName : 'delete', data : parameter },function(){
-							dialogRef.close();
-							dataTable.ajax.reload();
+						jsLIB.ajaxCall({
+							waiting : false,
+							async: true,
+							url: jsLIB.rootDir+"rules/aprendizado.php",
+							data: { MethodName : 'delete', data : parameter },
+							callBackSucess: function(){
+								dialogRef.close();
+								dataTable.ajax.reload();
+							}
 						});
 					}
 				}

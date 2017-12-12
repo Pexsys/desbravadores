@@ -113,7 +113,7 @@ $(document).ready(function(){
 					fd: field,
 					vl: value
 				};
-				jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/listaCompras.php", { MethodName : 'setAttr', data : parameters }, function(data){
+				jsLIB.ajaxCallOld( false, jsLIB.rootDir+"rules/listaCompras.php", { MethodName : 'setAttr', data : parameters }, function(data){
 					if (field == 'fg_entregue' && value == 'S' && !$("#fgCompra").prop('checked') ){
 						$("#fgCompra").prop('checked', true).triggerHandler('change');
 					} else if (field == 'fg_compra' && value == 'N' && $("#fgEntregue").prop('checked') ){
@@ -153,7 +153,7 @@ $(document).ready(function(){
 				act: $('#listaModal').attr('action'),
 				frm: jsLIB.getJSONFields( $('#cadListaForm') )
 			};
-			jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/listaCompras.php", { MethodName : 'addCompras', data : parameter }, function(data){
+			jsLIB.ajaxCallOld( false, jsLIB.rootDir+"rules/listaCompras.php", { MethodName : 'addCompras', data : parameter }, function(data){
 				dataTable.ajax.reload();
 				$("#listaModal").modal('hide');
 			});
@@ -185,7 +185,7 @@ $(document).ready(function(){
 					action: function(dialogRef){
 						dialogRef.enableButtons(false);
 						dialogRef.setClosable(false);
-						jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/listaCompras.php", { MethodName : 'process' }, function(data){
+						jsLIB.ajaxCallOld( false, jsLIB.rootDir+"rules/listaCompras.php", { MethodName : 'process' }, function(data){
 							dataTable.ajax.reload();
 							dialogRef.close();
 						});
@@ -231,7 +231,7 @@ $(document).ready(function(){
 		var parameter = {
 			domains : [ "tipos", "nomes" ]
 		};
-		jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/listaCompras.php", { MethodName : 'getData', data : parameter }, function(data){
+		jsLIB.ajaxCallOld( false, jsLIB.rootDir+"rules/listaCompras.php", { MethodName : 'getData', data : parameter }, function(data){
 			jsLIB.populateOptions( $("#cmTipo"), data.tipos );
 			jsLIB.populateOptions( $("#cmNome"), data.nomes );
 		});
@@ -248,7 +248,7 @@ $(document).ready(function(){
 		var parameter = {
 			domains : [ "nomesEntrega" ]
 		};
-		jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/listaCompras.php", { MethodName : 'getData', data : parameter }, function(data){
+		jsLIB.ajaxCallOld( false, jsLIB.rootDir+"rules/listaCompras.php", { MethodName : 'getData', data : parameter }, function(data){
 			jsLIB.populateOptions( $("#cmNome"), data.nomes );
 		});
 
@@ -260,7 +260,7 @@ $(document).ready(function(){
 	});
 	
 	$('#btnEdit').click(function(){
-		jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/listaCompras.php", { MethodName : 'getAttr', data : { id: $(this).attr("id-item") } }, function(data){
+		jsLIB.ajaxCallOld( false, jsLIB.rootDir+"rules/listaCompras.php", { MethodName : 'getAttr', data : { id: $(this).attr("id-item") } }, function(data){
 			formPopulated = false;
 			jsLIB.populateForm( $("#controleForm"), data.attr );
 			$("#comprasModal").modal();
@@ -285,7 +285,7 @@ $(document).ready(function(){
 				key : value,
 				domains : [ "itens" ]
 			};
-			jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/listaCompras.php", { MethodName : 'getData', data : parameter }, function(data){
+			jsLIB.ajaxCallOld( false, jsLIB.rootDir+"rules/listaCompras.php", { MethodName : 'getData', data : parameter }, function(data){
 				jsLIB.populateOptions( $("#cmItem"), data.itens );
 			});
 		}
@@ -337,7 +337,7 @@ $(document).ready(function(){
 						var parameter = {
 							ids: tmp
 						};
-						jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/listaCompras.php", { MethodName : 'distribuirEstoque' }, function(data){
+						jsLIB.ajaxCallOld( false, jsLIB.rootDir+"rules/listaCompras.php", { MethodName : 'distribuirEstoque' }, function(data){
 							dataTable.ajax.reload();
 							dialogRef.close();
 						});
@@ -381,7 +381,7 @@ $(document).ready(function(){
 						var parameter = {
 							ids: tmp
 						};
-						jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/listaCompras.php", { MethodName : 'delete', data : parameter }, function(){
+						jsLIB.ajaxCallOld( false, jsLIB.rootDir+"rules/listaCompras.php", { MethodName : 'delete', data : parameter }, function(){
 							dataTable.ajax.reload();
 							dialogRef.close();
 						});
@@ -442,7 +442,7 @@ function ruleBtnEdit( force ){
 	if (force == undefined){
 		if (data.length == 1 && data[0].ip == 'N'){
 			selected = data[0].id;
-			jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/listaCompras.php", { MethodName : 'getAttrPerm', data : { id: selected } }, function(data){
+			jsLIB.ajaxCallOld( false, jsLIB.rootDir+"rules/listaCompras.php", { MethodName : 'getAttrPerm', data : { id: selected } }, function(data){
 				if (!data || !data.edit){
 					selected = "";
 				}

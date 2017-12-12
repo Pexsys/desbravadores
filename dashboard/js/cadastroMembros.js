@@ -291,7 +291,7 @@ $(document).ready(function(){
 								sx: sexo,
 								dc: doc
 							}
-							jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/membros.php", { MethodName : 'insertMember', data : parameters }, function(mb){
+							jsLIB.ajaxCallOld( undefined, jsLIB.rootDir+"rules/membros.php", { MethodName : 'insertMember', data : parameters }, function(mb){
 								if (mb.result == true){
 									populateMember(mb);
 								}
@@ -304,7 +304,7 @@ $(document).ready(function(){
 							id	: membroID,
 							cpf	: value
 						}
-						jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/membros.php", { MethodName : 'verificaResp', data : parameters }, function(rs){
+						jsLIB.ajaxCallOld( undefined, jsLIB.rootDir+"rules/membros.php", { MethodName : 'verificaResp', data : parameters }, function(rs){
 							formPopulated = false;
 							jsLIB.populateForm( $("#Resp"), rs);
 							formPopulated = true;
@@ -317,7 +317,7 @@ $(document).ready(function(){
 							val	: value
 						}
 						//gravar
-						jsLIB.ajaxCall( true, jsLIB.rootDir+"rules/membros.php", { MethodName : 'updateMember', data : parameters }, function(mb){
+						jsLIB.ajaxCallOld( true, jsLIB.rootDir+"rules/membros.php", { MethodName : 'updateMember', data : parameters }, function(mb){
 							//tratamento de dependencias
 							if (field == "cad_pessoa-tp_sexo"){
 								populateUnidade(membroID);
@@ -432,7 +432,7 @@ function ruleButtons() {
 function populateUnidade(membroID) {
 	formPopulated = false;
 	var value = $("#cmUnidade").val();
-	jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/membros.php", { MethodName : 'getUnidades', data : { id : membroID } },function(un){
+	jsLIB.ajaxCallOld( undefined, jsLIB.rootDir+"rules/membros.php", { MethodName : 'getUnidades', data : { id : membroID } },function(un){
 		jsLIB.populateOptions( $("#cmUnidade"), un );
 		$("#cmUnidade").val(value).change();
 		formPopulated = true;
@@ -442,12 +442,12 @@ function populateUnidade(membroID) {
 function populateCargos(membroID) {
 	formPopulated = false;
 	var value = $("#cmCargo").val();
-	jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/membros.php", { MethodName : 'getCargos', data : { id : membroID } }, function(){
+	jsLIB.ajaxCallOld( undefined, jsLIB.rootDir+"rules/membros.php", { MethodName : 'getCargos', data : { id : membroID } }, function(){
 		jsLIB.populateOptions( $("#cmCargo"), cg );
 		$("#cmCargo").val(value).change();
 	
 		if ( value.startsWith("2-07") ) {
-			jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/membros.php", { MethodName : 'getCargos', data : { id : membroID, tp : true } }, function(cg){
+			jsLIB.ajaxCallOld( undefined, jsLIB.rootDir+"rules/membros.php", { MethodName : 'getCargos', data : { id : membroID, tp : true } }, function(cg){
 				jsLIB.populateOptions( $("#cmCargo2"), cg );
 			});
 		}
@@ -463,7 +463,7 @@ function getMember( membroID ) {
 		filtro: tpFiltro,
 		id : membroID
 	};
-	return jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/membros.php", { MethodName : 'getMember', data : parameters });
+	return jsLIB.ajaxCallOld( false, jsLIB.rootDir+"rules/membros.php", { MethodName : 'getMember', data : parameters });
 	jsLIB.modalWaiting(false);
 }
 

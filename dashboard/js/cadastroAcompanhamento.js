@@ -184,10 +184,16 @@ function update(){
 	var parameter = {
 		frm: jsLIB.getJSONFields( $('#cadAcompForm') )
 	};
-	jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/acompanhamento.php", { MethodName : 'setRequisito', data : parameter }, function(){
-		$("#divResultado").empty().hide();
-		$("#cdBar").val('').change().focus();
-		$('#btnGravar').visible(false);
-		dataTable.ajax.reload();
+	jsLIB.ajaxCall({
+		waiting : false,
+		async: true,
+		url: jsLIB.rootDir+"rules/acompanhamento.php",
+		data: { MethodName : 'setRequisito', data : parameter },
+		callBackSucess: function(){
+			$("#divResultado").empty().hide();
+			$("#cdBar").val('').change().focus();
+			$('#btnGravar').visible(false);
+			dataTable.ajax.reload();
+		}
 	});
 }

@@ -1,6 +1,11 @@
 function updateNotifications(){
-	jsLIB.ajaxCall( true, jsLIB.rootDir+"rules/notifications.php", { MethodName : 'getNotifications' },
-		function(data, jqxhr) {
+	jsLIB.ajaxCall({
+		waiting : false,
+		async: true,
+		type: "GET",
+		url: jsLIB.rootDir+"rules/notifications.php",
+		data: { MethodName : 'getNotifications' },
+		callBackSucess: function(data, jqxhr) {
 			if (data.result === true){
 				$("#notifyAlerts>ul").html(data.html);
 				$("#notifyAlertsBadge>span").html(data.qt);
@@ -10,5 +15,5 @@ function updateNotifications(){
 				$("#notifyAlerts").hide();
 			}
 		}
-	);
+	});
 }
