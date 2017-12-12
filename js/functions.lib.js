@@ -212,56 +212,6 @@ var jsLIB = {
 		return retorno;
 	},
 		
-	ajaxCallOld : function( pasync, url, data, callBackSucess, callBackError ) {
-		return this.ajaxCall({
-			waiting : true,
-			async: pasync,
-			url: url,
-			data: data,
-			callBackSucess: callBackSucess,
-			callBackError: callBackError 
-		});
-		/*
-		var retorno;
-		if (pasync === false) {
-			jsLIB.modalWaiting(true);
-		} else if (!pasync) {
-			pasync = false;
-		}
-		$.ajax({
-			url		: url,
-			async	: pasync,
-			type		: 'post',
-			data		: data,
-			dataType	: 'json',
-			
-			success	: function( data, textStatus, jqxhr ) {
-				if (!pasync) {
-					jsLIB.modalWaiting(false);
-				}
-				if ( typeof( callBackSucess ) == 'function' ) {
-					callBackSucess( data, jqxhr );
-				} else if ( callBackSucess === undefined ) {
-					retorno = data;
-				}
-			},
-			
-			error	: function( jqxhr, textStatus, errorMessage ) {
-				if (!pasync) {
-					jsLIB.modalWaiting(false);
-				}
-				if ( typeof( callBackError ) == 'function' ) {
-					callBackError( jqxhr, errorMessage );
-				}
-			}               
-		});
-		if (!pasync) {
-			jsLIB.modalWaiting(false);
-		}
-		return retorno;
-		*/
-	},
-		
 	getJSONFields : function( frm ) {
 		var retorno = {};
 		frm.find( $('[field]') ).each( function() {
