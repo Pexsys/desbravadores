@@ -83,6 +83,7 @@ $(document).ready(function(){
 				$('#btnDelete').show();
 				jsLIB.ajaxCall({
 					type: "GET",
+					async: false;
 					url: jsLIB.rootDir+"rules/agenda.php",
 					data: { MethodName : 'events', data : { id : e.id } },
 					success: function(ev){
