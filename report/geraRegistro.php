@@ -80,7 +80,7 @@ class ESPCR extends TCPDF {
  		$this->setXY(5,40);
  		$this->SetTextColor(0,0,0);
  		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 13);
- 		$this->Cell(200, 8, "REGISTRO DE ATIVIDADES", 0, false, 'C', false, false, false, false, 'T', 'M');
+ 		$this->Cell(200, 8, "REGISTRO DE ATIVIDADES" . ($this->getNumPages() > 1 ? " (Continuação)" : ""), 0, false, 'C', false, false, false, false, 'T', 'M');
  		$this->top = 48;
 	}
 	
@@ -101,12 +101,8 @@ class ESPCR extends TCPDF {
 		$this->setCellPaddings(0,0,0,0);
 		$this->SetTextColor(0,0,0);
 		$this->setXY(0,0);
-	}
-	
-	public function add() {
-	    $this->newPage();
-	    
-	    $this->top += 2;
+
+		$this->top += 2;
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 7);
 		$this->SetFillColor(0,0,0);
 		$this->SetTextColor(255,255,255);
@@ -130,6 +126,111 @@ class ESPCR extends TCPDF {
 		$this->Cell(20, 7, strftime("%d/%m/%Y",strtotime($this->line["DT_NASC"])), '', 1, 'L', 1, '', 0, false, 'T', 'C');
 		$this->RoundedRect(10, $this->top, 190, 7, 1, '0110', 'D', $this->stLine);
         $this->top += 10;
+	}
+
+	private function linhaAprendizado($bg,$fa){
+		if ($bg):
+			$this->SetFillColor(255,255,255);
+		else:
+			$this->SetFillColor(225,225,225);
+		endif;
+		$this->setXY(10, $this->top);
+		$this->Cell(7, 4, $fa["TP_ITEM"], 'L', 1, 'C', 1, '', 0, false, 'T', 'C');
+		$this->setXY(17, $this->top);
+		$this->Cell(15, 4, ( $fa["TP_ITEM"] == "CL" ? $fa["CD_AREA_INTERNO"] : $fa["CD_ITEM_INTERNO"] ), 'L', 1, 'C', 1, '', 0, false, 'T', 'C');
+		$this->setXY(32, $this->top);
+		$this->Cell(108, 4, " ".$fa["DS_ITEM"], 'L', 1, 'L', 1, '', 0, false, 'T', 'C');
+		$this->setXY(140, $this->top);
+		$this->Cell(15, 4, ( is_null($fa["DT_INICIO"]) ? "--" : strftime("%d/%m/%Y",strtotime($fa["DT_INICIO"])) ), 'L', 1, 'C', 1, '', 0, false, 'T', 'C');
+		$this->setXY(155, $this->top);
+		$this->Cell(15, 4, ( is_null($fa["DT_CONCLUSAO"]) ? "--" : strftime("%d/%m/%Y",strtotime($fa["DT_CONCLUSAO"])) ), 'L', 1, 'C', 1, '', 0, false, 'T', 'C');
+		$this->setXY(170, $this->top);
+		$this->Cell(15, 4, ( is_null($fa["DT_AVALIACAO"]) ? "--" : strftime("%d/%m/%Y",strtotime($fa["DT_AVALIACAO"])) ), 'L', 1, 'C', 1, '', 0, false, 'T', 'C');
+		$this->setXY(185, $this->top);
+		$this->Cell(15, 4, ( is_null($fa["DT_INVESTIDURA"]) ? "--" : strftime("%d/%m/%Y",strtotime($fa["DT_INVESTIDURA"])) ), 'LR', 1, 'C', 1, '', 0, false, 'T', 'C');
+		$this->top += 4;
+		return !$bg;
+	}
+
+	private function grupoAprendizado(){
+		$this->SetFillColor(85,85,85);
+		$this->SetTextColor(255,255,255);
+		$this->setXY(10, $this->top+1);
+		$this->Cell(190, 5, "APRENDIZADO", '1', 1, 'C', 1, '', 0, false, 'T', 'C');
+		$this->top += 6;
+		$this->SetFillColor(170,170,170);
+		$this->SetTextColor(0,0,0);
+		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 7);
+		$this->setXY(10, $this->top);
+		$this->Cell(7, 5, "Tipo", 'LB', 1, 'C', 1, '', 0, false, 'T', 'C');
+		$this->setXY(17, $this->top);
+		$this->Cell(15, 5, "Código", 'LB', 1, 'C', 1, '', 0, false, 'T', 'C');
+		$this->setXY(32, $this->top);
+		$this->Cell(108, 5, " Descrição", 'LB', 1, 'L', 1, '', 0, false, 'T', 'C');
+		$this->setXY(140, $this->top);
+		$this->Cell(15, 5, "Início", 'LB', 1, 'C', 1, '', 0, false, 'T', 'C');
+		$this->setXY(155, $this->top);
+		$this->Cell(15, 5, "Fim", 'LB', 1, 'C', 1, '', 0, false, 'T', 'C');
+		$this->setXY(170, $this->top);
+		$this->Cell(15, 5, "Avaliação", 'LB', 1, 'C', 1, '', 0, false, 'T', 'C');
+		$this->setXY(185, $this->top);
+		$this->Cell(15, 5, "Investidura", 'LRB', 1, 'C', 1, '', 0, false, 'T', 'C');
+		$this->top += 5;
+		$this->SetTextColor(0,0,0);
+		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 7);
+		return true;
+	}
+
+	private function grupoEvento(){
+		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 8);
+		$this->SetFillColor(85,85,85);
+		$this->SetTextColor(255,255,255);
+		$this->setXY(10, $this->top);
+		$this->Cell(190, 5, "EVENTOS", '1', 1, 'C', 1, '', 0, false, 'T', 'C');
+		$this->top += 5;
+		
+		$this->SetFillColor(170,170,170);
+		$this->SetTextColor(0,0,0);
+		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 7);
+		$this->setXY(10, $this->top);
+		$this->Cell(55, 5, " Descrição", 'LB', 1, 'L', 1, '', 0, false, 'T', 'C');
+		$this->setXY(65, $this->top);
+		$this->Cell(55, 5, " Tema", 'LB', 1, 'L', 1, '', 0, false, 'T', 'C');
+		$this->setXY(120, $this->top);
+		$this->Cell(50, 5, " Organização", 'LB', 1, 'L', 1, '', 0, false, 'T', 'C');
+		$this->setXY(170, $this->top);
+		$this->Cell(15, 5, "Início", 'LB', 1, 'C', 1, '', 0, false, 'T', 'C');
+		$this->setXY(185, $this->top);
+		$this->Cell(15, 5, "Fim", 'LRB', 1, 'C', 1, '', 0, false, 'T', 'C');
+		$this->top += 5;
+
+		$this->SetTextColor(0,0,0);
+		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 7);
+		return true;
+	}
+
+	private function linhaEvento($bg,$fe){
+		if ($bg):
+			$this->SetFillColor(255,255,255);
+		else:
+			$this->SetFillColor(225,225,225);
+		endif;
+		$this->setXY(10, $this->top);
+		$this->Cell(55, 4, " ".$fe["DS"], 'L', 1, 'L', 1, '', 0, false, 'T', 'C');
+		$this->setXY(65, $this->top);
+		$this->Cell(55, 4, " ".$fe["DS_TEMA"], 'L', 1, 'L', 1, '', 0, false, 'T', 'C');
+		$this->setXY(120, $this->top);
+		$this->Cell(50, 4, " ".$fe["DS_ORG"], 'L', 1, 'L', 1, '', 0, false, 'T', 'C');
+		$this->setXY(170, $this->top);
+		$this->Cell(15, 4, ( is_null($fe["DH_S"]) ? "--" : strftime("%d/%m/%Y",strtotime($fe["DH_S"])) ), 'L', 1, 'C', 1, '', 0, false, 'T', 'C');
+		$this->setXY(185, $this->top);
+		$this->Cell(15, 4, ( is_null($fe["DH_R"]) ? "--" : strftime("%d/%m/%Y",strtotime($fe["DH_R"])) ), 'LR', 1, 'C', 1, '', 0, false, 'T', 'C');
+		$this->top += 4;
+		return !$bg;
+	}
+	
+	public function add() {
+	    $this->newPage();
         
         $rYear = $GLOBALS['conn']->Execute("
             SELECT YEAR(es.DH_S) as YEAR_INDEX
@@ -144,7 +245,6 @@ class ESPCR extends TCPDF {
         ", array($this->line['ID'], $this->line['ID']) );
         
         foreach ($rYear as $yK => $f):
-            
             $o = $GLOBALS['conn']->Execute("
                 SELECT tu.DS, IF(cp.TP_SEXO='F',tc.DSF,tc.DSM) AS DS_CARGO
                 FROM CAD_ATIVOS ca
@@ -177,55 +277,32 @@ class ESPCR extends TCPDF {
                 ORDER BY ah.DT_INICIO, ta.TP_ITEM, ta.CD_AREA_INTERNO DESC, ta.DS_ITEM
             ", array($this->line['ID'], $f["YEAR_INDEX"]));
             if (!$aprend->EOF):
-        		$this->SetFillColor(85,85,85);
-        		$this->SetTextColor(255,255,255);
-        		$this->setXY(10, $this->top+1);
-        		$this->Cell(190, 5, "APRENDIZADO", '1', 1, 'C', 1, '', 0, false, 'T', 'C');
-        		$this->top += 6;
-        		$this->SetFillColor(170,170,170);
-        		$this->SetTextColor(0,0,0);
-        		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 7);
-                $this->setXY(10, $this->top);
-        		$this->Cell(7, 5, "Tipo", 'LB', 1, 'C', 1, '', 0, false, 'T', 'C');
-        		$this->setXY(17, $this->top);
-        		$this->Cell(15, 5, "Código", 'LB', 1, 'C', 1, '', 0, false, 'T', 'C');
-        		$this->setXY(32, $this->top);
-        		$this->Cell(108, 5, " Descrição", 'LB', 1, 'L', 1, '', 0, false, 'T', 'C');
-        		$this->setXY(140, $this->top);
-        		$this->Cell(15, 5, "Início", 'LB', 1, 'C', 1, '', 0, false, 'T', 'C');
-        		$this->setXY(155, $this->top);
-        		$this->Cell(15, 5, "Fim", 'LB', 1, 'C', 1, '', 0, false, 'T', 'C');
-        		$this->setXY(170, $this->top);
-        		$this->Cell(15, 5, "Avaliação", 'LB', 1, 'C', 1, '', 0, false, 'T', 'C');
-        		$this->setXY(185, $this->top);
-        		$this->Cell(15, 5, "Investidura", 'LRB', 1, 'C', 1, '', 0, false, 'T', 'C');
-        		$this->top += 5;
-        		
-        	    $bg = true;
-        		$this->SetTextColor(0,0,0);
-        		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 7);
-        		foreach($aprend as $kaprend => $fa):
-        		    if ($bg):
-        		    	$this->SetFillColor(255,255,255);
-        		    else:
-        		        $this->SetFillColor(225,225,225);
-        		    endif;
-                    $this->setXY(10, $this->top);
-            		$this->Cell(7, 4, $fa["TP_ITEM"], 'L', 1, 'C', 1, '', 0, false, 'T', 'C');
-            		$this->setXY(17, $this->top);
-            		$this->Cell(15, 4, ( $fa["TP_ITEM"] == "CL" ? $fa["CD_AREA_INTERNO"] : $fa["CD_ITEM_INTERNO"] ), 'L', 1, 'C', 1, '', 0, false, 'T', 'C');
-            		$this->setXY(32, $this->top);
-            		$this->Cell(108, 4, " ".$fa["DS_ITEM"], 'L', 1, 'L', 1, '', 0, false, 'T', 'C');
-            		$this->setXY(140, $this->top);
-            		$this->Cell(15, 4, ( is_null($fa["DT_INICIO"]) ? "--" : strftime("%d/%m/%Y",strtotime($fa["DT_INICIO"])) ), 'L', 1, 'C', 1, '', 0, false, 'T', 'C');
-            		$this->setXY(155, $this->top);
-            		$this->Cell(15, 4, ( is_null($fa["DT_CONCLUSAO"]) ? "--" : strftime("%d/%m/%Y",strtotime($fa["DT_CONCLUSAO"])) ), 'L', 1, 'C', 1, '', 0, false, 'T', 'C');
-            		$this->setXY(170, $this->top);
-            		$this->Cell(15, 4, ( is_null($fa["DT_AVALIACAO"]) ? "--" : strftime("%d/%m/%Y",strtotime($fa["DT_AVALIACAO"])) ), 'L', 1, 'C', 1, '', 0, false, 'T', 'C');
-            		$this->setXY(185, $this->top);
-            		$this->Cell(15, 4, ( is_null($fa["DT_INVESTIDURA"]) ? "--" : strftime("%d/%m/%Y",strtotime($fa["DT_INVESTIDURA"])) ), 'LR', 1, 'C', 1, '', 0, false, 'T', 'C');
-            		$this->top += 4;
-            		$bg = !$bg;
+				
+				//AGRUPADOR DE APRENDIZADO
+				$this->startTransaction();
+				$start_page = $this->getPage();
+				$bg = $this->grupoAprendizado();
+				if  ($this->getNumPages() != $start_page):
+					$this->rollbackTransaction(true);
+					$this->newPage();
+					$bg = $this->grupoAprendizado();
+				else:
+					$this->commitTransaction();
+				endif;
+
+				//DETALHE DO APRENDIZADO
+				foreach($aprend as $kaprend => $fa):
+					$this->startTransaction();
+					$start_page = $this->getPage();
+					$bg = $this->linhaAprendizado($bg,$fa);
+					if  ($this->getNumPages() != $start_page):
+						$this->rollbackTransaction(true);
+						$this->newPage();
+						$bg = $this->grupoAprendizado();
+						$bg = $this->linhaAprendizado($bg,$fa);
+					else:
+						$this->commitTransaction();
+					endif;
                 endforeach;
         	endif;
         	
@@ -238,50 +315,33 @@ class ESPCR extends TCPDF {
               AND YEAR(es.DH_S) = ?
             ORDER BY es.DH_S
             ", array($this->line['ID'], $f["YEAR_INDEX"]));
-            if (!$events->EOF):
-    		    $this->SetFont(PDF_FONT_NAME_MAIN, 'B', 8);
-        		$this->SetFillColor(85,85,85);
-        		$this->SetTextColor(255,255,255);
-        		$this->setXY(10, $this->top);
-        		$this->Cell(190, 5, "EVENTOS", '1', 1, 'C', 1, '', 0, false, 'T', 'C');
-        		$this->top += 5;
-        		
-        		$this->SetFillColor(170,170,170);
-        		$this->SetTextColor(0,0,0);
-        		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 7);
-                $this->setXY(10, $this->top);
-        		$this->Cell(55, 5, " Descrição", 'LB', 1, 'L', 1, '', 0, false, 'T', 'C');
-                $this->setXY(65, $this->top);
-        		$this->Cell(55, 5, " Tema", 'LB', 1, 'L', 1, '', 0, false, 'T', 'C');
-                $this->setXY(120, $this->top);
-        		$this->Cell(50, 5, " Organização", 'LB', 1, 'L', 1, '', 0, false, 'T', 'C');
-        		$this->setXY(170, $this->top);
-        		$this->Cell(15, 5, "Início", 'LB', 1, 'C', 1, '', 0, false, 'T', 'C');
-        		$this->setXY(185, $this->top);
-        		$this->Cell(15, 5, "Fim", 'LRB', 1, 'C', 1, '', 0, false, 'T', 'C');
-        		$this->top += 5;
-        		
-        	    $bg = true;
-        		$this->SetTextColor(0,0,0);
-        		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 7);
-        		foreach($events as $kevents => $fe):
-        		    if ($bg):
-        		    	$this->SetFillColor(255,255,255);
-        		    else:
-        		        $this->SetFillColor(225,225,225);
-        		    endif;
-                    $this->setXY(10, $this->top);
-            		$this->Cell(55, 4, " ".$fe["DS"], 'L', 1, 'L', 1, '', 0, false, 'T', 'C');
-                    $this->setXY(65, $this->top);
-            		$this->Cell(55, 4, " ".$fe["DS_TEMA"], 'L', 1, 'L', 1, '', 0, false, 'T', 'C');
-                    $this->setXY(120, $this->top);
-            		$this->Cell(50, 4, " ".$fe["DS_ORG"], 'L', 1, 'L', 1, '', 0, false, 'T', 'C');
-            		$this->setXY(170, $this->top);
-            		$this->Cell(15, 4, ( is_null($fe["DH_S"]) ? "--" : strftime("%d/%m/%Y",strtotime($fe["DH_S"])) ), 'L', 1, 'C', 1, '', 0, false, 'T', 'C');
-            		$this->setXY(185, $this->top);
-            		$this->Cell(15, 4, ( is_null($fe["DH_R"]) ? "--" : strftime("%d/%m/%Y",strtotime($fe["DH_R"])) ), 'LR', 1, 'C', 1, '', 0, false, 'T', 'C');
-            		$this->top += 4;
-            		$bg = !$bg;
+			if (!$events->EOF):
+
+				//AGRUPADOR DE EVENTOS
+				$this->startTransaction();
+				$start_page = $this->getPage();
+				$bg = $this->grupoEvento();
+				if  ($this->getNumPages() != $start_page):
+					$this->rollbackTransaction(true);
+					$this->newPage();
+					$bg = $this->grupoEvento();
+				else:
+					$this->commitTransaction();
+				endif;
+
+				foreach($events as $kevents => $fe):
+					$this->startTransaction();
+					$start_page = $this->getPage();
+					$bg = $this->linhaEvento($bg,$fe);
+					if  ($this->getNumPages() != $start_page):
+						$this->rollbackTransaction(true);
+						$this->newPage();
+						$bg = $this->grupoEvento();
+						$bg = $this->linhaEvento($bg,$fe);
+					else:
+						$this->commitTransaction();
+					endif;
+					
                 endforeach;
         	endif;
             $this->Line(10, $this->top, 200, $this->top);
