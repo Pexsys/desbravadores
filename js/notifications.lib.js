@@ -1,7 +1,5 @@
 function updateNotifications(){
 	jsLIB.ajaxCall({
-		waiting : false,
-		async: true,
 		type: "GET",
 		url: jsLIB.rootDir+"rules/notifications.php",
 		data: { MethodName : 'getNotifications' },

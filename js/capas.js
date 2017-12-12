@@ -82,7 +82,6 @@ $(document).ready(function(){
 			codigo: $(this).val()
 		};
 		jsLIB.ajaxCall({
-			waiting : false,
 			async: false,
 			type: 'GET',
 			url: jsLIB.rootDir+'rules/capas.php',
@@ -121,7 +120,7 @@ $(document).ready(function(){
 				infoEmpty: "0 encontrados"
 			},
 			ajax: {
-				type	: "POST",
+				type	: "GET",
 				url		: jsLIB.rootDir+"rules/capas.php",
 				data	: function (d) {
 							d.MethodName = "getEspecialidades"

@@ -24,7 +24,7 @@ $(document).ready(function(){
 			infoEmpty: "0 encontrados"
 		},
 		ajax: {
-			type	: "POST",
+			type	: "GET",
 			url	: jsLIB.rootDir+"rules/saidas.php",
 			data	: function (d) {
 					d.MethodName = "getAttrib",
@@ -80,7 +80,7 @@ $(document).ready(function(){
 			infoEmpty: "0 encontrados"
 		},
 		ajax: {
-			type	: "POST",
+			type	: "GET",
 			url	: jsLIB.rootDir+"rules/saidas.php",
 			data	: function (d) {
 					d.MethodName = "getSaidas",
@@ -282,10 +282,16 @@ $(document).ready(function(){
 							id: $('#saidaID').val(),
 							op: "DELETE"
 						};
-						jsLIB.ajaxCallOld( false, jsLIB.rootDir+"rules/saidas.php", { MethodName : 'fSaida', data : parameter }, function(data){
-							saidaDataTable.ajax.reload();
-							dialogRef.close();
-							$("#saidasModal").modal('hide');
+						jsLIB.ajaxCall({
+							waiting : true,
+							url: jsLIB.rootDir+"rules/saidas.php",
+							data: { MethodName : 'fSaida', data : parameter },
+							callBackSucess: function(data){
+								saidaDataTable.ajax.reload( function(){
+									dialogRef.close();
+									$("#saidasModal").modal('hide');
+								});
+							}
 						});
 					}
 				}
@@ -314,7 +320,10 @@ $(document).ready(function(){
 					fl: attrRule,
 					vl: $(this).val()
 				};
-				jsLIB.ajaxCallOld( undefined, jsLIB.rootDir+"rules/saidas.php", { MethodName : 'setAttrib', data : parameter } );				
+				jsLIB.ajaxCall({
+					url: jsLIB.rootDir+"rules/saidas.php",
+					data: { MethodName : 'setAttrib', data : parameter }
+				});				
 			});
 			
 		});
@@ -368,24 +377,35 @@ function populateMembers(){
 		id:  $("#saidaID").val(),
 		filters: jsFilter.jSON()
 	}	
-	jsLIB.ajaxCallOld( false, jsLIB.rootDir+"rules/saidas.php", { MethodName : 'getMembrosFilter', data : parameters }, function(mb){
-		jsLIB.populateOptions( $("#cbParticip"), mb.membros );
-		if ( mb.filter && mb.filter.length > 0 ) {
-			$("#cbParticip").selectpicker('deselectAll');
-			$("#cbParticip").selectpicker('val', mb.filter);
-		} else {
-			$("#cbParticip").selectpicker('selectAll');
+	jsLIB.ajaxCall({
+		waiting : true,
+		type: "GET",
+		url: jsLIB.rootDir+"rules/saidas.php",
+		data: { MethodName : 'getMembrosFilter', data : parameters },
+		callBackSucess: function(mb){
+			jsLIB.populateOptions( $("#cbParticip"), mb.membros );
+			if ( mb.filter && mb.filter.length > 0 ) {
+				$("#cbParticip").selectpicker('deselectAll');
+				$("#cbParticip").selectpicker('val', mb.filter);
+			} else {
+				$("#cbParticip").selectpicker('selectAll');
+			}
 		}
 	});
 }
 
 function populateSaida( saidaID ) {
-	jsLIB.ajaxCallOld( false, jsLIB.rootDir+"rules/saidas.php", { MethodName : 'fSaida', data : { id : saidaID } }, function(sd){
-		jsLIB.populateForm( $("#cadSaidasForm"), sd.saida );
-		jsLIB.populateOptions( $("#cbParticip"), sd.membros );
-		var filterArray = $.grep(sd.membros, function(e){ return e.pt == 'S'; });
-		if ( !filterArray || filterArray.length == 0 ) {
-			$("#cbParticip").selectpicker('selectAll');
+	jsLIB.ajaxCall({
+		type: "GET",
+		url: jsLIB.rootDir+"rules/saidas.php",
+		data: { MethodName : 'fSaida', data : { id : saidaID } },
+		callBackSucess: function(sd){
+			jsLIB.populateForm( $("#cadSaidasForm"), sd.saida );
+			jsLIB.populateOptions( $("#cbParticip"), sd.membros );
+			var filterArray = $.grep(sd.membros, function(e){ return e.pt == 'S'; });
+			if ( !filterArray || filterArray.length == 0 ) {
+				$("#cbParticip").selectpicker('selectAll');
+			}
 		}
 	});
 }
@@ -395,9 +415,14 @@ function updateSaida(){
 		op: "UPDATE",
 		frm: jsLIB.getJSONFields( $('#cadSaidasForm') )
 	};
-	jsLIB.ajaxCallOld( false, jsLIB.rootDir+"rules/saidas.php", { MethodName : 'fSaida', data : parameter }, function(sd){
-		$("#saidaID").val(sd.id);
-		buttons();
-		saidaDataTable.ajax.reload();	
+	jsLIB.ajaxCall({
+		waiting : true,
+		url: jsLIB.rootDir+"rules/saidas.php",
+		data: { MethodName : 'fSaida', data : parameter },
+		callBackSucess: function(sd){
+			$("#saidaID").val(sd.id);
+			buttons();
+			saidaDataTable.ajax.reload();	
+		}
 	});
 }

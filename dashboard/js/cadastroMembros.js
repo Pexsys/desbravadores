@@ -22,7 +22,7 @@ $(document).ready(function(){
 			infoEmpty: "0 encontrados"
 		},
 		ajax: {
-			type: "POST",
+			type: "GET",
 			url: jsLIB.rootDir+"rules/membros.php",
 			data: function (d) {
 				d.MethodName = "getMembros",
@@ -291,9 +291,14 @@ $(document).ready(function(){
 								sx: sexo,
 								dc: doc
 							}
-							jsLIB.ajaxCallOld( undefined, jsLIB.rootDir+"rules/membros.php", { MethodName : 'insertMember', data : parameters }, function(mb){
-								if (mb.result == true){
-									populateMember(mb);
+							jsLIB.ajaxCall({
+								async: false,
+								url: jsLIB.rootDir+"rules/membros.php",
+								data: { MethodName : 'insertMember', data : parameters },
+								callBackSucess: function(mb){
+									if (mb.result == true){
+										populateMember(mb);
+									}
 								}
 							});
 						}
@@ -304,10 +309,16 @@ $(document).ready(function(){
 							id	: membroID,
 							cpf	: value
 						}
-						jsLIB.ajaxCallOld( undefined, jsLIB.rootDir+"rules/membros.php", { MethodName : 'verificaResp', data : parameters }, function(rs){
-							formPopulated = false;
-							jsLIB.populateForm( $("#Resp"), rs);
-							formPopulated = true;
+						jsLIB.ajaxCall({
+							async: false,
+							type: "GET",
+							url: jsLIB.rootDir+"rules/membros.php",
+							data: { MethodName : 'verificaResp', data : parameters },
+							callBackSucess: function(rs){
+								formPopulated = false;
+								jsLIB.populateForm( $("#Resp"), rs);
+								formPopulated = true;
+							}
 						});
 						
 					} else {
@@ -317,36 +328,40 @@ $(document).ready(function(){
 							val	: value
 						}
 						//gravar
-						jsLIB.ajaxCallOld( true, jsLIB.rootDir+"rules/membros.php", { MethodName : 'updateMember', data : parameters }, function(mb){
-							//tratamento de dependencias
-							if (field == "cad_pessoa-tp_sexo"){
-								populateUnidade(membroID);
-								populateCargos(membroID);
-							} else if (field == "cad_pessoa-dt_nasc"){
-								$("#nrIdade").val( mb.membro.nr_idade );
-								fMostraAba( mb.membro.nr_idade < 18, $("#abaResponsavel"), $("#Resp") );
-								populateUnidade(membroID);
-								populateCargos(membroID);
-							} else if (field == "cad_pessoa-cep"){
-								jsLIB.consultaCEP({
-									value: value,
-									success: function(ect){
-										if (ect.cep){
-											$("#dsLogra").val(ect.cep.lg).attr('valid','ok').trigger("change");
-											$("#nrLog").val(ect.cep.nr).attr('valid','ok').trigger("change");
-											$("#dsBai").val(ect.cep.ba).attr('valid','ok').trigger("change");
-											$("#dsCid").val(ect.cep.cd).attr('valid','ok').trigger("change");
-											$("#cmUF").val(ect.cep.uf).attr('valid','ok').trigger("change");											
+						jsLIB.ajaxCall({
+							url: jsLIB.rootDir+"rules/membros.php",
+							data: { MethodName : 'updateMember', data : parameters },
+							callBackSucess: function(mb){
+								//tratamento de dependencias
+								if (field == "cad_pessoa-tp_sexo"){
+									populateUnidade(membroID);
+									populateCargos(membroID);
+								} else if (field == "cad_pessoa-dt_nasc"){
+									$("#nrIdade").val( mb.membro.nr_idade );
+									fMostraAba( mb.membro.nr_idade < 18, $("#abaResponsavel"), $("#Resp") );
+									populateUnidade(membroID);
+									populateCargos(membroID);
+								} else if (field == "cad_pessoa-cep"){
+									jsLIB.consultaCEP({
+										value: value,
+										success: function(ect){
+											if (ect.cep){
+												$("#dsLogra").val(ect.cep.lg).attr('valid','ok').trigger("change");
+												$("#nrLog").val(ect.cep.nr).attr('valid','ok').trigger("change");
+												$("#dsBai").val(ect.cep.ba).attr('valid','ok').trigger("change");
+												$("#dsCid").val(ect.cep.cd).attr('valid','ok').trigger("change");
+												$("#cmUF").val(ect.cep.uf).attr('valid','ok').trigger("change");											
+											}
 										}
+									});
+								} else if (field == "cad_ativos-id_unidade"){
+									populateCargos(membroID);
+								} else if (field == "cad_ativos-cd_cargo"){
+									fMostraDiretoria();
+								} else if (field == "fg_ativo"){
+									if (mb.result == true){
+										populateMember(mb);
 									}
-								});
-							} else if (field == "cad_ativos-id_unidade"){
-								populateCargos(membroID);
-							} else if (field == "cad_ativos-cd_cargo"){
-								fMostraDiretoria();
-							} else if (field == "fg_ativo"){
-								if (mb.result == true){
-									populateMember(mb);
 								}
 							}
 						});
@@ -432,39 +447,59 @@ function ruleButtons() {
 function populateUnidade(membroID) {
 	formPopulated = false;
 	var value = $("#cmUnidade").val();
-	jsLIB.ajaxCallOld( undefined, jsLIB.rootDir+"rules/membros.php", { MethodName : 'getUnidades', data : { id : membroID } },function(un){
-		jsLIB.populateOptions( $("#cmUnidade"), un );
-		$("#cmUnidade").val(value).change();
-		formPopulated = true;
+	jsLIB.ajaxCall({
+		async: false,
+		type: "GET",
+		url: jsLIB.rootDir+"rules/membros.php",
+		data: { MethodName : 'getUnidades', data : { id : membroID } },
+		callBackSucess: function(un){
+			jsLIB.populateOptions( $("#cmUnidade"), un );
+			$("#cmUnidade").val(value).change();
+			formPopulated = true;
+		}
 	});
 }
 
 function populateCargos(membroID) {
 	formPopulated = false;
 	var value = $("#cmCargo").val();
-	jsLIB.ajaxCallOld( undefined, jsLIB.rootDir+"rules/membros.php", { MethodName : 'getCargos', data : { id : membroID } }, function(){
-		jsLIB.populateOptions( $("#cmCargo"), cg );
-		$("#cmCargo").val(value).change();
-	
-		if ( value.startsWith("2-07") ) {
-			jsLIB.ajaxCallOld( undefined, jsLIB.rootDir+"rules/membros.php", { MethodName : 'getCargos', data : { id : membroID, tp : true } }, function(cg){
-				jsLIB.populateOptions( $("#cmCargo2"), cg );
-			});
+	jsLIB.ajaxCall({
+		async: false,
+		type: "GET",
+		url: jsLIB.rootDir+"rules/membros.php",
+		data: { MethodName : 'getCargos', data : { id : membroID } },
+		callBackSucess: function(){
+			jsLIB.populateOptions( $("#cmCargo"), cg );
+			$("#cmCargo").val(value).change();
+		
+			if ( value.startsWith("2-07") ) {
+				jsLIB.ajaxCall({
+					async: false,
+					type: "GET",
+					url: jsLIB.rootDir+"rules/membros.php",
+					data: { MethodName : 'getCargos', data : { id : membroID, tp : true } },
+					callBackSucess: function(cg){
+						jsLIB.populateOptions( $("#cmCargo2"), cg );
+					}
+				});
+			}
+			fMostraDiretoria();
+			formPopulated = true;
 		}
-		fMostraDiretoria();
-		formPopulated = true;
 	});
-
 }
 
 function getMember( membroID ) {
-	jsLIB.modalWaiting(true);
 	var parameters = { 
 		filtro: tpFiltro,
 		id : membroID
 	};
-	return jsLIB.ajaxCallOld( false, jsLIB.rootDir+"rules/membros.php", { MethodName : 'getMember', data : parameters });
-	jsLIB.modalWaiting(false);
+	return jsLIB.ajaxCall({
+		async: false,
+		type: "GET",
+		url: jsLIB.rootDir+"rules/membros.php",
+		data: { MethodName : 'getMember', data : parameters }
+	});
 }
 
 function populateMember( mb ) {

@@ -43,7 +43,6 @@ function onscan( bardata ) {
 
 function logout(){
 	jsLIB.ajaxCall({
-		waiting : false,
 		async: false,
 		url: jsLIB.rootDir+'rules/login.php',
 		data: { MethodName : 'logout' },

@@ -21,7 +21,7 @@ $(document).ready(function(){
 				infoEmpty: "0 encontrados"
 			},
 			ajax: {
-				type	: "POST",
+				type	: "GET",
 				url	: jsLIB.rootDir+"rules/ocorrencias.php",
 				data	: function (d) {
 						d.MethodName = "getOcorrencias",
@@ -74,7 +74,6 @@ $(document).ready(function(){
 	$('#btnCiente').on('click', function(){
 		jsLIB.ajaxCall({
 			waiting : true,
-			async: true,
 			url: jsLIB.rootDir+"rules/ocorrencias.php",
 			data: { MethodName : 'fSetRead', data : { id : $(this).attr("ocorr-id") } },
 			callBackSucess: function(data){
@@ -91,7 +90,6 @@ function populateOcorrencias( data ) {
 	$("#btnCiente").visible(false);
 	jsLIB.ajaxCall({
 		waiting : true,
-		async: true,
 		type: "GET",
 		url: jsLIB.rootDir+"rules/ocorrencias.php",
 		data: { MethodName : 'fOcorrencia', data : { id : data.id, nomes : 'N' } },

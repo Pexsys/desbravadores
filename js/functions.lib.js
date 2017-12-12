@@ -179,18 +179,18 @@ var jsLIB = {
 	
 	ajaxCall : function( objParam ) {
 		var retorno = undefined;
-		if (objParam.waiting !== false){
+		if (objParam.waiting === true){
 			jsLIB.modalWaiting(true);
 		}
 		$.ajax({
-			url		: objParam.url,
-			async	: (objParam.async !== undefined ? objParam.async : true),
+			url			: objParam.url,
+			async		: (objParam.async !== undefined ? objParam.async : true),
 			type		: (objParam.type !== undefined ? objParam.type : 'POST'),
 			data		: objParam.data,
 			dataType	: 'json',
 			
 			success	: function( data, textStatus, jqxhr ) {
-				if (objParam.waiting !== false){
+				if (objParam.waiting === true){
 					jsLIB.modalWaiting(false);
 				}
 				if ( typeof( objParam.callBackSucess ) == 'function' ) {
@@ -201,7 +201,7 @@ var jsLIB = {
 			},
 			
 			error	: function( jqxhr, textStatus, errorMessage ) {
-				if (objParam.waiting !== false){
+				if (objParam.waiting === true){
 					jsLIB.modalWaiting(false);
 				}
 				if ( typeof( objParam.callBackError ) == 'function' ) {

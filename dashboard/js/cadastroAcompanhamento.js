@@ -22,7 +22,7 @@ $(document).ready(function(){
 			infoEmpty: "0 encontrados"
 		},
 		ajax: {
-			type	: "POST",
+			type	: "GET",
 			url	: jsLIB.rootDir+"rules/acompanhamento.php",
 			data	: function (d) {
 					d.MethodName = "getData",
@@ -185,8 +185,6 @@ function update(){
 		frm: jsLIB.getJSONFields( $('#cadAcompForm') )
 	};
 	jsLIB.ajaxCall({
-		waiting : false,
-		async: true,
 		url: jsLIB.rootDir+"rules/acompanhamento.php",
 		data: { MethodName : 'setRequisito', data : parameter },
 		callBackSucess: function(){

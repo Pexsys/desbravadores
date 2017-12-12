@@ -23,7 +23,7 @@ $(document).ready(function(){
 			infoEmpty: "0 encontrados"
 		},
 		ajax: {
-			type	: "POST",
+			type	: "GET",
 			url	: jsLIB.rootDir+"rules/ocorrencias.php",
 			data	: function (d) {
 					d.MethodName = "getOcorrencias",
@@ -205,10 +205,15 @@ $(document).ready(function(){
 							id: $('#ocoID').val(),
 							op: "DELETE"
 						};
-						jsLIB.ajaxCallOld( false, jsLIB.rootDir+"rules/ocorrencias.php", { MethodName : 'fOcorrencia', data : parameter }, function(dt){
-							refreshAndButtons();
-							dialogRef.close();
-							$("#ocoModal").modal('hide');
+						jsLIB.ajaxCall({
+							waiting : true,
+							url: jsLIB.rootDir+"rules/ocorrencias.php",
+							data: { MethodName : 'fOcorrencia', data : parameter },
+							callBackSucess: function(dt){
+								refreshAndButtons();
+								dialogRef.close();
+								$("#ocoModal").modal('hide');
+							}
 						});
 					}
 				}
@@ -360,13 +365,19 @@ function rulefields(){
 }
 
 function populateOcorrencia( ocorrenciaID ) {
-	jsLIB.ajaxCallOld( false, jsLIB.rootDir+"rules/ocorrencias.php", { MethodName : 'fOcorrencia', data : { id : ocorrenciaID } }, function(oc){
-		jsLIB.populateOptions( $("#cmNome"), oc.nomes );
-		jsLIB.populateForm( $("#cadOcoForm"), oc.ocorrencia );
-		valuePendOrig = oc.ocorrencia.fg_pend;
-		valuePend = jsLIB.getValueFromField( $("#fgPend") );
-		rulefields();
-		buttons();
+	jsLIB.ajaxCall({
+		waiting : true,
+		type: "GET",
+		url: jsLIB.rootDir+"rules/ocorrencias.php",
+		data: { MethodName : 'fOcorrencia', data : { id : ocorrenciaID } },
+		callBackSucess: function(oc){
+			jsLIB.populateOptions( $("#cmNome"), oc.nomes );
+			jsLIB.populateForm( $("#cadOcoForm"), oc.ocorrencia );
+			valuePendOrig = oc.ocorrencia.fg_pend;
+			valuePend = jsLIB.getValueFromField( $("#fgPend") );
+			rulefields();
+			buttons();
+		}
 	});
 }
 
@@ -377,8 +388,13 @@ function refreshAndButtons(){
 }
 
 function populateMembers(){
-	jsLIB.ajaxCallOld( false, jsLIB.rootDir+"rules/ocorrencias.php", { MethodName : 'fGetMembros' }, function(oc){
-		jsLIB.populateOptions( $("#cmName"), oc.nomes );
+	jsLIB.ajaxCall({
+		type: "GET",
+		url: jsLIB.rootDir+"rules/ocorrencias.php",
+		data: { MethodName : 'fGetMembros' },
+		callBackSucess: function(oc){
+			jsLIB.populateOptions( $("#cmName"), oc.nomes );
+		}
 	});
 }
 
@@ -387,12 +403,16 @@ function updateOcorrencia(){
 		op: "UPDATE",
 		frm: jsLIB.getJSONFields( $('#cadOcoForm') )
 	};
-	jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/ocorrencias.php", { MethodName : 'fOcorrencia', data : parameter }, function(oc){
-		$("#ocoID").val(oc.id);
-		valuePendOrig = oc.so;
-		valuePend = jsLIB.getValueFromField( $("#fgPend") );
-		buttons();
-		rulefields();
-		refreshAndButtons();
+	jsLIB.ajaxCall({
+		url: jsLIB.rootDir+"rules/ocorrencias.php",
+		data: { MethodName : 'fOcorrencia', data : parameter },
+		callBackSucess: function(oc){
+			$("#ocoID").val(oc.id);
+			valuePendOrig = oc.so;
+			valuePend = jsLIB.getValueFromField( $("#fgPend") );
+			buttons();
+			rulefields();
+			refreshAndButtons();
+		}
 	});
 }

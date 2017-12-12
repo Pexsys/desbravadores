@@ -21,7 +21,7 @@ $(document).ready(function(){
 			infoEmpty: "0 encontrados"
 		},
 		ajax: {
-			type	: "POST",
+			type	: "GET",
 			url	: jsLIB.rootDir+"rules/membros.php",
 			data	: function (d) {
 					d.MethodName = "getMembros",

@@ -20,7 +20,7 @@ $(document).ready(function(){
 			infoEmpty: "0 encontrados"
 		},
 		ajax: {
-			type	: "POST",
+			type	: "GET",
 			url	: jsLIB.rootDir+"rules/tabelas.php",
 			data	: function (d) {
 				d.MethodName = "getCargos"

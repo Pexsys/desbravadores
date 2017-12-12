@@ -1,7 +1,6 @@
 $(document).ready(function(){
 	jsLIB.ajaxCall({
 		waiting : true,
-		async: true,
 		type: "GET",
 		url: jsLIB.rootDir+"rules/painelAprendizadoUnidade.php",
 		data: { MethodName : 'getGraphData' },

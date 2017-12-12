@@ -12,8 +12,6 @@ $(document).ready(function(){
 			};
 			
 			jsLIB.ajaxCall({
-				waiting : false,
-				async: true,
 				type: "GET",
 				url: jsLIB.rootDir+"rules/meuAprendizado.php",
 				data: { MethodName : 'getMasterRules', data : parameter },
@@ -49,8 +47,6 @@ $(document).ready(function(){
 	});
     
 	jsLIB.ajaxCall({
-		waiting : false,
-		async: true,
 		type: "GET",
 		url: jsLIB.rootDir+"rules/meuAprendizado.php",
 		data: { MethodName : 'getGraphData' },

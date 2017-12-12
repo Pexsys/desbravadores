@@ -1,6 +1,5 @@
 function sendBarCode( parameter, cbSuccess, cbError ) {
 	jsLIB.ajaxCall({
-		waiting : false,
 		async: false,
 		url: jsLIB.rootDir+'rules/readdata.php',
 		data: { MethodName : 'barcode', data : parameter },

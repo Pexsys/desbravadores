@@ -10,7 +10,6 @@ $(document).ready(function(){
 function agendaConsulta() {
 	jsLIB.ajaxCall({
 		waiting : true,
-		async: true,
 		type: "GET",
 		url: jsLIB.rootDir+"rules/agenda.php",
 		data: { MethodName : 'agendaConsulta', data : { ano: $("#cmANO").val() } },

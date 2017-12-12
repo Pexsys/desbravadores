@@ -22,7 +22,7 @@ $(document).ready(function(){
 				infoEmpty: "0 encontrados"
 			},
 			ajax: {
-				type	: "POST",
+				type	: "GET",
 				url	: jsLIB.rootDir+"rules/aprendizadoHist.php",
 				data	: function (d) {
 						d.MethodName = "getAprHist",
@@ -113,8 +113,6 @@ $(document).ready(function(){
 							ids: tmp
 						};
 						jsLIB.ajaxCall({
-							waiting : false,
-							async: true,
 							url: jsLIB.rootDir+"rules/aprendizado.php",
 							data: { MethodName : 'delete', data : parameter },
 							callBackSucess: function(){

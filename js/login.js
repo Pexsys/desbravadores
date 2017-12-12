@@ -90,11 +90,17 @@ $(document).ready(function(){
 	});
 	
 	$("#myBtnLogout").click(function(){
-		jsLIB.ajaxCall( true, jsLIB.rootDir+'rules/login.php', { MethodName : 'logout' }, function(dt){
-			window.location.replace( jsLIB.rootDir+'index.php' );
+		jsLIB.ajaxCall({
+			waiting : true,
+			url: jsLIB.rootDir+'rules/login.php',
+			data: { MethodName : 'logout' },
+			callBackSucess: function(dt){
+				window.location.replace( jsLIB.rootDir+'index.php' );
+			}
 		});
 	});
 });
+
 function loginError( jqxhr, errorMessage ){
 	BootstrapDialog.show({
 		title: 'Erro',

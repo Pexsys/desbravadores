@@ -23,7 +23,7 @@ $(document).ready(function(){
 				infoEmpty: "0 encontrados"
 			},
 			ajax: {
-				type	: "POST",
+				type	: "GET",
 				url	: jsLIB.rootDir+"rules/comunicados.php",
 				data	: function (d) {
 						d.MethodName = "getComunicados",
@@ -75,7 +75,6 @@ $(document).ready(function(){
 	
 	$('#btnCiente').on('click', function(){
 		jsLIB.ajaxCall({
-			waiting : false,
 			async: false,
 			url: jsLIB.rootDir+"rules/comunicados.php",
 			data: { MethodName : 'fSetRead', data : { id : $(this).attr("comunic-id") } },
@@ -93,7 +92,6 @@ function populateComunicado( data ) {
 	$("#btnCiente").visible(false);
 	jsLIB.ajaxCall({
 		waiting : true,
-		async: true,
 		type: "GET",
 		url: jsLIB.rootDir+"rules/comunicados.php",
 		data: { MethodName : 'fComunicado', data : { id : data.id } },
