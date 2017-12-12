@@ -58,7 +58,7 @@
 						<li><a data-toggle="tab" href="#Outros">Outros</a></li>
 						<li id="abaResponsavel" style="display:none"><a data-toggle="tab" href="#Resp">Respons&aacute;vel</a></li>
 					</ul>
-					<hr/>
+					<hr style="margin:10px"/>
 					<div class="row">
 						<div class="form-group col-xs-2">
 							<label for="membroID" class="control-label">C&oacute;digo</label>
@@ -69,7 +69,7 @@
 							<input type="text" name="nmCompleto" id="nmCompleto" field="cad_pessoa-nm" class="form-control input-sm" placeholder="Nome Completo" style="text-transform: uppercase"/>
 						</div>
 					</div>
-					<hr/>
+					<hr style="margin:1px"/>
 					<div class="row">
 						<div class="tab-content">
 							<div id="Pessoal" class="col-lg-12 tab-pane fade">
