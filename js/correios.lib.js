@@ -3,6 +3,6 @@ jsLIB.consultaCEP = function( objParam ){
 		type: "GET", 
 		url: jsLIB.rootDir+'rules/consultaECT.php',
 		data: { MethodName : 'consultaCEP', data : { cep: objParam.value } },
-		callBackSucess: objParam.success
+		success: objParam.success
 	});
 }

@@ -3,7 +3,7 @@ function showDetailEspec( objDetail, parameters ){
 		type: "GET",
 		url: jsLIB.rootDir+"rules/painelAprendizado.php",
 		data: { MethodName : 'getEspec', data : parameters },
-		callBackSucess: function(espec){
+		success: function(espec){
 			if (espec.detail){
 				$(objDetail).html(espec.detail);
 			}
@@ -16,7 +16,7 @@ function showDetailEspecPeople( objDetail, parameters ){
 		type: "GET",
 		url: jsLIB.rootDir+"rules/painelAprendizado.php",
 		data: { MethodName : 'getEspecPeople', data : parameters },
-		callBackSucess: function(espec){
+		success: function(espec){
 			if (espec.people){
 				$(objDetail).html(espec.people);
 			}
@@ -29,7 +29,7 @@ function showDetailClass( objDetail, parameters ){
 		type: "GET",
 		url: jsLIB.rootDir+"rules/painelAprendizado.php",
 		data: { MethodName : 'getClasses', data : parameters },
-		callBackSucess: function(classes){
+		success: function(classes){
 			if (classes.detail){
 				$(objDetail).html(classes.detail);
 			}
@@ -42,7 +42,7 @@ function showDetailClassReq( objDetail, parameters ){
 		type: "GET",
 		url: jsLIB.rootDir+"rules/painelAprendizado.php",
 		data: { MethodName : 'getPendentes', data : parameters },
-		callBackSucess: function(detail){
+		success: function(detail){
 			if (detail.pend){
 				$(objDetail).html(detail.pend);
 			}

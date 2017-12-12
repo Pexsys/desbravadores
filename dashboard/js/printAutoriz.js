@@ -76,7 +76,7 @@ $(document).ready(function(){
 		type: "GET",
 		url: jsLIB.rootDir+"rules/saidas.php",
 		data: { MethodName : 'getNames' },
-		callBackSucess: function(saidas){
+		success: function(saidas){
 			if (saidas.names && saidas.names.length){
 				jsLIB.populateOptions( $("#nmMembro"), saidas.names );
 				$("#outrasAutoriz").show();

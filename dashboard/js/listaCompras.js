@@ -116,7 +116,7 @@ $(document).ready(function(){
 				jsLIB.ajaxCall({
 					url: jsLIB.rootDir+"rules/listaCompras.php",
 					data: { MethodName : 'setAttr', data : parameters },
-					callBackSucess: function(data){
+					success: function(data){
 						if (field == 'fg_entregue' && value == 'S' && !$("#fgCompra").prop('checked') ){
 							$("#fgCompra").prop('checked', true).triggerHandler('change');
 						} else if (field == 'fg_compra' && value == 'N' && $("#fgEntregue").prop('checked') ){
@@ -161,7 +161,7 @@ $(document).ready(function(){
 				waiting: true,
 				url: jsLIB.rootDir+"rules/listaCompras.php",
 				data: { MethodName : 'addCompras', data : parameter },
-				callBackSucess: function(data){
+				success: function(data){
 					dataTable.ajax.reload();
 					$("#listaModal").modal('hide');
 				}
@@ -197,7 +197,7 @@ $(document).ready(function(){
 							waiting: true,
 							url: jsLIB.rootDir+"rules/listaCompras.php",
 							data: { MethodName : 'process' },
-							callBackSucess: function(data){
+							success: function(data){
 								dataTable.ajax.reload();
 								dialogRef.close();
 							}
@@ -249,7 +249,7 @@ $(document).ready(function(){
 			async: false,
 			url: jsLIB.rootDir+"rules/listaCompras.php",
 			data: { MethodName : 'getData', data : parameter },
-			callBackSucess: function(data){
+			success: function(data){
 				jsLIB.populateOptions( $("#cmTipo"), data.tipos );
 				jsLIB.populateOptions( $("#cmNome"), data.nomes );
 			}
@@ -272,7 +272,7 @@ $(document).ready(function(){
 			type: "GET",
 			url: jsLIB.rootDir+"rules/listaCompras.php",
 			data: { MethodName : 'getData', data : parameter },
-			callBackSucess: function(data){
+			success: function(data){
 				jsLIB.populateOptions( $("#cmNome"), data.nomes );
 			}
 		});
@@ -289,7 +289,7 @@ $(document).ready(function(){
 			type: "GET",
 			url: jsLIB.rootDir+"rules/listaCompras.php",
 			data: { MethodName : 'getAttr', data : { id: $(this).attr("id-item") } },
-			callBackSucess: function(data){
+			success: function(data){
 				formPopulated = false;
 				jsLIB.populateForm( $("#controleForm"), data.attr );
 				$("#comprasModal").modal();
@@ -320,7 +320,7 @@ $(document).ready(function(){
 				type: "GET",
 				url: jsLIB.rootDir+"rules/listaCompras.php",
 				data: { MethodName : 'getData', data : parameter },
-				callBackSucess: function(data){
+				success: function(data){
 					jsLIB.populateOptions( $("#cmItem"), data.itens );
 				}
 			});
@@ -377,7 +377,7 @@ $(document).ready(function(){
 							type: "GET",
 							url: jsLIB.rootDir+"rules/listaCompras.php",
 							data: { MethodName : 'distribuirEstoque' },
-							callBackSucess: function(data){
+							success: function(data){
 								dataTable.ajax.reload( function(){
 									dialogRef.close();
 								});
@@ -427,7 +427,7 @@ $(document).ready(function(){
 							waiting: true,
 							url: jsLIB.rootDir+"rules/listaCompras.php",
 							data: { MethodName : 'delete', data : parameter },
-							callBackSucess: function(){
+							success: function(){
 								dataTable.ajax.reload(function(){
 									dialogRef.close();
 								});
@@ -495,7 +495,7 @@ function ruleBtnEdit( force ){
 				type: "GET",
 				url: jsLIB.rootDir+"rules/listaCompras.php",
 				data: { MethodName : 'getAttrPerm', data : { id: selected } },
-				callBackSucess: function(data){
+				success: function(data){
 					if (!data || !data.edit){
 						selected = "";
 					}

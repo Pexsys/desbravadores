@@ -4,7 +4,7 @@ $(document).ready(function(){
 		type: "GET",
 		url: jsLIB.rootDir+"rules/painelAprendizadoUnidade.php",
 		data: { MethodName : 'getGraphData' },
-		callBackSucess: function(data){
+		success: function(data){
 			if (data.cls){
 				var optionBar = {
 					series: {

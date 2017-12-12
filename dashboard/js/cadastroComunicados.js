@@ -187,7 +187,7 @@ $(document).ready(function(){
 							waiting : true,
 							url: jsLIB.rootDir+"rules/comunicados.php",
 							data: { MethodName : 'fComunicado', data : parameter },
-							callBackSucess: function(){
+							success: function(){
 								comDataTable.ajax.reload();
 								dialogRef.close();
 								$("#comModal").modal('hide');
@@ -273,7 +273,7 @@ function populateComunicado( comunicadoID ) {
 		type: "GET",
 		url: jsLIB.rootDir+"rules/comunicados.php",
 		data: { MethodName : 'fComunicado', data : { id : comunicadoID } },
-		callBackSucess: function(cm){
+		success: function(cm){
 			jsLIB.populateForm( $("#cadComForm"), cm.comunicado );
 			valuePendOrig = cm.comunicado.fg_pend;
 			valuePend = jsLIB.getValueFromField( $("#fgPend") );
@@ -292,7 +292,7 @@ function updateComunicado(){
 		waiting : true,
 		url: jsLIB.rootDir+"rules/comunicados.php",
 		data: { MethodName : 'fComunicado', data : parameter },
-		callBackSucess: function(cm){
+		success: function(cm){
 			$("#comID").val(cm.id);
 			valuePendOrig = cm.so;
 			valuePend = jsLIB.getValueFromField( $("#fgPend") );

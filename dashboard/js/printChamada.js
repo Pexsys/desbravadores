@@ -14,7 +14,7 @@ $(document).ready(function(){
 		type: "GET",
 		url: jsLIB.rootDir+"rules/printChamada.php",
 		data: { MethodName : 'getDomains' },
-		callBackSucess: function(mb){
+		success: function(mb){
 			if (mb){
 				jsLIB.populateOptions( $("#cbMeses"), mb.meses );
 				jsLIB.populateOptions( $("#cbUnidades"), mb.unidade );

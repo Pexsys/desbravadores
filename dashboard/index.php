@@ -24,7 +24,7 @@ fHeaderDashboard();
 				type: "GET",
 				url: jsLIB.rootDir+'rules/login.php',
 				data: { MethodName : 'logout' },
-				callBackSucess: function( data, jqxhr ) {
+				success: function( data, jqxhr ) {
 					window.location.replace( jsLIB.rootDir+'index.php')
 				}
 			});

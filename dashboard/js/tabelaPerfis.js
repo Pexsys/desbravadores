@@ -76,7 +76,7 @@ $(document).ready(function(){
 				async: false,
 				url: jsLIB.rootDir+"rules/tabelaPerfis.php",
 				data: { MethodName : 'addPerfil', data : parameter },
-				callBackSucess: function(data){
+				success: function(data){
 					dataTable.ajax.reload( function(){
 						$("#listaModal").modal('hide');
 					});

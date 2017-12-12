@@ -86,7 +86,7 @@ $(document).ready(function(){
 			type: 'GET',
 			url: jsLIB.rootDir+'rules/capas.php',
 			data: { MethodName : 'getName', data : parameter },
-			callBackSucess: function(data){
+			success: function(data){
 				if ( data.ok == true ) {
 					$("#nmMembro").val(data.nome);
 					$("#id").val(data.id);

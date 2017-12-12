@@ -95,7 +95,7 @@ $(document).ready(function(){
 			jsLIB.ajaxCall({
 				url: jsLIB.rootDir+"rules/cadastroEstoque.php",
 				data: { MethodName : 'setEstoque', data : parameter },
-				callBackSucess: function(dt){
+				success: function(dt){
 					dataTable.ajax.reload( function(){
 						if (save != "add"){
 							$("#listaModal").modal('hide');
@@ -139,7 +139,7 @@ $(document).ready(function(){
 			type: "GET",
 			url: jsLIB.rootDir+"rules/cadastroEstoque.php",
 			data: { MethodName : 'getItem', data : { id: matID } },
-			callBackSucess: function(es){
+			success: function(es){
 				if (es){
 					save = "edit";
 					
@@ -168,7 +168,7 @@ function populateTipos(){
 		type: "GET",
 		url: jsLIB.rootDir+"rules/listaCompras.php",
 		data: { MethodName : 'getData', data : parameter },
-		callBackSucess: function(cg){
+		success: function(cg){
 			jsLIB.populateOptions( $("#cmTipo"), cg.tipos );
 		}
 	});
@@ -183,7 +183,7 @@ function populateItens(tp){
 		type: "GET",
 		url: jsLIB.rootDir+"rules/listaCompras.php",
 		data: { MethodName : 'getData', data : parameter },
-		callBackSucess: function(cg){
+		success: function(cg){
 			jsLIB.populateOptions( $("#cmItem"), cg.itens );
 		}
 	});

@@ -129,7 +129,7 @@ $(document).ready(function(){
 		type: "GET",
 		url: jsLIB.rootDir+"rules/painelAprendizado.php",
 		data: { MethodName : 'getGraphData' },
-		callBackSucess: function(data){
+		success: function(data){
 			if (data.clsP){
 				$.plot("#phGhaphP", data.clsP, optionBarP );
 			}

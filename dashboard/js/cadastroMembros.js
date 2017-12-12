@@ -295,7 +295,7 @@ $(document).ready(function(){
 								async: false,
 								url: jsLIB.rootDir+"rules/membros.php",
 								data: { MethodName : 'insertMember', data : parameters },
-								callBackSucess: function(mb){
+								success: function(mb){
 									if (mb.result == true){
 										populateMember(mb);
 									}
@@ -314,7 +314,7 @@ $(document).ready(function(){
 							type: "GET",
 							url: jsLIB.rootDir+"rules/membros.php",
 							data: { MethodName : 'verificaResp', data : parameters },
-							callBackSucess: function(rs){
+							success: function(rs){
 								formPopulated = false;
 								jsLIB.populateForm( $("#Resp"), rs);
 								formPopulated = true;
@@ -331,7 +331,7 @@ $(document).ready(function(){
 						jsLIB.ajaxCall({
 							url: jsLIB.rootDir+"rules/membros.php",
 							data: { MethodName : 'updateMember', data : parameters },
-							callBackSucess: function(mb){
+							success: function(mb){
 								//tratamento de dependencias
 								if (field == "cad_pessoa-tp_sexo"){
 									populateUnidade(membroID);
@@ -452,7 +452,7 @@ function populateUnidade(membroID) {
 		type: "GET",
 		url: jsLIB.rootDir+"rules/membros.php",
 		data: { MethodName : 'getUnidades', data : { id : membroID } },
-		callBackSucess: function(un){
+		success: function(un){
 			jsLIB.populateOptions( $("#cmUnidade"), un );
 			$("#cmUnidade").val(value).change();
 			formPopulated = true;
@@ -468,7 +468,7 @@ function populateCargos(membroID) {
 		type: "GET",
 		url: jsLIB.rootDir+"rules/membros.php",
 		data: { MethodName : 'getCargos', data : { id : membroID } },
-		callBackSucess: function(){
+		success: function(){
 			jsLIB.populateOptions( $("#cmCargo"), cg );
 			$("#cmCargo").val(value).change();
 		
@@ -478,7 +478,7 @@ function populateCargos(membroID) {
 					type: "GET",
 					url: jsLIB.rootDir+"rules/membros.php",
 					data: { MethodName : 'getCargos', data : { id : membroID, tp : true } },
-					callBackSucess: function(cg){
+					success: function(cg){
 						jsLIB.populateOptions( $("#cmCargo2"), cg );
 					}
 				});
