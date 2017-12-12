@@ -74,14 +74,14 @@ $(document).ready(function(){
 				waiting : true,
 				url: jsLIB.rootDir+'rules/login.php',
 				data: { MethodName : 'login', data : parameter },
-				callBackSucess: function(data){
+				success: function(data){
 					if ( data.login == true ) {
 						window.location.replace(data.page);
 					} else {
 						loginError();
 					}
 				},
-				callBackError: loginError 
+				error: loginError 
 			});
 		});
 	
@@ -94,7 +94,7 @@ $(document).ready(function(){
 			waiting : true,
 			url: jsLIB.rootDir+'rules/login.php',
 			data: { MethodName : 'logout' },
-			callBackSucess: function(dt){
+			success: function(dt){
 				window.location.replace( jsLIB.rootDir+'index.php' );
 			}
 		});

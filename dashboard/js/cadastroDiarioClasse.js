@@ -199,7 +199,7 @@ $(document).ready(function(){
 							waiting : true,
 							url: jsLIB.rootDir+"rules/diarioClasse.php",
 							data: { MethodName : 'fRegistro', data : parameter },
-							callBackSucess: function(){
+							success: function(){
 								refreshAndButtons();
 								dialogRef.close();
 								$("#diaModal").modal('hide');
@@ -361,7 +361,7 @@ function populateRegistro( diarioID ) {
 		type: "GET",
 		url: jsLIB.rootDir+"rules/diarioClasse.php",
 		data: { MethodName : 'fRegistro', data : { id : diarioID } },
-		callBackSucess: function(oc){
+		success: function(oc){
 			jsLIB.populateOptions( $("#cmClasse"), oc.classe );
 			jsLIB.populateOptions( $("#cmReq"), oc.req );
 			jsLIB.populateForm( $("#cadRegForm"), oc.diario );
@@ -385,7 +385,7 @@ function populateMembers(){
 		type: "GET",
 		url: jsLIB.rootDir+"rules/diarioClasse.php",
 		data: { MethodName : 'fGetMembros' },
-		callBackSucess: function(oc){
+		success: function(oc){
 			jsLIB.populateOptions( $("#cmName"), oc.nomes );
 		}
 	});
@@ -399,7 +399,7 @@ function populateReqs(){
 		type: "GET",
 		url: jsLIB.rootDir+"rules/diarioClasse.php",
 		data: { MethodName : 'fGetCompl', data : parameter },
-		callBackSucess: function(cm){
+		success: function(cm){
 			jsLIB.populateOptions( $("#cmReq"), cm.req );
 			$("#seqID").val(cm.sq);
 		}
@@ -415,7 +415,7 @@ function updateRegistro(){
 		waiting: true,
 		url: jsLIB.rootDir+"rules/diarioClasse.php",
 		data: { MethodName : 'fRegistro', data : parameter },
-		callBackSucess: function(oc){
+		success: function(oc){
 			$("#regID").val(oc.id);
 			valuePendOrig = oc.so;
 			valuePend = jsLIB.getValueFromField( $("#fgPend") );

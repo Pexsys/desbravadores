@@ -286,7 +286,7 @@ $(document).ready(function(){
 							waiting : true,
 							url: jsLIB.rootDir+"rules/saidas.php",
 							data: { MethodName : 'fSaida', data : parameter },
-							callBackSucess: function(data){
+							success: function(data){
 								saidaDataTable.ajax.reload( function(){
 									dialogRef.close();
 									$("#saidasModal").modal('hide');
@@ -382,7 +382,7 @@ function populateMembers(){
 		type: "GET",
 		url: jsLIB.rootDir+"rules/saidas.php",
 		data: { MethodName : 'getMembrosFilter', data : parameters },
-		callBackSucess: function(mb){
+		success: function(mb){
 			jsLIB.populateOptions( $("#cbParticip"), mb.membros );
 			if ( mb.filter && mb.filter.length > 0 ) {
 				$("#cbParticip").selectpicker('deselectAll');
@@ -399,7 +399,7 @@ function populateSaida( saidaID ) {
 		type: "GET",
 		url: jsLIB.rootDir+"rules/saidas.php",
 		data: { MethodName : 'fSaida', data : { id : saidaID } },
-		callBackSucess: function(sd){
+		success: function(sd){
 			jsLIB.populateForm( $("#cadSaidasForm"), sd.saida );
 			jsLIB.populateOptions( $("#cbParticip"), sd.membros );
 			var filterArray = $.grep(sd.membros, function(e){ return e.pt == 'S'; });
@@ -419,7 +419,7 @@ function updateSaida(){
 		waiting : true,
 		url: jsLIB.rootDir+"rules/saidas.php",
 		data: { MethodName : 'fSaida', data : parameter },
-		callBackSucess: function(sd){
+		success: function(sd){
 			$("#saidaID").val(sd.id);
 			buttons();
 			saidaDataTable.ajax.reload();	

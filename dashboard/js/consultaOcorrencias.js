@@ -76,7 +76,7 @@ $(document).ready(function(){
 			waiting : true,
 			url: jsLIB.rootDir+"rules/ocorrencias.php",
 			data: { MethodName : 'fSetRead', data : { id : $(this).attr("ocorr-id") } },
-			callBackSucess: function(data){
+			success: function(data){
 				ocoDataTable.ajax.reload( function(){
 					$("#ocoModal").modal('hide');
 					updateNotifications();					
@@ -93,7 +93,7 @@ function populateOcorrencias( data ) {
 		type: "GET",
 		url: jsLIB.rootDir+"rules/ocorrencias.php",
 		data: { MethodName : 'fOcorrencia', data : { id : data.id, nomes : 'N' } },
-		callBackSucess: function(cm){
+		success: function(cm){
 			if (cm.ocorrencia){
 				$("#ocorrenciaTitle").html("<b>Ocorr&ecirc;ncia #"+cm.ocorrencia.cd+" - Data:"+moment.unix(cm.ocorrencia.dh/1000).format("DD/MM/YYYY")+" - Inserido por:&nbsp;"+cm.ocorrencia.owner+"</b>");
 				$("#ocorrenciaBody").html(cm.ocorrencia.txt);

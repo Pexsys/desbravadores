@@ -13,7 +13,7 @@ function agendaConsulta() {
 		type: "GET",
 		url: jsLIB.rootDir+"rules/agenda.php",
 		data: { MethodName : 'agendaConsulta', data : { ano: $("#cmANO").val() } },
-		callBackSucess: function(dts){
+		success: function(dts){
 			if (dts.years){
 				jsLIB.populateOptions( $("#cmANO"), dts.years );
 			}

@@ -76,7 +76,7 @@ $(document).ready(function(){
 				async: false,
 				url: jsLIB.rootDir+"rules/tabelaFuncoes.php",
 				data: { MethodName : 'addFuncao', data : parameter },
-				callBackSucess: function(data){
+				success: function(data){
 					dataTable.ajax.reload( function(){
 						$("#listaModal").modal('hide');
 					});		

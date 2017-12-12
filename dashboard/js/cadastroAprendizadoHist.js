@@ -115,7 +115,7 @@ $(document).ready(function(){
 						jsLIB.ajaxCall({
 							url: jsLIB.rootDir+"rules/aprendizado.php",
 							data: { MethodName : 'delete', data : parameter },
-							callBackSucess: function(){
+							success: function(){
 								dialogRef.close();
 								dataTable.ajax.reload();
 							}

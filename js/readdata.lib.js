@@ -3,7 +3,7 @@ function sendBarCode( parameter, cbSuccess, cbError ) {
 		async: false,
 		url: jsLIB.rootDir+'rules/readdata.php',
 		data: { MethodName : 'barcode', data : parameter },
-		callBackSucess: function( data, jqxhr ) {
+		success: function( data, jqxhr ) {
 			if ( data.logged == true ) {
 				if (typeof(cbSuccess) == "function") {
 					cbSuccess(data,jqxhr);
@@ -17,7 +17,7 @@ function sendBarCode( parameter, cbSuccess, cbError ) {
 				msgScanBarError(jqxhr, data.result);
 			}
 		},
-		callBackError: msgScanBarError
+		error: msgScanBarError
 	});
 }
 

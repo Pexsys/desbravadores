@@ -119,7 +119,7 @@ $(document).ready(function(){
 		type: 'GET',
 		url: jsLIB.rootDir+'rules/capas.php',
 		data: { MethodName : 'getNames' },
-		callBackSucess: function(capas){
+		success: function(capas){
 			if (capas.names){
 				jsLIB.populateOptions( $("#nmMembro"), capas.names );
 			}

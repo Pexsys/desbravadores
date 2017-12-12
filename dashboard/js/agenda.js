@@ -85,7 +85,7 @@ $(document).ready(function(){
 					type: "GET",
 					url: jsLIB.rootDir+"rules/agenda.php",
 					data: { MethodName : 'events', data : { id : e.id } },
-					callBackSucess: function(ev){
+					success: function(ev){
 						jsLIB.populateForm( $('#myCalendarForm'), ev.result[0].info );
 					}
 				});
@@ -245,7 +245,7 @@ $(document).ready(function(){
 							waiting : true,
 							url: jsLIB.rootDir+"rules/agenda.php",
 							data: { MethodName : 'fEvent', data : parameter },
-							callBackSucess: function(){
+							success: function(){
 								dialogRef.close();
 								closeAndRefresh();
 							}
@@ -266,7 +266,7 @@ function updateEventDB(){
 		waiting : true,
 		url: jsLIB.rootDir+"rules/agenda.php",
 		data: { MethodName : 'fEvent', data : parameter },
-		callBackSucess: function(){
+		success: function(){
 			dialogRef.close();
 			closeAndRefresh();
 		}

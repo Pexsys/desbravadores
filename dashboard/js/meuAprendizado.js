@@ -15,7 +15,7 @@ $(document).ready(function(){
 				type: "GET",
 				url: jsLIB.rootDir+"rules/meuAprendizado.php",
 				data: { MethodName : 'getMasterRules', data : parameter },
-				callBackSucess: function(data){
+				success: function(data){
 					BootstrapDialog.show({
 						title: data.title,
 						message: data.message,
@@ -50,7 +50,7 @@ $(document).ready(function(){
 		type: "GET",
 		url: jsLIB.rootDir+"rules/meuAprendizado.php",
 		data: { MethodName : 'getGraphData' },
-		callBackSucess: function(data){
+		success: function(data){
 			datasets = data;
 			if (data.checkbox){
 				$("#divGraph").show(true);

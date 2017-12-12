@@ -112,7 +112,7 @@ $(document).ready(function(){
 					type: "GET",
 					url: jsLIB.rootDir+"rules/printTags.php",
 					data: { MethodName : 'getClasse', data : parameters },
-					callBackSucess: function(data){
+					success: function(data){
 						jsLIB.populateOptions( $("#cbAprend"), data );
 					}
 				});
@@ -309,7 +309,7 @@ function modalDelete(sAct,sMsg){
 					jsLIB.ajaxCall({
 						url: jsLIB.rootDir+"rules/printTags.php",
 						data: { MethodName : 'delete', data : parameter },
-						callBackSucess: function(data){
+						success: function(data){
 							dialogRef.close();
 							refreshAndButtons();
 						}
@@ -344,7 +344,7 @@ function populateFilters(){
 		type: "GET",
 		url: jsLIB.rootDir+"rules/printTags.php",
 		data: { MethodName : 'getMembrosFilter', data : parameters },
-		callBackSucess: function(data){
+		success: function(data){
 			if ( data.filter && data.filter.length > 0 ) {
 				$("#cbNomes").selectpicker('deselectAll');
 				$("#cbNomes").selectpicker('val', data.filter);
@@ -363,7 +363,7 @@ function populateMembers( tpDialog ) {
 		type: "GET",
 		url: jsLIB.rootDir+"rules/printTags.php",
 		data: { MethodName : 'getData', data : parameters },
-		callBackSucess: function(data){
+		success: function(data){
 			if (tpDialog == 'A') {
 				jsLIB.populateOptions( $("#cbTags"), data.tags );
 				jsLIB.populateOptions( $("#cbNomes"), data.membros );
@@ -384,7 +384,7 @@ function update(){
 	jsLIB.ajaxCall({
 		url: jsLIB.rootDir+"rules/printTags.php",
 		data: { MethodName : 'addTags', data : parameter },
-		callBackSucess: function(data){
+		success: function(data){
 			refreshAndButtons();
 		}
 	});

@@ -188,24 +188,22 @@ var jsLIB = {
 			type		: (objParam.type !== undefined ? objParam.type : 'POST'),
 			data		: objParam.data,
 			dataType	: 'json',
-			
-			success	: function( data, textStatus, jqxhr ) {
+			success		: ( data, textStatus, jqxhr ) => {
 				if (objParam.waiting === true){
 					jsLIB.modalWaiting(false);
 				}
-				if ( typeof( objParam.callBackSucess ) == 'function' ) {
-					objParam.callBackSucess( data, jqxhr );
-				} else if ( objParam.callBackSucess === undefined ) {
+				if ( typeof( objParam.success ) == 'function' ) {
+					objParam.success( data, jqxhr );
+				} else if ( objParam.success === undefined ) {
 					retorno = data;
 				}
 			},
-			
-			error	: function( jqxhr, textStatus, errorMessage ) {
+			error	: ( jqxhr, textStatus, message ) => {
 				if (objParam.waiting === true){
 					jsLIB.modalWaiting(false);
 				}
-				if ( typeof( objParam.callBackError ) == 'function' ) {
-					objParam.callBackError( jqxhr, errorMessage );
+				if ( typeof( objParam.error ) == 'function' ) {
+					objParam.error( jqxhr, message );
 				}
 			}               
 		});
@@ -459,7 +457,7 @@ var jsFilter = {
 				type: "GET",
 				url: jsLIB.rootDir+"rules/addFilter.php",
 				data: { MethodName : 'addFilter', data : { type : value, desc : label } },
-				callBackSucess: function(flt){
+				success: function(flt){
 					if ( flt.result ) {
 						$("#divFilters").append(flt.obj);
 						$("#optFilter"+value).selectpicker();

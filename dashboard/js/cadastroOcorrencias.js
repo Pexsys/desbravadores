@@ -209,7 +209,7 @@ $(document).ready(function(){
 							waiting : true,
 							url: jsLIB.rootDir+"rules/ocorrencias.php",
 							data: { MethodName : 'fOcorrencia', data : parameter },
-							callBackSucess: function(dt){
+							success: function(dt){
 								refreshAndButtons();
 								dialogRef.close();
 								$("#ocoModal").modal('hide');
@@ -370,7 +370,7 @@ function populateOcorrencia( ocorrenciaID ) {
 		type: "GET",
 		url: jsLIB.rootDir+"rules/ocorrencias.php",
 		data: { MethodName : 'fOcorrencia', data : { id : ocorrenciaID } },
-		callBackSucess: function(oc){
+		success: function(oc){
 			jsLIB.populateOptions( $("#cmNome"), oc.nomes );
 			jsLIB.populateForm( $("#cadOcoForm"), oc.ocorrencia );
 			valuePendOrig = oc.ocorrencia.fg_pend;
@@ -392,7 +392,7 @@ function populateMembers(){
 		type: "GET",
 		url: jsLIB.rootDir+"rules/ocorrencias.php",
 		data: { MethodName : 'fGetMembros' },
-		callBackSucess: function(oc){
+		success: function(oc){
 			jsLIB.populateOptions( $("#cmName"), oc.nomes );
 		}
 	});
@@ -406,7 +406,7 @@ function updateOcorrencia(){
 	jsLIB.ajaxCall({
 		url: jsLIB.rootDir+"rules/ocorrencias.php",
 		data: { MethodName : 'fOcorrencia', data : parameter },
-		callBackSucess: function(oc){
+		success: function(oc){
 			$("#ocoID").val(oc.id);
 			valuePendOrig = oc.so;
 			valuePend = jsLIB.getValueFromField( $("#fgPend") );

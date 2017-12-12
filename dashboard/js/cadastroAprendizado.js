@@ -207,7 +207,7 @@ $(document).ready(function(){
 							waiting : true,
 							url: jsLIB.rootDir+"rules/aprendizado.php",
 							data: { MethodName : 'delete', data : parameter },
-							callBackSucess: function(){
+							success: function(){
 								dialogRef.close();
 								closeAndRefresh();
 							}
@@ -321,7 +321,7 @@ function populateData(){
 		type: "GET",
 		url: jsLIB.rootDir+"rules/aprendizado.php",
 		data: { MethodName : 'getData' },
-		callBackSucess: function(cg){
+		success: function(cg){
 			jsLIB.populateOptions( $("#cmNome"), cg.nomes );
 			jsLIB.populateOptions( $("#cmClasse"), cg.classe );
 			jsLIB.populateOptions( $("#cmIdent"), cg.tags );

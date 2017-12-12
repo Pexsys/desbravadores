@@ -78,7 +78,7 @@ $(document).ready(function(){
 			async: false,
 			url: jsLIB.rootDir+"rules/comunicados.php",
 			data: { MethodName : 'fSetRead', data : { id : $(this).attr("comunic-id") } },
-			callBackSucess: function(data){
+			success: function(data){
 				comDataTable.ajax.reload( function(){
 					$("#comModal").modal('hide');
 					updateNotifications();					
@@ -95,7 +95,7 @@ function populateComunicado( data ) {
 		type: "GET",
 		url: jsLIB.rootDir+"rules/comunicados.php",
 		data: { MethodName : 'fComunicado', data : { id : data.id } },
-		callBackSucess: function(cm){
+		success: function(cm){
 			if (cm.comunicado){
 				$("#comunicadoTitle").html("<b>Comunicado&nbsp;#"+cm.comunicado.cd+"&nbsp;&nbsp;&nbsp;[&nbsp;"+moment.unix(cm.comunicado.dh/1000).format("DD/MM/YYYY")+"&nbsp;]</b>");
 				$("#comunicadoBody").html(cm.comunicado.txt);

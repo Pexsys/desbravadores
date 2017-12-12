@@ -187,7 +187,7 @@ function update(){
 	jsLIB.ajaxCall({
 		url: jsLIB.rootDir+"rules/acompanhamento.php",
 		data: { MethodName : 'setRequisito', data : parameter },
-		callBackSucess: function(){
+		success: function(){
 			$("#divResultado").empty().hide();
 			$("#cdBar").val('').change().focus();
 			$('#btnGravar').visible(false);
