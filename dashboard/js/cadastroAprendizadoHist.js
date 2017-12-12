@@ -22,7 +22,7 @@ $(document).ready(function(){
 				infoEmpty: "0 encontrados"
 			},
 			ajax: {
-				type	: "POST",
+				type	: "GET",
 				url	: jsLIB.rootDir+"rules/aprendizadoHist.php",
 				data	: function (d) {
 						d.MethodName = "getAprHist",
@@ -112,9 +112,13 @@ $(document).ready(function(){
 						var parameter = {
 							ids: tmp
 						};
-						jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/aprendizado.php", { MethodName : 'delete', data : parameter },function(){
-							dialogRef.close();
-							dataTable.ajax.reload();
+						jsLIB.ajaxCall({
+							url: jsLIB.rootDir+"rules/aprendizado.php",
+							data: { MethodName : 'delete', data : parameter },
+							callBackSucess: function(){
+								dialogRef.close();
+								dataTable.ajax.reload();
+							}
 						});
 					}
 				}

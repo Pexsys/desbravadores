@@ -177,20 +177,20 @@ var jsLIB = {
 		}
 	},
 	
-	ajaxCallNew : function( objParam ) {
+	ajaxCall : function( objParam ) {
 		var retorno = undefined;
-		if (objParam.waiting !== false){
+		if (objParam.waiting === true){
 			jsLIB.modalWaiting(true);
 		}
 		$.ajax({
-			url		: objParam.url,
-			async	: (objParam.async !== undefined ? objParam.async : true),
+			url			: objParam.url,
+			async		: (objParam.async !== undefined ? objParam.async : true),
 			type		: (objParam.type !== undefined ? objParam.type : 'POST'),
 			data		: objParam.data,
 			dataType	: 'json',
 			
 			success	: function( data, textStatus, jqxhr ) {
-				if (objParam.waiting !== false){
+				if (objParam.waiting === true){
 					jsLIB.modalWaiting(false);
 				}
 				if ( typeof( objParam.callBackSucess ) == 'function' ) {
@@ -201,7 +201,7 @@ var jsLIB = {
 			},
 			
 			error	: function( jqxhr, textStatus, errorMessage ) {
-				if (objParam.waiting !== false){
+				if (objParam.waiting === true){
 					jsLIB.modalWaiting(false);
 				}
 				if ( typeof( objParam.callBackError ) == 'function' ) {
@@ -210,56 +210,6 @@ var jsLIB = {
 			}               
 		});
 		return retorno;
-	},
-		
-	ajaxCall : function( pasync, url, data, callBackSucess, callBackError ) {
-		return this.ajaxCallNew({
-			waiting : true,
-			async: pasync,
-			url: url,
-			data: data,
-			callBackSucess: callBackSucess,
-			callBackError: callBackError 
-		});
-		/*
-		var retorno;
-		if (pasync === false) {
-			jsLIB.modalWaiting(true);
-		} else if (!pasync) {
-			pasync = false;
-		}
-		$.ajax({
-			url		: url,
-			async	: pasync,
-			type		: 'post',
-			data		: data,
-			dataType	: 'json',
-			
-			success	: function( data, textStatus, jqxhr ) {
-				if (!pasync) {
-					jsLIB.modalWaiting(false);
-				}
-				if ( typeof( callBackSucess ) == 'function' ) {
-					callBackSucess( data, jqxhr );
-				} else if ( callBackSucess === undefined ) {
-					retorno = data;
-				}
-			},
-			
-			error	: function( jqxhr, textStatus, errorMessage ) {
-				if (!pasync) {
-					jsLIB.modalWaiting(false);
-				}
-				if ( typeof( callBackError ) == 'function' ) {
-					callBackError( jqxhr, errorMessage );
-				}
-			}               
-		});
-		if (!pasync) {
-			jsLIB.modalWaiting(false);
-		}
-		return retorno;
-		*/
 	},
 		
 	getJSONFields : function( frm ) {
@@ -503,13 +453,20 @@ var jsFilter = {
 		var value = obj.val();
 
 		if (value != ""){
-			jsLIB.ajaxCall( undefined, jsLIB.rootDir+"rules/addFilter.php", { MethodName : 'addFilter', data : { type : value, desc : label } }, function(flt){
-				if ( flt.result ) {
-					$("#divFilters").append(flt.obj);
-					$("#optFilter"+value).selectpicker();
-					$("#addFilter option[value='"+value+"']").remove();
-					$("#addFilter").selectpicker('refresh');
-					$("#applyFilter").show();
+			jsLIB.ajaxCall({
+				waiting : false,
+				async: false,
+				type: "GET",
+				url: jsLIB.rootDir+"rules/addFilter.php",
+				data: { MethodName : 'addFilter', data : { type : value, desc : label } },
+				callBackSucess: function(flt){
+					if ( flt.result ) {
+						$("#divFilters").append(flt.obj);
+						$("#optFilter"+value).selectpicker();
+						$("#addFilter option[value='"+value+"']").remove();
+						$("#addFilter").selectpicker('refresh');
+						$("#applyFilter").show();
+					}
 				}
 			});
 		}

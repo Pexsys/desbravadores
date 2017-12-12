@@ -22,7 +22,7 @@ $(document).ready(function(){
 			infoEmpty: "0 encontrados"
 		},
 		ajax: {
-			type	: "POST",
+			type	: "GET",
 			url	: jsLIB.rootDir+"rules/acompanhamento.php",
 			data	: function (d) {
 					d.MethodName = "getData",
@@ -184,10 +184,14 @@ function update(){
 	var parameter = {
 		frm: jsLIB.getJSONFields( $('#cadAcompForm') )
 	};
-	jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/acompanhamento.php", { MethodName : 'setRequisito', data : parameter }, function(){
-		$("#divResultado").empty().hide();
-		$("#cdBar").val('').change().focus();
-		$('#btnGravar').visible(false);
-		dataTable.ajax.reload();
+	jsLIB.ajaxCall({
+		url: jsLIB.rootDir+"rules/acompanhamento.php",
+		data: { MethodName : 'setRequisito', data : parameter },
+		callBackSucess: function(){
+			$("#divResultado").empty().hide();
+			$("#cdBar").val('').change().focus();
+			$('#btnGravar').visible(false);
+			dataTable.ajax.reload();
+		}
 	});
 }

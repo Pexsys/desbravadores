@@ -19,8 +19,15 @@ fHeaderDashboard();
 <script language="javascript">
 	$(document).ready(function(){
 		$("#myBtnLogout").click(function(){
-			jsLIB.ajaxCall( false, jsLIB.rootDir+'rules/login.php', { MethodName : 'logout' } );
-			window.location.replace( jsLIB.rootDir+'index.php');
+			jsLIB.ajaxCall({
+				waiting : true,
+				type: "GET",
+				url: jsLIB.rootDir+'rules/login.php',
+				data: { MethodName : 'logout' },
+				callBackSucess: function( data, jqxhr ) {
+					window.location.replace( jsLIB.rootDir+'index.php')
+				}
+			});
 		});
 	});	
 </script>

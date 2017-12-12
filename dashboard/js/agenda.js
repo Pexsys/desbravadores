@@ -81,8 +81,13 @@ $(document).ready(function(){
 			if (!addEvent) {
 				closeCollapseAll();
 				$('#btnDelete').show();
-				jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/agenda.php", { MethodName : 'events', data : { id : e.id } }, function(ev){
-					jsLIB.populateForm( $('#myCalendarForm'), ev.result[0].info );
+				jsLIB.ajaxCall({
+					type: "GET",
+					url: jsLIB.rootDir+"rules/agenda.php",
+					data: { MethodName : 'events', data : { id : e.id } },
+					callBackSucess: function(ev){
+						jsLIB.populateForm( $('#myCalendarForm'), ev.result[0].info );
+					}
 				});
 				return 'Evento';
 			}
@@ -93,7 +98,11 @@ $(document).ready(function(){
 				from: pFrom.toDateTime(),
 				to: pTo.toDateTime()
 			};
-			var retorno = jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/agenda.php", { MethodName : 'events', data : parameter });
+			var retorno = jsLIB.ajaxCall({
+				type: "GET",
+				url: jsLIB.rootDir+"rules/agenda.php",
+				data: { MethodName : 'events', data : parameter }
+			});
 			return retorno.result;
 		},
 		tmpl_path				: jsLIB.rootDir+"dashboard/tmpls/",
@@ -232,9 +241,14 @@ $(document).ready(function(){
 							id: $('#eventID').val(),
 							op: "DELETE"
 						};
-						jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/agenda.php", { MethodName : 'fEvent', data : parameter }, function(){
-							dialogRef.close();
-							closeAndRefresh();
+						jsLIB.ajaxCall({
+							waiting : true,
+							url: jsLIB.rootDir+"rules/agenda.php",
+							data: { MethodName : 'fEvent', data : parameter },
+							callBackSucess: function(){
+								dialogRef.close();
+								closeAndRefresh();
+							}
 						});
 					}
 				}
@@ -248,7 +262,15 @@ function updateEventDB(){
 		op: "UPDATE",
 		frm: jsLIB.getJSONFields( $('#myCalendarForm') )
 	};
-	jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/agenda.php", { MethodName : 'fEvent', data : parameter } );
+	jsLIB.ajaxCall({
+		waiting : true,
+		url: jsLIB.rootDir+"rules/agenda.php",
+		data: { MethodName : 'fEvent', data : parameter },
+		callBackSucess: function(){
+			dialogRef.close();
+			closeAndRefresh();
+		}
+	});
 }
 
 function closeAndRefresh(){

@@ -24,7 +24,7 @@ $(document).ready(function(){
 			infoEmpty: "0 encontrados"
 		},
 		ajax: {
-			type	: "POST",
+			type	: "GET",
 			url	: jsLIB.rootDir+"rules/diarioClasse.php",
 			data	: function (d) {
 					d.MethodName = "getListaDiario",
@@ -195,10 +195,15 @@ $(document).ready(function(){
 							id: $('#regID').val(),
 							op: "DELETE"
 						};
-						jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/diarioClasse.php", { MethodName : 'fRegistro', data : parameter }, function(){
-							refreshAndButtons();
-							dialogRef.close();
-							$("#diaModal").modal('hide');
+						jsLIB.ajaxCall({
+							waiting : true,
+							url: jsLIB.rootDir+"rules/diarioClasse.php",
+							data: { MethodName : 'fRegistro', data : parameter },
+							callBackSucess: function(){
+								refreshAndButtons();
+								dialogRef.close();
+								$("#diaModal").modal('hide');
+							}
 						});
 					}
 				}
@@ -352,15 +357,20 @@ function rulefields(){
 
 function populateRegistro( diarioID ) {
 	formPopulated = false;
-	jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/diarioClasse.php", { MethodName : 'fRegistro', data : { id : diarioID } }, function(oc){
-		jsLIB.populateOptions( $("#cmClasse"), oc.classe );
-		jsLIB.populateOptions( $("#cmReq"), oc.req );
-		jsLIB.populateForm( $("#cadRegForm"), oc.diario );
-		valuePendOrig = oc.diario.fg_pend;
-		valuePend = jsLIB.getValueFromField( $("#fgPend") );
-		rulefields();
-		buttons();
-		formPopulated = true;
+	jsLIB.ajaxCall({
+		type: "GET",
+		url: jsLIB.rootDir+"rules/diarioClasse.php",
+		data: { MethodName : 'fRegistro', data : { id : diarioID } },
+		callBackSucess: function(oc){
+			jsLIB.populateOptions( $("#cmClasse"), oc.classe );
+			jsLIB.populateOptions( $("#cmReq"), oc.req );
+			jsLIB.populateForm( $("#cadRegForm"), oc.diario );
+			valuePendOrig = oc.diario.fg_pend;
+			valuePend = jsLIB.getValueFromField( $("#fgPend") );
+			rulefields();
+			buttons();
+			formPopulated = true;
+		}
 	});
 }
 
@@ -371,8 +381,13 @@ function refreshAndButtons(){
 }
 
 function populateMembers(){
-	jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/diarioClasse.php", { MethodName : 'fGetMembros' }, function(oc){
-		jsLIB.populateOptions( $("#cmName"), oc.nomes );
+	jsLIB.ajaxCall({
+		type: "GET",
+		url: jsLIB.rootDir+"rules/diarioClasse.php",
+		data: { MethodName : 'fGetMembros' },
+		callBackSucess: function(oc){
+			jsLIB.populateOptions( $("#cmName"), oc.nomes );
+		}
 	});
 }
 
@@ -380,9 +395,14 @@ function populateReqs(){
 	var parameter = {
 		id_classe: $("#cmClasse").val()
 	};
-	jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/diarioClasse.php", { MethodName : 'fGetCompl', data : parameter }, function(cm){
-		jsLIB.populateOptions( $("#cmReq"), cm.req );
-		$("#seqID").val(cm.sq);
+	jsLIB.ajaxCall({
+		type: "GET",
+		url: jsLIB.rootDir+"rules/diarioClasse.php",
+		data: { MethodName : 'fGetCompl', data : parameter },
+		callBackSucess: function(cm){
+			jsLIB.populateOptions( $("#cmReq"), cm.req );
+			$("#seqID").val(cm.sq);
+		}
 	});
 }
 
@@ -391,12 +411,17 @@ function updateRegistro(){
 		op: "UPDATE",
 		frm: jsLIB.getJSONFields( $('#cadRegForm') )
 	};
-	jsLIB.ajaxCall( false, jsLIB.rootDir+"rules/diarioClasse.php", { MethodName : 'fRegistro', data : parameter }, function(oc){
-		$("#regID").val(oc.id);
-		valuePendOrig = oc.so;
-		valuePend = jsLIB.getValueFromField( $("#fgPend") );
-		buttons();
-		rulefields();
-		refreshAndButtons();
+	jsLIB.ajaxCall({
+		waiting: true,
+		url: jsLIB.rootDir+"rules/diarioClasse.php",
+		data: { MethodName : 'fRegistro', data : parameter },
+		callBackSucess: function(oc){
+			$("#regID").val(oc.id);
+			valuePendOrig = oc.so;
+			valuePend = jsLIB.getValueFromField( $("#fgPend") );
+			buttons();
+			rulefields();
+			refreshAndButtons();
+		}
 	});
 }

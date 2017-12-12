@@ -78,18 +78,23 @@ $(document).ready(function(){
 			resetNome();
 			return;
 		}
-
 		var parameter = {
 			codigo: $(this).val()
 		};
-		jsLIB.ajaxCall( false, jsLIB.rootDir+'rules/capas.php', { MethodName : 'getName', data : parameter }, function(data){
-			if ( data.ok == true ) {
-				$("#nmMembro").val(data.nome);
-				$("#id").val(data.id);
-			} else {
-				resetNome();
+		jsLIB.ajaxCall({
+			async: false,
+			type: 'GET',
+			url: jsLIB.rootDir+'rules/capas.php',
+			data: { MethodName : 'getName', data : parameter },
+			callBackSucess: function(data){
+				if ( data.ok == true ) {
+					$("#nmMembro").val(data.nome);
+					$("#id").val(data.id);
+				} else {
+					resetNome();
+				}
+				updateFields();
 			}
-			updateFields();
 		});
 	});
 	
@@ -115,7 +120,7 @@ $(document).ready(function(){
 				infoEmpty: "0 encontrados"
 			},
 			ajax: {
-				type	: "POST",
+				type	: "GET",
 				url		: jsLIB.rootDir+"rules/capas.php",
 				data	: function (d) {
 							d.MethodName = "getEspecialidades"

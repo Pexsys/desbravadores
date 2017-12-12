@@ -29,7 +29,7 @@ function responseMethod() {
 	// Getting the json data from the request
 	$response = '';
 	
-	$json_data = json_decode( json_encode( $_POST ) );
+	$json_data = json_decode( json_encode( empty($_POST) ? $_GET : $_POST ) );
 	// Checking if the data is null..
 	if ( is_null( $json_data ) ):
 		$response = json_encode( array( "status" => -1, "message" => "Insufficient paramaters!") );
@@ -92,7 +92,7 @@ endif;
 <script type="text/javascript" src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/formValidation/formValidation.min.js"></script>
 <script type="text/javascript" src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/formValidation/bootstrap.min.js"></script>
 <script type="text/javascript" src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/bootstrap-dialog.min.js"></script>
-<script type="text/javascript" src="<?php echo $GLOBALS['pattern']->getVD();?>js/functions.lib.js"></script>
+<script type="text/javascript" src="<?php echo $GLOBALS['pattern']->getVD();?>js/functions.lib.js<?php echo "?".microtime();?>"></script>
 <script>jsLIB.rootDir = '<?php echo $GLOBALS['pattern']->getVD();?>';</script>
 <?php
 if (isset($aJsFiles)):
