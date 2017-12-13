@@ -14,7 +14,7 @@ function getDomains(){
 		SELECT DISTINCT DATE_FORMAT(ce.DTHORA_EVENTO_INI,'%Y-%m') AS ANO_MES
 		  FROM CAD_EVENTOS ce
 	INNER JOIN RGR_CHAMADA rc ON (rc.ID_EVENTO = ce.ID_EVENTO)
-		 WHERE (ce.DTHORA_EVENTO_INI >= NOW() OR MONTH(ce.DTHORA_EVENTO_INI) = MONTH(NOW()))
+		 WHERE ce.DTHORA_EVENTO_INI >= NOW()
 		   AND rc.ID_TAB_RGR_CHAMADA IS NOT NULL
 	  ORDER BY 1
 	");
@@ -23,7 +23,7 @@ function getDomains(){
 		$ma[] = array( "value" => $l["ANO_MES"], "label" => $desc );
 	endforeach;
 	
-	$un = getDomainUnidades();
+	$un = getDomainUnidades(true);
 
 	return array( "result" => true, "meses" => $ma, "unidade" => $un );
 }

@@ -47,14 +47,15 @@ function getDomainEventos(){
 	return $arr;
 }
 
-function getDomainUnidades(){
+function getDomainUnidades($fAtivo = false){
 	$arr = array();
 	
-	$result = $GLOBALS['conn']->Execute("
-		SELECT ID, DS
-		  FROM TAB_UNIDADE
-		 WHERE FG_ATIVA = ?
-	  ORDER BY DS", array('S') );
+	$query = "SELECT ta.ID, ta.DS FROM TAB_UNIDADE ta WHERE ta.FG_ATIVA = 'S' ORDER BY ta.DS";
+	if ($fAtivo):
+		$query = "SELECT DISTINCT ca.ID_UNIDADE AS ID, ca.DS_UNIDADE AS DS FROM CON_ATIVOS ca ORDER BY ca.DS_UNIDADE";
+	endif;
+	
+	$result = $GLOBALS['conn']->Execute($query);
 	while (!$result->EOF):
 		$arr[] = array( 
 			"value"	=> $result->fields['ID'],

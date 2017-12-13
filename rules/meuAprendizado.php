@@ -111,6 +111,133 @@ function getGraphData() {
 	return $arr;
 }
 
+function getMestrados(){
+	session_start();
+	
+	fConnDB();
+	$arr = array();
+	$rg = $GLOBALS['conn']->Execute("
+	    SELECT DISTINCT car.ID
+	      FROM CON_APR_REQ car
+   LEFT JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = car.ID AND ah.ID_CAD_PESSOA = ?)
+	     WHERE car.CD_AREA_INTERNO = ?
+	  ORDER BY car.CD_ITEM_INTERNO
+	", array( $_SESSION['USER']['id_cad_pessoa'], "ME") );
+	foreach ($rg as $lg => $fg):
+		$arr[] = $fg["ID"];
+	endforeach;
+	return array( "id" => $_SESSION['USER']['id_cad_pessoa'], "rules" => $arr );
+}
+
+function getClassPainelMestrado( $pct ){
+	if ($pct < 25):
+		return array( "panel" => "panel-default", "title" => "type-default" );
+	elseif ($pct < 50):
+		return array( "panel" => "panel-info", "title" => "type-info" );
+	elseif ($pct < 75):
+		return array( "panel" => "panel-yellow", "title" => "type-warning" );
+	elseif ($pct < 100):
+		return array( "panel" => "panel-red", "title" => "type-danger" );
+	else:
+		return array( "panel" => "panel-success", "title" => "type-success" );
+	endif;
+}
+
+function getPainelMestrado( $parameters ){
+	return getPainelMestradoPessoa( $parameters["ruleID"], $parameters["id"] );
+}
+
+function getPainelMestradoPessoa( $ruleID, $membroID ){
+	fConnDB();
+	
+	//LE REGRAS
+	$rg = $GLOBALS['conn']->Execute("
+	 	SELECT DISTINCT car.CD_ITEM_INTERNO, car.CD_AREA_INTERNO, car.DS_ITEM, car.TP_ITEM, car.MIN_AREA, ah.DT_CONCLUSAO
+	 	  FROM CON_APR_REQ car
+	 LEFT JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = car.ID AND ah.ID_CAD_PESSOA = ?)
+	 	WHERE car.ID = ?
+	 ", array( $membroID, $ruleID ) );
+	$fg = $rg->fields;
+	 
+	$min = $fg["MIN_AREA"];
+	
+	$feitas = 0;
+	//LE PARAMETRO MINIMO E HISTORICO PARA A REGRA
+	$rR = $GLOBALS['conn']->Execute("
+		 SELECT tar.ID, tar.QT_MIN, COUNT(*) AS QT_FEITAS
+		 FROM TAB_APR_REQ tar
+		 INNER JOIN CON_APR_REQ car ON (car.ID_TAB_APR_REQ = tar.ID AND car.TP_ITEM_RQ = ?)
+		 INNER JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = car.ID_RQ AND ah.ID_CAD_PESSOA = ? AND ah.DT_CONCLUSAO IS NOT NULL)
+		 WHERE tar.ID_TAB_APREND = ?
+		 GROUP BY tar.ID, tar.QT_MIN
+	", array( "ES", $membroID, $ruleID ) );
+	foreach($rR as $lR => $fR):
+	 	$feitas += min( $fR["QT_MIN"], $fR["QT_FEITAS"] );
+	endforeach;
+	
+	$icon = getIconAprendizado( $fg["TP_ITEM"], $fg["CD_AREA_INTERNO"], "fa-4x" );
+	$area = getMacroArea( $fg["TP_ITEM"], $fg["CD_AREA_INTERNO"] );
+	$pct = floor( ( $feitas / $min ) * 100 );
+	
+	$advise = null;
+	$class = array( "panel" => "panel-default", "title" => "type-default" );
+	if ( $pct < 100 && !is_null($fg["DT_CONCLUSAO"]) ):
+	 	$class = array( "panel" => "panel-primary", "title" => "type-primary" );
+	 	$advise = "Concluído pela regra antiga. Atualize seu mestrado para a regra nova.";
+	else:
+	 	$class = getClassPainelMestrado( $pct );
+	endif;
+	$sizeClass = "col-md-6 col-xs-12 col-sm-6 col-lg-4 col-xl-3";
+	
+	$fields = array(
+		 "name" => "detail",
+		 "what" => "rules",
+		 "cl-bar" => $class["title"],
+	 	"id-rule" => $ruleID
+	);
+	
+	//VERIFICA REQUISITOS CUMPRIDOS, MAS AINDA NÃO FINALIZADO.
+	if ( $pct >= 100 ):
+		 $rI = $GLOBALS['conn']->Execute("
+			 SELECT DT_CONCLUSAO
+			 FROM APR_HISTORICO
+			 WHERE ID_CAD_PESSOA = ?
+			 AND ID_TAB_APREND = ?
+		 ", array( $membroID, $ruleID ) );
+		 if ($rI->EOF || is_null($rI->fields["DT_CONCLUSAO"]) ):
+		 	$class = array( "panel" => "panel-green", "title" => "type-success" );
+		 	$sizeClass = "col-md-4 col-xs-12 col-sm-6 col-xl-3 col-lg-4 blink";
+		
+			 //INSERE NOTIFICAÇOES SE NÃO EXISTIR.
+			 $GLOBALS['conn']->Execute("
+				 INSERT INTO LOG_MENSAGEM ( ID_ORIGEM, TP, ID_USUARIO, EMAIL, DH_GERA )
+				 SELECT ?, 'M', cu.ID_USUARIO, ca.EMAIL, NOW()
+				 FROM CON_ATIVOS ca
+				 INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID)
+				 WHERE ca.ID = ?
+				 AND NOT EXISTS (SELECT 1 FROM LOG_MENSAGEM WHERE ID_ORIGEM = ? AND TP = 'M' AND ID_USUARIO = cu.ID_USUARIO)
+			 ", array( $fg["ID"], $membroID, $ruleID ) );
+			
+			 $fields = array(
+				 "name" => "print",
+				 "what" => "capa",
+				 "id-pess" => $membroID,
+				 "cd-item" => $fg["CD_ITEM_INTERNO"]
+			 );
+		endif;
+	endif;
+	 
+	return fItemAprendizado(array(
+	 	 "classPanel" 	=> $class["panel"],
+		 "leftIcon"		=> $icon,
+		 "value"			=> $fg["CD_ITEM_INTERNO"],
+		 "title"			=> titleCase( substr($fg["DS_ITEM"],12), array(" "), array("ADRA", "em", "e") ) . "<br/>$feitas / $min",
+		 "strBL"			=> $advise,
+		 "fields"			=> $fields,
+		 "classSize"		=> $sizeClass
+	));
+}
+
 
 function getMasterRules( $parameters ) {
 	session_start();

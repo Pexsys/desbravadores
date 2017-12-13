@@ -36,17 +36,17 @@ $classGraphs = "col-md-12 col-sm-12 col-lg-12";
 if (!empty($like)):
 	$where .= " AND ta.CD_ITEM_INTERNO LIKE '$like%'";
 	if (fStrStartWith($cargo,"2-04")):
-	    $where .= " AND at.CD_CARGO NOT LIKE '2-%'";
+	    $where .= " AND ca.CD_CARGO NOT LIKE '2-%'";
 	endif;
 	$classGraphs = "col-md-12 col-sm-12 col-lg-6";
 endif;
 $result = $GLOBALS['conn']->Execute("
-	SELECT ta.ID_TAB_APREND, ta.TP_ITEM, ta.CD_ITEM_INTERNO, ta.CD_AREA_INTERNO, ta.CD_COR, ta.DS_ITEM, COUNT(*) as QTD
+	SELECT ah.ID_TAB_APREND, ta.TP_ITEM, ta.CD_ITEM_INTERNO, ta.CD_AREA_INTERNO, ta.CD_COR, ta.DS_ITEM, COUNT(*) as QTD
 	  FROM APR_HISTORICO ah
-	INNER JOIN CON_ATIVOS at ON (at.ID = ah.ID_CAD_PESSOA)
+	INNER JOIN CON_ATIVOS ca ON (ca.ID = ah.ID_CAD_PESSOA)
 	INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
 	 WHERE ah.DT_CONCLUSAO IS NULL $where
-	  GROUP BY ta.ID_TAB_APREND, ta.TP_ITEM, ta.CD_ITEM_INTERNO, ta.CD_AREA_INTERNO, ta.CD_COR, ta.DS_ITEM
+	  GROUP BY ah.ID_TAB_APREND, ta.TP_ITEM, ta.CD_ITEM_INTERNO, ta.CD_AREA_INTERNO, ta.CD_COR, ta.DS_ITEM
 ");
 if (!$result->EOF):
 	?>
@@ -63,7 +63,7 @@ if (!$result->EOF):
 				$color = (fStrStartWith($line["CD_ITEM_INTERNO"],"01-06") ? "#000000" : "#FFFFFF");
 				$style = "color:$color;background-color:$back";
 			endif;
-			fItemAprendizado(array(
+			echo fItemAprendizado(array(
 				"classPanel" => "panel-info",
 				"leftIcon" => $icon, 
 				"value" => $line["QTD"], 
@@ -92,28 +92,28 @@ endif;
 <?php
 $pendNome = $GLOBALS['conn']->Execute("
 	SELECT cap.ID_TAB_APREND, cap.CD_ITEM_INTERNO, cap.CD_REQ_INTERNO, cap.CD_AP_AREA, cap.DS_AP_AREA, cap.DS_ITEM, cap.DS, cap.CD_COR,
-	       at.NM
+	       ca.NM
 	FROM CON_APR_PESSOA cap
-	INNER JOIN CON_ATIVOS at ON (at.ID = cap.ID_CAD_PESSOA)
+	INNER JOIN CON_ATIVOS ca ON (ca.ID = cap.ID_CAD_PESSOA)
 	INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = cap.ID_TAB_APREND)
 	WHERE cap.TP_ITEM = 'CL'
 	AND YEAR(cap.DT_INICIO) = YEAR(NOW())
 	AND cap.DT_ASSINATURA IS NULL
 	AND cap.DT_CONCLUSAO IS NULL $where
-	ORDER BY cap.CD_ITEM_INTERNO, cap.CD_REQ_INTERNO, at.NM
+	ORDER BY cap.CD_ITEM_INTERNO, cap.CD_REQ_INTERNO, ca.NM
 ");
 /*
 $pendItens = $GLOBALS['conn']->Execute("
 	SELECT cap.ID_TAB_APREND, cap.CD_ITEM_INTERNO, cap.CD_REQ_INTERNO, cap.CD_AP_AREA, cap.DS_AP_AREA, cap.DS_ITEM, cap.DS, cap.CD_COR,
 			at.NM
 	FROM CON_APR_PESSOA cap
-	INNER JOIN CON_ATIVOS at ON (at.ID = cap.ID_CAD_PESSOA)
+	INNER JOIN CON_ATIVOS ca ON (ca.ID = cap.ID_CAD_PESSOA)
 	INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = cap.ID_TAB_APREND)
 	WHERE cap.TP_ITEM = 'CL'
 	AND YEAR(cap.DT_INICIO) = YEAR(NOW())
 	AND cap.DT_ASSINATURA IS NULL
 	AND cap.DT_CONCLUSAO IS NULL $where
-	ORDER BY cap.CD_ITEM_INTERNO, at.NM, cap.CD_REQ_INTERNO
+	ORDER BY cap.CD_ITEM_INTERNO, ca.NM, cap.CD_REQ_INTERNO
 ");
 */
 if (!$pendNome->EOF):
@@ -214,12 +214,12 @@ if (!$pendNome->EOF):
 </div>
 <?php endif;
 $result = $GLOBALS['conn']->Execute("
-	SELECT DISTINCT at.NM, at.ID
+	SELECT DISTINCT ca.NM, ca.ID
 	  FROM APR_HISTORICO ah
-	INNER JOIN CON_ATIVOS at ON (at.ID = ah.ID_CAD_PESSOA)
+	INNER JOIN CON_ATIVOS ca ON (ca.ID = ah.ID_CAD_PESSOA)
 	INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
 	 WHERE (ah.DT_INVESTIDURA IS NULL OR YEAR(ah.DT_INICIO) = YEAR(NOW())) $where
-	  ORDER BY at.NM
+	  ORDER BY ca.NM
 ");
 if (!$result->EOF):
 	echo "<div class=\"row\">";
