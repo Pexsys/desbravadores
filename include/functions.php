@@ -24,7 +24,7 @@ function zeroSizeID(){
 	return $_SESSION['USER']['sizeID'];
 }
 
-function responseMethod() {
+function responseMethod(){
     header('Content-type: application/json');
 	// Getting the json data from the request
 	$response = '';
@@ -119,33 +119,7 @@ function fConnDB(){
 }
 
 function fDescMes($cMes){
-	$cRet = "";
-	if ($cMes == "01"):
-		$cRet = "Janeiro";
-	elseif ($cMes == "02"):
-		$cRet = "Fevereiro";
-	elseif ($cMes == "03"):
-		$cRet = "Março";
-	elseif ($cMes == "04"):
-		$cRet = "Abril";
-	elseif ($cMes == "05"):
-		$cRet = "Maio";
-	elseif ($cMes == "06"):
-		$cRet = "Junho";
-	elseif ($cMes == "07"):
-		$cRet = "Julho";
-	elseif ($cMes == "08"):
-		$cRet = "Agosto";
-	elseif ($cMes == "09"):
-		$cRet = "Setembro";
-	elseif ($cMes == "10"):
-		$cRet = "Outubro";
-	elseif ($cMes == "11"):
-		$cRet = "Novembro";
-	elseif ($cMes == "12"):
-		$cRet = "Dezembro";
-	endif;
-	return $cRet;
+	return (array("Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro")[$cMes-1]);
 }
 
 function fStrZero($n,$q){
@@ -260,6 +234,14 @@ function fMontaCarrousel($relativePath,$extentions){
 			endif;
 		endif;
 	endif;
+}
+
+function insDocs(){
+	?>
+	<div class="col-md-6 col-sm-9 col-lg-4">
+	<?php fListDocumentos("docs/inscricoes/","<h4><i class=\"fa fa-fw fa-pencil\"></i>&nbsp;Inscri&ccedil;&otilde;es ".date('Y')."</h4>",".pdf", ( date("m") < 4 ? "panel-danger" : "panel-warning" ) ,"h4");?>
+    </div>
+<?php   
 }
 
 function fListDocumentos($relativePath,$title,$extentions,$classPanel,$tagItem){
@@ -490,37 +472,38 @@ function fItemAprendizado($aP) {
 	if (!isset($aP["classSize"])):
 		$aP["classSize"] = "col-md-6 col-xs-12 col-sm-6 col-lg-4 col-xl-3";
 	endif;
-	echo "<div class=\"".$aP["classSize"]."\"". (isset($aP["hint"]) ? " title=\"".$aP["hint"]."\"" : "") .">";
-	echo "<div class=\"panel ".$aP["classPanel"]."\"";
+	$str = "<div class=\"".$aP["classSize"]."\"". (isset($aP["hint"]) ? " title=\"".$aP["hint"]."\"" : "") .">";
+	$str .= "<div class=\"panel ".$aP["classPanel"]."\"";
 	if ( isset($aP["fields"]) ):
 		foreach ($aP["fields"] as $k => $i):
-		    echo " $k=\"$i\"";
+			$str .= " $k=\"$i\"";
 		endforeach;
 	endif;
-	echo "><div class=\"panel-heading\"";
+	$str .= "><div class=\"panel-heading\"";
 	$style = (isset($aP["style"]) && !is_null($aP["style"]) ? $aP["style"] : "");
 	if ( isset($aP["fields"]) ):
 		$style .= (empty($style) ? "" : ";")."cursor:pointer";
 	endif;
-	echo (empty($style) ? "" : "style=\"$style\"") . "><div class=\"row\">
+	$str .= (empty($style) ? "" : "style=\"$style\"") . "><div class=\"row\">
 				<div class=\"col-xs-3\"><i class=\"".$aP["leftIcon"]."\"></i></div>
 				<div class=\"col-xs-9 text-right\">
 					<div class=\"huge\">".$aP["value"]."</div>
 				</div>
 				<div class=\"col-xs-12 text-right\">".$aP["title"]."</div>
 			</div>";
-	echo "</div>";
+	$str .= "</div>";
 	if ( isset($aP["fields"]) ):
-		echo "<div id=\"detalhes\" class=\"panel-body panel-collapse collapse\"></div>";
+		$str .= "<div id=\"detalhes\" class=\"panel-body panel-collapse collapse\"></div>";
 	endif;
 	if ( isset($aP["strBL"]) || isset($aP["strBR"]) ):
-    	echo "<div class=\"panel-footer\">
+	$str .= "<div class=\"panel-footer\">
 				<span class=\"pull-left\">".$aP["strBL"]."</span>
 				<span class=\"pull-right\">".$aP["strBR"]."</span>
 				<div class=\"clearfix\"></div>
 			</div>";
     endif;
-	echo "</div></div>";
+    $str .= "</div></div>";
+    return $str;
 }
 
 function getFormsTipo(){

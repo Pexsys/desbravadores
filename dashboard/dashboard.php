@@ -59,10 +59,8 @@ function fDashBoard( $panelClass, $iconLeft, $query, $showZero, $titulo, $urlDet
 	</div>
 </div>
 <div class="row">
-	<div class="col-md-6 col-sm-9 col-lg-4">
-		<?php fListDocumentos("docs/inscricoes/","<h4><i class=\"fa fa-fw fa-pencil\"></i>Inscri&ccedil;&otilde;es 2017</h4>",".pdf","panel-danger","h4");?>
-	</div>
 	<?php
+		insDocs();
 		fDashBoard( "panel-red", "fa fa-thumbs-down fa-4x", 
 			"SELECT COUNT(*) AS qtd FROM (
 				SELECT 'NOME COMPLETO' AS INCONSIST FROM CON_ATIVOS WHERE LENGTH(NM)<=5

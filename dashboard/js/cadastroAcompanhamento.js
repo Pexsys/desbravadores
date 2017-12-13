@@ -1,6 +1,4 @@
 var dataTable = undefined;
-var dataTable = undefined;
-var dataTable = undefined;
 
 $(document).ready(function(){
 	$.fn.dataTable.moment( 'DD/MM/YYYY' );

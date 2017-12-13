@@ -12,12 +12,12 @@ if (empty($unidadeID)):
 	exit;
 endif;
 
-$where = "at.ID_UNIDADE = $unidadeID";
+$where = "ca.ID_UNIDADE = $unidadeID";
 $classGraphs = "col-md-12 col-sm-12 col-lg-6";
 
 $cargo = $result->fields['CD_CARGO'];
 if (!fStrStartWith($cargo,"2-07")):
-	$where .= " OR at.CD_CARGO LIKE '2-07%'";	
+	$where .= " OR ca.CD_CARGO LIKE '2-07%'";	
 	$classGraphs = "col-md-12 col-sm-12 col-lg-12";
 endif;
 $rc = $GLOBALS['conn']->Execute("
@@ -38,11 +38,11 @@ endif;
 <?php
 $result = $GLOBALS['conn']->Execute("
 	SELECT COUNT(*) as QTD
-	  FROM CON_ATIVOS at 
+	  FROM CON_ATIVOS ca 
 	 WHERE ($where)
 ");
 if (!$result->EOF):
-	fItemAprendizado(array(
+	echo fItemAprendizado(array(
 		"classPanel" => "panel-green",
 		"leftIcon" => "fa fa-child fa-4x", 
 		"value" => $result->fields["QTD"], 
@@ -52,12 +52,12 @@ if (!$result->EOF):
 endif;
 $result = $GLOBALS['conn']->Execute("
 	SELECT COUNT(*) as QTD
-	  FROM CON_ATIVOS at
+	  FROM CON_ATIVOS ca
 	 WHERE ($where) 
 	   AND at.DT_BAT IS NOT NULL
 ");
 if (!$result->EOF):
-	fItemAprendizado(array(
+	echo fItemAprendizado(array(
 		"classPanel" => "panel-primary",
 		"leftIcon" => "fa fa-thumbs-up fa-4x", 
 		"value" => $result->fields["QTD"], 
@@ -77,7 +77,7 @@ endif;
 $result = $GLOBALS['conn']->Execute("
 	SELECT ta.TP_ITEM, ta.CD_AREA_INTERNO, COUNT(*) as QTD
 	  FROM APR_HISTORICO ah
-	INNER JOIN CON_ATIVOS at ON (at.ID = ah.ID_CAD_PESSOA)
+	INNER JOIN CON_ATIVOS ca ON (ca.ID = ah.ID_CAD_PESSOA)
 	INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
 	 WHERE ah.DT_CONCLUSAO IS NULL AND ta.TP_ITEM = ?". (!empty($where)?" AND ($where)":"")." 
 	  GROUP BY ta.CD_AREA_INTERNO DESC
@@ -86,7 +86,7 @@ if (!$result->EOF):
 	foreach ($result as $k => $line):
 		$icon = getIconAprendizado( $line["TP_ITEM"], $line["CD_AREA_INTERNO"], "fa-4x" );
 		$area = getMacroArea( $line["TP_ITEM"], $line["CD_AREA_INTERNO"] );
-		fItemAprendizado(array(
+		echo fItemAprendizado(array(
 			"classPanel" => "panel-primary",
 			"leftIcon" => $icon, 
 			"value" => $line["QTD"], 
@@ -107,7 +107,7 @@ endif;
 $result = $GLOBALS['conn']->Execute("
 	SELECT ta.ID, ta.TP_ITEM, ta.CD_ITEM_INTERNO, ta.CD_AREA_INTERNO, ta.CD_COR, ta.DS_ITEM, COUNT(*) as QTD
 	  FROM APR_HISTORICO ah
-	INNER JOIN CON_ATIVOS at ON (at.ID = ah.ID_CAD_PESSOA)
+	INNER JOIN CON_ATIVOS ca ON (ca.ID = ah.ID_CAD_PESSOA)
 	INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
 	 WHERE ah.DT_CONCLUSAO IS NULL". (!empty($where)?" AND ($where)":"")." 
 	  GROUP BY ta.ID, ta.TP_ITEM, ta.CD_ITEM_INTERNO, ta.CD_AREA_INTERNO, ta.CD_COR, ta.DS_ITEM
@@ -125,7 +125,7 @@ if (!$result->EOF):
 			$style = "color:$color;background-color:$back";
 		endif;
 
-		fItemAprendizado(array(
+		echo fItemAprendizado(array(
 			"classPanel" => "panel-info",
 			"leftIcon" => $icon, 
 			"value" => $line["QTD"], 
@@ -156,12 +156,12 @@ endif;
 </div>
 <?php
 $result = $GLOBALS['conn']->Execute("
-	SELECT DISTINCT at.NM, at.ID
+	SELECT DISTINCT ca.NM, ca.ID
 	  FROM APR_HISTORICO ah
-	INNER JOIN CON_ATIVOS at ON (at.ID = ah.ID_CAD_PESSOA)
+	INNER JOIN CON_ATIVOS ca ON (ca.ID = ah.ID_CAD_PESSOA)
 	INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
 	  WHERE (ah.DT_INVESTIDURA IS NULL OR YEAR(ah.DT_INICIO) = YEAR(NOW()))". (!empty($where)?" AND ($where)":"")." 
-	  ORDER BY at.NM
+	  ORDER BY ca.NM
 ");
 if (!$result->EOF):
 	echo "<div class=\"row\">";

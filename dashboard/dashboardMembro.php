@@ -28,7 +28,7 @@ function drawBoxesArea($title,$result,$boxClass = NULL){
 				$icon = getIconAprendizado( $fields["TP_ITEM"], $fields["CD_AREA_INTERNO"], "fa-4x" );
 				$area = getMacroArea( $fields["TP_ITEM"], $fields["CD_AREA_INTERNO"] );
 				$class = (isset($boxClass) ? $boxClass : (empty($fields["BOX_CLASS"]) ? "panel-default" : $fields["BOX_CLASS"]));
-				fItemAprendizado(array(
+				echo fItemAprendizado(array(
 					"classPanel" => $class,
 					"leftIcon" => $icon, 
 					"value" => $value, 
@@ -83,7 +83,7 @@ if (!$result->EOF):
 
 			$icon = getIconAprendizado( $fields["TP"], "", "fa-4x" );
 			$area = getMacroArea( $fields["TP"], "" );
-			fItemAprendizado(array(
+			echo fItemAprendizado(array(
 				"classPanel" => "panel-red",
 				"leftIcon" => $icon, 
 				"value" => $area, 
@@ -129,7 +129,7 @@ if (!$result->EOF):
 
 			$icon = getIconAprendizado( $fields["TP"], "", "fa-4x" );
 			$area = getMacroArea( $fields["TP"], "" );
-			fItemAprendizado(array(
+			echo fItemAprendizado(array(
 				"classPanel" => "panel-warning",
 				"leftIcon" => $icon, 
 				"value" => $area, 
@@ -161,7 +161,7 @@ if (!$result->EOF):
 			$area = getMacroArea( $fields["TP_ITEM"], $fields["CD_AREA_INTERNO"] );
 			
 			if ($fields["TP_ITEM"] == "ES"):
-				fItemAprendizado(array(
+				echo fItemAprendizado(array(
 					"classPanel" => "panel-danger",
 					"leftIcon" => $icon, 
 					"value" => $fields["CD_ITEM_INTERNO"], 
@@ -188,7 +188,7 @@ if (!$result->EOF):
 				endif;
 				
 				$pct = floor( ( $qtd / $qtdReq ) * 100);
-				fItemAprendizado(array(
+				echo fItemAprendizado(array(
 					"classPanel" => getClass( $pct ),
 					"classSize" => "col-md-12 col-xs-12 col-sm-12 col-lg-6 col-xl-3",
 					"leftIcon" => $icon, 
@@ -294,7 +294,7 @@ if (!$matAnteriores->EOF || !$matAno->EOF):
 			
 					$icon = getIconAprendizado( $line["TP"], "", "fa-4x" );
 					$area = getMacroArea( $line["TP"], "" );
-					fItemAprendizado(array(
+					echo fItemAprendizado(array(
 						"leftIcon" => $icon, 
 						"value" => $area, 
 						"title" => titleCase( $ds, array(" "), array("OU", "COU", "APS") )

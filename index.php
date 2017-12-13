@@ -138,15 +138,6 @@ function about(){
 	</div>
 <?php
 }
-	
-
-function insDocs(){
-?>
-	<div class="col-md-4">
-	<?php fListDocumentos("docs/inscricoes/","<h4><i class=\"fa fa-fw fa-pencil\"></i>&nbsp;Inscri&ccedil;&otilde;es 2017</h4>",".pdf", ( date("m") < 4 ? "panel-danger" : "panel-warning" ) ,"h4");?>
-    </div>
-<?php   
-}
 ?>
 <body>
 

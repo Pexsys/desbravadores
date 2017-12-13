@@ -4,47 +4,7 @@ var previousPoint = null, previousLabel = null;
 
 $(document).ready(function(){
     
-    $("[name=detail]").on('click',function(){
-        var what = $(this).attr('what');
-        if (what == 'rules'){
-			var parameter = {
-				id : $(this).attr('id-rule')
-			};
-			
-			jsLIB.ajaxCall({
-				type: "GET",
-				url: jsLIB.rootDir+"rules/meuAprendizado.php",
-				data: { MethodName : 'getMasterRules', data : parameter },
-				success: function(data){
-					BootstrapDialog.show({
-						title: data.title,
-						message: data.message,
-						type: $(this).attr('cl-bar'),
-						size: BootstrapDialog.SIZE_WIDE,
-						draggable: true,
-						closable: true,
-						closeByBackdrop: true,
-						closeByKeyboard: true,
-						onshown: function(dialogRef){
-							mapPrint();
-						},
-						buttons: [
-							{ label: 'Fechar',
-								icon: 'glyphicon glyphicon-remove',
-								cssClass: 'btn-info',
-								autospin: true,
-								action: function(dialogRef){
-									dialogRef.enableButtons(false);
-									dialogRef.setClosable(false);
-									dialogRef.close();
-								}
-							}
-						]
-					});
-				}
-			});
-        }
-	});
+    $("[name=detail]").on('click',mapDetail);
     
 	jsLIB.ajaxCall({
 		type: "GET",
@@ -65,8 +25,73 @@ $(document).ready(function(){
 		}
 	});
 	
-	mapPrint();
+	jsLIB.ajaxCall({
+		type: "GET",
+		url: jsLIB.rootDir+"rules/meuAprendizado.php",
+		data: { MethodName : 'getMestrados' },
+		success: function(data){
+			var pessoaID = 
+			$.each(data.rules, (k,v) => {
+				var parameter = { id : data.id, ruleID : v };
+				$("#painelMestrados").append("<div id-rule=\""+v+"\"></div>");
+				
+				jsLIB.ajaxCall({
+					type: "GET",
+					url: jsLIB.rootDir+"rules/meuAprendizado.php",
+					data: { MethodName : 'getPainelMestrado', data : parameter },
+					success: function(data){
+						var obj = $(data);
+						obj.find("[name=detail]").on('click',mapDetail);
+						$("div[id-rule=\""+v+"\"]").replaceWith(obj);
+					}
+				})
+			});
+		}
+	});
+	
 });
+
+const mapDetail = function(){
+    var what = $(this).attr('what');
+    if (what == 'rules'){
+		var parameter = {
+			id : $(this).attr('id-rule')
+		};
+		
+		jsLIB.ajaxCall({
+			type: "GET",
+			url: jsLIB.rootDir+"rules/meuAprendizado.php",
+			data: { MethodName : 'getMasterRules', data : parameter },
+			success: (data) => {
+				BootstrapDialog.show({
+					title: data.title,
+					message: data.message,
+					type: $(this).attr('cl-bar'),
+					size: BootstrapDialog.SIZE_WIDE,
+					draggable: true,
+					closable: true,
+					closeByBackdrop: true,
+					closeByKeyboard: true,
+					onshown: function(dialogRef){
+						mapPrint();
+					},
+					buttons: [
+						{ label: 'Fechar',
+							icon: 'glyphicon glyphicon-remove',
+							cssClass: 'btn-info',
+							autospin: true,
+							action: function(dialogRef){
+								dialogRef.enableButtons(false);
+								dialogRef.setClosable(false);
+								dialogRef.close();
+							}
+						}
+					]
+				});
+			}
+		});
+    }
+}
 
 function mapPrint(){
 	$("[name=print]").unbind('click').on('click',function(){
