@@ -82,6 +82,9 @@ function marcaRequisito( $pessoaID, $itemID, $reqCD, $assDT ) {
 		
 		marcaRequisitoID( $assDT, $pessoaID, $uh["id"], $arr["idreq"] );
 	endif;
+
+	analiseHistoricoPessoa($pessoaID);
+	
 	return $arr;
 }
 

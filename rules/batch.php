@@ -68,8 +68,8 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
             //LE PARAMETRO MINIMO E HISTORICO PARA A REGRA
     	    $rR = $GLOBALS['conn']->Execute("
                     SELECT tar.ID, tar.QT_MIN, COUNT(*) AS QT_FEITAS
-                      FROM TAB_APR_REQ tar
-                INNER JOIN CON_APR_REQ car ON (car.ID_TAB_APR_REQ = tar.ID AND car.TP_ITEM_RQ = ?)
+                      FROM TAB_APR_ITEM tar
+                INNER JOIN CON_APR_REQ car ON (car.ID_TAB_APR_ITEM = tar.ID AND car.TP_ITEM_RQ = ?)
                 INNER JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = car.ID_RQ AND ah.ID_CAD_PESSOA = ? AND ah.DT_CONCLUSAO IS NOT NULL)
                      WHERE tar.ID_TAB_APREND = ?
                   GROUP BY tar.ID, tar.QT_MIN
@@ -139,8 +139,10 @@ foreach($result as $l => $fields):
 	$profile->deleteAllByUserID( $fields['ID_USUARIO'] );
 endforeach;
 
-//*******  SECRETARIA - REORGANIZACAO DA BASE DE COMPRAS EM 01/JANEIRO
+//*******  SECRETARIA - REORGANIZACAO DA BASE EM 01/JANEIRO
 if (date("m-d") == "01-01"):
+
+	//BASE DE COMPRAS
 	$GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.04-Reorganizando base de compras...')");
 	$result = $GLOBALS['conn']->Execute("
 		SELECT * 
@@ -168,6 +170,25 @@ if (date("m-d") == "01-01"):
 			$f["FG_COMPRA"],
 			$f["FG_ENTREGUE"],
 			$f["FG_PREVISAO"]
+		));
+	endforeach;
+
+	//REQUISITOS ASSINADOS DE ITENS AINDA NÃO CONCLUÍDOS
+	$GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.05-Reorganizando base de requisitos assinados...')");
+	$GLOBALS['conn']->Execute("DELETE FROM APR_PESSOA_REQ WHERE ID_HISTORICO IN (SELECT ID FROM APR_HISTORICO WHERE DT_CONCLUSAO IS NOT NULL)");
+	$result = $GLOBALS['conn']->Execute("SELECT * FROM APR_PESSOA_REQ ORDER BY ID_HISTORICO, ID_TAB_APR_ITEM");
+	$GLOBALS['conn']->Execute("TRUNCATE APR_PESSOA_REQ");
+	foreach($result as $l => $f):
+		$GLOBALS['conn']->Execute("
+			INSERT INTO APR_PESSOA_REQ(
+				ID_HISTORICO,
+				ID_TAB_APR_ITEM,
+				DT_ASSINATURA
+			) VALUES (?,?,?)
+		", array(
+			$f["ID_HISTORICO"],
+			$f["ID_TAB_APR_ITEM"],
+			$f["DT_ASSINATURA"]
 		));
 	endforeach;
 endif;

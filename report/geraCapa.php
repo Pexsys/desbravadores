@@ -208,8 +208,8 @@ class ESPCR extends TCPDF {
             //LE PARAMETRO MINIMO E HISTORICO PARA A REGRA
 	    	    $rR = $GLOBALS['conn']->Execute("
 	                    SELECT tar.ID, tar.QT_MIN, COUNT(*) AS QT_FEITAS
-	                      FROM TAB_APR_REQ tar
-	                INNER JOIN CON_APR_REQ car ON (car.ID_TAB_APR_REQ = tar.ID AND car.TP_ITEM_RQ = ?)
+	                      FROM TAB_APR_ITEM tar
+	                INNER JOIN CON_APR_REQ car ON (car.ID_TAB_APR_ITEM = tar.ID AND car.TP_ITEM_RQ = ?)
 	                INNER JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = car.ID_RQ AND ah.ID_CAD_PESSOA = ? AND ah.DT_INICIO IS NOT NULL)
 	                     WHERE tar.ID_TAB_APREND = ?
 	                  GROUP BY tar.ID, tar.QT_MIN
@@ -235,7 +235,7 @@ class ESPCR extends TCPDF {
 	                      FROM CON_APR_REQ car
 	                INNER JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = car.ID_RQ AND ah.ID_CAD_PESSOA = ? AND ah.DT_CONCLUSAO IS NOT NULL)
 	                INNER JOIN TAB_MATERIAIS tm ON (tm.ID_TAB_APREND = car.ID_RQ)
-	                     WHERE car.ID_TAB_APR_REQ = ?
+	                     WHERE car.ID_TAB_APR_ITEM = ?
 	            ORDER BY tm.NR_PG_ASS, car.CD_AREA_INTERNO_RQ, car.CD_ITEM_INTERNO_RQ 
 	            	", array( $idPessoa, $fR["ID"] ) );
 	        	    foreach($rS as $lS => $fS):

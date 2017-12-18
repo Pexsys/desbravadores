@@ -156,8 +156,8 @@ function delete( $parameters ) {
     		    WHERE ID_ORIGEM = ? AND TP = ? AND ID_USUARIO = (SELECT ID_USUARIO FROM CAD_USUARIOS WHERE ID_CAD_PESSOA = ?)
     		", array( $rs->fields["ID_TAB_APREND"], "M", $rs->fields["ID_CAD_PESSOA"] ) );
 		endif;
+		$GLOBALS['conn']->Execute("DELETE FROM APR_PESSOA_REQ WHERE ID_HISTORICO = ?", array($id) );
 		$GLOBALS['conn']->Execute("DELETE FROM APR_HISTORICO WHERE ID = ?", array($id) );
-		
 		
 	endforeach;
 	return array( "result" => true );
@@ -280,8 +280,8 @@ function setAprendizado( $parameters ) {
                     //LE PARAMETRO MINIMO E HISTORICO PARA A REGRA
             	    $rR = $GLOBALS['conn']->Execute("
                             SELECT tar.ID, tar.QT_MIN, COUNT(*) AS QT_FEITAS
-                              FROM TAB_APR_REQ tar
-                        INNER JOIN CON_APR_REQ car ON (car.ID_TAB_APR_REQ = tar.ID AND car.TP_ITEM_RQ = ?)
+                              FROM TAB_APR_ITEM tar
+                        INNER JOIN CON_APR_REQ car ON (car.ID_TAB_APR_ITEM = tar.ID AND car.TP_ITEM_RQ = ?)
                         INNER JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = car.ID_RQ AND ah.ID_CAD_PESSOA = ? AND ah.DT_CONCLUSAO IS NOT NULL)
                              WHERE tar.ID_TAB_APREND = ?
                           GROUP BY tar.ID, tar.QT_MIN
@@ -302,7 +302,8 @@ function setAprendizado( $parameters ) {
             endif;
 		    
 		    if ($deixa):
-			    updateHistorico( $idPessoa, $id, $paramDates, $compras );
+				updateHistorico( $idPessoa, $id, $paramDates, $compras );
+				analiseHistoricoPessoa($idPessoa);
 			endif;
 			
 			//INCLUI ITENS DE IDENTIFICACAO
