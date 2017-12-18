@@ -167,8 +167,8 @@ function updateHistorico( $barpessoaid, $barfnid, $paramDates, $compras = null )
 				//LE PARAMETRO MINIMO E HISTORICO PARA A REGRA
     	    		$rR = $GLOBALS['conn']->Execute("
                     SELECT tar.ID, tar.QT_MIN, COUNT(*) AS QT_FEITAS
-                      FROM TAB_APR_REQ tar
-                INNER JOIN CON_APR_REQ car ON (car.ID_TAB_APR_REQ = tar.ID AND car.TP_ITEM_RQ = ?)
+                      FROM TAB_APR_ITEM tar
+                INNER JOIN CON_APR_REQ car ON (car.ID_TAB_APR_ITEM = tar.ID AND car.TP_ITEM_RQ = ?)
                 INNER JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = car.ID_RQ AND ah.ID_CAD_PESSOA = ? AND ah.DT_CONCLUSAO IS NOT NULL)
                      WHERE tar.ID_TAB_APREND = ?
                   GROUP BY tar.ID, tar.QT_MIN
@@ -291,7 +291,7 @@ function analiseHistoricoPessoa($pessoaID){
 	
 	$res = $GLOBALS['conn']->Execute("
 		  SELECT ta.ID_TAB_APREND, ta.TP_ITEM, ta.CD_AREA_INTERNO, ta.CD_ITEM_INTERNO, ta.DS_ITEM, ta.DT_INICIO, 
-			 MAX(DT_ASSINATURA) AS DT_CONCLUSAO, COUNT(*) AS QT_REQ
+			 MAX(DT_ASSINATURA) AS DT_MAX_ASSINATURA, COUNT(*) AS QT_REQ
 			FROM CON_APR_PESSOA ta
 		   WHERE ta.ID_CAD_PESSOA = ?
 			 AND ta.DT_CONCLUSAO IS NULL
@@ -299,55 +299,62 @@ function analiseHistoricoPessoa($pessoaID){
 		ORDER BY ta.TP_ITEM, ta.CD_ITEM_INTERNO
 	", array( $pessoaID ) );
 
-	foreach ($res as $kes => $les):
-		$rc = $GLOBALS['conn']->Execute("
-			SELECT COUNT(*) AS QT_COMPL
-			  FROM CON_APR_PESSOA
-			 WHERE ID_CAD_PESSOA = ?
-			   AND ID_TAB_APREND = ?
-			   AND DT_ASSINATURA IS NOT NULL
-			   AND DT_CONCLUSAO IS NULL
-		", array( $pessoaID, $les["ID_TAB_APREND"] ) );
+	if ($res->EOF):
+		$GLOBALS['conn']->Execute("
+			DELETE FROM APR_PESSOA_REQ 
+			WHERE ID_HISTORICO IN (SELECT ID FROM APR_HISTORICO WHERE ID_CAD_PESSOA = ?)	
+		", array( $pessoaID ) );
+	else:
+		foreach ($res as $kes => $les):
+			$rc = $GLOBALS['conn']->Execute("
+				SELECT COUNT(*) AS QT_COMPL
+				FROM CON_APR_PESSOA
+				WHERE ID_CAD_PESSOA = ?
+				AND ID_TAB_APREND = ?
+				AND DT_ASSINATURA IS NOT NULL
+				AND DT_CONCLUSAO IS NULL
+			", array( $pessoaID, $les["ID_TAB_APREND"] ) );
 
-		if (!$rc->EOF):
-			$qtdCompl = $rc->fields["QT_COMPL"];
-			$reqok = ($qtdCompl >= $les["QT_REQ"]);
+			if (!$rc->EOF):
+				$qtdCompl = $rc->fields["QT_COMPL"];
+				$reqok = ($qtdCompl >= $les["QT_REQ"]);
 
-			$pq = $GLOBALS['conn']->Execute("
-				SELECT h.ID
-				  FROM APR_HISTORICO h
-				INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = h.ID_TAB_APREND)
-				 WHERE h.ID_CAD_PESSOA = ?
-				   AND ta.TP_ITEM = ?
-				   AND ta.CD_ITEM_INTERNO = ?
-				   AND h.DT_CONCLUSAO IS NULL
-			", array( $pessoaID, $les['TP_ITEM'], $les['CD_ITEM_INTERNO'] ) );
+				$pq = $GLOBALS['conn']->Execute("
+					SELECT h.ID
+					FROM APR_HISTORICO h
+					INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = h.ID_TAB_APREND)
+					WHERE h.ID_CAD_PESSOA = ?
+					AND ta.TP_ITEM = ?
+					AND ta.CD_ITEM_INTERNO = ?
+					AND h.DT_CONCLUSAO IS NULL
+				", array( $pessoaID, $les['TP_ITEM'], $les['CD_ITEM_INTERNO'] ) );
 
-			$op = "";
-			if ($reqok == true && !$pq->EOF):
-				$GLOBALS['conn']->Execute("
-					UPDATE APR_HISTORICO 
-					   SET DT_CONCLUSAO = ? 
-					 WHERE ID = ?
-				", array( $les['DT_CONCLUSAO'], $pq->fields['ID'] ) );
-				
-				$op .= ",UPDATED";
-				$alterados++;
-			else:
-				$op .= ",NOT UPDATED";
+				$op = "";
+				if ($reqok == true && !$pq->EOF):
+					$GLOBALS['conn']->Execute("
+						UPDATE APR_HISTORICO 
+						SET DT_CONCLUSAO = ? 
+						WHERE ID = ?
+					", array( $les['DT_MAX_ASSINATURA'], $pq->fields['ID'] ) );
+					
+					$op .= ",UPDATED";
+					$alterados++;
+				else:
+					$op .= ",NOT UPDATED";
+				endif;
+				if ( $reqok == true ):
+					$GLOBALS['conn']->Execute("
+						DELETE FROM APR_PESSOA_REQ 
+						WHERE ID_HISTORICO IN (SELECT ID FROM APR_HISTORICO WHERE ID_CAD_PESSOA = ? AND ID_TAB_APREND = ?)	
+					", array( $pessoaID, $les["ID_TAB_APREND"] ) );
+					
+					$op .= ",DELETED";
+					$deletados++;
+				endif;
+				$arr[] = "HISTORICO APR[".$les["ID_TAB_APREND"]."],PESSOA[$pessoaID],TOT[".$les["QT_REQ"]."],DONE[$qtdCompl]$op";
 			endif;
-			if ( $reqok == true ):
-				$GLOBALS['conn']->Execute("
-					DELETE FROM APR_PESSOA_REQ 
-					WHERE ID_APR_PESSOA IN (SELECT ID FROM APR_PESSOA WHERE ID_CAD_PESSOA = ? AND ID_TAB_APREND = ?)	
-				", array( $pessoaID, $les["ID_TAB_APREND"] ) );
-				
-				$op .= ",DELETED";
-				$deletados++;
-			endif;
-			$arr[] = "HISTORICO APR[".$les["ID_TAB_APREND"]."],PESSOA[$pessoaID],TOT[".$les["QT_REQ"]."],DONE[$qtdCompl]$op";
-		endif;
-	endforeach;
+		endforeach;
+	endif;
 	return array("del" => $deletados, "upd" => $alterados, "op" => $arr);
 }
 ?>
