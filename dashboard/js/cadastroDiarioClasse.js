@@ -158,6 +158,20 @@ $(document).ready(function(){
 							message: 'Selecione a Classe'
 						}
 					}
+				},
+				cmReq: {
+					validators: {
+						notEmpty: {
+							message: 'O Requisito não pode ficar em branco!'
+						}
+					}
+				},
+				cmRef: {
+					validators: {
+						notEmpty: {
+							message: 'Este Item não pode ficar em branco!'
+						}
+					}
 				}
 			}
 		})
@@ -257,6 +271,7 @@ $(document).ready(function(){
 	
 	$('#btnNovo').click(function(){
 		jsLIB.resetForm( $('#cadRegForm') );
+		$('#divReferencia').visible( false );
 		populateRegistro( $("#regID").val("Novo").val() );
 		buttons();
 		$("#diaModal").modal();
@@ -269,6 +284,19 @@ $(document).ready(function(){
 
 	$("#cmClasse").change(function(){
 		populateReqs();
+		buttons();
+	});
+
+	$("#cmReq").change(function(){
+		if (this.options.selectedIndex > 0){
+			$('#divReferencia').visible( this.options[this.options.selectedIndex].getAttribute('tp') == 'E' );
+			$("#cadRegForm").formValidation('revalidateField', "cmRef");
+			populateRefs();
+			buttons();
+		}
+	});
+
+	$("#cmRef").change(function(){
 		buttons();
 	});
 	
@@ -344,8 +372,15 @@ function ruleBotaoGerar( force ){
 }
 
 function buttons(){
-	$('#btnDel').visible( $("#regID").val() != "Novo" && valuePend == 'S' && valuePendOrig == 'S' );
-	$("#btnGravar").visible(valuePendOrig !== 'N' && $("#regDH").val() != '' && $("#cmClasse").val() != '');
+	$('#btnDel').visible( $("#regID").val() != "" && valuePend == 'S' && valuePendOrig == 'S' );
+	var ref = ( ($('#divReferencia:visible').is(":visible") && $("#cmRef").val() != '') || !$('#divReferencia:visible').is(":visible") ) ;
+	$("#btnGravar").visible(
+		valuePendOrig !== 'N' && 
+		$("#regDH").val() != '' && 
+		$("#cmClasse").val() != '' && 
+		$("#cmReq").val() != '' &&
+		ref
+	);
 }
 
 function rulefields(){
@@ -364,7 +399,7 @@ function populateRegistro( diarioID ) {
 		success: function(oc){
 			jsLIB.populateOptions( $("#cmClasse"), oc.classe );
 			jsLIB.populateOptions( $("#cmReq"), oc.req );
-			//jsLIB.populateOptions( $("#divReferencia"), oc.ref );
+			jsLIB.populateOptions( $("#cmRef"), oc.ref );
 			jsLIB.populateForm( $("#cadRegForm"), oc.diario );
 			valuePendOrig = oc.diario.fg_pend;
 			valuePend = jsLIB.getValueFromField( $("#fgPend") );
@@ -393,18 +428,23 @@ function populateMembers(){
 }
 
 function populateReqs(){
-	var parameter = {
-		id_classe: $("#cmClasse").val()
-	};
-	jsLIB.ajaxCall({
-		type: "GET",
-		url: jsLIB.rootDir+"rules/diarioClasse.php",
-		data: { MethodName : 'fGetCompl', data : parameter },
-		success: function(cm){
-			jsLIB.populateOptions( $("#cmReq"), cm.req );
-			$("#seqID").val(cm.sq);
-		}
-	});
+	var classeID = $("#cmClasse").val();
+	if (classeID){
+		jsLIB.ajaxCall({
+			type: "GET",
+			url: jsLIB.rootDir+"rules/diarioClasse.php",
+			data: { 
+				MethodName : 'fGetCompl', 
+				data : {
+					id_classe: classeID
+				}
+			},
+			success: function(cm){
+				jsLIB.populateOptions( $("#cmReq"), cm.req );
+				$("#seqID").val(cm.sq);
+			}
+		});
+	}
 }
 
 function populateRefs(){
@@ -414,9 +454,9 @@ function populateRefs(){
 	jsLIB.ajaxCall({
 		type: "GET",
 		url: jsLIB.rootDir+"rules/diarioClasse.php",
-		data: { MethodName : 'fGetRefs', data : parameter },
+		data: { MethodName : 'fGetRef', data : parameter },
 		success: function(cm){
-			jsLIB.populateOptions( $("#divReferencia"), cm.ref );
+			jsLIB.populateOptions( $("#cmRef"), cm );
 		}
 	});
 }

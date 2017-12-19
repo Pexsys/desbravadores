@@ -147,7 +147,6 @@ $.fn.selectpicker.defaults = {
 	selectAllText: 'Marcar Todos'
 };
 
-
 var jsLIB = {
 	rootDir : "/",
 	parameters : {},
@@ -337,7 +336,7 @@ var jsLIB = {
 		}
 		
 		objSelect.children().remove();
-		if ( !objSelect.hasClass("selectpicker") ) {
+		if ( !objSelect.hasClass("selectpicker") || objSelect.attr("add-none") == "true" ) {
 			 objSelect.append( $("<option></option>")
 				.attr("value","").text("(NENHUM)"));
 		}

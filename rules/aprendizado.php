@@ -333,7 +333,7 @@ function getData(){
 		$id = fStrZero($result->fields['ID'], $qtdZeros);
 		$arr["nomes"][] = array( 
 			"id" => $id,
-			"ds" => "$id ".($result->fields['NM'])
+			"ds" => "$id ".$result->fields['NM']
 		);
 		$result->MoveNext();
 	endwhile;
@@ -357,7 +357,7 @@ function getMerito(){
 	foreach ($result as $k => $line):
 		$arr[] = array( 
 			"id"	=> $line['ID'],
-			"ds"	=> ($line['DS_ITEM'])
+			"ds"	=> $line['DS_ITEM']
 		);
 	endforeach;
 	return $arr;
@@ -373,7 +373,7 @@ function getClasse(){
 	foreach ($result as $k => $line):
 		$arr[] = array( 
 			"id"	=> $line['ID'],
-			"ds"	=> ($line['DS_ITEM'])
+			"ds"	=> $line['DS_ITEM']
 		);
 	endforeach;
 	return $arr;
@@ -391,7 +391,7 @@ function getMestrado(){
 	foreach ($result as $k => $line):
 		$arr[] = array( 
 			"id"	=> $line['ID'],
-			"ds"	=> $line['CD_ITEM_INTERNO'] ." ". ($line['DS_ITEM'])
+			"ds"	=> $line['CD_ITEM_INTERNO'] ." ". $line['DS_ITEM']
 		);
 	endforeach;
 	return $arr;
@@ -409,7 +409,7 @@ function getEspecialidade(){
 	foreach ($result as $k => $line):
 		$arr[] = array( 
 			"id"	=> $line['ID'],
-			"ds"	=> $line['CD_ITEM_INTERNO'] ." ". ($line['DS_ITEM'])
+			"ds"	=> $line['CD_ITEM_INTERNO'] ." ". $line['DS_ITEM']
 		);
 	endforeach;
 	return $arr;
