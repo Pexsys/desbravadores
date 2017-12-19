@@ -64,8 +64,12 @@ $(document).ready(function(){
 			{	data: "ie",
 				width: "5%",
 				sortable: true,
-				render: function (data) {
-					return (data == "S" ? "SIM" : "N&Atilde;O" );
+				render: function (data, type, row) {
+					if (row.ip == 'S'){
+						return "";
+					} else {
+						return (data == "S" ? "SIM" : "N&Atilde;O" );
+					}
 				}
 			}
 		],
