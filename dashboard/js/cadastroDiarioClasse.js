@@ -364,6 +364,7 @@ function populateRegistro( diarioID ) {
 		success: function(oc){
 			jsLIB.populateOptions( $("#cmClasse"), oc.classe );
 			jsLIB.populateOptions( $("#cmReq"), oc.req );
+			//jsLIB.populateOptions( $("#divReferencia"), oc.ref );
 			jsLIB.populateForm( $("#cadRegForm"), oc.diario );
 			valuePendOrig = oc.diario.fg_pend;
 			valuePend = jsLIB.getValueFromField( $("#fgPend") );
@@ -402,6 +403,20 @@ function populateReqs(){
 		success: function(cm){
 			jsLIB.populateOptions( $("#cmReq"), cm.req );
 			$("#seqID").val(cm.sq);
+		}
+	});
+}
+
+function populateRefs(){
+	var parameter = {
+		id_req: $("#cmReq").val()
+	};
+	jsLIB.ajaxCall({
+		type: "GET",
+		url: jsLIB.rootDir+"rules/diarioClasse.php",
+		data: { MethodName : 'fGetRefs', data : parameter },
+		success: function(cm){
+			jsLIB.populateOptions( $("#divReferencia"), cm.ref );
 		}
 	});
 }

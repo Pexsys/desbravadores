@@ -81,6 +81,11 @@
 											<select field="id_req" name="cmReq" id="cmReq" opt-value="id" opt-label="ds" class="selectpicker form-control input-sm" data-live-search="true" data-container="body" data-width="100%"></select>
 										</div>
 									</div>
+									<div class="row" id="divReferencia" style="display:none">
+										<div class="form-group col-xs-12">
+											<select field="id_ref" name="cmRef" id="cmRef" opt-value="id" opt-label="ds" class="selectpicker form-control input-sm" data-live-search="true" data-container="body" data-width="100%"></select>
+										</div>
+									</div>
 									<div class="row">
 										<div class="form-group col-xs-12"><textarea field="txt" id="txt" type="wysiwyg" placeholder="Descrição"></textarea></div>
 									</div>
