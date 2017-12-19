@@ -107,11 +107,11 @@ class ESPCR extends TCPDF {
 		$this->Ln(130);
 		$this->SetTextColor(0,0,0);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'BI', 25);
-		$this->Cell(0, 0, "$nomeEsp", 0, false, 'C', false, false, 1, false, 'C', 'C');
+		$this->Cell(0, 0, $nomeEsp, 0, false, 'C', false, false, 1, false, 'C', 'C');
 
 		$this->Ln(5);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'I', 13);
-		$this->Cell(0, 0, "$codEsp - #$pgAss", 0, false, 'C');
+		$this->writeHTMLCell(0, 0, '', '', "<span>$codEsp - #$pgAss</span><span style=\"color:#888888\">&nbsp;[".$result->fields["ID"]."]</span>", 0, 0, 0, true, 'C', true);
 		
 		if (!empty($idPessoa)):
 			$barCODE = $GLOBALS['pattern']->getBars()->encode(array(
@@ -206,46 +206,46 @@ class ESPCR extends TCPDF {
 		    $arr = array();
 		    
             //LE PARAMETRO MINIMO E HISTORICO PARA A REGRA
-	    	    $rR = $GLOBALS['conn']->Execute("
-	                    SELECT tar.ID, tar.QT_MIN, COUNT(*) AS QT_FEITAS
-	                      FROM TAB_APR_ITEM tar
-	                INNER JOIN CON_APR_REQ car ON (car.ID_TAB_APR_ITEM = tar.ID AND car.TP_ITEM_RQ = ?)
-	                INNER JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = car.ID_RQ AND ah.ID_CAD_PESSOA = ? AND ah.DT_INICIO IS NOT NULL)
-	                     WHERE tar.ID_TAB_APREND = ?
-	                  GROUP BY tar.ID, tar.QT_MIN
-	        	", array( "ES", $idPessoa, $result->fields["ID"] ) );
-	    	    foreach($rR as $lR => $fR):
-	    	        $fazReq = ( $fR["QT_FEITAS"] >= $fR["QT_MIN"] );
-	    	        
-	    	        if (!$fazReq):
-	    	            break;
-				endif;
-	                
-	            $arr[ $fR["ID"] ] = array(
-	                "min" => $fR["QT_MIN"],
-	                "hist" => array()
-	            );
-	                
-	            //ADICIONAR REGRA E SELECAO DA REGRA.
-	            //LE PARAMETRO MINIMO E HISTORICO PARA A REGRA
-	        	    $rS = $GLOBALS['conn']->Execute("
-	                    SELECT car.ID_RQ, car.CD_AREA_INTERNO_RQ, car.CD_ITEM_INTERNO_RQ, car.DS_ITEM_RQ, 
-	                           tm.NR_PG_ASS, 
-	                           ah.DT_INICIO, ah.DT_CONCLUSAO
-	                      FROM CON_APR_REQ car
-	                INNER JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = car.ID_RQ AND ah.ID_CAD_PESSOA = ? AND ah.DT_CONCLUSAO IS NOT NULL)
-	                INNER JOIN TAB_MATERIAIS tm ON (tm.ID_TAB_APREND = car.ID_RQ)
-	                     WHERE car.ID_TAB_APR_ITEM = ?
-	            ORDER BY tm.NR_PG_ASS, car.CD_AREA_INTERNO_RQ, car.CD_ITEM_INTERNO_RQ 
-	            	", array( $idPessoa, $fR["ID"] ) );
-	        	    foreach($rS as $lS => $fS):
+			$rR = $GLOBALS['conn']->Execute("
+					SELECT tar.ID, tar.QT_MIN, COUNT(*) AS QT_FEITAS
+						FROM TAB_APR_ITEM tar
+				INNER JOIN CON_APR_REQ car ON (car.ID_TAB_APR_ITEM = tar.ID AND car.TP_ITEM_RQ = ?)
+				INNER JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = car.ID_RQ AND ah.ID_CAD_PESSOA = ? AND ah.DT_INICIO IS NOT NULL)
+						WHERE tar.ID_TAB_APREND = ?
+					GROUP BY tar.ID, tar.QT_MIN
+			", array( "ES", $idPessoa, $result->fields["ID"] ) );
+			foreach($rR as $lR => $fR):
+				$fazReq = ( $fR["QT_FEITAS"] >= $fR["QT_MIN"] );
+				
+				if (!$fazReq):
+					break;
+			endif;
+				
+			$arr[ $fR["ID"] ] = array(
+				"min" => $fR["QT_MIN"],
+				"hist" => array()
+			);
+				
+			//ADICIONAR REGRA E SELECAO DA REGRA.
+			//LE PARAMETRO MINIMO E HISTORICO PARA A REGRA
+				$rS = $GLOBALS['conn']->Execute("
+					SELECT car.ID_RQ, car.CD_AREA_INTERNO_RQ, car.CD_ITEM_INTERNO_RQ, car.DS_ITEM_RQ, 
+							tm.NR_PG_ASS, 
+							ah.DT_INICIO, ah.DT_CONCLUSAO
+						FROM CON_APR_REQ car
+				INNER JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = car.ID_RQ AND ah.ID_CAD_PESSOA = ? AND ah.DT_CONCLUSAO IS NOT NULL)
+				INNER JOIN TAB_MATERIAIS tm ON (tm.ID_TAB_APREND = car.ID_RQ)
+						WHERE car.ID_TAB_APR_ITEM = ?
+					ORDER BY tm.NR_PG_ASS, car.CD_AREA_INTERNO_RQ, car.CD_ITEM_INTERNO_RQ 
+				", array( $idPessoa, $fR["ID"] ) );
+				foreach($rS as $lS => $fS):
 					$arr[ $fR["ID"] ]["hist"][] = $fS;
                 endforeach;
                 
             endforeach;
     		
-	    		//VERIFICA SE CONCLUIDO
-	    		if ( $fazReq ):
+			//VERIFICA SE CONCLUIDO
+			if ( $fazReq ):
                 $this->newPage();
                 
                 $req = 0;
@@ -281,15 +281,15 @@ class ESPCR extends TCPDF {
                     
                     $this->top += 20;
                 endforeach;
-	    		endif;
-	    		
-	    		//REMOVE NOTIFICACAO PARA O MESTRADO
-	    		$GLOBALS['conn']->Execute("
-	    		    UPDATE LOG_MENSAGEM SET DH_READ = NOW()
-	    		          WHERE ID_ORIGEM = ? 
-	    		            AND TP = ? 
-	    		            AND ID_USUARIO = (SELECT ID_USUARIO FROM CAD_USUARIOS WHERE ID_CAD_PESSOA = ?)
-	    		", array( $result->fields["ID"], "M", $idPessoa ) );
+			endif;
+			
+			//REMOVE NOTIFICACAO PARA O MESTRADO
+			$GLOBALS['conn']->Execute("
+				UPDATE LOG_MENSAGEM SET DH_READ = NOW()
+				WHERE ID_ORIGEM = ? 
+				AND TP = ? 
+				AND ID_USUARIO = (SELECT ID_USUARIO FROM CAD_USUARIOS WHERE ID_CAD_PESSOA = ?)
+			", array( $result->fields["ID"], "M", $idPessoa ) );
 
 		endif;
 	}

@@ -2,11 +2,6 @@
 @require_once("../include/filters.php");
 $autorizIcon = "fa fa-circle";
 ?>
-<style>
-.autoriz{
-  background: #ffffaa !important;
-}
-</style>
 <div class="row">
 	<div class="col-lg-12">
 		<h3 class="page-header">Cadastro de Eventos/Sa&iacute;das</h3>
