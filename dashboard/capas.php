@@ -21,7 +21,7 @@
 	<div class="col-xs-12 col-md-12">
 		<div class="row form-group">
 			<label for="nmMembro" class="control-label">Para quem?</label>
-			<select name="nmMembro" id="nmMembro" class="selectpicker form-control input-sm" opt-value="id" multiple opt-label="ds" opt-search="id" data-live-search="true" title="Escolha um ou mais nomes" data-selected-text-format="count > 5" data-width="100%" data-container="body" data-actions-box="true"></select>
+			<select name="nmMembro" id="nmMembro" class="selectpicker form-control input-sm" opt-value="id" multiple opt-label="ds" opt-search="id" opt-links="fg" opt-link-class="S=minhaCapa" data-live-search="true" title="Escolha um ou mais nomes" data-selected-text-format="count > 5" data-width="100%" data-container="body" data-actions-box="true"></select>
 		</div>
 	</div>
 	<div class="col-xs-12 col-md-12">

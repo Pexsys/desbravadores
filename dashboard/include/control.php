@@ -32,6 +32,10 @@ require_once("../include/_metaheader.php");
    top:-8px;
    left:-8px;
 }
+.dropdown-menu>li>a.minhaCapa {
+  background: #ffff00 !important;
+  font-weight: bolder;
+}
 </style>
 </head>
 <body>

@@ -47,7 +47,7 @@ function getNames(){
 		$membroID = $result->fields["ID_CAD_PESSOA"];
 		$membroNM = ($result->fields["NM"]);
 		
-		$arr[] = array( "id" => $result->fields["ID_CAD_PESSOA"]."|$membroNM", "ds" => "<<mim>> - $membroNM");
+		$arr[] = array( "id" => $result->fields["ID_CAD_PESSOA"]."|$membroNM", "ds" => "<<mim>> - $membroNM", "fg" => "S");
 		$cargo = $result->fields['CD_CARGO'];
 		if (fStrStartWith($cargo,"2-07")):
 			$cargo = $result->fields['CD_CARGO2'];
