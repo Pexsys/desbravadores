@@ -20,28 +20,6 @@ function getQueryByFilter( $parameters ) {
 	",$aWhere);
 }
 
-function fGetMembros(){
-	$arr = array();
-	fConnDB();
-	$qtdZeros = zeroSizeID();
-	$result = $GLOBALS['conn']->Execute("
-		SELECT o.ID_CAD_PESSOA, a.NM
-		  FROM CAD_OCORRENCIA o
-	INNER JOIN CON_ATIVOS a ON (a.ID = o.ID_CAD_PESSOA)
-		 WHERE YEAR(o.DH) = YEAR(NOW()) 
-		   AND o.FG_PEND = ?
-	  ORDER BY a.NM
-	", array("N") );
-	foreach($result as $l => $fields):
-		$id = fStrZero($fields['ID_CAD_PESSOA'], $qtdZeros);
-		$arr["nomes"][] = array(
-			"value" => $fields['ID_CAD_PESSOA'],
-			"label" => "$id ".($fields['NM'])
-		);
-	endforeach;
-	return $arr;
-}
-
 function fRegistro( $parameters ) {
 	session_start();
 	fConnDB();
@@ -85,6 +63,7 @@ function fRegistro( $parameters ) {
 				fReturnStringNull($fg_pend),
 				fReturnStringNull(trim($frm["id_classe"])),
 				fReturnStringNull(trim($frm["id_req"])),
+				fReturnStringNull(trim($frm["id_ref"])),
 				$frm["sq"],
 				fReturnStringNull(trim($frm["txt"])),
 				$id
@@ -95,6 +74,7 @@ function fRegistro( $parameters ) {
 					FG_PEND = ?,
 					ID_TAB_APREND = ?,
 					ID_TAB_APR_ITEM = ?,
+					ID_TAB_APR_ITEM_SEL = ?,
 					SQ = ?,
 					TXT = ?
 				WHERE ID = ?
@@ -105,6 +85,7 @@ function fRegistro( $parameters ) {
 				fReturnStringNull($fg_pend),
 				fReturnStringNull(trim($frm["id_classe"])),
 				fReturnStringNull(trim($frm["id_req"])),
+				fReturnStringNull(trim($frm["id_ref"])),
 				$userID,
 				$frm["sq"],
 				fReturnStringNull(trim($frm["txt"]))
@@ -115,10 +96,11 @@ function fRegistro( $parameters ) {
 					FG_PEND,
 					ID_TAB_APREND,
 					ID_TAB_APR_ITEM,
+					ID_TAB_APR_ITEM_SEL,
 					ID_USUARIO_INS,
 					SQ,
 					TXT
-				) VALUES (?,?,?,?,?,?,?)
+				) VALUES (?,?,?,?,?,?,?,?)
 			",$arr);
 			$id = $GLOBALS['conn']->Insert_ID();
 		endif;
@@ -151,12 +133,14 @@ function fRegistro( $parameters ) {
 					"id"			=> $result->fields['ID'],
 					"id_classe"		=> $result->fields['ID_TAB_APREND'],
 					"id_req"		=> $result->fields['ID_TAB_APR_ITEM'],
+					"id_ref"		=> $result->fields['ID_TAB_APR_ITEM_SEL'],
 					"sq"			=> $result->fields['SQ'],
 					"dh"			=> strtotime($result->fields['DH'])."000",
 					"txt"			=> trim($result->fields['TXT']),
 					"fg_pend"		=> $result->fields['FG_PEND']
 				);
 				$out["req"] = fGetReq( $result->fields['ID_TAB_APREND'] );
+				$out["ref"] = fGetRefs( $result->fields['ID_TAB_APR_ITEM'] );
 			endif;
 			
 		endif;
@@ -197,11 +181,11 @@ function fGetCompl( $parameters ){
 function fGetReq( $classeID ){
 	$arr = array();
 	$result = $result = $GLOBALS['conn']->Execute("
-		   SELECT tap.ID, taa.CD AS CD_AREA, taa.DS AS DS_AREA, tap.CD_REQ_INTERNO, tap.DS
+		   SELECT tap.ID, taa.SEQ, taa.CD AS CD_AREA, taa.DS AS DS_AREA, tap.CD_REQ_INTERNO, tap.DS, tap.QT_MIN
 			 FROM TAB_APR_ITEM tap 
 		LEFT JOIN TAB_APR_AREA taa ON (taa.ID = tap.ID_TAB_APR_AREA)
-		    WHERE tap.ID_TAB_APREND = ? 
-		 ORDER BY taa.CD, tap.CD_REQ_INTERNO
+			WHERE tap.ID_TAB_APREND = ? 
+		 ORDER BY taa.SEQ, tap.CD_REQ_INTERNO
 	", array( $classeID ) );
 
 	foreach ($result as $k => $fields):
@@ -211,7 +195,33 @@ function fGetReq( $classeID ){
 
 		$arr[] = array(
 			"id" => $fields['ID'],
-			"ds" => $dsReq
+			"ds" => $dsReq,
+			"tp" => (!is_null($fields['QT_MIN']) ? "E" : "")
+		);
+	endforeach;
+	return $arr;
+}
+
+function fGetRef( $parameters ){
+	fConnDB();
+	return fGetRefByID( $parameters["id_req"] );
+}
+
+function fGetRefByID( $refID ){
+	$arr = array();
+	$result = $result = $GLOBALS['conn']->Execute("
+		SELECT tais.ID, ta.CD_AREA_INTERNO, ta.CD_ITEM_INTERNO, ta.DS_ITEM
+		FROM TAB_APR_ITEM_SEL tais
+		INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = tais.ID_REF)
+		WHERE tais.ID_TAB_APR_ITEM = ? 
+		ORDER BY ta.CD_AREA_INTERNO, ta.DS_ITEM
+	", array( $refID ) );
+
+	foreach ($result as $k => $fields):
+		$arr[] = array( 
+			"id"	=> $fields['ID'],
+			"ds"	=> $fields['DS_ITEM'],
+			"sb"	=> $fields['CD_ITEM_INTERNO']
 		);
 	endforeach;
 	return $arr;

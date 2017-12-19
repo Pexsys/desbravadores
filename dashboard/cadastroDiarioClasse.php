@@ -10,7 +10,7 @@
 </style>
 <div class="row">
 	<div class="col-lg-12">
-		<h3 class="page-header">Cadastro do Di&aacute;rio de Classe</h3>
+		<h3 class="page-header">Cadastro do Planejamento de Classe</h3>
 	</div>
 </div>
 <div class="col-lg-12">
@@ -45,7 +45,7 @@
 		<div class="modal-content">
 			<div class="modal-body">
 				<form method="post" id="cadRegForm">
-				<input type="hidden" name="regID" id="regID" field="id"/>
+					<input type="hidden" name="regID" id="regID" field="id"/>
 					<div class="row">
 						<div class="col-lg-12">
 							<div class="panel panel-warning" aria-expanded="false">
@@ -57,7 +57,7 @@
 									<div class="row">
 										<div class="form-group col-xs-6">
 											<label for="cmClasse" class="control-label">Classe</label>
-											<select field="id_classe" name="cmClasse" id="cmClasse" class="form-control input-sm"></select>
+											<select field="id_classe" name="cmClasse" id="cmClasse" class="selectpicker form-control input-sm" add-none="true" data-live-search="true" data-container="body" data-width="100%"></select>
 										</div>
 										<div class="form-group col-xs-1">
 											<label for="seqID" class="control-label">Seq.</label>
@@ -78,12 +78,12 @@
 									<div class="row">
 										<div class="form-group col-xs-12">
 											<label for="cmReq" class="control-label">Requisito</label>
-											<select field="id_req" name="cmReq" id="cmReq" opt-value="id" opt-label="ds" class="selectpicker form-control input-sm" data-live-search="true" data-container="body" data-width="100%"></select>
+											<select field="id_req" name="cmReq" id="cmReq" opt-value="id" opt-label="ds" opt-links="tp" class="selectpicker form-control input-sm" add-none="true" data-live-search="true" data-container="body" data-width="100%"></select>
 										</div>
 									</div>
 									<div class="row" id="divReferencia" style="display:none">
 										<div class="form-group col-xs-12">
-											<select field="id_ref" name="cmRef" id="cmRef" opt-value="id" opt-label="ds" class="selectpicker form-control input-sm" data-live-search="true" data-container="body" data-width="100%"></select>
+											<select field="id_ref" name="cmRef" id="cmRef" opt-value="id" opt-label="ds" class="selectpicker form-control input-sm" opt-search="sb" opt-subtext="sb" add-none="true" data-live-search="true" data-container="body" data-width="100%"></select>
 										</div>
 									</div>
 									<div class="row">
