@@ -90,6 +90,7 @@ $(document).ready(function(){
 		})
 		.on('success.validator.fv', function(e, data) {
 			e.preventDefault();
+			$("#divResultado").html('');
 		})
 		.on('success.field.fv', function(e, data) {
 			e.preventDefault();

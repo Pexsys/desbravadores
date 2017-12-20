@@ -105,12 +105,12 @@ function getAcompanhamento( $param ) {
 
 function fGetClassAcomp( $cap, $param ){
 	$strC = "";
-	
+
+	//SELECIONA ITENS PENDENTES
 	$result = $GLOBALS['conn']->Execute("
 		   SELECT taa.CD AS CD_AP_AREA, taa.DS AS DS_AP_AREA, 
 				  ta.TP_ITEM, ta.CD_COR, ta.CD_ITEM_INTERNO, ta.CD_AREA_INTERNO, ta.DS_ITEM, 
-				  tai.ID, tai.CD_REQ_INTERNO, tai.DS,
-				  ah.DT_CONCLUSAO, 
+				  tai.ID, tai.CD_REQ_INTERNO, tai.DS, tai.QT_MIN,
 				  apr.DT_ASSINATURA
 			 FROM TAB_APRENDIZADO ta
 		LEFT JOIN TAB_APR_ITEM tai ON ( tai.ID_TAB_APREND = ta.ID ) 
@@ -124,11 +124,11 @@ function fGetClassAcomp( $cap, $param ){
 	", array( $param["ip"], $param["it"] ) );
 	$strC .= fGetDetailAcomp("panel-danger","Itens Pendentes","fa-frown-o",$result);	
 	
+	//SELECIONA ITENS CONCLUIDOS
 	$result = $GLOBALS['conn']->Execute("
 		   SELECT taa.CD AS CD_AP_AREA, taa.DS AS DS_AP_AREA, 
 				  ta.TP_ITEM, ta.CD_COR, ta.CD_ITEM_INTERNO, ta.CD_AREA_INTERNO, ta.DS_ITEM, 
-				  tai.ID, tai.CD_REQ_INTERNO, tai.DS,
-				  ah.DT_CONCLUSAO, 
+				  tai.ID, tai.CD_REQ_INTERNO, tai.DS, tai.QT_MIN,
 				  apr.DT_ASSINATURA
 			 FROM TAB_APRENDIZADO ta
 		LEFT JOIN TAB_APR_ITEM tai ON ( tai.ID_TAB_APREND = ta.ID ) 
@@ -157,7 +157,7 @@ function fGetDetailAcomp($class, $titulo, $icon, $result){
 		$str .= "<div class=\"row\">";
 		$str .= "<div class=\"panel $class\">";
 		$str .= "<div class=\"panel-heading\" style=\"padding:3px 10px\">$titulo</div>";
-		$str .= "<div class=\"panel-body\" style=\"height:100px;overflow-y:auto;overflow-x:hidden;padding:5px 10px\">";
+		$str .= "<div class=\"panel-body\" style=\"height:100px;overflow-y:scroll;overflow-x:hidden;padding:5px 10px\">";
 		$areaAtu = "";
 		$first = true;
 		foreach ($result as $k => $line):
@@ -170,14 +170,19 @@ function fGetDetailAcomp($class, $titulo, $icon, $result){
 			
 			$req = $line["CD_REQ_INTERNO"];
 			$taiID = $line["ID"];
+			$qtMin = $line["QT_MIN"];
 			$rTela = substr($req,-2);
 			$hint = $line["DS"];
+			$disabledOpt = "";
+
+			//SE EXISTE MINIMO DE REQUISITOS PARA ESTE ITEM.
+			$disabledOpt = (!is_null($qtMin) ? " disabled" : "");
 			
 			$str .= "<div class=\"row\">";
 			$str .= "<div class=\"col-sm-6\" style=\"padding:1px 0px 2px 15px\" title=\"$hint\">";
-			$str .= "<label>$rTela</label> <input type=\"checkbox\" for=\"dt-req-$taiID\"". ($checked?" checked":"")." value-on=\"S\" value-off=\"N\" data-on=\"Conclu&iacute;do\" data-off=\"Pendente\" data-onstyle=\"success\" data-offstyle=\"danger\" data-toggle=\"toggle\" data-width=\"85\" data-size=\"small\" data-style=\"quick\"/>";
+			$str .= "<label>$rTela</label>&nbsp;<input type=\"checkbox\"$disabledOpt for=\"dt-req-$taiID\"". ($checked?" checked":"")." value-on=\"S\" value-off=\"N\" data-on=\"Conclu&iacute;do\" data-off=\"Pendente\" data-onstyle=\"success\" data-offstyle=\"danger\" data-toggle=\"toggle\" data-width=\"85\" data-size=\"small\" data-style=\"quick\"/>";
 			$str .= "</div>";
-			$str .= "<div class=\"col-sm-6\" style=\"1px 15px 2px 10px\">";
+			$str .= "<div class=\"col-sm-6\" style=\"padding:1px 30px 2px 10px\">";
 			
 			$dateValue = "";
 			$styleDate = "";
@@ -187,7 +192,7 @@ function fGetDetailAcomp($class, $titulo, $icon, $result){
 				$styleDate = " style=\"display:none\"";
 			endif;
 			
-			$str .= "<input type=\"text\" name=\"dt_assinatura\" field=\"dt-req-$taiID\" class=\"form-control input-sm date\" value=\"$dateValue\" placeholder=\"Assinatura\"$styleDate/>";
+			$str .= "<input type=\"text\"$disabledOpt name=\"dt_assinatura\" field=\"dt-req-$taiID\" class=\"form-control input-sm date\" value=\"$dateValue\" placeholder=\"Assinatura\"$styleDate/>";
 			$str .= "</div>";
 			$str .= "</div>";
 			$first = false;
