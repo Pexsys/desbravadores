@@ -64,24 +64,15 @@ $(document).ready(function(){
 		}
 	});
 
-
-
 	$('.panel')
 		.on('click', function (e) {
 		})
 		.on('show.bs.collapse', function (e) {
 			var idCad = $(this).attr("cad-id");
-			showDetailClass( $(this).find("#m"+idCad), { id: idCad, iil: $(this).attr("itm-int-like") } );
-			$(this).find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
-			
-			$('[name=progress]')
-				.on('click', function (e) {
-					showDetailClassReq( $(this).find("#detalhes"), { id: $(this).attr("cad-id"), req: $(this).attr("req-id") } );
-				});	
+			showDetailClass( this, { id: idCad, iil: $(this).attr("itm-int-like") } );
 		})
 		.on('hide.bs.collapse', function (e) {
 			$(this).find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
 		})
 	;
-	
 });

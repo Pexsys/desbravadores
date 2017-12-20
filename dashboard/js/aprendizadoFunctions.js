@@ -24,14 +24,23 @@ function showDetailEspecPeople( objDetail, parameters ){
 	});
 }
 
-function showDetailClass( objDetail, parameters ){
+function showDetailClass( objThis, parameters ){
 	jsLIB.ajaxCall({
 		type: "GET",
 		url: jsLIB.rootDir+"rules/painelAprendizado.php",
 		data: { MethodName : 'getClasses', data : parameters },
 		success: function(classes){
 			if (classes.detail){
+				var cadID = $(objThis).attr("cad-id");
+				var objDetail = $(objThis).find("#m"+cadID);
 				$(objDetail).html(classes.detail);
+
+				$(objThis).find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+				
+				$('[name=progress]')
+					.on('click', function (e) {
+						showDetailClassReq( $(this).find("#detalhes"), { id: cadID, req: $(this).attr("req-id") } );
+					});
 			}
 		}
 	});

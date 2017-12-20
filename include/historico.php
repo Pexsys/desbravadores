@@ -157,7 +157,7 @@ function updateHistorico( $barpessoaid, $barfnid, $paramDates, $compras = null )
 	endif;
 	
 	//VERIFICA SE ITEM É UMA ESPECIALIDADE E SE EXISTE ALGUM MESTRADO COMPLETADO COM A CONCLUSAO ESSA ESPECIALIDADE.
-    if ( $tpItem == "ES" && $cdInte != "ME" && $paramDates["dt_conclusao"] != "N" ):
+	if ( $tpItem == "ES" && $cdInte != "ME" && $paramDates["dt_conclusao"] != "N" ):
         
     		$rg = $GLOBALS['conn']->Execute("SELECT ID, MIN_AREA, DS_ITEM FROM CON_APR_REQ WHERE ID_RQ = ? ORDER BY CD_ITEM_INTERNO", array($barfnid) );
     		foreach ($rg as $lg => $fg):
@@ -243,6 +243,81 @@ function updateHistorico( $barpessoaid, $barfnid, $paramDates, $compras = null )
 	);
 }
 
+function requisitosEspecialidadePessoa( $it, $ip ){
+
+	//RECUPERA ID DO HISTORICO DA CLASSE
+	$uh = updateHistorico( 
+		$ip, 
+		$it, 
+		array(
+			"dt_inicio" => "N",
+			"dt_conclusao" => "N",
+			"dt_avaliacao" => "N",
+			"dt_investidura" => "N"
+		), 
+		null
+	);
+
+	//VERIFICAR QUAIS OS ITENS DE ESPECIALIDADES DO CARTAO
+	$result = $GLOBALS['conn']->Execute("
+		SELECT tai.ID, tai.QT_MIN, ah.DT_INICIO, COUNT(*) AS QTD_TOTAL
+		FROM TAB_APR_ITEM tai
+		INNER JOIN TAB_APR_ITEM_SEL tais ON (tais.ID_TAB_APR_ITEM = tai.ID)
+			LEFT JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = tai.ID_TAB_APREND AND ah.ID_CAD_PESSOA = ?)
+		WHERE tai.ID_TAB_APREND = ?
+			AND tai.QT_MIN IS NOT NULL
+		GROUP BY tai.ID, tai.QT_MIN, ah.DT_INICIO
+	", array( $ip, $it ) );
+	foreach($result as $k => $f):
+
+		//VERIFICAR QUANTOS ITENS JÁ FORAM CONCLUÍDOS PARA A REGRA E A MAIOR DATA DE CONCLUSAO
+		$rs = $GLOBALS['conn']->Execute("
+				SELECT COUNT(*) AS QT_CONCLUIDA, MAX(ah.DT_CONCLUSAO) AS MAX_DT_CONCLUSAO
+				FROM CON_APR_REQ car
+			INNER JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = car.ID_RQ AND ah.ID_CAD_PESSOA = ?)
+				WHERE car.ID_TAB_APR_ITEM = ?
+					AND ah.DT_CONCLUSAO IS NOT NULL
+					AND NOT EXISTS (SELECT 1 FROM CON_APR_REQ WHERE ID_RQ = car.ID_RQ AND ID = car.ID AND ID_TAB_APR_ITEM != car.ID_TAB_APR_ITEM)
+		", array( $ip, $f["ID"] ) );
+
+		//SE NAO HÁ REGISTRO DE CONCLUSAO - APAGA REGISTRO DE APONTAMENTO
+		if ($rs->fields["QT_CONCLUIDA"] == 0):
+			marcaRequisitoID( null, $ip, $uh["id"], $f["ID"] );
+
+		//SE A QUANTIDADE CUMPRIDA IQUAL A QUANTIDADE TOTAL DE ITENS A CUMPRIR
+		//elseif ($rs->fields["QT_CONCLUIDA"] == $f["QTD_TOTAL"]):
+		//	marcaRequisitoID( $rs->fields["MAX_DT_CONCLUSAO"], $ip, $uh["id"], $f["ID"] );
+			
+		else:
+			$reqCompletado = 0;
+
+			//VERIFICAR QUAIS OS ITENS PENDENTES PARA A PESSOA/CARTAO
+			$r1 = $GLOBALS['conn']->Execute("
+				SELECT ah.DT_CONCLUSAO, cap.DT_ASSINATURA
+					FROM CON_APR_REQ car
+				LEFT JOIN TAB_APRENDIZADO ta ON (ta.ID = car.ID_RQ)
+				LEFT JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = car.ID_RQ AND ah.ID_CAD_PESSOA = ?)
+				LEFT JOIN CON_APR_PESSOA cap ON (cap.ID_TAB_APREND = car.ID AND cap.ID_CAD_PESSOA = ah.ID_CAD_PESSOA AND cap.ID = car.ID_TAB_APR_ITEM)
+				WHERE car.ID_TAB_APR_ITEM = ?
+				AND NOT EXISTS (SELECT 1 FROM CON_APR_REQ WHERE ID_RQ = car.ID_RQ AND ID = car.ID AND ID_TAB_APR_ITEM != car.ID_TAB_APR_ITEM)
+			", array( $ip, $f["ID"], ) );
+			foreach($r1 as $k1 => $f1):
+				if (!is_null($f1["DT_CONCLUSAO"]) && $f1["DT_CONCLUSAO"] > $f["DT_INICIO"]):
+					if ( ++$reqCompletado == $f["QT_MIN"] ):
+						if ($f1["DT_ASSINATURA"] !== $f1["DT_CONCLUSAO"]):
+							marcaRequisitoID( $f1["DT_CONCLUSAO"], $ip, $uh["id"], $f["ID"] );
+						endif;
+						break;
+					endif;
+				endif;
+			endforeach;
+			if ($reqCompletado < $f["QT_MIN"]):
+				marcaRequisitoID( null, $ip, $uh["id"], $f["ID"] );
+			endif;
+		endif;
+	endforeach;
+}
+
 function consultaAprendizadoPessoa( $tabAprendID, $pessoaID ){
 	$arr = array( "ap" => "", "ar" => "", "cd" => "", "nm" => "" );
 	$rs = $GLOBALS['conn']->Execute("
@@ -252,11 +327,11 @@ function consultaAprendizadoPessoa( $tabAprendID, $pessoaID ){
 		 WHERE ta.ID = ?
 	", array( $tabAprendID ) );
 	if (!$rs->EOF):
-	$arr["cr"] = $rs->fields["CD_COR"];
-	$arr["ap"] = $rs->fields["DS_ITEM"];
-	$arr["ar"] = $rs->fields["CD_AREA_INTERNO"];
-	$arr["cd"] = $rs->fields["CD_ITEM_INTERNO"];
-	$arr["pg"] = $rs->fields["NR_PG_ASS"];
+		$arr["cr"] = $rs->fields["CD_COR"];
+		$arr["ap"] = $rs->fields["DS_ITEM"];
+		$arr["ar"] = $rs->fields["CD_AREA_INTERNO"];
+		$arr["cd"] = $rs->fields["CD_ITEM_INTERNO"];
+		$arr["pg"] = $rs->fields["NR_PG_ASS"];
 	endif;
 	
 	$rp = $GLOBALS['conn']->Execute("
@@ -265,7 +340,7 @@ function consultaAprendizadoPessoa( $tabAprendID, $pessoaID ){
 		 WHERE ID = ?
 	", array( $pessoaID ) );
 	if (!$rp->EOF):
-	$arr["nm"] = ($rp->fields["NM"]);
+		$arr["nm"] = ($rp->fields["NM"]);
 	endif;
 	return $arr;
 }
