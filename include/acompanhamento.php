@@ -1,50 +1,6 @@
 <?php
 @require_once("historico.php");
 
-function marcaRequisitoID( $assDT, $pessoaID, $histID, $reqID ) {
-
-	//APAGA CASO DATA DE ASSINATURA NULA
-	if ( is_null($assDT) || empty($assDT) ):
-		$GLOBALS['conn']->Execute("
-			DELETE FROM APR_PESSOA_REQ
-			WHERE ID_HISTORICO = ?
-			  AND ID_TAB_APR_ITEM = ?
-		", array( $histID, $reqID ) );
-
-	else:
-		//RECUPERA REQUISITO COM ITEM APRENDIZADO
-		$rs = $GLOBALS['conn']->Execute("
-		  SELECT 1
-			FROM APR_PESSOA_REQ
-		   WHERE ID_HISTORICO = ?
-			 AND ID_TAB_APR_ITEM = ?
-		", array( $histID, $reqID ) );
-		
-		//SE NAO EXISTIR, INSERE
-		if ($rs->EOF):
-			$GLOBALS['conn']->Execute("
-				INSERT INTO APR_PESSOA_REQ(
-					ID_HISTORICO,
-					ID_TAB_APR_ITEM,
-					DT_ASSINATURA
-				) VALUES (
-					?,?,?
-				)
-			", array( $histID, $reqID, $assDT ) );
-			
-		//ATUALIZA
-		else:
-			$GLOBALS['conn']->Execute("
-				UPDATE APR_PESSOA_REQ
-				   SET DT_ASSINATURA = ?
-				 WHERE ID_HISTORICO = ?
-				   AND ID_TAB_APR_ITEM ?
-				   AND DT_ASSINATURA <> ?
-			", array( $assDT, $histID, $reqID, $assDT ) );
-		endif;
-	endif;
-}
-
 function marcaRequisito( $pessoaID, $itemID, $reqCD, $assDT ) {
 	$arr = array("idreq" => null);
 	

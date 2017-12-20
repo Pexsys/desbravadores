@@ -99,13 +99,18 @@ $(document).ready(function(){
 				}
 			});
 		})
+		.on('err.field.fv', function(e, data) {
+			e.preventDefault();
+			//$("#divResultado").empty().hide();
+		})
 		.on('success.validator.fv', function(e, data) {
 			e.preventDefault();
 		})
 		.on('success.field.fv', function(e, data) {
 			e.preventDefault();
-			
-			 onscan( $("#cdBar").val() );
+			if ($("#cdBar").val() != ''){
+				onscan( $("#cdBar").val().toUpperCase() );
+			}
 		})
 		.formValidation({
 			framework: 'bootstrap',
@@ -116,10 +121,7 @@ $(document).ready(function(){
 							min: 7,
 							max: 7,
 							message: 'O c&oacute;digo deve conter 7 caracteres'
-						},
-						notEmpty: {
-                            message: 'Informe o pr&oacute;ximo c&oacute;digo'
-                        }
+						}
 					}
 				}
 			}

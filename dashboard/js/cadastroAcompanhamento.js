@@ -88,9 +88,12 @@ $(document).ready(function(){
 				}
 			});
 		})
+		.on('err.field.fv', function(e, data) {
+			e.preventDefault();
+			$("#divResultado").empty().hide();
+		})
 		.on('success.validator.fv', function(e, data) {
 			e.preventDefault();
-			$("#divResultado").html('');
 		})
 		.on('success.field.fv', function(e, data) {
 			e.preventDefault();

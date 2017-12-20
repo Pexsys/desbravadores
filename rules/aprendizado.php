@@ -156,6 +156,20 @@ function delete( $parameters ) {
     		    WHERE ID_ORIGEM = ? AND TP = ? AND ID_USUARIO = (SELECT ID_USUARIO FROM CAD_USUARIOS WHERE ID_CAD_PESSOA = ?)
     		", array( $rs->fields["ID_TAB_APREND"], "M", $rs->fields["ID_CAD_PESSOA"] ) );
 		endif;
+
+		$rs = $GLOBALS['conn']->Execute("
+			SELECT apr.ID
+			FROM APR_HISTORICO ah
+			INNER JOIN TAB_APR_ITEM_SEL tais ON (tais.ID_REF = ah.ID_TAB_APREND)
+			INNER JOIN TAB_APR_ITEM tai ON (tai.ID = tais.ID_TAB_APR_ITEM)
+			INNER JOIN APR_PESSOA_REQ apr ON (apr.ID_TAB_APR_ITEM = tais.ID_TAB_APR_ITEM)
+			INNER JOIN APR_HISTORICO ah2 ON (ah2.ID_CAD_PESSOA = ah.ID_CAD_PESSOA AND ah2.ID = apr.ID_HISTORICO AND ah2.DT_CONCLUSAO IS NULL)
+			WHERE ah.ID = ?
+		", array($id) );
+		foreach ($rs as $k => $f):
+			$GLOBALS['conn']->Execute("DELETE FROM APR_PESSOA_REQ WHERE ID = ?", array($f["ID"]) );
+		endforeach;
+
 		$GLOBALS['conn']->Execute("DELETE FROM APR_PESSOA_REQ WHERE ID_HISTORICO = ?", array($id) );
 		$GLOBALS['conn']->Execute("DELETE FROM APR_HISTORICO WHERE ID = ?", array($id) );
 		
