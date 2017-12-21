@@ -347,7 +347,8 @@ function getData(){
 		$id = fStrZero($result->fields['ID'], $qtdZeros);
 		$arr["nomes"][] = array( 
 			"id" => $id,
-			"ds" => "$id ".$result->fields['NM']
+			"ds" => $result->fields['NM'],
+			"sb" => $id
 		);
 		$result->MoveNext();
 	endwhile;
@@ -401,11 +402,12 @@ function getMestrado(){
 		 WHERE TP_ITEM = ?
 		   AND CD_AREA_INTERNO = ?
 		   AND CD_ITEM_INTERNO IS NOT NULL
-	  ORDER BY CD_ITEM_INTERNO, DS_ITEM", array( "ES", "ME" ) );
+	  ORDER BY DS_ITEM", array( "ES", "ME" ) );
 	foreach ($result as $k => $line):
 		$arr[] = array( 
 			"id"	=> $line['ID'],
-			"ds"	=> $line['CD_ITEM_INTERNO'] ." ". $line['DS_ITEM']
+			"ds"	=> $line['DS_ITEM'],
+			"sb"	=> $line['CD_ITEM_INTERNO']
 		);
 	endforeach;
 	return $arr;
@@ -419,11 +421,12 @@ function getEspecialidade(){
 		 WHERE TP_ITEM = ?
 		   AND CD_AREA_INTERNO <> ?
 		   AND CD_ITEM_INTERNO IS NOT NULL
-	  ORDER BY CD_ITEM_INTERNO, DS_ITEM", array( "ES", "ME" ) );
+	  ORDER BY DS_ITEM", array( "ES", "ME" ) );
 	foreach ($result as $k => $line):
 		$arr[] = array( 
 			"id"	=> $line['ID'],
-			"ds"	=> $line['CD_ITEM_INTERNO'] ." ". $line['DS_ITEM']
+			"ds"	=> $line['DS_ITEM'],
+			"sb"	=> $line['CD_ITEM_INTERNO']
 		);
 	endforeach;
 	return $arr;

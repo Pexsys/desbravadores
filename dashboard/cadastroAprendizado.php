@@ -20,16 +20,16 @@
 			"filterTo" => "#aprDatatable",
 			"filters" => 
 				array( 
-					array( "value" => "Z", "label" => "Tipo" ),
-					array( "value" => "X", "label" => "Sexo" ),
-					array( "value" => "C", "label" => "Classe" ),
-					array( "value" => "G", "label" => "Grupo" ),
-					array( "value" => "HA", "label" => "Avaliações" ),
-					array( "value" => "IC", "label" => "Compras" ),
-					array( "value" => "U", "label" => "Unidade" ),
-					array( "value" => "A", "label" => "&Aacute;reas" ),
-					array( "value" => "E", "label" => "Especialidade" ),
-					array( "value" => "M", "label" => "Mestrado" )
+					array( "id" => "Z", "ds" => "Tipo" ),
+					array( "id" => "X", "ds" => "Sexo" ),
+					array( "id" => "C", "ds" => "Classe" ),
+					array( "id" => "G", "ds" => "Grupo" ),
+					array( "id" => "HA", "ds" => "Avaliações" ),
+					array( "id" => "IC", "ds" => "Compras" ),
+					array( "id" => "U", "ds" => "Unidade" ),
+					array( "id" => "A", "ds" => "&Aacute;reas" ),
+					array( "id" => "E", "ds" => "Especialidade" ),
+					array( "id" => "M", "ds" => "Mestrado" )
 				)
 		) 
 	);?>
@@ -138,7 +138,7 @@
 									<div class="well well-sm" style="padding:4px;margin-bottom:0px;font-size:11px"><b>Especialidade</b></div>
 									<div class="row">
 										<div class="form-group col-xs-12">
-											<select field="cd_espec" name="cmEspec" id="cmEspec" opt-value="id" opt-label="ds" class="selectpicker form-control input-sm" multiple data-live-search="true" data-selected-text-format="count > 2" data-container="body" data-width="100%"></select>
+											<select field="cd_espec" name="cmEspec" id="cmEspec" opt-value="id" opt-label="ds" opt-subtext="sb" class="selectpicker form-control input-sm" multiple data-live-search="true" data-selected-text-format="count > 2" data-container="body" data-width="100%"></select>
 										</div>
 									</div>
 								</div>
@@ -146,7 +146,7 @@
 									<div class="well well-sm" style="padding:4px;margin-bottom:0px;font-size:11px"><b>Mestrado</b></div>
 									<div class="row">
 										<div class="form-group col-xs-12">
-											<select field="cd_mest" name="cmMest" id="cmMest" opt-value="id" opt-label="ds" class="selectpicker form-control input-sm" multiple data-live-search="true" data-selected-text-format="count > 2" data-container="body" data-width="100%"></select>
+											<select field="cd_mest" name="cmMest" id="cmMest" opt-value="id" opt-label="ds" opt-subtext="sb" class="selectpicker form-control input-sm" multiple data-live-search="true" data-selected-text-format="count > 2" data-container="body" data-width="100%"></select>
 										</div>
 									</div>
 								</div>
@@ -182,7 +182,7 @@
 								<div class="row">
 									<div class="form-group col-xs-12">
 										<label for="cmNome" class="control-label">Membros</label>
-										<select field="id_pessoa" name="cmNome" id="cmNome" opt-value="id" opt-search="id" opt-label="ds" class="selectpicker form-control input-sm" multiple data-live-search="true" data-selected-text-format="count" data-container="body" data-width="100%"></select>
+										<select field="id_pessoa" name="cmNome" id="cmNome" opt-value="id" opt-search="id" opt-label="ds" opt-subtext="sb" class="selectpicker form-control input-sm" multiple data-live-search="true" data-selected-text-format="count" data-container="body" data-width="100%"></select>
 									</div>
 								</div>
 							</div>

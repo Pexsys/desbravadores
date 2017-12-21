@@ -83,17 +83,17 @@
 									"filterTo" => "#cbNomes",
 									"filters" => 
 										array( 
-											array( "value" => "G", "label" => "Grupo" ),
-											array( "value" => "X", "label" => "Sexo" ),
-											array( "value" => "U", "label" => "Unidade" ),
-											array( "value" => "IC", "label" => "Compras" ),
-											array( "value" => "C", "label" => "Classe" )
+											array( "id" => "G", "ds" => "Grupo" ),
+											array( "id" => "X", "ds" => "Sexo" ),
+											array( "id" => "U", "ds" => "Unidade" ),
+											array( "id" => "IC", "ds" => "Compras" ),
+											array( "id" => "C", "ds" => "Classe" )
 										)
 								) 
 							);
 							?>
 							<div class="form-group col-xs-12">
-								<select name="cbNomes" id="cbNomes" class="selectpicker form-control input-sm" opt-value="id" opt-search="id" opt-label="nm" opt-selected="fg" multiple data-live-search="true" field="ip" title="Escolha um ou mais nomes" data-selected-text-format="count > 2" data-width="100%" data-container="body" data-actions-box="true"></select>
+								<select name="cbNomes" id="cbNomes" class="selectpicker form-control input-sm" opt-value="id" opt-search="id" opt-label="nm" opt-subtext="sb" opt-selected="fg" multiple data-live-search="true" field="ip" title="Escolha um ou mais nomes" data-selected-text-format="count > 2" data-width="100%" data-container="body" data-actions-box="true"></select>
 							</div>
 						</div>
 					</div>
@@ -161,7 +161,7 @@
 								<div class="row">
 									<div class="form-group col-xs-12">
 										<label for="cmNome" class="control-label">Membros</label>
-										<select name="cmNome" id="cmNome" opt-value="id" opt-search="id" opt-label="nm" class="selectpicker form-control input-sm" multiple data-live-search="true" field="ip" title="Escolha um ou mais nomes" data-selected-text-format="count > 2" data-width="100%" data-container="body" data-actions-box="true"></select>
+										<select name="cmNome" id="cmNome" opt-value="id" opt-search="id" opt-label="nm" opt-subtext="sb" class="selectpicker form-control input-sm" multiple data-live-search="true" field="ip" title="Escolha um ou mais nomes" data-selected-text-format="count > 2" data-width="100%" data-container="body" data-actions-box="true"></select>
 									</div>
 								</div>
 							</div>

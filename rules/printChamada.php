@@ -19,8 +19,8 @@ function getDomains(){
 	  ORDER BY 1
 	");
 	foreach ($result as $k => $l):
-		$desc = mb_strtoupper(fDescMes(substr($l["ANO_MES"],5,2))) ."/". substr($l["ANO_MES"],0,4);
-		$ma[] = array( "value" => $l["ANO_MES"], "label" => $desc );
+		$desc = mb_strtoupper(fDescMes(substr($l["ANO_MES"],5,2)));
+		$ma[] = array( "id" => $l["ANO_MES"], "ds" => $desc, "sb" => substr($l["ANO_MES"],0,4) );
 	endforeach;
 	
 	$un = getDomainUnidades(true);

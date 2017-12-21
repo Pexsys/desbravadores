@@ -310,8 +310,8 @@ var jsLIB = {
 	},
 	
 	populateOptions : function( objSelect, source ) {
-		var value = ( objSelect.hasAttr("opt-value") ? objSelect.attr("opt-value") : "value" );
-		var label = ( objSelect.hasAttr("opt-label") ? objSelect.attr("opt-label") : "label" );
+		var value = ( objSelect.hasAttr("opt-value") ? objSelect.attr("opt-value") : "id" );
+		var label = ( objSelect.hasAttr("opt-label") ? objSelect.attr("opt-label") : "ds" );
 		var search = ( objSelect.hasAttr("opt-search") ? objSelect.attr("opt-search") : label );
 		var subtext = ( objSelect.hasAttr("opt-subtext") ? objSelect.attr("opt-subtext") : null );
 		var selected = ( objSelect.hasAttr("opt-selected") ? objSelect.attr("opt-selected") : null );

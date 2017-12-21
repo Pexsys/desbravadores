@@ -155,8 +155,8 @@ function fRegistro( $parameters ) {
 		");
 		foreach ($rc as $r => $f):
 			$out["classe"][] = array(
-				"value" => $f['ID'],
-				"label" => $f['DS_ITEM']
+				"id" => $f['ID'],
+				"ds" => $f['DS_ITEM']
 			);
 		endforeach;
 

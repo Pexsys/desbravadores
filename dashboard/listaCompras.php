@@ -34,16 +34,16 @@ function filtroDatasAvaliacao(){
 			"filterTo" => "#comprasDatatable",
 			"filters" => 
 				array( 
-					array( "value" => "Z", "label" => "Tipo" ),
-					array( "value" => "X", "label" => "Sexo" ),
-					array( "value" => "C", "label" => "Classe" ),
-					array( "value" => "G", "label" => "Grupo" ),
-					array( "value" => "U", "label" => "Unidade" ),
-					array( "value" => "A", "label" => "&Aacute;reas" ),
-					array( "value" => "IC", "label" => "Compras" ),
-					array( "value" => "T", "label" => "Membros Ativos" ),
-					array( "value" => "E", "label" => "Especialidade" ),
-					array( "value" => "M", "label" => "Mestrado" )
+					array( "id" => "Z", "ds" => "Tipo" ),
+					array( "id" => "X", "ds" => "Sexo" ),
+					array( "id" => "C", "ds" => "Classe" ),
+					array( "id" => "G", "ds" => "Grupo" ),
+					array( "id" => "U", "ds" => "Unidade" ),
+					array( "id" => "A", "ds" => "&Aacute;reas" ),
+					array( "id" => "IC", "ds" => "Compras" ),
+					array( "id" => "T", "ds" => "Membros Ativos" ),
+					array( "id" => "E", "ds" => "Especialidade" ),
+					array( "id" => "M", "ds" => "Mestrado" )
 				)
 		) 
 	);?>
@@ -240,7 +240,7 @@ function filtroDatasAvaliacao(){
 								</div>
 								<div class="form-group col-xs-8">
 									<div class="well well-sm" style="padding:4px;margin-bottom:0px;font-size:11px"><b>Item</b></div>
-									<select field="id" name="cmItem" id="cmItem" opt-value="id" opt-links="cm" opt-label="ds" opt-search="sb" opt-subtext="sb" data-show-subtext="true" class="selectpicker form-control input-sm" data-live-search="true" title="(NENHUM)" data-container="body" data-width="100%"></select>
+									<select field="id" name="cmItem" id="cmItem" opt-value="id" opt-links="cm" opt-label="ds" opt-search="sb" opt-subtext="sb" class="selectpicker form-control input-sm" data-live-search="true" title="(NENHUM)" data-container="body" data-width="100%"></select>
 								</div>
 							</div>
 							<div class="row" id="divCmpl" style="display:none">
@@ -258,7 +258,7 @@ function filtroDatasAvaliacao(){
 						<div class="panel-body" style="padding:4px 10px 0px">
 							<div class="row">
 								<div class="form-group col-xs-12">
-									<select field="id_pessoa" name="cmNome" id="cmNome" opt-value="id" opt-label="ds" class="selectpicker form-control input-sm" multiple data-actions-box="true" data-live-search="true" data-selected-text-format="count" data-container="body" data-width="100%"></select>
+									<select field="id_pessoa" name="cmNome" id="cmNome" opt-value="id" opt-label="ds" class="selectpicker form-control input-sm" multiple data-actions-box="true" opt-subtext="sb" data-live-search="true" data-selected-text-format="count" data-container="body" data-width="100%"></select>
 								</div>
 							</div>
 						</div>

@@ -21,9 +21,9 @@
 			"filterTo" => "#ocoDataTable",
 			"filters" => 
 				array( 
-					array( "value" => "X", "label" => "Sexo" ),
-					array( "value" => "U", "label" => "Unidade" ),
-					array( "value" => "TO", "label" => "Tipo" )
+					array( "id" => "X", "ds" => "Sexo" ),
+					array( "id" => "U", "ds" => "Unidade" ),
+					array( "id" => "TO", "ds" => "Tipo" )
 				)
 		) 
 	);?>
@@ -95,7 +95,7 @@
 									<div class="row">
 										<div class="form-group col-xs-12">
 											<label for="cmNome" class="control-label">Para</label>
-											<select field="id_pessoa" name="cmNome" id="cmNome" opt-value="id_pessoa" opt-search="nm" opt-label="nm" class="selectpicker form-control input-sm" data-live-search="true" data-container="body" data-width="100%"></select>
+											<select field="id_pessoa" name="cmNome" id="cmNome" opt-value="id_pessoa" opt-search="nm" opt-label="nm" opt-subtext="sb" class="selectpicker form-control input-sm" data-live-search="true" data-container="body" data-width="100%"></select>
 										</div>
 									</div>
 									<div class="row">
@@ -149,7 +149,7 @@
 								<div class="row">
 									<div class="form-group col-xs-12">
 										<label for="cmName" class="control-label">Membros</label>
-										<select name="cmName" id="cmName" opt-value="value" opt-search="label" opt-label="label" class="selectpicker form-control input-sm" data-live-search="true" field="ip" title="Escolha um nome" data-width="100%" data-container="body" data-actions-box="true"></select>
+										<select name="cmName" id="cmName" opt-value="id" opt-search="ds" opt-label="ds" class="selectpicker form-control input-sm" data-live-search="true" field="ip" title="Escolha um nome" data-width="100%" data-container="body" data-actions-box="true"></select>
 									</div>
 								</div>
 							</div>

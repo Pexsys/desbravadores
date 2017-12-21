@@ -13,16 +13,16 @@
 			"filterTo" => "#aprHstTable",
 			"filters" => 
 				array( 
-					array( "value" => "Z", "label" => "Tipo" ),
-					array( "value" => "X", "label" => "Sexo" ),
-					array( "value" => "C", "label" => "Classe" ),
-					array( "value" => "G", "label" => "Grupo" ),
-					array( "value" => "HH", "label" => "Avaliações" ),
-					array( "value" => "U", "label" => "Unidade" ),
-					array( "value" => "A", "label" => "&Aacute;reas" ),
-					array( "value" => "T", "label" => "Membros Ativos" ),
-					array( "value" => "E", "label" => "Especialidade" ),
-					array( "value" => "M", "label" => "Mestrado" )
+					array( "id" => "Z", "ds" => "Tipo" ),
+					array( "id" => "X", "ds" => "Sexo" ),
+					array( "id" => "C", "ds" => "Classe" ),
+					array( "id" => "G", "ds" => "Grupo" ),
+					array( "id" => "HH", "ds" => "Avaliações" ),
+					array( "id" => "U", "ds" => "Unidade" ),
+					array( "id" => "A", "ds" => "&Aacute;reas" ),
+					array( "id" => "T", "ds" => "Membros Ativos" ),
+					array( "id" => "E", "ds" => "Especialidade" ),
+					array( "id" => "M", "ds" => "Mestrado" )
 				)
 		) 
 	);?>

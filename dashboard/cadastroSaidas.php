@@ -110,11 +110,11 @@ $autorizIcon = "fa fa-circle";
 												"filterTo" => "#cbParticip",
 												"filters" => 
 													array( 
-														array( "value" => "G", "label" => "Grupo",		"icon" => "fa fa-group" ),
-														array( "value" => "X", "label" => "Sexo",		"icon" => "fa fa-user" ),
-														array( "value" => "B", "label" => "Batizado",	"icon" => "fa fa-smile-o" ),
-														array( "value" => "U", "label" => "Unidade",	"icon" => "fa fa-universal-access" ),
-														array( "value" => "C", "label" => "Classe",		"icon" => "fa fa-universal-access" )
+														array( "id" => "G", "ds" => "Grupo",		"icon" => "fa fa-group" ),
+														array( "id" => "X", "ds" => "Sexo",		"icon" => "fa fa-user" ),
+														array( "id" => "B", "ds" => "Batizado",	"icon" => "fa fa-smile-o" ),
+														array( "id" => "U", "ds" => "Unidade",	"icon" => "fa fa-universal-access" ),
+														array( "id" => "C", "ds" => "Classe",		"icon" => "fa fa-universal-access" )
 													)
 											) 
 										);
@@ -124,7 +124,7 @@ $autorizIcon = "fa fa-circle";
 									<div class="row">
 										<div class="form-group col-xs-12">
 											<label for="cbParticip" class="control-label"><i class="<?echo $autorizIcon;?>" aria-hidden="true">&nbsp;</i>Autoriza&ccedil;&atilde;o&nbsp;&nbsp;|&nbsp;&nbsp;Participa&ccedil;&atilde;o<i class="fa fa-check" aria-hidden="true"></i></label>
-											<select name="cbParticip" id="cbParticip" class="selectpicker form-control input-sm" opt-value="id" opt-label="nm" opt-selected="pt" opt-links="fg" opt-link-icons="S=<?echo $autorizIcon;?>;N=fa fa-circle-thin" multiple data-live-search="true" field="particip" title="Escolha um ou mais nomes" data-selected-text-format="count > 2" data-width="100%" data-container="body" data-actions-box="true"></select>
+											<select name="cbParticip" id="cbParticip" class="selectpicker form-control input-sm" opt-value="id" opt-label="nm" opt-subtext="sb" opt-selected="pt" opt-links="fg" opt-link-icons="S=<?echo $autorizIcon;?>;N=fa fa-circle-thin" multiple data-live-search="true" field="particip" title="Escolha um ou mais nomes" data-selected-text-format="count > 2" data-width="100%" data-container="body" data-actions-box="true"></select>
 										</div>
 									</div>
 								</div>

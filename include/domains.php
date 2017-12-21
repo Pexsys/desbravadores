@@ -5,11 +5,12 @@ function getDomainMembrosAtivos(){
 	
 	$qtdZeros = zeroSizeID();
 	$result = $GLOBALS['conn']->Execute("SELECT ID, NM FROM CON_ATIVOS ORDER BY NM");
-	foreach($result as $l => $fields):
-		$id = fStrZero($fields['ID'], $qtdZeros);
+	foreach($result as $l => $f):
+		$id = fStrZero($f['ID'], $qtdZeros);
 		$arr[] = array(
-			"value" => $fields['ID'],
-			"label" => "$id ".($fields['NM'])
+			"id" => $f['ID'],
+			"ds" => $f['NM'],
+			"sb" => $id
 		);
 	endforeach;
 	return $arr;
@@ -20,11 +21,12 @@ function getDomainMembrosInativos(){
 	
 	$qtdZeros = zeroSizeID();
 	$result = $GLOBALS['conn']->Execute("SELECT cp.ID, cp.NM FROM CAD_PESSOA cp WHERE NOT EXISTS (SELECT 1 FROM CAD_ATIVOS WHERE ID = cp.ID AND NR_ANO = YEAR(NOW())) ORDER BY cp.NM");
-	foreach($result as $l => $fields):
-		$id = fStrZero($fields['ID'], $qtdZeros);
+	foreach($result as $l => $f):
+		$id = fStrZero($f['ID'], $qtdZeros);
 		$arr[] = array(
-			"value" => $fields['ID'],
-			"label" => "$id ".($fields['NM'])
+			"id" => $f['ID'],
+			"ds" => $f['NM'],
+			"sb" => $id
 		);
 	endforeach;
 	return $arr;
@@ -40,8 +42,9 @@ function getDomainEventos(){
 	");
 	foreach ($result as $k => $f):
 		$arr[] = array(
-			"value"	=> $f['ID'],
-			"label"	=> strftime("%d/%m/%Y",strtotime($f["DH_S"])) ." - ". ($f['DS'])
+			"id"	=> $f['ID'],
+			"ds"	=> $f['DS'],
+			"sb"	=> strftime("%d/%m/%Y",strtotime($f["DH_S"]))
 		);
 	endforeach;
 	return $arr;
@@ -56,13 +59,12 @@ function getDomainUnidades($fAtivo = false){
 	endif;
 	
 	$result = $GLOBALS['conn']->Execute($query);
-	while (!$result->EOF):
+	foreach ($result as $k => $f):
 		$arr[] = array( 
-			"value"	=> $result->fields['ID'],
-			"label"	=> ($result->fields['DS'])
+			"id"	=> $f['ID'],
+			"ds"	=> $f['DS']
 		);
-		$result->MoveNext();
-	endwhile;
+	endforeach;
 	return $arr;
 }
 
@@ -73,13 +75,12 @@ function getTipoAprendizado(){
 		SELECT ID, DS
 		  FROM TAB_TP_APRENDIZADO
 		  ORDER BY ID");
-	while (!$result->EOF):
+	foreach ($result as $k => $f):
 		$arr[] = array( 
-			"value"	=> $result->fields['ID'],
-			"label"	=> ($result->fields['DS'])
+			"id"	=> $f['ID'],
+			"ds"	=> $f['DS']
 		);
-		$result->MoveNext();
-	endwhile;
+	endforeach;
 	return $arr;
 }
 
@@ -90,13 +91,12 @@ function getTipoMateriais(){
 		SELECT DISTINCT TP
 		  FROM TAB_MATERIAIS
 		  ORDER BY TP");
-	while (!$result->EOF):
+	foreach ($result as $k => $f):
 		$arr[] = array(
-				"value"	=> ($result->fields['TP']),
-				"label"	=> ($result->fields['TP'])
+				"id"	=> $f['TP'],
+				"ds"	=> $f['TP']
 		);
-		$result->MoveNext();
-	endwhile;
+	endforeach;
 	return $arr;
 }
 
@@ -108,13 +108,13 @@ function getDomainClasses(){
 		  FROM TAB_APRENDIZADO
 		WHERE TP_ITEM = ?
 	  ORDER BY CD_ITEM_INTERNO", array( "CL" ) );
-	while (!$result->EOF):
+	foreach ($result as $k => $f):
 		$arr[] = array( 
-			"value"	=> $result->fields['ID'],
-			"label"	=> ($result->fields['DS_ITEM'])
+			"id"	=> $f['ID'],
+			"ds"	=> $f['DS_ITEM'],
+			"sb"	=> $f['CD_ITEM_INTERNO']
 		);
-		$result->MoveNext();
-	endwhile;
+	endforeach;
 	return $arr;
 }
 
@@ -128,13 +128,13 @@ function getDomainMestrados(){
 		  AND CD_AREA_INTERNO = ?
 		  AND CD_ITEM_INTERNO IS NOT NULL
 	  ORDER BY DS_ITEM", array( "ES", "ME" ) );
-	while (!$result->EOF):
+	foreach ($result as $k => $f):
 		$arr[] = array( 
-			"value"	=> $result->fields['ID'],
-			"label"	=> $result->fields['CD_ITEM_INTERNO']." ".($result->fields['DS_ITEM'])
+			"id"	=> $f['ID'],
+			"ds"	=> $f['DS_ITEM'],
+			"sb"	=> $f['CD_ITEM_INTERNO']
 		);
-		$result->MoveNext();
-	endwhile;
+	endforeach;
 	return $arr;
 }
 
@@ -148,13 +148,13 @@ function getDomainEspecialidades(){
 		  AND CD_AREA_INTERNO <> ?
 		  AND CD_ITEM_INTERNO IS NOT NULL
 	  ORDER BY DS_ITEM", array( "ES", "ME" ) );
-	while (!$result->EOF):
+	foreach ($result as $k => $f):
 		$arr[] = array( 
-			"value"	=> $result->fields['ID'],
-			"label"	=> $result->fields['CD_ITEM_INTERNO']." ".($result->fields['DS_ITEM'])
+			"id"	=> $f['ID'],
+			"ds"	=> $f['DS_ITEM'],
+			"sb"	=> $f['CD_ITEM_INTERNO']
 		);
-		$result->MoveNext();
-	endwhile;
+	endforeach;
 	return $arr;
 }
 
@@ -167,13 +167,13 @@ function getDomainAreasEspecialidades(){
 		WHERE TP_ITEM = ?
 		  AND CD_ITEM_INTERNO IS NULL
 	  ORDER BY DS_ITEM", array( "ES" ) );
-	while (!$result->EOF):
+	foreach ($result as $k => $f):
 		$arr[] = array( 
-			"value"	=> $result->fields['CD_AREA_INTERNO'],
-			"label"	=> $result->fields['CD_ITEM_INTERNO']." ".($result->fields['DS_ITEM'])
+			"id"	=> $f['CD_AREA_INTERNO'],
+			"ds"	=> $f['DS_ITEM'],
+			"sb"	=> $f['CD_ITEM_INTERNO']
 		);
-		$result->MoveNext();
-	endwhile;
+	endforeach;
 	return $arr;
 }
 
@@ -183,8 +183,8 @@ function getMesAniversario(){
 		  FROM CON_ATIVOS
 	  ORDER BY 1
 	");
-	foreach ($result as $k => $l):
-		$arr[] = array( "value" => $l["MES"], "label" => mb_strtoupper(fDescMes($l["MES"])) );
+	foreach ($result as $k => $f):
+		$arr[] = array( "id" => $f["MES"], "ds" => mb_strtoupper(fDescMes($f["MES"])) );
 	endforeach;
 	return $arr;
 }

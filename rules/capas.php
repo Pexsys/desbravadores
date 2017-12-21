@@ -24,17 +24,18 @@ function getName( $parameters ) {
 }
 
 function getNames(){
-	$arr = array();
+	$arr = array();	
+
+	fConnDB();
 
 	session_start();
 	$usuarioID = $_SESSION['USER']['id_usuario'];
-	
+	$qtdZeros = zeroSizeID();
+
 	$unidadeID	= null;
 	$membroID	= null;
 	$cargo		= null;
-	
-	fConnDB();
-	
+
 	//MEMBRO ATIVO LOGADO
 	$result = $GLOBALS['conn']->Execute("
 		SELECT cu.ID_CAD_PESSOA, ca.ID_UNIDADE, ca.CD_CARGO, ca.CD_CARGO2, ca.NM 
@@ -45,9 +46,9 @@ function getNames(){
 	if (!$result->EOF):
 		$unidadeID = $result->fields["ID_UNIDADE"];
 		$membroID = $result->fields["ID_CAD_PESSOA"];
-		$membroNM = ($result->fields["NM"]);
-		
-		$arr[] = array( "id" => $result->fields["ID_CAD_PESSOA"]."|$membroNM", "ds" => "<<mim>> - $membroNM", "fg" => "S");
+		$membroNM = $result->fields["NM"];
+		$id = fStrZero($membroID, $qtdZeros);
+		$arr[] = array( "id" => "$id|$membroNM", "ds" => "<<mim>> - $membroNM", "fg" => "S", "sb" => $id );
 		$cargo = $result->fields['CD_CARGO'];
 		if (fStrStartWith($cargo,"2-07")):
 			$cargo = $result->fields['CD_CARGO2'];
@@ -91,7 +92,9 @@ function getNames(){
 		WHERE cu.ID_USUARIO = ?
 	", array($usuarioID) );
 	foreach ($rd as $k => $l):
-		$arr[] = array( "id" => $l["ID"]."|".($l["NM"]), "ds" =>($l["NM"]) );
+		$id = fStrZero($l["ID"], $qtdZeros);
+		$nm = $line["NM"];
+		$arr[] = array( "id" => "$id|$nm", "ds" => $nm, "sb" => $id );
 	
 		$aQuery = getUnionByUnidade( $aQuery, $l["ID_UNIDADE"], $l["ID"] );
 		$aQuery = getUnionByClasses( $aQuery, $l["ID"] );
@@ -100,12 +103,12 @@ function getNames(){
 	if (!empty($aQuery["query"])):
 		$rs = $GLOBALS['conn']->Execute( substr($aQuery["query"], 7)." ORDER BY 2", $aQuery["binds"] );
 		foreach ($rs as $k => $line):
-			$id = $line["ID"];
-			$nm = ($line["NM"]);
-			$arr[] = array( "id" => "$id|$nm", "ds" => $nm );
+			$id = fStrZero($line["ID"], $qtdZeros);
+			$nm = $line["NM"];
+			$arr[] = array( "id" => "$id|$nm", "ds" => $nm, "sb" => $id );
 		endforeach;
 	endif;
-
+	
 	return array( "result" => true, "names" => $arr );
 }
 

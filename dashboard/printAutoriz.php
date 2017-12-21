@@ -46,7 +46,6 @@ if ( !$result->EOF ):
     	</div>
     </div>
 	<?php
-	//TOTAL DE REQUISITOS POR CLASSE.
 	foreach ($result as $k => $fields):
 	    	echo "<div class=\"col-md-8 col-xs-12 col-sm-12 col-lg-4\">";
 			echo "  <div class=\"panel panel-success\" name=\"reprint\" cad-id=\"".$fields["ID_CAD_PESSOA"]."\" aut-id=\"".$fields["ID"]."\">";
@@ -56,7 +55,7 @@ if ( !$result->EOF ):
     					<div class=\"col-xs-9 text-right\">
     						<div class=\"huge\">".strftime("%Y",strtotime($fields["DH_S"]))."-".fStrZero($fields["ID"],3)."</div>
     					</div>
-    					<div class=\"col-xs-12 text-right\">".(strtoupper( $fields["DS"] ))."</div>
+    					<div class=\"col-xs-12 text-right\">".strtoupper($fields["DS"])."</div>
     				</div>
 			    </div>	
 	    		</div>
@@ -74,7 +73,7 @@ endif;
 		<div class="col-xs-12 col-md-12">
 			<div class="row form-group">
 				<label for="nmMembro" class="control-label">Para quem?</label>
-				<select name="nmMembro" id="nmMembro" class="selectpicker form-control input-sm" opt-value="id" multiple opt-label="ds" data-live-search="true" title="Escolha um ou mais nomes" data-selected-text-format="count > 5" data-width="100%" data-container="body" data-actions-box="true"></select>
+				<select name="nmMembro" id="nmMembro" class="selectpicker form-control input-sm" opt-value="id" multiple opt-label="ds" opt-subtext="sb" data-live-search="true" title="Escolha um ou mais nomes" data-selected-text-format="count > 5" data-width="100%" data-container="body" data-actions-box="true"></select>
 			</div>
 		</div>
 		<div class="col-xs-12 col-md-12">
