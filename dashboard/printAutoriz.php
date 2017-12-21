@@ -86,7 +86,7 @@ endif;
 <div id="alertAutoriz" style="display:none">
 	<div class="row">
 		<div class="col-lg-12">
-			<h3 class="page-header">Você não está autorizado a imprimir sua autorização. Procure a secretaria do clube.</h3>
+			<h3 class="page-header">Autorização não disponível. Procure a secretaria do clube.</h3>
 		</div>
 	</div>
 </div>

@@ -111,9 +111,9 @@ $autorizIcon = "fa fa-circle";
 												"filters" => 
 													array( 
 														array( "id" => "G", "ds" => "Grupo",		"icon" => "fa fa-group" ),
-														array( "id" => "X", "ds" => "Sexo",		"icon" => "fa fa-user" ),
-														array( "id" => "B", "ds" => "Batizado",	"icon" => "fa fa-smile-o" ),
-														array( "id" => "U", "ds" => "Unidade",	"icon" => "fa fa-universal-access" ),
+														array( "id" => "X", "ds" => "Sexo",			"icon" => "fa fa-user" ),
+														array( "id" => "B", "ds" => "Batizado",		"icon" => "fa fa-smile-o" ),
+														array( "id" => "U", "ds" => "Unidade",		"icon" => "fa fa-universal-access" ),
 														array( "id" => "C", "ds" => "Classe",		"icon" => "fa fa-universal-access" )
 													)
 											) 
