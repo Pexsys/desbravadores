@@ -14,11 +14,11 @@
 			"filterTo" => "#membrosDatatable",
 			"filters" => 
 				array( 
-					array( "value" => "G", "label" => "Grupo" ),
-					array( "value" => "X", "label" => "Sexo" ),
-					array( "value" => "B", "label" => "Batizado" ),
-					array( "value" => "U", "label" => "Unidade" ),
-					array( "value" => "PC", "label" => "Pend&ecirc;ncia Cadastral" )
+					array( "id" => "G", "ds" => "Grupo" ),
+					array( "id" => "X", "ds" => "Sexo" ),
+					array( "id" => "B", "ds" => "Batizado" ),
+					array( "id" => "U", "ds" => "Unidade" ),
+					array( "id" => "PC", "ds" => "Pend&ecirc;ncia Cadastral" )
 				)
 		) 
 	);?>

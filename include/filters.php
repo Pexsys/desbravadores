@@ -11,10 +11,10 @@ function fDataFilters( $parameters ){
 		$aParam = explode(",",$flt);
 		$aOpSel = explode(",",fRequest("op"));
 		foreach ($aParam as $k):
-			$key = array_search($k, array_column($pFilters, "value"));
+			$key = array_search($k, array_column($pFilters, "id"));
 			if ($key !== false):
 				$temFiltro = true;
-				$arrFilter = addFilter( array( "type" => $pFilters[$key]["value"], "desc" => $pFilters[$key]["label"], "opsl" => $aOpSel ) );
+				$arrFilter = addFilter( array( "type" => $pFilters[$key]["id"], "desc" => $pFilters[$key]["ds"], "opsl" => $aOpSel ) );
 				$strFilter .= $arrFilter["obj"];
 				unset($pFilters[$key]);
 			endif;
@@ -26,11 +26,11 @@ function fDataFilters( $parameters ){
 	$strFilter .= "<select class=\"selectpicker form-control input-sm\" id=\"addFilter\" onchange=\"jsFilter.addFilter(this);\" data-width=\"100%\" title=\"Adicionar filtros\" data-width=\"auto\" data-container=\"body\">";
 	$arr = array_msort( $pFilters, array('label' => SORT_ASC) );
 	foreach ($arr as $key => $value):
-		$strFilter .= "<option value=\"".$value["value"]."\">";
+		$strFilter .= "<option value=\"".$value["id"]."\">";
 		//if ( isset($value["icon"]) ):
 		//	$strFilter .= " <i class=\"".$value["icon"]."\"></i>&nbsp;";
 		//endif;
-		$strFilter .= $value["label"]."</option>";
+		$strFilter .= $value["ds"]."</option>";
 	endforeach;
 	$strFilter .= "</select>";
 	$strFilter .= "</div>";
@@ -47,67 +47,67 @@ function getDomainFilter( $parameters ) {
 	//SEXO
 	if ( $type == "X" ):
 		$domain = array(
-			array( "value" => "F", "label" => "FEMININO" ),
-			array( "value" => "M", "label" => "MASCULINO" )
+			array( "id" => "F", "ds" => "FEMININO" ),
+			array( "id" => "M", "ds" => "MASCULINO" )
 		);
 	
 	//SITUACAO
 	elseif ( $type == "S" ):
 		$domain = array(
-			array( "value" => "A", "label" => "ATIVOS" ),
-			array( "value" => "I", "label" => "INATIVOS" ),
-			array( "value" => "T", "label" => "TODOS" )
+			array( "id" => "A", "ds" => "ATIVOS" ),
+			array( "id" => "I", "ds" => "INATIVOS" ),
+			array( "id" => "T", "ds" => "TODOS" )
 		);
 		
 	//GRUPO
 	elseif ( $type == "G" ):
 		$domain = array(
-			array( "value" => "1", "label" => "DESBRAVADORES" ),
-			array( "value" => "2", "label" => "DIRETORIA GERAL" ),
-			array( "value" => "3", "label" => "FANFARRA" ),
-			array( "value" => "4", "label" => "INSTRUTORES" ),
-			array( "value" => "5", "label" => "CONSELHEIROS" ),
-			array( "value" => "6", "label" => "CAPITÃES" )
+			array( "id" => "1", "ds" => "DESBRAVADORES" ),
+			array( "id" => "2", "ds" => "DIRETORIA GERAL" ),
+			array( "id" => "3", "ds" => "FANFARRA" ),
+			array( "id" => "4", "ds" => "INSTRUTORES" ),
+			array( "id" => "5", "ds" => "CONSELHEIROS" ),
+			array( "id" => "6", "ds" => "CAPITÃES" )
 		);
 		
 	//APRENDIZADO
 	elseif ( $type == "HA" ):
 		$year = date("Y");
 		$domain = array(
-			array( "value" => "0", "label" => "EM ANDAMENTO" ),
-			array( "value" => "1", "label" => "PENDENTES DE AVALIA&Ccedil;&Atilde;O" ),
-			array( "value" => "2", "label" => "AVALIADOS EM $year" ),
-			array( "value" => "3", "label" => "PENDENTES DE INVESTIDURA" )
+			array( "id" => "0", "ds" => "EM ANDAMENTO" ),
+			array( "id" => "1", "ds" => "PENDENTES DE AVALIA&Ccedil;&Atilde;O" ),
+			array( "id" => "2", "ds" => "AVALIADOS EM $year" ),
+			array( "id" => "3", "ds" => "PENDENTES DE INVESTIDURA" )
 		);
 		
 	//PENDENCIAS CADASTRAIS
 	elseif ( $type == "PC" ):
 		$domain = array(
-			array( "value" => "NC5", "label" => "NOME COMPLETO INV&Aacute;LIDO" ),
-			array( "value" => "SEX", "label" => "SEXO INV&Aacute;LIDO" ),
-			array( "value" => "DTN", "label" => "DATA DE NASCIMENTO INV&Aacute;LIDA" ),
-			array( "value" => "DOC", "label" => "DOCUMENTO INV&Aacute;LIDO" ),
-			array( "value" => "CPF", "label" => "CPF INV&Aacute;LIDO" ),
-			array( "value" => "LOG", "label" => "LOGRADOURO INV&Aacute;LIDO" ),
-			array( "value" => "NLG", "label" => "NUMERO LOGRADOURO INV&Aacute;LIDO" ),
-			array( "value" => "BAI", "label" => "BAIRRO INV&Aacute;LIDO" ),
-			array( "value" => "CID", "label" => "CIDADE INV&Aacute;LIDA" ),
-			array( "value" => "EST", "label" => "UF INV&Aacute;LIDA" ),
-			array( "value" => "CEP", "label" => "CEP INV&Aacute;LIDO" ),
-			array( "value" => "TEL", "label" => "TELEFONES INV&Aacute;LIDOS" ),
-			array( "value" => "UNI", "label" => "UNIDADE INV&Aacute;LIDA" ),
-			array( "value" => "CAR", "label" => "CARGO/FUN&Ccedil;&Atilde;O INV&Aacute;LIDA" )
+			array( "id" => "NC5", "ds" => "NOME COMPLETO INV&Aacute;LIDO" ),
+			array( "id" => "SEX", "ds" => "SEXO INV&Aacute;LIDO" ),
+			array( "id" => "DTN", "ds" => "DATA DE NASCIMENTO INV&Aacute;LIDA" ),
+			array( "id" => "DOC", "ds" => "DOCUMENTO INV&Aacute;LIDO" ),
+			array( "id" => "CPF", "ds" => "CPF INV&Aacute;LIDO" ),
+			array( "id" => "LOG", "ds" => "LOGRADOURO INV&Aacute;LIDO" ),
+			array( "id" => "NLG", "ds" => "NUMERO LOGRADOURO INV&Aacute;LIDO" ),
+			array( "id" => "BAI", "ds" => "BAIRRO INV&Aacute;LIDO" ),
+			array( "id" => "CID", "ds" => "CIDADE INV&Aacute;LIDA" ),
+			array( "id" => "EST", "ds" => "UF INV&Aacute;LIDA" ),
+			array( "id" => "CEP", "ds" => "CEP INV&Aacute;LIDO" ),
+			array( "id" => "TEL", "ds" => "TELEFONES INV&Aacute;LIDOS" ),
+			array( "id" => "UNI", "ds" => "UNIDADE INV&Aacute;LIDA" ),
+			array( "id" => "CAR", "ds" => "CARGO/FUN&Ccedil;&Atilde;O INV&Aacute;LIDA" )
 		);
 
 		
 	//ITENS COMPRADOS
 	elseif ( $type == "IC" ):
 		$domain = array(
-			array( "value" => "0", "label" => "ITENS COMPRADOS" ),
-			array( "value" => "1", "label" => "ITENS A COMPRAR" ),
-			array( "value" => "4", "label" => "ITENS PREVISTOS" ),
-			array( "value" => "2", "label" => "ITENS ENTREGUES" ),
-			array( "value" => "3", "label" => "ITENS A ENTREGAR" )
+			array( "id" => "0", "ds" => "ITENS COMPRADOS" ),
+			array( "id" => "1", "ds" => "ITENS A COMPRAR" ),
+			array( "id" => "4", "ds" => "ITENS PREVISTOS" ),
+			array( "id" => "2", "ds" => "ITENS ENTREGUES" ),
+			array( "id" => "3", "ds" => "ITENS A ENTREGAR" )
 		);
 		
 	//MES ANIVERSARIO
@@ -118,8 +118,8 @@ function getDomainFilter( $parameters ) {
 	elseif ( $type == "HH" ):
 		$year = date("Y");
 		$domain = array(
-			array( "value" => "4", "label" => "INVESTIDOS EM $year" ),
-			array( "value" => "5", "label" => "INVESTIDOS ANTES DE $year" )
+			array( "id" => "4", "ds" => "INVESTIDOS EM $year" ),
+			array( "id" => "5", "ds" => "INVESTIDOS ANTES DE $year" )
 		);
 		
 	//TIPO DE MATERIAIS
@@ -129,21 +129,21 @@ function getDomainFilter( $parameters ) {
 	//BATIZADO
 	elseif ( $type == "B" ):
 		$domain = array(
-			array( "value" => "S", "label" => "SIM" ),
-			array( "value" => "N", "label" => "N&Atilde;O" )
+			array( "id" => "S", "ds" => "SIM" ),
+			array( "id" => "N", "ds" => "N&Atilde;O" )
 		);
 		$y = 0;
 		for ($i=0;$i<=2;$i++):
 			$y = date("Y") - $i;
-			$domain[] = array( "value" => $y, "label" => "EM ". $y);
+			$domain[] = array( "id" => $y, "ds" => "EM ". $y);
 		endfor;
-		$domain[] = array( "value" => "A". $y, "label" => "ANTES DE ". $y);
+		$domain[] = array( "id" => "A". $y, "ds" => "ANTES DE ". $y);
 		
 	//TIPO DE OCORRENCIA
 	elseif ( $type == "TO" ):
 		$domain = array(
-			array( "value" => "P", "label" => "POSITIVA" ),
-			array( "value" => "N", "label" => "NEGATIVA" )
+			array( "id" => "P", "ds" => "POSITIVA" ),
+			array( "id" => "N", "ds" => "NEGATIVA" )
 		);
 		
 	//UNIDADE
@@ -195,7 +195,7 @@ function addFilter( $parameters ){
 	$opSel = $parameters["opsl"];
 	if (is_array($opSel)):
 		foreach ( $filter["domain"] as $j => $k ):
-			if ( $opSel[0] == "ALL" || in_array( $k["value"], $opSel, true ) ):
+			if ( $opSel[0] == "ALL" || in_array( $k["id"], $opSel, true ) ):
 				$filter["domain"][$j]["selected"] = "S";
 			endif;
 		endforeach;
@@ -214,11 +214,14 @@ function addFilter( $parameters ){
 	endif;
 	$str .= ">";
 	foreach ( $filter["domain"] as $k ):
-		$str .= "<option value=\"".$k["value"]."\"";
+		$str .= "<option value=\"".$k["id"]."\"";
 		if ($k["selected"] == "S"):
 			$str .= " selected";
 		endif;
-		$str .= ">".$k["label"]."</option>";
+		if (isset($k["sb"])):
+			$str .= " data-subtext=\"".$k["sb"]."\"";
+		endif;
+		$str .= ">".$k["ds"]."</option>";
 	endforeach;
 	$str .= "</select></div>";
 	return array( "result" => true, "obj" => $str );

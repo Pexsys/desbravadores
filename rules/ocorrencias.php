@@ -81,8 +81,9 @@ function fGetMembros(){
 	foreach($result as $l => $fields):
 		$id = fStrZero($fields['ID_CAD_PESSOA'], $qtdZeros);
 		$arr["nomes"][] = array(
-			"value" => $fields['ID_CAD_PESSOA'],
-			"label" => "$id ".($fields['NM'])
+			"id" => $fields['ID_CAD_PESSOA'],
+			"ds" => $fields['NM'],
+			"sb" => $id
 		);
 	endforeach;
 	return $arr;
@@ -258,7 +259,8 @@ function fOcorrencia( $parameters ) {
 				$id = fStrZero($f['ID'], $qtdZeros);
 				$out["nomes"][] = array(
 						"id_pessoa" => $id,
-						"nm" => "$id ".($f['NM'])
+						"nm" => $f['NM'],
+						"sb" => $id
 				);
 			endforeach;
 		endif;

@@ -116,14 +116,15 @@ function getQueryByFilter( $parameters ) {
 function getNames(){
 	$arr = array();
 
+	fConnDB();
+
 	session_start();
 	$usuarioID = $_SESSION['USER']['id_usuario'];
+	$qtdZeros = zeroSizeID();
 	
 	$unidadeID	= null;
 	$membroID	= null;
 	$cargo		= null;
-	
-	fConnDB();
 
 	//MEMBRO LOGADO
 	$result = $GLOBALS['conn']->Execute("
@@ -145,7 +146,8 @@ function getNames(){
 		     AND esp.FG_AUTORIZ = ?
 		", array( $membroID, "S" ) );
 		if ($result->fields["IDADE_HOJE"] < 18 && !$rs->EOF):
-			$arr[] = array( "id" => $membroID, "ds" => "<<mim>> - $membroNM");
+			$id = fStrZero($membroID, $qtdZeros);
+			$arr[] = array( "id" => $membroID, "ds" => "<<mim>> - $membroNM", "sb" => $id );
 		endif;
 		
 		$cargo = $result->fields['CD_CARGO'];
@@ -220,7 +222,8 @@ function getNames(){
 	          AND ca.IDADE_HOJE < ?
 	", array("S", $usuarioID, 18) );
 	foreach ($rd as $k => $l):
-		$arr[] = array( "id" => $l["ID"], "ds" =>($l["NM"]) );
+		$id = fStrZero($line["ID"], $qtdZeros);
+		$arr[] = array( "id" => $l["ID"], "ds" =>$l["NM"], "sb" => $id );
 		
 		$aQuery = getUnionByUnidade( $aQuery, $l["ID_UNIDADE"], $l["ID"] );
 		$aQuery = getUnionByClasses( $aQuery, $l["ID"] );
@@ -230,7 +233,8 @@ function getNames(){
 		$rs = $GLOBALS['conn']->Execute( substr($aQuery["query"], 7)." ORDER BY 1", $aQuery["binds"] );
 		if (!$rs->EOF):
 			foreach ($rs as $k => $line):
-				$arr[] = array( "id" => $line["ID"], "ds" => ($line["NM"]) );
+				$id = fStrZero($line["ID"], $qtdZeros);
+				$arr[] = array( "id" => $line["ID"], "ds" => $line["NM"], "sb" => $id );
 			endforeach;
 		endif;
 	endif;
@@ -448,7 +452,7 @@ function fSaidaPessoa( $saidaID, $arrayParticip ) {
 function getMembros( $parameters ) {
 	$arr = array();
 	fConnDB();
-	
+	$qtdZeros = zeroSizeID();
 	$result = getQueryByFilter( $parameters );
 	foreach ($result as $k => $fields):
 		$idade = is_null($fields['IDADE_EVENTO_FIM']) ? $fields['IDADE_HOJE'] : $fields['IDADE_EVENTO_FIM'];
@@ -457,12 +461,13 @@ function getMembros( $parameters ) {
 		if ( is_null($fgAutoriz) || is_null($fields['ID_EVE_SAIDA']) ):
 			$fgAutoriz = ($idade < 18 ? 'S' : 'N');
 		endif;
-	
+		$id = fStrZero($fields['ID'], $qtdZeros);
 		$arr[] = array(
 			"pt" => is_null($fields['ID_EVE_PESSOA']) ? 'N' : 'S',
 			"id" => $fields['ID'],
-			"nm" => ($fields['NM']),
-			"fg" => $fgAutoriz
+			"nm" => $fields['NM'],
+			"fg" => $fgAutoriz,
+			"sb" => $id
 		);
 	endforeach;
 	return $arr;
@@ -489,7 +494,7 @@ function getSaidas( $parameters ) {
 	
 	$query = "SELECT es.ID, es.DS, es.DS_DEST, es.DH_S, es.DH_R FROM EVE_SAIDA es";
 	if ( $parameters["filter"] == "Y" ):
-		$query .= " WHERE YEAR(es.DH_R) = YEAR(NOW())";
+		$query .= " WHERE YEAR(es.DH_S) = YEAR(NOW()) OR YEAR(es.DH_R) = YEAR(NOW())";
 	elseif ( $parameters["filter"] == "P" ):
 		$query .= " WHERE es.DH_R > NOW() AND es.FG_IMPRIMIR = 'S' AND EXISTS (SELECT 1 FROM EVE_SAIDA_PESSOA WHERE ID_EVE_SAIDA = es.ID AND FG_AUTORIZ = 'S' ";
     
@@ -537,9 +542,9 @@ function getAttrib( $parameters ) {
 		foreach ($result as $k => $f):
 			$arr[] = array(
 				"id" => $f['ID'],
-				"nm" => ($f["NM"]),
-				"un" => ($f["DS_UNIDADE"]),
-				"cd" => ($f[$filter])
+				"nm" => $f["NM"],
+				"un" => $f["DS_UNIDADE"],
+				"cd" => $f[$filter]
 			);
 		endforeach;
 	endif;

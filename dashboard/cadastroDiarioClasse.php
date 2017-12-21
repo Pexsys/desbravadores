@@ -137,13 +137,13 @@
 								<div class="row">
 									<div class="form-group col-xs-12">
 										<label for="cmName" class="control-label">Classe</label>
-										<select name="cmName" id="cmName" opt-value="value" opt-search="label" opt-label="label" class="selectpicker form-control input-sm" data-live-search="true" field="ic" title="Escolha Classe" data-width="100%" data-container="body" data-actions-box="true"></select>
+										<select name="cmName" id="cmName" opt-value="id" opt-search="ds" opt-label="ds" class="selectpicker form-control input-sm" data-live-search="true" field="ic" title="Escolha Classe" data-width="100%" data-container="body" data-actions-box="true"></select>
 									</div>
 								</div>
 								<div class="row" style="display:none">
 									<div class="form-group col-xs-12">
 										<label for="cmItem" class="control-label">Item</label>
-										<select name="cmItem" id="cmItem" opt-value="value" opt-search="label" opt-label="label" class="selectpicker form-control input-sm" data-live-search="true" field="it" title="Escolha Itens" data-width="100%" data-container="body" data-actions-box="true"></select>
+										<select name="cmItem" id="cmItem" opt-value="id" opt-search="ds" opt-label="ds" class="selectpicker form-control input-sm" data-live-search="true" field="it" title="Escolha Itens" data-width="100%" data-container="body" data-actions-box="true"></select>
 									</div>
 								</div>
 							</div>

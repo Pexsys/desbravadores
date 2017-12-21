@@ -13,11 +13,11 @@
 			"filterTo" => "#matHstTable",
 			"filters" => 
 				array( 
-					array( "value" => "X", "label" => "Sexo" ),
-					array( "value" => "G", "label" => "Grupo" ),
-					array( "value" => "U", "label" => "Unidade" ),
-					array( "value" => "T", "label" => "Membros Ativos" ),
-					array( "value" => "HT", "label" => "Tipo de Material" )
+					array( "id" => "X", "ds" => "Sexo" ),
+					array( "id" => "G", "ds" => "Grupo" ),
+					array( "id" => "U", "ds" => "Unidade" ),
+					array( "id" => "T", "ds" => "Membros Ativos" ),
+					array( "id" => "HT", "ds" => "Tipo de Material" )
 				)
 		) 
 	);?>

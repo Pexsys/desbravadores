@@ -13,11 +13,11 @@
 			"filterTo" => "#birthTable",
 			"filters" => 
 				array( 
-					array( "value" => "X", "label" => "Sexo" ),
-					array( "value" => "C", "label" => "Classe" ),
-					array( "value" => "G", "label" => "Grupo" ),
-					array( "value" => "MA", "label" => "Mês de Aniversário" ),
-					array( "value" => "U", "label" => "Unidade" )
+					array( "id" => "X", "ds" => "Sexo" ),
+					array( "id" => "C", "ds" => "Classe" ),
+					array( "id" => "G", "ds" => "Grupo" ),
+					array( "id" => "MA", "ds" => "Mês de Aniversário" ),
+					array( "id" => "U", "ds" => "Unidade" )
 				)
 		) 
 	);?>

@@ -538,7 +538,7 @@ function fDomain($a){
 	$query .= isset( $a['order'] ) ? " ORDER BY ".$a['order'] : "";
 	$dom = $GLOBALS['conn']->Execute($query);
 	while (!$dom->EOF):
-		$arr[] = array("value" => $dom->fields[$id], "label" => $dom->fields[$ds]);
+		$arr[] = array("id" => $dom->fields[$id], "ds" => $dom->fields[$ds]);
 		$dom->MoveNext();
 	endwhile;
 	return $arr;
@@ -549,7 +549,7 @@ function fDomainStatic($a,$lWrite = true){
 	if ( $lWrite ):
 		$strDomain = "<option value=\"\">(NENHUM)</option>";
 		foreach ($arr as $key => $value):
-			$strDomain .= "<option value=\"".$value["value"]."\">".$value["label"]."</option>";
+			$strDomain .= "<option value=\"".$value["id"]."\">".$value["ds"]."</option>";
 		endforeach;
 		echo $strDomain;
 	endif;

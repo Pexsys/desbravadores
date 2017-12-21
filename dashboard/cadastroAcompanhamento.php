@@ -20,11 +20,11 @@
 			"filterTo" => "#acompDatatable",
 			"filters" => 
 				array( 
-					array( "value" => "HA", "label" => "Avaliações" ),
-					array( "value" => "X", "label" => "Sexo" ),
-					array( "value" => "C", "label" => "Classe" ),
-					array( "value" => "G", "label" => "Grupo" ),
-					array( "value" => "U", "label" => "Unidade" )
+					array( "id" => "HA", "ds" => "Avaliações" ),
+					array( "id" => "X", "ds" => "Sexo" ),
+					array( "id" => "C", "ds" => "Classe" ),
+					array( "id" => "G", "ds" => "Grupo" ),
+					array( "id" => "U", "ds" => "Unidade" )
 				)
 		) 
 	);?>

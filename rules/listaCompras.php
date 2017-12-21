@@ -193,7 +193,7 @@ function getData( $parameters ) {
 				 WHERE FG_IM = 'S'
 				 ORDER BY TP");
 			foreach ($result as $k => $fields):
-				$tp = ($fields['TP']);
+				$tp = $fields['TP'];
 				$arr["tipos"][] = array( 
 					"id" => $tp,
 					"ds" => $tp
@@ -207,7 +207,7 @@ function getData( $parameters ) {
 				  FROM TAB_MATERIAIS 
 				 ORDER BY TP");
 			foreach ($result as $k => $fields):
-				$tp = ($fields['TP']);
+				$tp = $fields['TP'];
 				$arr["tipos"][] = array( 
 					"id" => $tp,
 					"ds" => $tp
@@ -222,7 +222,8 @@ function getData( $parameters ) {
 				$id = fStrZero($fields['ID'], $qtdZeros);
 				$arr["nomes"][] = array( 
 					"id" => $id,
-					"ds" => "$id ".$fields['NM']
+					"ds" => $fields['NM'],
+					"sb" => $id
 				);
 			endforeach;
 		endif;
@@ -288,7 +289,8 @@ function getData( $parameters ) {
 				$id = fStrZero($fields['ID_CAD_PESSOA'], $qtdZeros);
 				$arr["nomes"][] = array( 
 					"id" => $fields['ID_CAD_PESSOA'],
-					"ds" => "$id ".$fields['NM']
+					"ds" => $fields['NM'],
+					"sb" => $id
 				);
 			endforeach;
 		endif;

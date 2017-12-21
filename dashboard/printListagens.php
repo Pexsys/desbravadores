@@ -54,7 +54,7 @@ $classes = getDomainFilter( array( "type" => "C" ) );
 	    	<select name="cbClasses" id="cbClasses" class="selectpicker form-control input-sm" title="Escolha uma ou mais classes"  multiple data-selected-text-format="count > 4" data-width="100%" data-container="body" data-actions-box="true">
 	    	    <?php
 	    	    foreach ($classes["domain"] as $k => $o):
-	    	    		echo "<option value=\"". $o["value"] ."\" selected>". $o["label"] ."</option>";
+	    	    		echo "<option value=\"". $o["id"] ."\" selected>". $o["ds"] ."</option>";
 	    	    endforeach;
 	    	    ?>
 	    	</select>
@@ -64,7 +64,7 @@ $classes = getDomainFilter( array( "type" => "C" ) );
 	    	<select name="cbUnidades" id="cbUnidades" class="selectpicker form-control input-sm" title="Escolha uma ou mais unidades"  multiple data-selected-text-format="count > 4" data-width="100%" data-container="body" data-actions-box="true">
 	    	    <?php
 	    	    foreach ($unidades["domain"] as $k => $o):
-	    	    		echo "<option value=\"". $o["value"] ."\" selected>". $o["label"] ."</option>";
+	    	    		echo "<option value=\"". $o["id"] ."\" selected>". $o["ds"] ."</option>";
 	    	    endforeach;
 	    	    ?>
 	    	</select>
@@ -82,21 +82,22 @@ $classes = getDomainFilter( array( "type" => "C" ) );
     	    <?php
     	    $s = false;
 		foreach ($batismo["domain"] as $k => $o):
-			echo "<option value=\"". $o["value"] ."\"". ($o["value"]=="S"?" selected":"") .">". $o["label"] ."</option>";
+			echo "<option value=\"". $o["id"] ."\"". ($o["id"]=="S"?" selected":"") .">". $o["ds"] ."</option>";
 		endforeach;
     	    ?>
 		</select>
     </div>
 	<div class="col-lg-8" name="rowFilter" id="divEventos" style="display:none;">
-    		<label for="cbEventos" class="control-label">Evento:</label>
-    		<select name="cbEventos" id="cbEventos" class="selectpicker form-control input-sm" title="Escolha o Evento" data-live-search="true" data-width="100%" data-container="body" data-actions-box="false">
-    		<option></option>
+		<label for="cbEventos" class="control-label">Evento:</label>
+		<select name="cbEventos" id="cbEventos" class="selectpicker form-control input-sm" title="Escolha o Evento" data-live-search="true" data-width="100%" data-show-subtext="true" data-container="body" data-actions-box="false">
+		<option></option>
 		<?php
     	   	$s = false;
-    	    foreach ($eventos["domain"] as $k => $o):
-    	        echo "<option value=\"". $o["value"] ."\"". (!$s ? " selected":"") .">". $o["label"] ."</option>";
-    	        	$s = true;
-		endforeach;
+			foreach ($eventos["domain"] as $k => $o):
+				$id = fStrZero($o["id"],3);
+    	        echo "<option value=\"". $o["id"] ."\"". (!$s ? " selected":"") ." data-subtext=\"$id\">". $o["ds"] ."</option>";
+    	        $s = true;
+			endforeach;
 		?>
 		</select>
     </div>
@@ -114,7 +115,7 @@ $classes = getDomainFilter( array( "type" => "C" ) );
             ");
         	foreach($result as $l => $fields):
         		$id = fStrZero($fields['ID'], $qtdZeros);
-        		echo "<option value=\"". $fields['ID'] ."\">$id ".($fields['NM']) ."</option>";
+        		echo "<option value=\"". $fields['ID'] ."\" data-subtext=\"$id\">".$fields['NM']."</option>";
         	endforeach;
 		?>
 		</select>

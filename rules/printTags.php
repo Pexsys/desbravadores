@@ -155,7 +155,8 @@ function getMembros( $parameters ) {
 		$id = fStrZero($fields['ID'], $qtdZeros);
 		$arr[] = array(
 			"id" => $id,
-			"nm" => "$id ".($fields['NM'])
+			"nm" => $fields['NM'],
+			"sb" => $id
 		);
 	endforeach;
 	return $arr;
@@ -201,7 +202,8 @@ function getClasse( $parameters ){
 	foreach ($result as $k => $line):
 		$arr[] = array( 
 			"id"	=> $line['ID'],
-			"ds"	=> ($line['DS_ITEM'])
+			"ds"	=> $line['DS_ITEM'],
+			"sb"	=> $line['CD_ITEM_INTERNO']
 		);
 	endforeach;
 	return $arr;

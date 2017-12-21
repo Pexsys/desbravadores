@@ -535,8 +535,8 @@ function getUnidades( $parameters ) {
 		  ORDER BY IDADE DESC", array('S') );
 		foreach ($result as $k => $l):
 			$arr[] = array( 
-				"value"	=> $l['ID'],
-				"label"	=> ($l['DS'])
+				"id"	=> $l['ID'],
+				"ds"	=> $l['DS']
 			);
 		endforeach;
 	endif;
@@ -571,8 +571,8 @@ function getCargos( $parameters ) {
 		");
 		while (!$result->EOF):
 			$arr[] = array( 
-				"value"	=> $result->fields['ID'],
-				"label"	=> ($result->fields['DS'])
+				"id"	=> $result->fields['ID'],
+				"ds"	=> $result->fields['DS']
 			);
 			$result->MoveNext();
 		endwhile;
@@ -593,8 +593,8 @@ function getInstrumentos( $parameters ) {
 	", Array( $parameters["id"] ) );
 	while (!$result->EOF):
 		$arr[] = array( 
-			"value"	=> $result->fields['ID'],
-			"label"	=> ($result->fields['DS'])
+			"id"	=> $result->fields['ID'],
+			"ds"	=> $result->fields['DS']
 		);
 		$result->MoveNext();
 	endwhile;
@@ -617,8 +617,8 @@ function getAnosDir( $parameters ) {
 		if (isset($ano)):
 			for ($idx = $ano+16; $idx<=$result->fields['HOJE']; $idx++):
 				$arr[] = array( 
-					"value"	=> $idx,
-					"label"	=> $idx
+					"id"	=> $idx,
+					"ds"	=> $idx
 				);
 			endfor;
 		endif;
