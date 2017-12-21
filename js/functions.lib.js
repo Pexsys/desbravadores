@@ -424,11 +424,16 @@ var jsFilter = {
 		var obj = $(objFilter);
 		var value = obj.attr("filter-value");
 		var label = obj.attr("filter-label");
-		
-		$("#addFilter").append( $("<option></option>") 
+		var icon = obj.attr("filter-icon");
+
+		var obj = $("<option></option>") 
 			.attr("value",value)
-			.text(label));
-			
+			.text(label);
+		if (icon){
+			obj.attr('data-icon',icon);
+		}
+		
+		$("#addFilter").append(obj);
 		$("#addFilter").html($("#addFilter").children('option').sort(function(x, y) {
 			return $(x).text().toUpperCase() < $(y).text() ? - 1 : 1;
 		}));
@@ -446,7 +451,9 @@ var jsFilter = {
 
 	addFilter : function (objFilter){
 		var obj = $(objFilter);
-		var label = obj.find('option:selected').text();
+		var objSelected = obj.find('option:selected');
+		var label = objSelected.text();
+		var icon = objSelected.attr('data-icon');
 		var value = obj.val();
 
 		if (value != ""){
@@ -455,7 +462,7 @@ var jsFilter = {
 				async: false,
 				type: "GET",
 				url: jsLIB.rootDir+"rules/addFilter.php",
-				data: { MethodName : 'addFilter', data : { type : value, desc : label } },
+				data: { MethodName : 'addFilter', data : { type : value, desc : label, icon } },
 				success: function(flt){
 					if ( flt.result ) {
 						$("#divFilters").append(flt.obj);
