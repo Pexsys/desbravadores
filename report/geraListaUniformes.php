@@ -36,8 +36,8 @@ class LISTAMATERIAIS extends TCPDF {
 		$this->SetCreator(PDF_CREATOR);
 		$this->SetAuthor('Ricardo J. Cesar');
 		$this->SetTitle('Listagem Alfabética de Materiais');
-		$this->SetSubject('Clube Pioneiros');
-		$this->SetKeywords('Desbravadores, Especialidades, Pioneiros, Capão Redondo');
+		$this->SetSubject($GLOBALS['pattern']->getClubeDS(array("cl","nm")));
+		$this->SetKeywords('Uniformes, ' . str_replace(" ", ", ", $GLOBALS['pattern']->getClubeDS( array("db","nm","ig") ) ));
 		$this->setImageScale(PDF_IMAGE_SCALE_RATIO);
 	}
 	

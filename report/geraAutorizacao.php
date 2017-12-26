@@ -38,8 +38,8 @@ class ESPCR extends TCPDF {
 		$this->SetCreator(PDF_CREATOR);
 		$this->SetAuthor('Ricardo J. Cesar');
 		$this->SetTitle('Geração automática de autorização de Saída');
-		$this->SetSubject('Clube Pioneiros');
-		$this->SetKeywords('Desbravadores, Autorizações, Pioneiros, Capão Redondo');
+		$this->SetSubject($GLOBALS['pattern']->getClubeDS(array("cl","nm")));
+		$this->SetKeywords('Autorizações, ' . str_replace(" ", ", ", $GLOBALS['pattern']->getClubeDS( array("db","nm","ig") ) ) );
 		$this->setImageScale(PDF_IMAGE_SCALE_RATIO);
 		$this->SetTopMargin(4);
 		$this->SetFooterMargin(0);
@@ -174,13 +174,13 @@ class ESPCR extends TCPDF {
 		$this->SetFont(PDF_FONT_NAME_MAIN, '', 9);
 		$html = "<p align=\"justify\">Através dos poderes legais a mim atribuídos, autorizo ".
 			($this->line["TP_SEXO"] == "F" ? "a " : "o "). $this->dsCargo ." <b><u>".trim($this->line["NM"])."</u></b>, ".
-			$this->line["NR_DOC"]." a participar juntamente com o Clube Pioneiros, dirigido e representado por ".trim($this->line["NOME_DIRETOR"]).", ".
+			$this->line["NR_DOC"]." a participar juntamente com o ".$GLOBALS['pattern']->getClubeDS(array("cl","nm")).", dirigido e representado por ".trim($this->line["NOME_DIRETOR"]).", ".
 			$this->line["IDENT_DIRETOR"].", do evento: ".trim($this->line["DS"]). (!empty($this->line["DS_DEST"]) ? "/".trim($this->line["DS_DEST"]) : "").", ".
 			(strftime("%Y-%m-%d",$dtS) == strftime("%Y-%m-%d",$dtR)
 			? "no dia ". strftime("%e de %B de %Y",$dtS). ", saindo &agrave;s ". strftime("%Hh". (strftime("%M",$dtS)>0?"%M":""),$dtS). " e retornando &agrave;s ". strftime("%Hh". (strftime("%M",$dtR)>0?"%M":""),$dtR)
 			: ", com saída prevista para ". strftime("%e de %B de %Y &agrave;s %Hh". (strftime("%M",$dtS)>0?"%M":""),$dtS)." e com retorno previsto para ". strftime("%e de %B de %Y &agrave;s %Hh". (strftime("%M",$dtR)>0?"%M":""),$dtR)
 			).". Local de Saída/Retorno: ".trim($this->line["DS_ORIG"]). ". ".
-			"Consciente dos grandes benefícios recebidos através do Clube de Desbravadores acima descrito, abdico responsabilizar, ".
+			"Consciente dos grandes benefícios recebidos através do ".$GLOBALS['pattern']->getClubeDS(array("cl","cj","db"))." acima descrito, abdico responsabilizar, ".
 			"em qualquer instância judicial, o(os) responsável(eis) do referido Clube em todos os níveis, bem como a ".
 			"Igreja Adventista do Sétimo Dia, por qualquer dano causado ou sofrido por meu dependente, devido a sua própria atuação, ".
 			"no percurso de ida e volta bem como no decurso do referido evento. Em caso de acidente, ou doença, autorizo o responsável do ".
@@ -212,7 +212,7 @@ class ESPCR extends TCPDF {
 		$this->SetFont(PDF_FONT_NAME_MAIN, '', 10);
 		$html = "<p align=\"justify\">Eu, ". trim($this->line["NM_RESP"]) .", autorizo ".
 				($this->line["TP_SEXO"] == "F" ? "a " : "o "). $this->dsCargo ." <b><u>".trim($this->line["NM"])."</u></b>, ".
-				$this->line["NR_DOC"]." a se deslocar e participar juntamente com o Clube de Desbravadores Pioneiros do ". trim($this->line["DS"]) .", \"". trim($this->line["DS_TEMA"]) ."\"".
+				$this->line["NR_DOC"]." a se deslocar e participar juntamente com o ".$GLOBALS['pattern']->getClubeDS(array("cl","cj","db","nm"))." do ". trim($this->line["DS"]) .", \"". trim($this->line["DS_TEMA"]) ."\"".
 				", promovido pela ".trim($this->line["DS_ORG"]) . 
 				" da Igreja Adventista do Sétimo Dia, que se realizará entre ".strftime("%e de %B de %Y &agrave;s %Hh". (strftime("%M",$dtS)>0?"%M":""),$dtS) . 
 				" e com retorno em ". strftime("%e de %B de %Y &agrave;s %Hh". (strftime("%M",$dtR)>0?"%M":""),$dtR) .
@@ -220,10 +220,10 @@ class ESPCR extends TCPDF {
 				<br/>
 				<br/>
 				Através dos poderes legais a mim atribuídos, nomeio através desta para o período do evento, como responsável pelo menor acima descrito".
-				" o DIRETOR e responsável pelo Clube de Desbravadores Pioneiros, identificado nesta como ".trim($this->line["NOME_DIRETOR"]).", ".$this->line["IDENT_DIRETOR"].". 
+				" o DIRETOR e responsável pelo ".$GLOBALS['pattern']->getClubeDS(array("cl","cj","db","nm")).", identificado nesta como ".trim($this->line["NOME_DIRETOR"]).", ".$this->line["IDENT_DIRETOR"].". 
 				<br/>
 				<br/>
-				Consciente dos grandes benefícios recebidos através do Clube de Desbravadores acima descrito, abdico responsabilizar, 
+				Consciente dos grandes benefícios recebidos através do ".$GLOBALS['pattern']->getClubeDS(array("cl","cj","db"))." acima descrito, abdico responsabilizar, 
 				em qualquer instância judicial, o(os) responsável(eis) do referido Clube em todos os níveis, bem como a 
 				Igreja Adventista do Sétimo Dia, por qualquer dano causado ou sofrido por meu dependente, devido a sua própria atuação, 
 				no percurso de ida e volta bem como no decurso do referido evento.

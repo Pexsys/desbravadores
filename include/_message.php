@@ -50,20 +50,10 @@ class MESSAGE {
         ". $this->_directorName ."
         <br/>
         <small>".
-        $GLOBALS['pattern']->getClubeDS( 
-            array(
-                "cl" => true,
-                "db" => true,
-                "nm" => true
-            )
-        ).
+        $GLOBALS['pattern']->getClubeDS( array( "cl", "db", "nm" ) ).
         "<br/>"
         .
-        $GLOBALS['pattern']->getClubeDS( 
-            array(
-                "ig" => true
-            )
-        ).
+        $GLOBALS['pattern']->getClubeDS( array( "ig" ) ).
         "</small>";
     }
 
@@ -75,12 +65,7 @@ class MESSAGE {
                 <p>Olá ".$this->_np.",<br/>
                 <br/>
                 Em nome do ".
-                $GLOBALS['pattern']->getClubeDS( 
-                    array(
-                        "cl" => true,
-                        "nm" => true
-                    )
-                )
+                $GLOBALS['pattern']->getClubeDS( array( "cl", "nm" ) )
                 .", quero lhe agradecer pelo seu esforço e por mais esta etapa concluída.<br/>
                 <br/>
                 No intuito de melhorar cada dia mais os registros da secretaria, nosso sistema detectou automaticamente que você concluiu o <b>".$this->_nm."</b>.<br/>
@@ -273,12 +258,7 @@ class MESSAGE {
                 "msg" => "<p>Querid".$this->_oa." amig".$this->_oa." ".$this->_np.",<br/>
                 <br/>
                 Dentro, fora, perto ou longe do nosso ".
-                $GLOBALS['pattern']->getClubeDS( 
-                    array(
-                        "cl" => true,
-                        "nm" => true
-                    )
-                )
+                $GLOBALS['pattern']->getClubeDS( array( "cl" => true, "nm" => true ) )
                 .", que seus dias deste novo ano possam ser mais alegres, e suas conquistas mais plenas e belas, juntamente com a bênção de Deus.<br/>
                 <br/>
                 Ano novo, novas metas, desafios e conquistas, e meu desejo é que você e eu possamos realizar cada um deles com muito amor e entrega.<br/>
