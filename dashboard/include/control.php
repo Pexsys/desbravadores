@@ -6,10 +6,10 @@ require_once("../include/_metaheader.php");
 <html lang="pt-br" dir="ltr">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
-<title>Pioneiros ADM v1.0</title>
+<title><?php echo $GLOBALS['pattern']->getClubeDS(array("nm"));?> ADM v2.0</title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Clube Pioneiros">
+<meta name="description" content="<?php echo $GLOBALS['pattern']->getClubeDS(array("cl","nm"))?>">
 <meta name="author" content="Ricardo Jonadabs César">
 <link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
 <link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css"/>

@@ -13,7 +13,7 @@
 				<!-- FINAL FORMULARIO BOTAO PAGSEGURO -->
 			</center>
 			<hr>
-			<p class="text-center">Copyright &copy; <?php echo date("Y");?> - Clube de Desbravadores Pioneiros - 1959<br/>6&ordf; Regi&atilde;o - IASD Cap&atilde;o Redondo - APS - UCB - DSA</p>
+			<p class="text-center">Copyright &copy; <?php echo date("Y");?> - <?php echo $GLOBALS['pattern']->getClubeDS(array("cl","cj","db","nm","sp","af")) ."<br/>". $GLOBALS['pattern']->getClubeDS(array("rg","sp","ig","as","un","dv"));?></p>
 		</div>
 	</div>
 </footer>

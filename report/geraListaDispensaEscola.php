@@ -35,8 +35,8 @@ class LISTADISPENSAESCOLAR extends TCPDF {
 		$this->SetCreator(PDF_CREATOR);
 		$this->SetAuthor('Ricardo J. Cesar');
 		$this->SetTitle('Listagem de Dispensa Escolar');
-		$this->SetSubject('Clube Pioneiros');
-		$this->SetKeywords('Desbravadores, Especialidades, Pioneiros, Capão Redondo');
+		$this->SetSubject($GLOBALS['pattern']->getClubeDS(array("cl","nm")));
+		$this->SetKeywords('Dispensa, ' . str_replace(" ", ", ", $GLOBALS['pattern']->getClubeDS( array("db","nm","ig") ) ));
 		$this->setImageScale(PDF_IMAGE_SCALE_RATIO);
 	}
 
@@ -197,7 +197,7 @@ if (!$result->EOF):
             $html = "
                 <p align=\"justify\">Prezados Senhores,<br/>
                     <br/>
-                    Pertencemos ao Clube de Desbravadores, órgão pertencente à Igreja Adventista do 7º Dia, que tem por finalidade auxiliar os pais na formação do caráter de seus filhos, na faixa etária de 10 a 15 anos. O trabalho que realizamos compreende atividades, tais como:
+                    Pertencemos ao ".$GLOBALS['pattern']->getClubeDS(array("cl","cj","db")).", órgão pertencente à Igreja Adventista do 7º Dia, que tem por finalidade auxiliar os pais na formação do caráter de seus filhos, na faixa etária de 10 a 15 anos. O trabalho que realizamos compreende atividades, tais como:
                     Projetos Comunitários: limpeza de praças, plantio de árvores, pintura de meio fio, desfiles anti-fumo e álcool, desfiles cívicos, visitas a asilos e orfanatos, auxílio em campanhas de vacinação, entre outros, que promovem a conscientização de preservação do meio onde vivemos, respeitando a vida e os semelhantes, além de orientá-los para um viver mais saudável;&nbsp;
                     Aulas teóricas e práticas de especializações nas mais diversas áreas: dando-os a oportunidade de identificarem-se com áreas para futura profissão;&nbsp;
                     Desenvolvimento de atividades físicas: condicionamento físico e modalidades esportivas;&nbsp;

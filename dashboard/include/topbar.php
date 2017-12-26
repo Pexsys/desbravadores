@@ -37,7 +37,7 @@
 				<span class="icon-bar"></span>
 			</button>
 			<a class="navbar-brand" href="index.php" style="margin:0">
-				<img class="img-responsive" src="<?php echo $GLOBALS['pattern']->getVD();?>img/logos.png" width="60" height="5" alt="Clube de Desbravadores Pioneiros">
+				<img class="img-responsive" src="<?php echo $GLOBALS['pattern']->getVD();?>img/logos.png" width="60" height="5" alt="<?php echo $GLOBALS['pattern']->getClubeDS(array("cl","db","nm"));?>">
 			</a>
 		</div>
 	<?php @include_once("menu.php");?>

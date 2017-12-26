@@ -13,7 +13,7 @@ function sendOcorrenciaByID($ocorrenciaID){
 		  ORDER BY 1
 	", array($ocorrenciaID) );
 	if (!$rs->EOF):
-		$GLOBALS['mail']->Subject = "Clube Pioneiros - Ocorrencia #".$l["CD"]." [".strftime("%d/%m/%Y",strtotime($l["DH"])) ."]";
+		$GLOBALS['mail']->Subject = $GLOBALS['pattern']->getClubeDS( array("cl","nm") ) . " - Ocorrencia #".$l["CD"]." [".strftime("%d/%m/%Y",strtotime($l["DH"])) ."]";
 		
 		$rs1 = $GLOBALS['conn']->Execute("
 			SELECT *

@@ -35,8 +35,8 @@ class LISTAESTRELAS extends TCPDF {
 		$this->SetCreator(PDF_CREATOR);
 		$this->SetAuthor('Ricardo J. Cesar');
 		$this->SetTitle('Listagem de Membros Ativos');
-		$this->SetSubject('Clube Pioneiros');
-		$this->SetKeywords('Desbravadores, Especialidades, Pioneiros, Capão Redondo');
+		$this->SetSubject($GLOBALS['pattern']->getClubeDS(array("cl","nm")));
+		$this->SetKeywords('Estrelas, ' . str_replace(" ", ", ", $GLOBALS['pattern']->getClubeDS( array("db","nm","ig") ) ) );
 		$this->setImageScale(PDF_IMAGE_SCALE_RATIO);
 	}
 
@@ -109,9 +109,9 @@ $pdf->SetTextColor(0,0,0);
 $pdf->SetFont(PDF_FONT_NAME_MAIN, '', 13);
 
 $html = "<p align=\"justify\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			Eu, $nmPastor, pastor do Distrito de Capão Redondo,
+			Eu, $nmPastor, pastor do Distrito de ".$GLOBALS['pattern']->getClubeDS(array("ig")).",
 			venho através desta, recomendar a <b>Estrela de Tempo de Serviço</b> aos 
-			membros da direção do Clube Pioneiros listados abaixo, em reconhecimento 
+			membros da direção do ".$GLOBALS['pattern']->getClubeDS(array("cl","nm"))." listados abaixo, em reconhecimento 
 			de sua dedicação no trabalho de liderar o clube para Salvação e Serviço.		
 		</p>";
 $pdf->setCellHeightRatio(2);

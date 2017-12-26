@@ -42,8 +42,8 @@ class LISTAINVESTIDURADSA extends TCPDF {
 		$this->SetCreator(PDF_CREATOR);
 		$this->SetAuthor('Ricardo J. Cesar');
 		$this->SetTitle('Listagem de Investidura - DSA');
-		$this->SetSubject('Clube Pioneiros');
-		$this->SetKeywords('Desbravadores, Especialidades, Pioneiros, Capão Redondo');
+		$this->SetSubject($GLOBALS['pattern']->getClubeDS(array("cl","nm")));
+		$this->SetKeywords('Investiduras, ' . str_replace(" ", ", ", $GLOBALS['pattern']->getClubeDS( array("db","nm","ig") ) ));
 		$this->setImageScale(PDF_IMAGE_SCALE_RATIO);
 		$this->heightHeader = 25;
 		$this->SetMargins(5, $this->heightHeader, 5);

@@ -33,7 +33,7 @@ function barcode( $parameters ) {
 		fConnDB();
 		if ( $barDecode["ci"] !== $GLOBALS['pattern']->getBars()->getClubeID() || 
 			$barDecode["lg"] <> $GLOBALS['pattern']->getBars()->getLength() ):
-			$arr['result'] = "Código não pertence ao Clube Pioneiros";
+			$arr['result'] = "Código não pertence ao ".$GLOBALS['pattern']->getClubeDS(array("cl","nm"));
 
 		//CHAMADA
 		elseif ( $op == "CHAMADA" ):

@@ -110,7 +110,7 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
 
             			$GLOBALS['mail']->ClearAllRecipients();
         				$GLOBALS['mail']->AddAddress( $fA["EMAIL"] );
-        				$GLOBALS['mail']->Subject = utf8_decode("Clube Pioneiros - Aviso de Conclusão");
+        				$GLOBALS['mail']->Subject = utf8_decode($GLOBALS['pattern']->getClubeDS( array("cl","nm") ) . " - Aviso de Conclusão");
         				$GLOBALS['mail']->MsgHTML( $message->getConclusao() );
         					
         				if ( $GLOBALS['mail']->Send() ):

@@ -59,8 +59,8 @@ class ETIQUETAS extends TCPDF {
 		$this->SetCreator(PDF_CREATOR);
 		$this->SetAuthor('Ricardo J. Cesar');
 		$this->SetTitle('Geração automática de identificação');
-		$this->SetSubject('Clube Pioneiros');
-		$this->SetKeywords('Desbravadores, Especialidades, Pioneiros, Capão Redondo');
+		$this->SetSubject($GLOBALS['pattern']->getClubeDS(array("cl","nm")));
+		$this->SetKeywords('Etiquetas, ' . str_replace(" ", ", ", $GLOBALS['pattern']->getClubeDS( array("db","nm","ig") ) ));
 		$this->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
 		$this->SetMargins(0, 0, 0);
@@ -284,7 +284,7 @@ class ETIQUETAS extends TCPDF {
 			$this->setXY($x+2,$y+83);
 			$this->SetTextColor(180,180,180);
 			$this->SetFont(PDF_FONT_NAME_MAIN, 'I', 7);
-			$this->MultiCell(126, 6, "Clube Pioneiros - desde 1959\nIASD Capão Redondo - 6ª Região - APS - UCB - DSA", false, 'C', false, 2, "", "", true, 0, false, true, 0, "M", false );
+			$this->MultiCell(126, 6, $GLOBALS['pattern']->getClubeDS( array("cl","nm") ) . " - desde 1959\nIASD Capão Redondo - 6ª Região - APS - UCB - DSA", false, 'C', false, 2, "", "", true, 0, false, true, 0, "M", false );
 			
 		//TIPO E - CARTAO DE ESPECIALIDADE
 		elseif ($ln["TP"] == "E"):
