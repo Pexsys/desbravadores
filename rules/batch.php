@@ -1,7 +1,9 @@
 <?php
 @require_once("../include/functions.php");
 @require_once("../include/sendmail.php");
-@require_once("../include/messages.php");
+@require_once("../include/_message.php");
+
+$md = date("m-d");
 
 fConnDB();
 //******* INICIO DA ROTINA DIARIA
@@ -16,8 +18,8 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.01.
 //******* SECRETARIA
 $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.00-Analisando Secretaria...')");
 
-$rA = $GLOBALS['conn']->Execute("SELECT * FROM CON_DIRETOR");
-$nomeDiretor = titleCase($rA->fields["NOME_DIRETOR"]);
+$rDIR = $GLOBALS['conn']->Execute("SELECT * FROM CON_DIRETOR");
+$nomeDiretor = titleCase($rDIR->fields["NOME_DIRETOR"]);
 
 //******* SECRETARIA - FELIZ ANIVERSADIO
 $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.01-Analisando Aniversário...')");
@@ -28,11 +30,13 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
 		  AND cp.EMAIL IS NOT NULL
 		  AND MONTH(cp.DT_NASC) = MONTH(NOW())
 		  AND DAY(cp.DT_NASC) = DAY(NOW())
-	");
+		  AND cp.ID != ?
+	", array($rDIR->fields["ID_DIRETOR"]) );
 	foreach ($rA as $lA => $fA):
 		$a = explode(" ",titleCase($fA["NM"]));
 
-		$bm = getBirthdayMessage( array( "np" => $a[0], "id" => $fA["IDADE_ANO"], "sx" => $fA["TP_SEXO"], "nd" => $nomeDiretor ) );
+		$message = new MESSAGE( array( "np" => $a[0], "id" => $fA["IDADE_ANO"], "sx" => $fA["TP_SEXO"], "nd" => $nomeDiretor ) );
+		$bm = $message->getBirthday();
 
 		$GLOBALS['mail']->ClearAllRecipients();
 		$GLOBALS['mail']->AddAddress( $fA["EMAIL"] );
@@ -45,6 +49,7 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
 			echo "parabens não enviado para ". $fA["EMAIL"]."<br/>";
 		endif;
 	endforeach;
+
 
 //******* SECRETARIA - MESTRADOS
 $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.02-Analisando Mestrados Completados...')");
@@ -100,11 +105,13 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
         				   AND NOT EXISTS (SELECT 1 FROM LOG_MENSAGEM WHERE ID_ORIGEM = ? AND TP = 'M' AND ID_USUARIO = cu.ID_USUARIO)
         			", array( $fg["ID"], $fA["ID"], $fg["ID"] ) );
         			
-					if (!empty($fA["EMAIL"])):
+					if (!empty($fA["EMAIL"]) && $fA["ID"] != $rDIR->fields["ID_DIRETOR"] ):
+						$message = new MESSAGE( array( "np" => $a[0], "nm" => $fg["DS_ITEM"], "sx" => $fA["SEXO"], "nd" => $nomeDiretor ) );
+
             			$GLOBALS['mail']->ClearAllRecipients();
         				$GLOBALS['mail']->AddAddress( $fA["EMAIL"] );
         				$GLOBALS['mail']->Subject = utf8_decode("Clube Pioneiros - Aviso de Conclusão");
-        				$GLOBALS['mail']->MsgHTML( getConclusaoMsg( array( "np" => $a[0], "nm" => $fg["DS_ITEM"], "sx" => $fA["SEXO"], "nd" => $nomeDiretor ) ) );
+        				$GLOBALS['mail']->MsgHTML( $message->getConclusao() );
         					
         				if ( $GLOBALS['mail']->Send() ):
         					$nrEnviados++;
@@ -139,8 +146,9 @@ foreach($result as $l => $fields):
 	$profile->deleteAllByUserID( $fields['ID_USUARIO'] );
 endforeach;
 
+
 //*******  SECRETARIA - REORGANIZACAO DA BASE EM 01/JANEIRO
-if (date("m-d") == "01-01"):
+if ($md == "01-01"):
 
 	//BASE DE COMPRAS
 	$GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.04-Reorganizando base de compras...')");
@@ -190,6 +198,60 @@ if (date("m-d") == "01-01"):
 			$f["ID_TAB_APR_ITEM"],
 			$f["DT_ASSINATURA"]
 		));
+	endforeach;
+
+	//MENSAGEM DE FELIZ ANO NOVO
+	$GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.06-Felicitando pelo novo ano...')");
+	$rA = $GLOBALS['conn']->Execute("
+		SELECT cp.NM, cp.TP_SEXO, EMAIL
+		  FROM CAD_PESSOA cp
+		 WHERE EMAIL IS NOT NULL
+		   AND ID != ?
+	", array($rDIR->fields["ID_DIRETOR"]) );
+	foreach ($rA as $lA => $fA):
+		$a = explode(" ",titleCase($fA["NM"]));
+
+		$message = new MESSAGE( array( "np" => $a[0], "id" => $fA["IDADE_ANO"], "sx" => $fA["TP_SEXO"], "nd" => $nomeDiretor ) );
+		$bm = $message->getNewYear();
+
+		$GLOBALS['mail']->ClearAllRecipients();
+		$GLOBALS['mail']->AddAddress( $fA["EMAIL"] );
+		$GLOBALS['mail']->Subject = utf8_decode( $bm["sub"] );
+		$GLOBALS['mail']->MsgHTML( $bm["msg"] );
+			
+		if ( $GLOBALS['mail']->Send() ):
+			echo "feliz ano novo enviado para ". $fA["EMAIL"]."<br/>";
+		else:
+			echo "feliz ano novo não enviado para ". $fA["EMAIL"]."<br/>";
+		endif;
+	endforeach;
+
+//MENSAGEM DE FELIZ NATAL
+elseif ($md == "12-25"):
+	
+	$GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.07-Felicitando pelo natal...')");
+	$rA = $GLOBALS['conn']->Execute("
+		SELECT cp.NM, cp.TP_SEXO, EMAIL
+			FROM CAD_PESSOA cp
+			WHERE EMAIL IS NOT NULL
+			AND ID != ?
+	", array($rDIR->fields["ID_DIRETOR"]) );
+	foreach ($rA as $lA => $fA):
+		$a = explode(" ",titleCase($fA["NM"]));
+
+		$message = new MESSAGE( array( "np" => $a[0], "id" => $fA["IDADE_ANO"], "sx" => $fA["TP_SEXO"], "nd" => $nomeDiretor ) );
+		$bm = $message->getXMas();
+
+		$GLOBALS['mail']->ClearAllRecipients();
+		$GLOBALS['mail']->AddAddress( $fA["EMAIL"] );
+		$GLOBALS['mail']->Subject = utf8_decode( $bm["sub"] );
+		$GLOBALS['mail']->MsgHTML( $bm["msg"] );
+			
+		if ( $GLOBALS['mail']->Send() ):
+			echo "feliz ano novo enviado para ". $fA["EMAIL"]."<br/>";
+		else:
+			echo "feliz ano novo não enviado para ". $fA["EMAIL"]."<br/>";
+		endif;
 	endforeach;
 endif;
 

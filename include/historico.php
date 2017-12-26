@@ -1,6 +1,6 @@
 <?php
 @require_once("sendmail.php");
-@require_once("messages.php");
+@require_once("_message.php");
 @require_once("compras.php");
 
 function dateDefaultInicio($date = null){
@@ -309,11 +309,13 @@ function regraRequisitoEspecialidade($barfnid, $barpessoaid, $dtInicio, $dtConcl
 					if (!empty($rA->fields["EMAIL"])):
 						$rD = $GLOBALS['conn']->Execute("SELECT * FROM CON_DIRETOR");
 						$nomeDiretor = titleCase($rD->fields["NOME_DIRETOR"]);
+
+						$message = new MESSAGE( array( "np" => $a[0], "nm" => $fg["DS_ITEM"], "sx" => $rA->fields["SEXO"], "nd" => $nomeDiretor ) );
 					
 						$GLOBALS['mail']->ClearAllRecipients();
 						$GLOBALS['mail']->AddAddress( $rA->fields["EMAIL"] );
 						$GLOBALS['mail']->Subject = utf8_decode("Clube Pioneiros - Aviso de Conclusão");
-						$GLOBALS['mail']->MsgHTML( getConclusaoMsg( array( "np" => $a[0], "nm" => $fg["DS_ITEM"], "sx" => $rA->fields["SEXO"], "nd" => $nomeDiretor ) ) );
+						$GLOBALS['mail']->MsgHTML( $message->getConclusao() );
 							
 						if ( $GLOBALS['mail']->Send() ):
 							$GLOBALS['conn']->Execute("UPDATE LOG_MENSAGEM SET DH_SEND = NOW() WHERE ID = ?", array( $logID ) );

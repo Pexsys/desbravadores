@@ -9,19 +9,19 @@ class BARS {
 			
 			//FUNCTION ID
 			"ID" => array(
-					"length" => 1,
-					"types" => array(
-							//ID ETIQUETA			//FUNCTION          //IMPR.ETIQ     //OBR.CLASSE    //MODELO FORM   //DESCRICAO
-							array(  "id" => "0",		"fn" => "BS_NM",    "tg" => "S",    "cl" => "N",    "md" => "1",    "ds" => "0-BÁSICA/NOME" ),
-							array(  "id" => "1",		"fn" => "AV_CL",    "tg" => "S",    "cl" => "S",    "md" => "3",    "ds" => "1-CAPA DA PASTA DE AVALIAÇÃO" ),
-							array(  "id" => "2",		"fn" => "CL_BL",    "tg" => "S",    "cl" => "S",    "md" => "3",    "ds" => "2-CAPA DE LEITURA BÍBLICA" ),
-							array(  "id" => "A",		"fn" => "CT_CL",    "tg" => "S",    "cl" => "S",    "md" => "1",    "ds" => "A-CARTÃO DE CLASSE" ),
-							array(  "id" => "B",		"fn" => "CD_CL",    "tg" => "S",    "cl" => "S",    "md" => "1",    "ds" => "B-CADERNO DE ATIVIDADES" ),
-							array(  "id" => "C",		"fn" => "PT_CL",    "tg" => "S",    "cl" => "S",    "md" => "2",    "ds" => "C-PASTA DE CLASSE" ),
-							array(  "id" => "D",		"fn" => "AT_CM",    "tg" => "N",    "cl" => "N",                    "ds" => "D-AUTORIZAÇÃO DE SAÍDA" ),
-							array(  "id" => "E",		"fn" => "CT_ES",    "tg" => "S",    "cl" => "N",    "md" => "1",    "ds" => "E-CARTÃO / ESPECIALIDADES" ),
-							array(  "id" => "F",		"fn" => "AT_ES",    "tg" => "N",    "cl" => "N",                    "ds" => "F-AUTORIZAÇÃO ESPECIAL" )
-					)
+				"length" => 1,
+				"types" => array(
+					//ID ETIQUETA			//FUNCTION          //IMPR.ETIQ     //OBR.CLASSE    //MODELO FORM   //DESCRICAO
+					array(  "id" => "0",	"fn" => "BS_NM",    "tg" => "S",    "cl" => "N",    "md" => "1",    "ds" => "0-BÁSICA/NOME" ),
+					array(  "id" => "1",	"fn" => "AV_CL",    "tg" => "S",    "cl" => "S",    "md" => "3",    "ds" => "1-CAPA DA PASTA DE AVALIAÇÃO" ),
+					array(  "id" => "2",	"fn" => "CL_BL",    "tg" => "S",    "cl" => "S",    "md" => "3",    "ds" => "2-CAPA DE LEITURA BÍBLICA" ),
+					array(  "id" => "A",	"fn" => "CT_CL",    "tg" => "S",    "cl" => "S",    "md" => "1",    "ds" => "A-CARTÃO DE CLASSE" ),
+					array(  "id" => "B",	"fn" => "CD_CL",    "tg" => "S",    "cl" => "S",    "md" => "1",    "ds" => "B-CADERNO DE ATIVIDADES" ),
+					array(  "id" => "C",	"fn" => "PT_CL",    "tg" => "S",    "cl" => "S",    "md" => "2",    "ds" => "C-PASTA DE CLASSE" ),
+					array(  "id" => "D",	"fn" => "AT_CM",    "tg" => "N",    "cl" => "N",                    "ds" => "D-AUTORIZAÇÃO DE SAÍDA" ),
+					array(  "id" => "E",	"fn" => "CT_ES",    "tg" => "S",    "cl" => "N",    "md" => "1",    "ds" => "E-CARTÃO / ESPECIALIDADES" ),
+					array(  "id" => "F",	"fn" => "AT_ES",    "tg" => "N",    "cl" => "N",                    "ds" => "F-AUTORIZAÇÃO ESPECIAL" )
+				)
 			),
 			
 			//FUNCTION ID PARAM
