@@ -239,18 +239,18 @@ function fMontaCarrousel($relativePath,$extentions){
 function insDocs(){
 	?>
 	<div class="col-md-6 col-sm-9 col-lg-4">
-	<?php fListDocumentos("docs/inscricoes/","<h4><i class=\"fa fa-fw fa-pencil\"></i>&nbsp;Inscri&ccedil;&otilde;es ".date('Y')."</h4>",".pdf", ( date("m") < 4 ? "panel-danger" : "panel-warning" ) ,"h4");?>
+	<?php fListDocumentos("docs/inscricoes/".date('Y')."/","<h4><i class=\"fa fa-fw fa-pencil\"></i>&nbsp;Inscri&ccedil;&otilde;es ".date('Y')."</h4>",".pdf", ( date("m") < 4 ? "panel-danger" : "panel-warning" ) ,"h4");?>
     </div>
 <?php   
 }
 
 function fListDocumentos($relativePath,$title,$extentions,$classPanel,$tagItem){
 	$capa = $GLOBALS['pattern']->getVD() . $relativePath;
-	$capa_img = $GLOBALS['pattern']->getVD() . $relativePath."img/";
+	$capa_img = $GLOBALS['pattern']->getVD() ."img/";
 	
 	$document_root = $_SERVER['DOCUMENT_ROOT'];
 	$fisico_capas = dirname(dirname(__FILE__)) . "/$relativePath";
-	$fisico_img = $fisico_capas . "img/";
+	$fisico_img = dirname(dirname(__FILE__)) . "/img/";
 
 	$capaFiles = array();
 	if (is_dir($fisico_capas)):
