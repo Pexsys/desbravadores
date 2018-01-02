@@ -23,7 +23,7 @@ function login( $parameters ) {
 	if ( isset($usr) && !empty($usr) ):
 		$barDecode	= $GLOBALS['pattern']->getBars()->decode($usr);
 		$usrClube	= ($barDecode["lg"] == $GLOBALS['pattern']->getBars()->getLength() && 
-					   $barDecode["ci"] == $GLOBALS['pattern']->getBars()->getClubeID() && 
+					   $barDecode["cp"] == $GLOBALS['pattern']->getBars()->getClubePrefix() && 
 					   $GLOBALS['pattern']->getBars()->has("id",$barDecode["split"]["id"])
 					);
 
