@@ -62,7 +62,7 @@ function login( $parameters ) {
 				//VERIFICA SE RESPONSAVEL TEM ALGUM DEPENDENTE ATIVO
 				elseif ( existeMenorByRespID($resp["ID"]) ):
 					$psw = sha1(str_replace("-","",str_replace(".","",$usr)));
-					fInsertUserProfile( fInsertUser( $usr, $resp["NM_RESP"], $psw, null ), 10 );
+					fInsertUserProfile( fInsertUser( $usr, $resp["NM"], $psw, null ), 10 );
 					
 					return login( array(
 						"page"		=> $pag,
@@ -77,9 +77,9 @@ function login( $parameters ) {
 		if ($usrClube && $result->EOF):
 
 			//VERIFICA SE ESTÁ ATIVO
-			$rsHA = $GLOBALS['conn']->Execute("SELECT NM FROM CON_ATIVOS WHERE ID = ?", array( $barDecode["ni"] ) );
+			$rsHA = $GLOBALS['conn']->Execute("SELECT NM FROM CON_ATIVOS WHERE ID_CLUBE = ? AND ID_MEMBRO = ?", array( $barDecode["ci"], $barDecode["ni"] ) );
 			if (!$rsHA->EOF):
-				fInsertUserProfile( fInsertUser( $usr, $rsHA->fields['NM'], $psw, $barDecode["ni"] ), 0 );
+				fInsertUserProfile( fInsertUser( $usr, $rsHA->fields['NM'], $psw, $rsHA->fields['ID_CAD_PESSOA'] ), 0 );
 			
 				return login( array( 
 					"page" =>		$pag, 
@@ -92,7 +92,7 @@ function login( $parameters ) {
 		
 			if ($usrClube):
 				//VERIFICA SE ESTÁ ATIVO
-				$rsHA = $GLOBALS['conn']->Execute("SELECT 1 FROM CON_ATIVOS WHERE ID = ?", array( $barDecode["ni"] ) );
+				$rsHA = $GLOBALS['conn']->Execute("SELECT 1 FROM CON_ATIVOS WHERE ID_CLUBE = ? AND ID_MEMBRO = ?", array( $barDecode["ci"], $barDecode["ni"] ) );
 				if ($rsHA->EOF):
 					$psw = null;
 				endif;
@@ -172,7 +172,7 @@ function checkMemberByCPF($cpf){
 	return $GLOBALS['conn']->Execute("
 		SELECT cu.ID_USUARIO, cu.CD_USUARIO, cu.DS_USUARIO, cu.DS_SENHA, ca.ID AS ID_CAD_PESSOA, ca.TP_SEXO
 		  FROM CON_ATIVOS ca
-		INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID)
+		INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
 		 WHERE REPLACE(REPLACE(ca.NR_CPF,'.',''),'-','') = ?
 	",array( $noFormat ) );
 }
@@ -181,11 +181,10 @@ function checkUser($cdUser, $pag){
 	return $GLOBALS['conn']->Execute("
 		SELECT cu.ID_USUARIO, cu.CD_USUARIO, cu.DS_USUARIO, cu.DS_SENHA, cp.ID AS ID_CAD_PESSOA, cp.TP_SEXO, cr.TP_SEXO_RESP
 		  FROM CAD_USUARIOS cu
-	    LEFT JOIN CAD_PESSOA cp ON (cp.ID = cu.ID_CAD_PESSOA)
-		LEFT JOIN CAD_RESP cr ON (REPLACE(REPLACE(cr.CPF_RESP,'.',''),'-','') = cu.CD_USUARIO)
+	    LEFT JOIN CAD_PESSOA cp ON (cp.ID = cu.ID_CAD_PESSOA OR cp.NR_CPF = ?)
 	". ($pag == "READDATA" ? " INNER JOIN CAD_USU_PERFIL cuf ON (cuf.ID_CAD_USUARIOS = cu.ID_USUARIO AND cuf.ID_PERFIL = 2) " : "") ."
 		 WHERE cu.CD_USUARIO = ?",
-	array( $cdUser ) );
+	array( $cdUser, $cdUser ) );
 }
 
 function logout() {

@@ -5,7 +5,10 @@ class BARS {
 	function __construct() {
 		$this->bars = array(
 			//CLUBE ID
-			"CI" => "P",
+			"CI" => 1,
+
+			//CLUBE PREFIX
+			"CP" => "P",
 			
 			//FUNCTION ID
 			"ID" => array(
@@ -36,7 +39,7 @@ class BARS {
 		
 		//GRUPO 1 - CI
 		$pattern = "(";
-		foreach (str_split($this->getClubeID()) as $s):
+		foreach (str_split($this->getClubePrefix()) as $s):
 			$pattern .= "[".strtoupper($s).strtolower($s)."]{1}";
 		endforeach;
 		$pattern .= ")";
@@ -62,7 +65,7 @@ class BARS {
 	
 	public function getLength(){
 		return
-		strlen($this->getClubeID()) +
+		strlen($this->getClubePrefix()) +
 		$this->getIDLength()+
 		$this->getFILength()+
 		$this->getNILength()
@@ -81,13 +84,17 @@ class BARS {
 		return $this->bars["ID"]["length"];
 	}
 	
+	public function getClubePrefix(){
+		return $this->bars["CP"];
+	}
+	
 	public function getClubeID(){
 		return $this->bars["CI"];
 	}
-	
+
 	public function split($s){
 		$patternCode =
-			"(.{".strlen($this->getClubeID())."})".
+			"(.{".strlen($this->getClubePrefix())."})".
 			"(.{".$this->getIDLength()."})".
 			"(.{".$this->getFILength()."})".
 			"(.{".$this->getNILength()."})"
@@ -95,7 +102,8 @@ class BARS {
 				
 		$a = preg_split("/$patternCode/i", $s, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE );
 		return array(
-				"ci" => $a[0],
+				"ci" => $this->getClubeID(),
+				"cp" => $a[0],
 				"id" => $a[1],
 				"fi" => $a[2],
 				"ni" => $a[3]
@@ -108,6 +116,7 @@ class BARS {
 				"lg" => strlen($s),
 				"split" => $a,
 				"ci" => $a["ci"],
+				"cp" => $a["cp"],
 				"id" => base_convert($a["id"],36,10),
 				"fi" => base_convert($a["fi"],36,10),
 				"ni" => base_convert($a["ni"],36,10),
@@ -133,7 +142,7 @@ class BARS {
 			$ni = fStrZero(base_convert($a["ni"],10,36),$this->getNILength());
 		endif;
 		
-		return mb_strtoupper( $this->getClubeID() . $fn . $fi . $ni);
+		return mb_strtoupper( $this->getClubePrefix() . $fn . $fi . $ni);
 	}
 	
 	public function getAllTags(){
