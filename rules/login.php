@@ -105,7 +105,7 @@ function login( $parameters ) {
 			endif;
 
 			$password = $result->fields['DS_SENHA'];
-				
+
 			if ($password == $psw):
 				$profile->fSetSessionLogin($result);
 				$GLOBALS['conn']->Execute("UPDATE CAD_USUARIOS SET DH_ATUALIZACAO = NOW() WHERE ID_USUARIO = ?",
@@ -179,7 +179,7 @@ function checkMemberByCPF($cpf){
 
 function checkUser($cdUser, $pag){
 	return $GLOBALS['conn']->Execute("
-		SELECT cu.ID_USUARIO, cu.CD_USUARIO, cu.DS_USUARIO, cu.DS_SENHA, cp.ID AS ID_CAD_PESSOA, cp.TP_SEXO, cr.TP_SEXO_RESP
+		SELECT cu.ID_USUARIO, cu.CD_USUARIO, cu.DS_USUARIO, cu.DS_SENHA, cp.ID AS ID_CAD_PESSOA, cp.TP_SEXO
 		  FROM CAD_USUARIOS cu
 	    LEFT JOIN CAD_PESSOA cp ON (cp.ID = cu.ID_CAD_PESSOA OR cp.NR_CPF = ?)
 	". ($pag == "READDATA" ? " INNER JOIN CAD_USU_PERFIL cuf ON (cuf.ID_CAD_USUARIOS = cu.ID_USUARIO AND cuf.ID_PERFIL = 2) " : "") ."
