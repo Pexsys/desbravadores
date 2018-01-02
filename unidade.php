@@ -69,7 +69,9 @@ endforeach;
                     if (strlen($strmembros)):
                         echo "<li><b>{$membros->RecordCount()}&nbsp;Membros</b>:&nbsp;$strmembros</li>";
                     endif;
-                    echo (!empty($result->fields["HISTORY"]) ? "<li><b>Hist&oacute;ria e Significados</b>:&nbsp;".($result->fields["HISTORY"])."</li>" : "" );
+                    if (!empty($result->fields["HISTORY"])):
+                        echo "<li><b>Hist&oacute;ria e Significados</b>:&nbsp;{$result->fields["HISTORY"]}</li>";
+                    endif;
                     ?>
                 </ul>
             </div>
