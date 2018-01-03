@@ -177,7 +177,7 @@ function fOcorrencia( $parameters ) {
 				SELECT $id, 'O',  cu.ID_USUARIO, cr.EMAIL_RESP, NOW()
 				  FROM CON_ATIVOS ca
 			INNER JOIN CAD_RESP cr ON (cr.ID = ca.ID_RESP)
-			INNER JOIN CON_ATIVOS cab ON (REPLACE(REPLACE(cab.NR_CPF,'.',''),'-','') = REPLACE(REPLACE(cr.CPF_RESP,'.',''),'-',''))
+			INNER JOIN CON_ATIVOS cab ON (cab.NR_CPF = cr.CPF_RESP)
 			INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = cab.ID)
 				 WHERE ca.ID = ?
 					
@@ -186,8 +186,8 @@ function fOcorrencia( $parameters ) {
 				SELECT $id, 'O', cu.ID_USUARIO, cr.EMAIL_RESP, NOW()
 				FROM CON_ATIVOS ca
 				INNER JOIN CAD_RESP cr ON (cr.ID = ca.ID_RESP)
-				INNER JOIN CAD_USUARIOS cu ON (cu.CD_USUARIO = REPLACE(REPLACE(cr.CPF_RESP,'.',''),'-',''))
-				WHERE NOT EXISTS (SELECT 1 FROM CON_ATIVOS WHERE REPLACE(REPLACE(NR_CPF,'.',''),'-','') = REPLACE(REPLACE(cr.CPF_RESP,'.',''),'-',''))
+				INNER JOIN CAD_USUARIOS cu ON (cu.CD_USUARIO = cr.CPF_RESP)
+				WHERE NOT EXISTS (SELECT 1 FROM CON_ATIVOS WHERE NR_CPF = cr.CPF_RESP)
 				  AND ca.ID = ?
 			", array( $frm["id_pessoa"], $frm["id_pessoa"] ) );
 		

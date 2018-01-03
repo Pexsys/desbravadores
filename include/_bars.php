@@ -142,7 +142,7 @@ class BARS {
 			$ni = fStrZero(base_convert($a["ni"],10,36),$this->getNILength());
 		endif;
 		
-		return mb_strtoupper( $this->getClubePrefix() . $fn . $fi . $ni);
+		return mb_strtoupper($this->getClubePrefix() . $fn . $fi . $ni);
 	}
 	
 	public function getAllTags(){
