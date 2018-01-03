@@ -72,6 +72,7 @@ $(document).ready(function(){
 		ruleButtons();
 		formPopulated = false;
 		jsLIB.resetForm( $("#cadMembrosForm") );
+		$("#id_membro").val("Novo");
 		$("#membroID").val("Novo");
 		formPopulated = true;
 		$("#membrosModal").modal();
@@ -254,9 +255,9 @@ $(document).ready(function(){
 				cmFanfarra:		{validators: {}},
 				cmAnoDir:		{validators: {}},
 				nrUltEstrela:	{validators: {}},
-				nrUniformes:		{validators: {}},
+				nrUniformes:	{validators: {}},
 				dsReligiao:		{validators: {}},
-				cbAtivo:			{validators: {}}
+				cbAtivo:		{validators: {}}
 			}
 		})
 		.on("change", "[field]", function(e) {
@@ -272,7 +273,7 @@ $(document).ready(function(){
 
 				if (field && (input.attr('valid') == 'ok' || field == "cad_pessoa-qt_uniformes") ) {
 					formPopulated = false;
-					if (field == "cad_pessoa-email" || field == "cad_resp-email_resp" ){
+					if (field == "cad_pessoa-email" || field == "cad_resp_legal-email_resp" ){
 						value = value.toLowerCase();
 					}else{
 						value = value.toUpperCase();
@@ -307,7 +308,7 @@ $(document).ready(function(){
 						}
 						
 					//se mudou procura, se nao encontrar cpf, insere. se encontrar, retorna dados e popula.
-					} else if (field == "cad_resp-cpf_resp") {
+					} else if (field == "cad_resp_legal-nr_cpf") {
 						var parameters = {
 							id	: membroID,
 							cpf	: value
@@ -326,9 +327,10 @@ $(document).ready(function(){
 						
 					} else {
 						var parameters = {
-							id	: (field.startsWith("cad_resp") ? $("#respID").val() : membroID),
-							field	: field,
-							val	: value
+							id	: membroID,
+							rid : $("#respID").val(),
+							field,
+							value
 						}
 						//gravar
 						jsLIB.ajaxCall({

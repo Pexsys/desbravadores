@@ -4,31 +4,31 @@
 
 class COMPRAS {
 	
-	public function deleteItemPessoaEntregue( $pessoaID, $itemAprendID ) {
+	public function deleteItemPessoaEntregue( $cadMembroID, $itemAprendID ) {
 		$GLOBALS['conn']->Execute("
-			DELETE FROM CAD_COMPRAS_PESSOA
+			DELETE FROM CAD_COMPRAS
 			 WHERE FG_COMPRA = 'S'
 			   AND FG_ENTREGUE = 'S'
-			   AND ID_CAD_PESSOA = ?
+			   AND ID_CAD_MEMBRO = ?
 			   AND ID_TAB_MATERIAIS IN (SELECT ID FROM TAB_MATERIAIS WHERE ID_TAB_APREND = ?) 
-		", array( $pessoaID, $itemAprendID ) );
+		", array( $cadMembroID, $itemAprendID ) );
 	}
 	
-	public function deletePessoa( $pessoaID ) {
+	public function deletePessoa( $cadMembroID ) {
 		$GLOBALS['conn']->Execute("
-			DELETE FROM CAD_COMPRAS_PESSOA
-			 WHERE ID_CAD_PESSOA = ?
-		", array( $pessoaID ) );
+			DELETE FROM CAD_COMPRAS
+			 WHERE ID_CAD_MEMBRO = ?
+		", array( $cadMembroID ) );
 	}
 	
 	public function deleteByID( $id ) {
-		 $GLOBALS['conn']->Execute("DELETE FROM CAD_COMPRAS_PESSOA WHERE ID = ?", array($id) );
+		 $GLOBALS['conn']->Execute("DELETE FROM CAD_COMPRAS WHERE ID = ?", array($id) );
 	}
 	
 	public function forceInsert( $arr ){
 		$GLOBALS['conn']->Execute("
-			INSERT INTO CAD_COMPRAS_PESSOA(
-				ID_CAD_PESSOA,
+			INSERT INTO CAD_COMPRAS(
+				ID_CAD_MEMBRO,
 				ID_TAB_MATERIAIS,
 				TP,
 				COMPL,
@@ -38,7 +38,7 @@ class COMPRAS {
 		", $arr );
 	}
 	
-	public function insertItemCompra( $cd, $pessoaID, $tp, $compl = null, $previsao = "N" ) {
+	public function insertItemCompra( $cd, $cadMembroID, $tp, $compl = null, $previsao = "N" ) {
 		$r = $GLOBALS['conn']->Execute("
 			SELECT ID
 			  FROM TAB_MATERIAIS
@@ -47,21 +47,21 @@ class COMPRAS {
 		if (!$r->EOF):
 			$item = $r->fields["ID"];
 			
-			$arr = array( $pessoaID, $item );
+			$arr = array( $cadMembroID, $item );
 			if (!is_null($compl)):
 				$arr[] = $compl;
 			endif;
 			$r2 = $GLOBALS['conn']->Execute("
 				SELECT 1
-				  FROM CAD_COMPRAS_PESSOA
-				 WHERE ID_CAD_PESSOA = ?
+				  FROM CAD_COMPRAS
+				 WHERE ID_CAD_MEMBRO = ?
 				   AND ID_TAB_MATERIAIS = ?
 				   AND COMPL ". (is_null($compl) ? "IS NULL" : "= ?" ) ."
 			", $arr );
 			if ($r2->EOF):
 				$this->forceInsert(
 					array(
-						$pessoaID,
+						$cadMembroID,
 						$item,
 						$tp,
 						$compl,
@@ -73,20 +73,21 @@ class COMPRAS {
 		endif;
 	}	
 
-	function processaListaPessoaID( $pessoaID, $tp ) {
+	function processaListaPessoaID( $cadMembroID, $tp ) {
 		//SELECIONA AS CARACTERISTICAS DA PESSOA
-		$r1 = $GLOBALS['conn']->Execute("SELECT * FROM CON_ATIVOS WHERE ID = ?", array($pessoaID) );
+		$r1 = $GLOBALS['conn']->Execute("SELECT * FROM CON_ATIVOS WHERE ID_CAD_MEMBRO = ?", array($cadMembroID) );
+		$pessoaID = $r1->fields['ID_CAD_PESSOA'];
 		
 		$qtItens = max( $r1->fields['QT_UNIFORMES'], 1 );
 		$isProxAnoDir = fIdadeAtual($r1->fields['DT_NASC']) >= 15 && date( 'n' ) >= 10;
 		$fundo = ( fStrStartWith( $r1->fields['CD_CARGO'], "2-") || $isProxAnoDir ? "BR" : "CQ" );
 
 		$GLOBALS['conn']->Execute("
-			DELETE FROM CAD_COMPRAS_PESSOA 
-			WHERE FG_COMPRA = ?
-			  AND ID_CAD_PESSOA = ?
+			DELETE FROM CAD_COMPRAS 
+			WHERE FG_COMPRA = 'N'
+			  AND ID_CAD_MEMBRO = ?
 			  AND TP = ?
-		", array("N", $pessoaID, $tp) );
+		", array($cadMembroID, $tp) );
 
 		//SELECIONA OS ITENS DE HISTORICO
 		$r1 = $GLOBALS['conn']->Execute("
@@ -139,7 +140,7 @@ class COMPRAS {
 					//TRATAR TIRA DE CLASSE REGULAR
 					//***************************************************************
 					$materialCD = ($fundo == "BR" ? "05-04-" : "05-03-").$a[1];
-					$this->insertItemCompra( $materialCD, $pessoaID, $tp, null, $previsao );
+					$this->insertItemCompra( $materialCD, $cadMembroID, $tp, null, $previsao );
 					
 					//***************************************************************
 					//TRATAR DISTINTIVO DE REGULARES
@@ -150,7 +151,7 @@ class COMPRAS {
 					else:
 						$materialCD = "04-02-01-".$a[1];
 					endif;
-					$this->insertItemCompra( $materialCD, $pessoaID, $tp, null, $previsao );
+					$this->insertItemCompra( $materialCD, $cadMembroID, $tp, null, $previsao );
 					
 					//***************************************************************
 					//TRATAR DIVISA DE CLASSE REGULAR
@@ -182,7 +183,7 @@ class COMPRAS {
 							if ($qtItens>1):
 								$compl = "$qtd/$qtItens";
 							endif;
-							$this->insertItemCompra( $materialCD, $pessoaID, $tp, $compl, $previsao );
+							$this->insertItemCompra( $materialCD, $cadMembroID, $tp, $compl, $previsao );
 						endfor;
 					endif;
 
@@ -240,7 +241,7 @@ class COMPRAS {
 								if ($qtItens>1):
 									$compl = "$qtd/$qtItens";
 								endif;
-								$this->insertItemCompra( $materialCD, $pessoaID, $tp, $compl, $previsao );
+								$this->insertItemCompra( $materialCD, $cadMembroID, $tp, $compl, $previsao );
 							endfor;
 						endif;
 					endif;
@@ -251,7 +252,7 @@ class COMPRAS {
 				$cd = ( $l1["CD_AREA_INTERNO"] == "ME" ? "07-03-" : "07-02-" ) . $l1["CD_ITEM_INTERNO"];
 				
 				//INSERE INSIGNIA DE ESPECIALIDADE/MESTRADO
-				$this->insertItemCompra( $cd, $pessoaID, $tp, null, $previsao );
+				$this->insertItemCompra( $cd, $cadMembroID, $tp, null, $previsao );
 			endif;
 		endforeach;
 	}		

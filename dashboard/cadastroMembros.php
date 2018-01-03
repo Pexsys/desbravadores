@@ -62,8 +62,10 @@
 					<hr style="margin:10px"/>
 					<div class="row">
 						<div class="form-group col-xs-2">
-							<label for="membroID" class="control-label">C&oacute;digo</label>
-							<input type="text" name="membroID" id="membroID" field="cad_pessoa-id" class="form-control input-sm" placeholder="ID" disabled="disabled" style="text-align:center"/>
+							<input type="hidden" name="membroID" id="membroID" field="cad_membro-id"/>
+
+							<label for="id_membro" class="control-label">C&oacute;digo</label>
+							<input type="text" name="id_membro" id="id_membro" field="cad_membro-id_membro" class="form-control input-sm" placeholder="ID" disabled="disabled" style="text-align:center"/>
 						</div>
 						<div class="form-group col-xs-10">
 							<label for="nmCompleto" class="control-label">Nome Completo</label>
@@ -150,39 +152,39 @@
 								</div>
 							</div>
 							<div id="Resp" class="col-lg-12 tab-pane fade">
-								<input type="hidden" field="cad_resp-id" id="respID"/>
+								<input type="hidden" field="cad_resp_legal-id_cad_pessoa" id="respID"/>
 								<div class="row">
 									<div class="form-group col-xs-3">
 										<label for="nrCPFResp" class="control-label">CPF Resp.</label>
-										<input type="text" name="nrCPFResp" id="nrCPFResp" field="cad_resp-cpf_resp" class="form-control input-sm cpf" placeholder="CPF" style="padding-right:0px"/>
+										<input type="text" name="nrCPFResp" id="nrCPFResp" field="cad_resp_legal-nr_cpf" class="form-control input-sm cpf" placeholder="CPF" style="padding-right:0px"/>
 									</div>
 									<div class="form-group col-xs-9">
 										<label for="nmResponsavel" class="control-label">Nome Completo do Respons&aacute;vel</label>
-										<input type="text" name="nmResponsavel" id="nmResponsavel" field="cad_resp-nm_resp" class="form-control input-sm" placeholder="Nome" style="text-transform: uppercase"/>
+										<input type="text" name="nmResponsavel" id="nmResponsavel" field="cad_resp_legal-nm" class="form-control input-sm" placeholder="Nome" style="text-transform: uppercase"/>
 									</div>
 								</div>
 								<div class="row">
 									<div class="form-group col-xs-3">
 										<label for="dsParentesco" class="control-label">Resp.</label>
-										<input type="text" name="dsParentesco" id="dsParentesco" field="cad_resp-ds_resp" class="form-control input-sm" placeholder="Parentesco" style="padding-right:0px" style="text-transform: uppercase"/>
+										<input type="text" name="dsParentesco" id="dsParentesco" field="cad_resp_legal-ds_tp" class="form-control input-sm" placeholder="Parentesco" style="padding-right:0px" style="text-transform: uppercase"/>
 									</div>
 									<div class="form-group col-xs-2">
 										<label for="tpSexoResp" class="control-label">Sexo</label>
-										<input type="checkbox" name="tpSexoResp" id="tpSexoResp" field="cad_resp-tp_sexo_resp" value-on="M" value-off="F" data-toggle="toggle" data-width="90" data-onstyle="info" data-offstyle="danger" data-size="small" data-on="Masculino" data-off="Feminino"/>
+										<input type="checkbox" name="tpSexoResp" id="tpSexoResp" field="cad_resp_legal-tp_sexo" value-on="M" value-off="F" data-toggle="toggle" data-width="90" data-onstyle="info" data-offstyle="danger" data-size="small" data-on="Masculino" data-off="Feminino"/>
 									</div>
 									<div class="form-group col-xs-4">
 										<label for="nrDocResp" class="control-label">DOC. Resp.</label>
-										<input type="text" name="nrDocResp" id="nrDocResp" field="cad_resp-doc_resp" class="form-control input-sm" placeholder="DOC" style="text-transform: uppercase"/>
+										<input type="text" name="nrDocResp" id="nrDocResp" field="cad_resp_legal-nr_doc" class="form-control input-sm" placeholder="DOC" style="text-transform: uppercase"/>
 									</div>
 									<div class="form-group col-xs-3">
 										<label for="nrFoneResp" class="control-label">Fone Resp.</label>
-										<input type="text" name="nrFoneResp" id="nrFoneResp" field="cad_resp-tel_resp" class="form-control input-sm sp_celphones" placeholder="Telefone" style="padding-right:0px"/>
+										<input type="text" name="nrFoneResp" id="nrFoneResp" field="cad_resp_legal-fone_cel" class="form-control input-sm sp_celphones" placeholder="Telefone" style="padding-right:0px"/>
 									</div>
 								</div>
 								<div class="row">
 									<div class="form-group col-xs-12">
 										<label for="dsEmailResp" class="control-label">Email do Respons&aacute;vel</label>
-										<input type="text" name="dsEmailResp" id="dsEmailResp" field="cad_resp-email_resp" class="form-control input-sm" placeholder="E-mail do Respons&aacute;vel" style="text-transform: lowercase"/>
+										<input type="text" name="dsEmailResp" id="dsEmailResp" field="cad_resp_legal-email" class="form-control input-sm" placeholder="E-mail do Respons&aacute;vel" style="text-transform: lowercase"/>
 									</div>
 								</div>
 							</div>
@@ -228,17 +230,17 @@
 								<div class="row" id="divDiretoria">
 									<div class="form-group col-xs-4">
 										<label for="cmAnoDir" class="control-label">Ano Diretoria</label>
-										<select field="cad_pessoa-ano_dir" name="cmAnoDir" id="cmAnoDir" class="form-control">
+										<select field="cad_membro-ano_dir" name="cmAnoDir" id="cmAnoDir" class="form-control">
 											<option value=""></option>
 										</select>
 									</div>
 									<div class="form-group col-xs-4">
 										<label for="nrUltEstrela" class="control-label"><i class="fa fa-star-o"></i> (&Uacute;ltima devolvida)</label>
-										<input type="text" name="nrUltEstrela" id="nrUltEstrela" field="cad_pessoa-estr_devol" class="form-control" placeholder="&Uacute;ltima Estrela" data-min="2"/>
+										<input type="text" name="nrUltEstrela" id="nrUltEstrela" field="cad_membro-estr_devol" class="form-control" placeholder="&Uacute;ltima Estrela" data-min="2"/>
 									</div>
 									<div class="form-group col-xs-4">
 										<label for="nrUniformes" class="control-label">Qtd. Uniformes</label>
-										<input type="text" name="nrUniformes" id="nrUniformes" field="cad_pessoa-qt_uniformes" class="form-control" placeholder="Uniformes" data-min="0" data-max="3"/>
+										<input type="text" name="nrUniformes" id="nrUniformes" field="cad_membro-qt_uniformes" class="form-control" placeholder="Uniformes" data-min="0" data-max="3"/>
 									</div>
 								</div>
 							</div>

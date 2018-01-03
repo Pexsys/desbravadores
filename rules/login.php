@@ -60,7 +60,7 @@ function login( $parameters ) {
 						"password"	=> $result->fields["DS_SENHA"] ) );
 								
 				//VERIFICA SE RESPONSAVEL TEM ALGUM DEPENDENTE ATIVO
-				elseif ( existeMenorByRespID($resp["ID"]) ):
+				elseif ( existeMenorByRespID($resp["ID_CAD_PESSOA"]) ):
 					$psw = sha1(str_replace("-","",str_replace(".","",$usr)));
 					fInsertUserProfile( fInsertUser( $usr, $resp["NM"], $psw, null ), 10 );
 					
@@ -98,7 +98,7 @@ function login( $parameters ) {
 				endif;
 			else:
 				$resp = verificaRespByCPF($usr);
-				if (!is_null($resp) && !existeMenorByRespID($resp["ID"])):
+				if (!is_null($resp) && !existeMenorByRespID($resp["ID_CAD_PESSOA"])):
 					fDeleteUserAndProfile( $result->fields["ID_USUARIO"], 10 );
 					return $arr;
 				endif;
@@ -173,7 +173,7 @@ function checkMemberByCPF($cpf){
 		SELECT cu.ID_USUARIO, cu.CD_USUARIO, cu.DS_USUARIO, cu.DS_SENHA, ca.ID AS ID_CAD_PESSOA, ca.TP_SEXO
 		  FROM CON_ATIVOS ca
 		INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
-		 WHERE REPLACE(REPLACE(ca.NR_CPF,'.',''),'-','') = ?
+		 WHERE ca.NR_CPF = ?
 	",array( $noFormat ) );
 }
 

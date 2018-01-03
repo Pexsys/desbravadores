@@ -3,10 +3,11 @@ function verificaRespByCPF( $cpf ) {
 	$noFormat = str_replace("-","",str_replace(".","",$cpf));
 	
 	$result = $GLOBALS['conn']->Execute("
-		SELECT cp.*
-		FROM CAD_PESSOA cp
-		INNER JOIN CAD_RESP_LEGAL crl ON (crl.ID_PESSOA_RESP = cp.ID)
-		WHERE REPLACE(REPLACE(cp.NR_CPF,'.',''),'-','') = ?
+		SELECT DISTINCT cp.*, rl.DS_TP
+		  FROM CON_PESSOA cp
+	 LEFT JOIN CAD_RESP_LEGAL rl ON (rl.ID_PESSOA_RESP = cp.ID_CAD_PESSOA)
+		 WHERE (cp.IDADE_ANO >= 18 OR cp.IDADE_ANO IS NULL)
+		   AND cp.NR_CPF = ?
 	", array( $noFormat ) );
 	if (!$result->EOF):
 		return $result->fields;
@@ -14,12 +15,21 @@ function verificaRespByCPF( $cpf ) {
 	return null;
 }
 
-function verificaRespByID( $pessoaRespID ) {
+function verificaRespByID( $pessoaRespID, $pessoaID ) {
 	$result = $GLOBALS['conn']->Execute("
-		SELECT *
-		  FROM CAD_RESP_LEGAL
-		 WHERE ID_PESSOA_RESP = ?
-	", array( $pessoaRespID ) );
+		SELECT 
+			cp.ID AS ID_CAD_PESSOA,
+			rl.DS_TP,
+			cp.NM,
+			cp.TP_SEXO,
+			cp.NR_DOC,
+			cp.NR_CPF,
+			cp.FONE_CEL,
+			cp.EMAIL
+		FROM CAD_PESSOA cp
+		LEFT JOIN CAD_RESP_LEGAL rl ON (rl.ID_PESSOA_RESP = cp.ID AND rl.ID_CAD_PESSOA = ?)
+		WHERE cp.ID = ?
+	", array( $pessoaID, $pessoaRespID ) );
 	if (!$result->EOF):
 		return $result->fields;
 	endif;

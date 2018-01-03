@@ -863,4 +863,26 @@ function fDtHoraEvento($dhI, $dhF, $fmt = "%d de %B"){
 	endif;
 	return utf8_encode($sDataHora);
 }
+
+function fStrFormat($mask, $str, $ch = '#') {
+    $c = 0;
+    $rs = '';
+    for ($i = 0; $i < strlen($mask); $i++) {
+        if ($mask[$i] == $ch) {
+            $rs .= $str[$c];
+            $c++;
+        } else {
+            $rs .= $mask[$i];
+        }
+    }
+    return $rs;
+}
+
+function fClearBN($bn){
+	return preg_replace('/[.-]/i', "", $bn);
+}
+
+function fCPF($cpf){
+	return fStrFormat("###.###.###-##",fStrZero(fClearBN($cpf),11));
+}
 ?>
