@@ -11,18 +11,40 @@ function getQueryByFilter( $parameters ) {
 	
 	$strQuery = "
 		SELECT 
-				e.ID AS ID_EVE_PESSOA, 
-				es.ID AS ID_EVE_SAIDA, a.IDADE_HOJE, 
+				p.NM, 
+				p.ID_CAD_PESSOA,
+				esm.ID_CAD_MEMBRO,
+				esm.ID AS ID_EVE_MEMBRO, 
+				esm.ID_EVE_SAIDA, 
+				p.IDADE_HOJE, 
+				YEAR(es.DH_R)-YEAR(p.DT_NASC) - IF(DATE_FORMAT(p.DT_NASC,'%m%d')>DATE_FORMAT(es.DH_R,'%m%d'),1,0) AS IDADE_EVENTO_FIM,
+				esm.FG_AUTORIZ 
+			FROM EVE_SAIDA_MEMBRO esm
+			INNER JOIN EVE_SAIDA es ON (es.ID = esm.ID_EVE_SAIDA)
+			INNER JOIN CAD_MEMBRO m ON (m.ID = esm.ID_CAD_MEMBRO)
+			INNER JOIN CON_PESSOA p ON (p.ID_CAD_PESSOA = m.ID_CAD_PESSOA)
+			WHERE esm.ID_EVE_SAIDA = ?
+
+		UNION
+
+		SELECT 
+				a.NM,
+				a.ID_CAD_PESSOA,
+				a.ID_CAD_MEMBRO,
+				esm.ID AS ID_EVE_MEMBRO, 
+				es.ID AS ID_EVE_SAIDA, 
+				a.IDADE_HOJE, 
 				YEAR(es.DH_R)-YEAR(a.DT_NASC) - IF(DATE_FORMAT(a.DT_NASC,'%m%d')>DATE_FORMAT(es.DH_R,'%m%d'),1,0) AS IDADE_EVENTO_FIM,
-				a.ID, a.NM, e.FG_AUTORIZ 
+				esm.FG_AUTORIZ 
 		FROM CON_ATIVOS a 
-		LEFT JOIN EVE_SAIDA_PESSOA e ON (e.ID_CAD_PESSOA = a.ID AND e.ID_EVE_SAIDA = ?) 
-		LEFT JOIN EVE_SAIDA es ON (es.ID = e.ID_EVE_SAIDA)
+		LEFT JOIN EVE_SAIDA_MEMBRO esm ON (esm.ID_CAD_MEMBRO = a.ID_CAD_MEMBRO AND esm.ID_EVE_SAIDA = ?) 
+		LEFT JOIN EVE_SAIDA es ON (es.ID = esm.ID_EVE_SAIDA)
 		WHERE 1=1 
 	";
 	if ($parameters["id"] == "Novo"):
 		$aWhere[] = null;
 	else:
+		$aWhere[] = $parameters["id"];
 		$aWhere[] = $parameters["id"];
 	endif;
 	
@@ -52,7 +74,7 @@ function getQueryByFilter( $parameters ) {
 							SELECT DISTINCT 1
 							FROM TAB_APRENDIZADO ta 
 							LEFT JOIN APR_HISTORICO ah ON (ah.id_tab_aprend = ta.id AND ah.dt_conclusao IS NULL)
-							WHERE ta.tp_item = ? AND ah.id_cad_pessoa = a.ID AND
+							WHERE ta.tp_item = ? AND ah.id_cad_pessoa = a.ID_CAD_PESSOA AND
 							ta.ID ".$notStr."IN";
 				$aWhere[] = "CL";
 			else:
@@ -104,11 +126,7 @@ function getQueryByFilter( $parameters ) {
 			endif;
 		endforeach;
 	endif;
-	$strQuery .= " $where ORDER BY a.NM";
-	
-//echo "$strQuery\n";
-//print_r($aWhere);
-//exit;
+	$strQuery .= " $where ORDER BY 1";
 
 	return $GLOBALS['conn']->Execute($strQuery, $aWhere);
 }
@@ -122,32 +140,33 @@ function getNames(){
 	$usuarioID = $_SESSION['USER']['id_usuario'];
 	$qtdZeros = zeroSizeID();
 	
-	$unidadeID	= null;
-	$membroID	= null;
-	$cargo		= null;
+	$unidadeID = null;
+	$cadMembroID = null;
+	$pessoaID = null;
+	$cargo = null;
 
 	//MEMBRO LOGADO
 	$result = $GLOBALS['conn']->Execute("
-		SELECT cu.ID_CAD_PESSOA, ca.ID_UNIDADE, ca.CD_CARGO, ca.CD_CARGO2, ca.NM, ca.IDADE_HOJE
+		SELECT cu.ID_CAD_PESSOA, ca.ID_CAD_MEMBRO, ca.ID_UNIDADE, ca.CD_CARGO, ca.CD_CARGO2, ca.NM, ca.IDADE_HOJE
 		  FROM CON_ATIVOS ca
-	INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID)
+	INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
 	     WHERE cu.ID_USUARIO = ? 
 	", array( $usuarioID ) );
 	if (!$result->EOF):
 		$unidadeID = $result->fields["ID_UNIDADE"];
-		$membroID = $result->fields["ID_CAD_PESSOA"];
+		$cadMembroID = $result->fields["ID_CAD_MEMBRO"];
+		$pessoaID = $result->fields["ID_CAD_PESSOA"];
 		$membroNM = ($result->fields["NM"]);
 		
 		$rs = $GLOBALS['conn']->Execute("
 			SELECT 1 
-			FROM EVE_SAIDA_PESSOA esp
-	  INNER JOIN EVE_SAIDA es ON (es.ID = esp.ID_EVE_SAIDA AND es.DH_R > NOW() AND es.FG_IMPRIMIR = 'S')
-		   WHERE esp.ID_CAD_PESSOA = ?
-		     AND esp.FG_AUTORIZ = ?
-		", array( $membroID, "S" ) );
+			FROM EVE_SAIDA_MEMBRO esm
+	  INNER JOIN EVE_SAIDA es ON (es.ID = esm.ID_EVE_SAIDA AND es.DH_R > NOW() AND es.FG_IMPRIMIR = 'S')
+		   WHERE esm.ID_CAD_MEMBRO = ?
+		     AND esm.FG_AUTORIZ = 'S'
+		", array($cadMembroID) );
 		if ($result->fields["IDADE_HOJE"] < 18 && !$rs->EOF):
-			$id = fStrZero($membroID, $qtdZeros);
-			$arr[] = array( "id" => $membroID, "ds" => "<<mim>> - $membroNM", "sb" => $id );
+			$arr[] = array( "id" => $cadMembroID, "ds" => "<<mim>> - $membroNM", "sb" => fStrZero($membroID, $qtdZeros) );
 		endif;
 		
 		$cargo = $result->fields['CD_CARGO'];
@@ -159,82 +178,72 @@ function getNames(){
 	$aQuery = array( "query" => "", "binds" => array() );
 	
 	//TRATAMENTO MEMBROS DA MINHA UNIDADE
-	$aQuery = getUnionByUnidade( $aQuery, $unidadeID, $membroID );
+	$aQuery = getUnionByUnidade( $aQuery, $unidadeID, $cadMembroID );
 		
 	//TRATAMENTO MEMBROS QUE ESTAO FAZENDO AS MESMAS CLASSES QUE EU
-	$aQuery = getUnionByClasses( $aQuery, $membroID );
+	$aQuery = getUnionByClasses( $aQuery, $pessoaID, $cadMembroID );
 
 	//TRATAMENTO PARA INSTRUTOR DE CLASSE
 	if ($cargo != "2-04-00" && fStrStartWith($cargo,"2-04")):
 		$classe = "01-".substr($cargo,-2);
 
 		$aQuery["query"] .= " UNION 
-			SELECT DISTINCT ca.NM, ca.ID
+			SELECT DISTINCT ca.NM, ca.ID_CAD_MEMBRO, ca.ID_CAD_PESSOA
 			  FROM CON_APR_PESSOA cap
-		    INNER JOIN CON_ATIVOS ca ON (ca.ID = cap.ID_CAD_PESSOA)
-	            INNER JOIN EVE_SAIDA_PESSOA esp ON (esp.ID_CAD_PESSOA = ca.ID AND esp.FG_AUTORIZ = ?)
-	            INNER JOIN EVE_SAIDA es ON (es.ID = esp.ID_EVE_SAIDA AND es.DH_R > NOW() AND es.FG_IMPRIMIR = 'S')
+		    INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = cap.ID_CAD_PESSOA)
+	            INNER JOIN EVE_SAIDA_MEMBRO esm ON (esm.ID_CAD_MEMBRO = ca.ID_CAD_MEMBRO AND esm.FG_AUTORIZ = 'S')
+	            INNER JOIN EVE_SAIDA es ON (es.ID = esm.ID_EVE_SAIDA AND es.DH_R > NOW() AND es.FG_IMPRIMIR = 'S')
 			 WHERE cap.CD_ITEM_INTERNO LIKE '$classe%'
 			   AND cap.DT_CONCLUSAO IS NULL
-			   AND ca.ID <> ?
-			   AND ca.IDADE_HOJE < ?";
-		$aQuery["binds"][] = "S";
-		$aQuery["binds"][] = $membroID;
-		$aQuery["binds"][] = 18;
+			   AND ca.ID_CAD_MEMBRO <> ?
+			   AND ca.IDADE_HOJE < 18";
+		$aQuery["binds"][] = $cadMembroID;
 	endif;
 	
 	//TRATAMENTO PARA ADMINISTRACAO
 	if ($cargo == "2-01-00" || $cargo == "2-02-00"):
 		$aQuery["query"] .= " UNION 
-	           SELECT ca.NM, ca.ID 
+	           SELECT ca.NM, ca.ID_CAD_MEMBRO, ca.ID_CAD_PESSOA
 	           FROM CON_ATIVOS ca
-	     INNER JOIN EVE_SAIDA_PESSOA esp ON (esp.ID_CAD_PESSOA = ca.ID AND esp.FG_AUTORIZ = ?)
-	     INNER JOIN EVE_SAIDA es ON (es.ID = esp.ID_EVE_SAIDA AND es.DH_R > NOW())
-	           WHERE ca.ID <> ? 
-	             AND ca.IDADE_HOJE < ?";
-		$aQuery["binds"][] = "S";
-		$aQuery["binds"][] = $membroID;
-		$aQuery["binds"][] = 18;
+	     INNER JOIN EVE_SAIDA_MEMBRO esm ON (esm.ID_CAD_MEMBRO = ca.ID_CAD_MEMBRO AND esm.FG_AUTORIZ = 'S')
+	     INNER JOIN EVE_SAIDA es ON (es.ID = esm.ID_EVE_SAIDA AND es.DH_R > NOW())
+	           WHERE ca.ID_CAD_MEMBRO <> ? 
+	             AND ca.IDADE_HOJE < 18";
+		$aQuery["binds"][] = $cadMembroID;
 
 	//TRATAMENTO PARA INSTRUTORES NAO ESPECIFICOS
 	elseif ($cargo == "2-04-00" || $cargo == "2-04-99"):
 		$aQuery["query"] .= " UNION 
-	           SELECT ca.NM, ca.ID 
+	           SELECT ca.NM, ca.ID_CAD_MEMBRO, ca.ID_CAD_PESSOA
 	           FROM CON_ATIVOS ca
-	     INNER JOIN EVE_SAIDA_PESSOA esp ON (esp.ID_CAD_PESSOA = ca.ID AND esp.FG_AUTORIZ = ?)
-	     INNER JOIN EVE_SAIDA es ON (es.ID = esp.ID_EVE_SAIDA AND es.DH_R > NOW() AND es.FG_IMPRIMIR = 'S')
+	     INNER JOIN EVE_SAIDA_PESSOA esm ON (esm.ID_CAD_MEMBRO = ca.ID_CAD_MEMBRO AND esm.FG_AUTORIZ = 'S')
+	     INNER JOIN EVE_SAIDA es ON (es.ID = esm.ID_EVE_SAIDA AND es.DH_R > NOW() AND es.FG_IMPRIMIR = 'S')
 	           WHERE ca.ID <> ? 
-	             AND ca.IDADE_HOJE < ?";
-		$aQuery["binds"][] = "S";
-		$aQuery["binds"][] = $membroID;
-		$aQuery["binds"][] = 18;
+	             AND ca.IDADE_HOJE < 18";
+		$aQuery["binds"][] = $cadMembroID;
 	endif;
 	
 	//TRATAMENTO MEUS DEPENDENTES, SUAS UNIDADES OU SUAS CLASSES
 	$rd = $GLOBALS['conn']->Execute("
-		SELECT ca.ID, ca.NM, ca.ID_UNIDADE
+		SELECT ca.ID_CAD_PESSOA, ca.NM, ca.ID_UNIDADE
 		FROM CAD_USUARIOS cu
 		INNER JOIN CAD_RESP cr ON (REPLACE(REPLACE(cr.CPF_RESP,'.',''),'-','') = cu.CD_USUARIO)
 		INNER JOIN CON_ATIVOS ca ON (ca.ID_RESP = cr.ID)
-	        INNER JOIN EVE_SAIDA_PESSOA esp ON (esp.ID_CAD_PESSOA = ca.ID AND esp.FG_AUTORIZ = ?)
-	        INNER JOIN EVE_SAIDA es ON (es.ID = esp.ID_EVE_SAIDA AND es.DH_R > NOW() AND es.FG_IMPRIMIR = 'S')
+		INNER JOIN EVE_SAIDA_PESSOA esm ON (esm.ID_CAD_MEMBRO = ca.ID_CAD_MEMBRO AND esm.FG_AUTORIZ = 'S')
+		INNER JOIN EVE_SAIDA es ON (es.ID = esm.ID_EVE_SAIDA AND es.DH_R > NOW() AND es.FG_IMPRIMIR = 'S')
 		WHERE cu.ID_USUARIO = ?
 	          AND ca.IDADE_HOJE < ?
-	", array("S", $usuarioID, 18) );
+	", array($usuarioID, 18) );
 	foreach ($rd as $k => $l):
-		$id = fStrZero($line["ID"], $qtdZeros);
-		$arr[] = array( "id" => $l["ID"], "ds" =>$l["NM"], "sb" => $id );
-		
-		$aQuery = getUnionByUnidade( $aQuery, $l["ID_UNIDADE"], $l["ID"] );
-		$aQuery = getUnionByClasses( $aQuery, $l["ID"] );
+		$aQuery = getUnionByUnidade( $aQuery, $l["ID_UNIDADE"], $cadMembroID );
+		$aQuery = getUnionByClasses( $aQuery, $l["ID_CAD_PESSOA"], $cadMembroID );
 	endforeach;
 	
 	if (!empty($aQuery["query"])):
 		$rs = $GLOBALS['conn']->Execute( substr($aQuery["query"], 7)." ORDER BY 1", $aQuery["binds"] );
 		if (!$rs->EOF):
 			foreach ($rs as $k => $line):
-				$id = fStrZero($line["ID"], $qtdZeros);
-				$arr[] = array( "id" => $line["ID"], "ds" => $line["NM"], "sb" => $id );
+				$arr[] = array( "id" => $line["ID_CAD_MEMBRO"], "ds" => $line["NM"], "sb" => fStrZero($line["ID_CAD_PESSOA"], $qtdZeros) );
 			endforeach;
 		endif;
 	endif;
@@ -242,41 +251,36 @@ function getNames(){
 	return array( "result" => true, "names" => $arr );
 }
 
-function getUnionByUnidade($aQuery, $unidadeID, $membroID){
-	if (!is_null($unidadeID) && !is_null($membroID)):
+function getUnionByUnidade($aQuery, $unidadeID, $cadMembroID){
+	if (!is_null($unidadeID) && !is_null($cadMembroID)):
 		$aQuery["query"] .=" UNION 
 		SELECT ca.NM, ca.ID 
 		FROM CON_ATIVOS ca 
-      INNER JOIN EVE_SAIDA_PESSOA esp ON (esp.ID_CAD_PESSOA = ca.ID AND esp.FG_AUTORIZ = ?)
-	  INNER JOIN EVE_SAIDA es ON (es.ID = esp.ID_EVE_SAIDA AND es.DH_R > NOW() AND es.FG_IMPRIMIR = 'S')
+      INNER JOIN EVE_SAIDA_PESSOA esm ON (esm.ID_CAD_PESSOA = ca.ID AND esm.FG_AUTORIZ = 'S')
+	  INNER JOIN EVE_SAIDA es ON (es.ID = esm.ID_EVE_SAIDA AND es.DH_R > NOW() AND es.FG_IMPRIMIR = 'S')
 		WHERE ca.ID_UNIDADE = ? 
 		  AND ca.ID <> ? 
-		  AND ca.IDADE_HOJE < ?";
-		$aQuery["binds"][] = "S";
+		  AND ca.IDADE_HOJE < 18";
 		$aQuery["binds"][] = $unidadeID;
-		$aQuery["binds"][] = $membroID;
-		$aQuery["binds"][] = 18;
+		$aQuery["binds"][] = $cadMembroID;
 	endif;
 	return $aQuery;
 }
 
-function getUnionByClasses($aQuery, $membroID){
-	if (!is_null($membroID)):
+function getUnionByClasses($aQuery, $pessoaID, $cadMembroID){
+	if (!is_null($membroID) && !is_null($cadMembroID)):
 		$aQuery["query"] .= " UNION 
 		SELECT DISTINCT ca.NM, ca.ID
 		  FROM CON_APR_PESSOA cap
 	INNER JOIN CON_ATIVOS ca ON (ca.ID = cap.ID_CAD_PESSOA)
-    INNER JOIN EVE_SAIDA_PESSOA esp ON (esp.ID_CAD_PESSOA = ca.ID AND esp.FG_AUTORIZ = ?)
-	INNER JOIN EVE_SAIDA es ON (es.ID = esp.ID_EVE_SAIDA AND es.DH_R > NOW() AND es.FG_IMPRIMIR = 'S')
-		 WHERE cap.CD_ITEM_INTERNO IN (SELECT DISTINCT CD_ITEM_INTERNO FROM CON_APR_PESSOA WHERE ID_CAD_PESSOA = ? AND TP_ITEM = ? AND DT_CONCLUSAO IS NULL)
+    INNER JOIN EVE_SAIDA_PESSOA esm ON (esm.ID_CAD_PESSOA = ca.ID AND esm.FG_AUTORIZ = 'S')
+	INNER JOIN EVE_SAIDA es ON (es.ID = esm.ID_EVE_SAIDA AND es.DH_R > NOW() AND es.FG_IMPRIMIR = 'S')
+		 WHERE cap.CD_ITEM_INTERNO IN (SELECT DISTINCT CD_ITEM_INTERNO FROM CON_APR_PESSOA WHERE ID_CAD_PESSOA = ? AND TP_ITEM = 'CL' AND DT_CONCLUSAO IS NULL)
 		   AND cap.DT_CONCLUSAO IS NULL
 		   AND ca.ID <> ?
-		   AND ca.IDADE_HOJE < ?";
-		$aQuery["binds"][] = "S";
-		$aQuery["binds"][] = $membroID;
-		$aQuery["binds"][] = "CL";
-		$aQuery["binds"][] = $membroID;
-		$aQuery["binds"][] = 18;
+		   AND ca.IDADE_HOJE < 18";
+		$aQuery["binds"][] = $pessoaID;
+		$aQuery["binds"][] = $cadMembroID;
 	endif;
 	return $aQuery;
 }
@@ -461,13 +465,12 @@ function getMembros( $parameters ) {
 		if ( is_null($fgAutoriz) || is_null($fields['ID_EVE_SAIDA']) ):
 			$fgAutoriz = ($idade < 18 ? 'S' : 'N');
 		endif;
-		$id = fStrZero($fields['ID'], $qtdZeros);
 		$arr[] = array(
-			"pt" => is_null($fields['ID_EVE_PESSOA']) ? 'N' : 'S',
-			"id" => $fields['ID'],
+			"pt" => is_null($fields['ID_EVE_MEMBRO']) ? 'N' : 'S',
+			"id" => $fields['ID_CAD_MEMBRO'],
 			"nm" => $fields['NM'],
 			"fg" => $fgAutoriz,
-			"sb" => $id
+			"sb" => fStrZero($fields['ID_CAD_PESSOA'], $qtdZeros)
 		);
 	endforeach;
 	return $arr;
@@ -496,17 +499,17 @@ function getSaidas( $parameters ) {
 	if ( $parameters["filter"] == "Y" ):
 		$query .= " WHERE YEAR(es.DH_S) = YEAR(NOW()) OR YEAR(es.DH_R) = YEAR(NOW())";
 	elseif ( $parameters["filter"] == "P" ):
-		$query .= " WHERE es.DH_R > NOW() AND es.FG_IMPRIMIR = 'S' AND EXISTS (SELECT 1 FROM EVE_SAIDA_PESSOA WHERE ID_EVE_SAIDA = es.ID AND FG_AUTORIZ = 'S' ";
+		$query .= " WHERE es.DH_R > NOW() AND es.FG_IMPRIMIR = 'S' AND EXISTS (SELECT 1 FROM EVE_SAIDA_MEMBRO WHERE ID_EVE_SAIDA = es.ID AND FG_AUTORIZ = 'S' ";
     
     	//MEMBRO LOGADO
     	$result = $GLOBALS['conn']->Execute("
-    		SELECT cu.ID_CAD_PESSOA, ca.ID_UNIDADE, ca.CD_CARGO, ca.CD_CARGO2, ca.NM, ca.IDADE_HOJE
+    		SELECT cu.ID_CAD_MEMBRO, ca.ID_UNIDADE, ca.CD_CARGO, ca.CD_CARGO2, ca.NM, ca.IDADE_HOJE
     		  FROM CON_ATIVOS ca
     	INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID)
     	     WHERE cu.ID_USUARIO = ? 
     	", array( $usuarioID ) );
     	if ( !$result->EOF && fStrStartWith($result->fields["CD_CARGO"], "1") ):
-    	    $query .= " AND ID_CAD_PESSOA = ".$result->fields["ID_CAD_PESSOA"];
+    	    $query .= " AND ID_CAD_MEMBRO = ".$result->fields["ID_CAD_MEMBRO"];
     	endif;
 		 $query .= "  )";
 		 
