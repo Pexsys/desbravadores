@@ -168,6 +168,10 @@ class PROFILE {
 			elseif ( fStrStartWith($cargoCD,"2-04") || fStrStartWith($cargo2CD,"2-04") ):
 				$arr[] = 5;
 
+			//ANCIAO/PASTORES
+			elseif ( fStrStartWith($cargoCD,"2-05") || fStrStartWith($cargo2CD,"2-05") ):
+				$arr[] = 9;
+
 			//CONSELHEIROS
 			elseif ( fStrStartWith($cargoCD,"2-07") || fStrStartWith($cargo2CD,"2-07") ):
 				$arr[] = 6;

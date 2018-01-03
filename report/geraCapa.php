@@ -70,17 +70,21 @@ class ESPCR extends TCPDF {
 	
 	public function addEspecialidade($codEsp,$params) {
 		$this->params = $params;
-		$idPessoa = $this->params[0];
+		$cadMembroID = $this->params[0];
 		$nmPessoa = $this->params[1];
+		$pessoaID = null;
+		$membroID = null;
 		
-		if (!empty($idPessoa)):
+		if (!empty($cadMembroID)):
 		    $result = $GLOBALS['conn']->Execute("
     			SELECT *
     			  FROM CON_ATIVOS
-    			 WHERE ID_CAD_PESSOA = ?
-    	    ", array( $idPessoa ) );
+    			 WHERE ID_CAD_MEMBRO = ?
+    	    ", array( $cadMembroID ) );
     	    if (!$result->EOF):
-    	        $nmPessoa = $result->fields["NM"];
+				$nmPessoa = $result->fields["NM"];
+				$membroID = $result->fields["ID_MEMBRO"];
+				$pessoaID = $result->fields["ID_CAD_PESSOA"];
             endif;
 		endif;
 		
@@ -113,11 +117,11 @@ class ESPCR extends TCPDF {
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'I', 13);
 		$this->writeHTMLCell(0, 0, '', '', "<span>$codEsp - #$pgAss</span><span style=\"color:#888888\">&nbsp;[".$result->fields["ID"]."]</span>", 0, 0, 0, true, 'C', true);
 		
-		if (!empty($idPessoa)):
+		if (!empty($membroID)):
 			$barCODE = $GLOBALS['pattern']->getBars()->encode(array(
 				"id" => "E",
 				"fi" => $result->fields["ID"],
-				"ni" => $idPessoa
+				"ni" => $membroID
 			));
 			$this->write1DBarcode($barCODE, 'C39', 73, 178, '', 17, 0.4, $this->stLine3, 'N');
 		endif;
@@ -200,7 +204,7 @@ class ESPCR extends TCPDF {
 		$this->Line(142, $tbTop-11, 142, $tbTop+10, $this->stLine);
 		
 		//MONTA ESPECIALIDADES COMPLETADAS NA SEGUNDA FOLHA DESSE MESTRADO.
-		if (!empty($idPessoa) && $areaEsp == "ME"):
+		if (!empty($pessoaID) && $areaEsp == "ME"):
 		    
 		    $fazReq = true;
 		    $arr = array();
@@ -213,21 +217,21 @@ class ESPCR extends TCPDF {
 				INNER JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = car.ID_RQ AND ah.ID_CAD_PESSOA = ? AND ah.DT_INICIO IS NOT NULL)
 						WHERE tar.ID_TAB_APREND = ?
 					GROUP BY tar.ID, tar.QT_MIN
-			", array( "ES", $idPessoa, $result->fields["ID"] ) );
+			", array( "ES", $pessoaID, $result->fields["ID"] ) );
 			foreach($rR as $lR => $fR):
 				$fazReq = ( $fR["QT_FEITAS"] >= $fR["QT_MIN"] );
 				
 				if (!$fazReq):
 					break;
-			endif;
-				
-			$arr[ $fR["ID"] ] = array(
-				"min" => $fR["QT_MIN"],
-				"hist" => array()
-			);
-				
-			//ADICIONAR REGRA E SELECAO DA REGRA.
-			//LE PARAMETRO MINIMO E HISTORICO PARA A REGRA
+				endif;
+					
+				$arr[ $fR["ID"] ] = array(
+					"min" => $fR["QT_MIN"],
+					"hist" => array()
+				);
+					
+				//ADICIONAR REGRA E SELECAO DA REGRA.
+				//LE PARAMETRO MINIMO E HISTORICO PARA A REGRA
 				$rS = $GLOBALS['conn']->Execute("
 					SELECT car.ID_RQ, car.CD_AREA_INTERNO_RQ, car.CD_ITEM_INTERNO_RQ, car.DS_ITEM_RQ, 
 							tm.NR_PG_ASS, 
@@ -237,11 +241,10 @@ class ESPCR extends TCPDF {
 				INNER JOIN TAB_MATERIAIS tm ON (tm.ID_TAB_APREND = car.ID_RQ)
 						WHERE car.ID_TAB_APR_ITEM = ?
 					ORDER BY tm.NR_PG_ASS, car.CD_AREA_INTERNO_RQ, car.CD_ITEM_INTERNO_RQ 
-				", array( $idPessoa, $fR["ID"] ) );
+				", array( $pessoaID, $fR["ID"] ) );
 				foreach($rS as $lS => $fS):
 					$arr[ $fR["ID"] ]["hist"][] = $fS;
                 endforeach;
-                
             endforeach;
     		
 			//VERIFICA SE CONCLUIDO
@@ -289,7 +292,7 @@ class ESPCR extends TCPDF {
 				WHERE ID_ORIGEM = ? 
 				AND TP = ? 
 				AND ID_USUARIO = (SELECT ID_USUARIO FROM CAD_USUARIOS WHERE ID_CAD_PESSOA = ?)
-			", array( $result->fields["ID"], "M", $idPessoa ) );
+			", array( $result->fields["ID"], "M", $pessoaID ) );
 
 		endif;
 	}
@@ -376,7 +379,7 @@ if ($nome == "ALL"):
 		  FROM CON_ATIVOS 
 		 ORDER BY NM");
 	foreach ($result as $k => $line):
-		$arrNome[] = $line["ID"];
+		$arrNome[] = $line["ID_CAD_MEMBRO"];
 	endforeach;
 else:
 	$arrNome = explode(",",$nome);

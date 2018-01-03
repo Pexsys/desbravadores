@@ -129,7 +129,7 @@ class BARS {
 			$fn = $a["id"];
 		elseif (isset($a["fn"])):
 			$aux = $this->getFirstTag("fn",$a["fn"]);
-		$fn = $aux["id"];
+			$fn = $aux["id"];
 		endif;
 		
 		$fi = fStrZero(0,$this->getFILength());
