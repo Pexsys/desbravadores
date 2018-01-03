@@ -27,6 +27,7 @@
 		<table class="compact row-border hover stripe" style="cursor: pointer;" cellspacing="0" width="100%" id="membrosDatatable">
 			<thead>
 				<tr>
+					<th></th>
 					<th>C&oacute;d.</th>
 					<th>Nome Completo</th>
 					<th>Unidade</th>
@@ -39,7 +40,7 @@
 	</div>
 	<div class="row">
 		<a role="button" class="btn btn-warning pull-left" id="btnNovo" style="display:none"><i class="fa fa-plus"></i>&nbsp;Novo</a>
-		<a role="button" class="btn btn-primary pull-right" name="filtro" id="btnAtivos" tp-filtro="A"><i class="fa fa-child"></i>&nbsp;Ativos</a>
+		<a role="button" class="btn btn-primary pull-right" name="filtro" id="btnAtivos" tp-filtro="A"><i class="fa fa-filter"></i>&nbsp;Ativos</a>
 		<a role="button" class="btn btn-primary-outline pull-right" name="filtro" id="btnTodos" tp-filtro="T"><i class="fa fa-globe"></i>&nbsp;Todos</a>
 	</div>
 </div>

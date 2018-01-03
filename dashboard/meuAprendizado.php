@@ -1,5 +1,5 @@
 <?php
-$membroID = $_SESSION['USER']['id_cad_pessoa'];
+$pessoaID = $_SESSION['USER']['id_cad_pessoa'];
 ?>
 <style>
 .blink{
@@ -37,7 +37,7 @@ $result = $GLOBALS['conn']->Execute("
 	  AND DT_CONCLUSAO IS NULL
 	GROUP BY TP_ITEM, DS_ITEM, CD_AREA_INTERNO, DT_INICIO
 	ORDER BY DT_INICIO, TP_ITEM, CD_ITEM_INTERNO
-", array($membroID) );
+", array($pessoaID) );
 if (!$result->EOF):
 ?>
 	<div class="col-lg-6">
@@ -82,7 +82,7 @@ $result = $GLOBALS['conn']->Execute("
 	  AND DT_CONCLUSAO IS NULL
 	GROUP BY TP_ITEM, DS_ITEM, CD_AREA_INTERNO, DT_INICIO
 	ORDER BY DT_INICIO, TP_ITEM, CD_ITEM_INTERNO
-", array($membroID) );
+", array($pessoaID) );
 if (!$result->EOF):
 ?>
 	<div class="col-lg-6">
@@ -127,14 +127,14 @@ endif;
 
 <?php
 $result = $GLOBALS['conn']->Execute("
-   SELECT ta.TP_ITEM, ta.CD_ITEM_INTERNO, ta.DS_ITEM, ah.DT_INICIO, ah.DT_CONCLUSAO, ah.DT_AVALIACAO, ah.DT_INVESTIDURA
+   SELECT ta.TP_ITEM, ta.CD_ITEM_INTERNO, ta.CD_AREA_INTERNO, ta.DS_ITEM, ah.DT_INICIO, ah.DT_CONCLUSAO, ah.DT_AVALIACAO, ah.DT_INVESTIDURA
 	 FROM APR_HISTORICO ah
 INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
 	WHERE ah.ID_CAD_PESSOA = ?
 	  AND ah.DT_INVESTIDURA IS NOT NULL 
 	  AND YEAR(ah.DT_INVESTIDURA) < YEAR(NOW())
 	ORDER BY ah.DT_CONCLUSAO DESC, ta.TP_ITEM, ta.CD_ITEM_INTERNO DESC
-", array($membroID) );
+", array($pessoaID) );
 if (!$result->EOF):
 ?>
 <div class="row">
@@ -143,7 +143,7 @@ if (!$result->EOF):
 	</div>
 	<div class="col-lg-12">
 		<div class="panel panel-success">
-			<div class="panel-body" style="height:300px;overflow-y:scroll;">
+			<div class="panel-body" style="height:450px;overflow-y:scroll;">
 				<div class="table-responsive">
 					<table class="table">
 						<thead>
@@ -157,9 +157,11 @@ if (!$result->EOF):
 						</thead>
 						<tbody>
 							<?php
-							foreach ($result as $key => $line ):
+							$total = $result->RecordCount();
+							$size = strlen($total);
+							foreach ($result as $key => $line):
 								echo "<tr>
-									<td><i class=\"".getIconAprendizado( $line["TP_ITEM"], $line["CD_AREA_INTERNO"] )."\"></i>&nbsp;".titleCase($line["DS_ITEM"])."</td>
+									<td>".fStrZero($total--,$size)." - <i class=\"".getIconAprendizado( $line["TP_ITEM"], $line["CD_AREA_INTERNO"] )."\"></i>&nbsp;".titleCase($line["DS_ITEM"])."</td>
 									<td>".date( 'd/m/Y', strtotime($line["DT_INICIO"]) )."</td>
 									<td>".date( 'd/m/Y', strtotime($line["DT_CONCLUSAO"]) )."</td>
 									<td>".date( 'd/m/Y', strtotime($line["DT_AVALIACAO"]) )."</td>

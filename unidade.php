@@ -65,8 +65,14 @@ endforeach;
                     <li><b>Cor do g&ecirc;nero</b>:&nbsp;<i class="fa fa-stop" aria-hidden="true" style="color:<?php echo $result->fields["CD_COR_GENERO"];?>"></i></li>
                     <li><b>Cor da unidade</b>:&nbsp;<i class="fa fa-stop" aria-hidden="true" style="color:<?php echo $result->fields["CD_COR"];?>"></i></li>
                     <li><b>Grito de Guerra</b>:<br/><i><?php echo ($result->fields["GRITO"]);?></i></li>
-                    <li><b><?php echo $membros->RecordCount();?>&nbsp;Membros</b>:&nbsp;<?php echo $strmembros;?></li>
-                    <?php echo (!empty($result->fields["HISTORY"]) ? "<li><b>Hist&oacute;ria e Significados</b>:&nbsp;".($result->fields["HISTORY"])."</li>" : "" );?>
+                    <?php 
+                    if (strlen($strmembros)):
+                        echo "<li><b>{$membros->RecordCount()}&nbsp;Membros</b>:&nbsp;$strmembros</li>";
+                    endif;
+                    if (!empty($result->fields["HISTORY"])):
+                        echo "<li><b>Hist&oacute;ria e Significados</b>:&nbsp;{$result->fields["HISTORY"]}</li>";
+                    endif;
+                    ?>
                 </ul>
             </div>
             <div class="col-md-12">

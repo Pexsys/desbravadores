@@ -77,7 +77,7 @@ class ESPCR extends TCPDF {
 		    $result = $GLOBALS['conn']->Execute("
     			SELECT *
     			  FROM CON_ATIVOS
-    			 WHERE ID = ?
+    			 WHERE ID_CAD_PESSOA = ?
     	    ", array( $idPessoa ) );
     	    if (!$result->EOF):
     	        $nmPessoa = $result->fields["NM"];

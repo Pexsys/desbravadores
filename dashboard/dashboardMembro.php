@@ -1,5 +1,6 @@
 <?php
-$membroID = $_SESSION['USER']['id_cad_pessoa'];
+$cadMembroID = $_SESSION['USER']['id_cad_membro'];
+$pessoaID = $_SESSION['USER']['id_cad_pessoa'];
 
 function getClass( $pct ){
 	if ($pct < 51):
@@ -56,8 +57,8 @@ SELECT TP, CM, DS, CMPL, FG_IM, DS_ITEM, FUNDO
  WHERE cc.TP_INCL = 'M'
    AND cc.FG_COMPRA = 'S'
    AND cc.FG_ENTREGUE = 'N'
-   AND cc.ID_CAD_PESSOA = ?
-", array($membroID) );
+   AND cc.ID_CAD_MEMBRO = ?
+", array($cadMembroID) );
 if (!$result->EOF):
 	?>
 	<div class="row">
@@ -102,8 +103,8 @@ $result = $GLOBALS['conn']->Execute("
 	AND cc.FG_COMPRA = 'N'
 	AND cc.FG_ENTREGUE = 'N'
 	AND cc.FG_ALMOX = 'N'
-	AND cc.ID_CAD_PESSOA = ?
-	", array($membroID) );
+	AND cc.ID_CAD_MEMBRO = ?
+	", array($cadMembroID) );
 if (!$result->EOF):
 	?>
 	<div class="row">
@@ -147,7 +148,7 @@ $result = $GLOBALS['conn']->Execute("
 	WHERE ID_CAD_PESSOA = ? AND DT_CONCLUSAO IS NULL
 	GROUP BY ID_CAD_PESSOA, ID_TAB_APREND, TP_ITEM, CD_AREA_INTERNO, CD_ITEM_INTERNO, DS_ITEM, DT_INICIO
 	ORDER BY TP_ITEM, CD_ITEM_INTERNO
-", array($membroID) );
+", array($pessoaID) );
 if (!$result->EOF):
 	?>
 	<div class="row">
@@ -182,7 +183,7 @@ if (!$result->EOF):
 					AND ID_TAB_APREND = ?
 					AND DT_ASSINATURA IS NOT NULL
 					AND DT_CONCLUSAO IS NULL
-				", array($membroID, $tabAprID) );
+				", array($pessoaID, $tabAprID) );
 				if (!$rs->EOF):
 					$qtd = $rs->fields["QT_COMPL"];
 				endif;
@@ -217,7 +218,7 @@ INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
 	  AND ah.DT_CONCLUSAO IS NOT NULL
 	  AND ah.DT_AVALIACAO IS NULL
 	ORDER BY ta.TP_ITEM, ta.CD_ITEM_INTERNO
-", array($membroID) );
+", array($pessoaID) );
 drawBoxesArea("Itens não avaliados pelo regional",$result,"panel-yellow");
 
 $result = $GLOBALS['conn']->Execute("
@@ -234,7 +235,7 @@ INNER JOIN TAB_MATERIAIS tm ON (tm.ID_TAB_APREND = ta.ID)
 	  AND ah.DT_AVALIACAO IS NOT NULL
 	  AND ah.DT_INVESTIDURA IS NULL
 	ORDER BY ta.TP_ITEM, ta.CD_ITEM_INTERNO
-", array($membroID) );
+", array($pessoaID) );
 drawBoxesArea("Itens a receber na próxima investidura",$result);
 
 $result = $GLOBALS['conn']->Execute("
@@ -244,24 +245,24 @@ INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
 	WHERE ah.ID_CAD_PESSOA = ?
 	  AND YEAR(ah.DT_INVESTIDURA) = Year(NOW())
 	ORDER BY ta.TP_ITEM, ta.CD_ITEM_INTERNO
-", array($membroID) );
+", array($pessoaID) );
 drawBoxesArea("Itens recebidos em ".date("Y"),$result,"panel-green");
 
 $matAnteriores = $GLOBALS['conn']->Execute("
 	SELECT COMPL, DT_ENTREGA, TP, DS, FUNDO, CMPL, FG_ALMOX, FG_IM
 	FROM CON_MAT_HISTORICO
-	WHERE ID_CAD_PESSOA = ?
+	WHERE ID_CAD_MEMBRO = ?
 	  AND YEAR(DT_ENTREGA) < YEAR(NOW())
 	ORDER BY TP, DT_ENTREGA DESC
-", array($membroID) );
+", array($cadMembroID) );
 
 $matAno = $GLOBALS['conn']->Execute("
 	SELECT COMPL, DT_ENTREGA, TP, DS, FUNDO, CMPL, FG_ALMOX, FG_IM
 	FROM CON_MAT_HISTORICO
-	WHERE ID_CAD_PESSOA = ?
+	WHERE ID_CAD_MEMBRO = ?
 	AND YEAR(DT_ENTREGA) = YEAR(NOW())
 	ORDER BY TP, DT_ENTREGA DESC
-", array($membroID) );
+", array($cadMembroID) );
 
 if (!$matAnteriores->EOF || !$matAno->EOF):
 ?>

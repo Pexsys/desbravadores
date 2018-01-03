@@ -33,9 +33,12 @@ $(document).ready(function(){
 			},
 			dataSrc: "membros"
 		},
-		order: [ 1, 'asc' ],
+		order: [ 2, 'asc' ],
 		columns: [
 			{	data: 'id',
+				visible: false
+			},
+			{	data: 'ic',
 				sortable: true,
 				width: "5%"
 			},

@@ -50,8 +50,11 @@ class PROFILE {
 		$_SESSION['USER']['cd_usuario']		= $result->fields['CD_USUARIO'];
 		$_SESSION['USER']['ds_usuario']		= $result->fields['DS_USUARIO'];
 		$_SESSION['USER']['id_usuario']		= $result->fields['ID_USUARIO'];
+		$_SESSION['USER']['id_cad_membro']	= $result->fields['ID_CAD_MEMBRO'];
+		$_SESSION['USER']['id_clube']		= $result->fields['ID_CLUBE'];
+		$_SESSION['USER']['id_membro']		= $result->fields['ID_MEMBRO'];
 		$_SESSION['USER']['id_cad_pessoa']	= $result->fields['ID_CAD_PESSOA'];
-		$_SESSION['USER']['sexo']			= (!is_null($result->fields['TP_SEXO_RESP']) ? $result->fields['TP_SEXO_RESP'] : $result->fields['TP_SEXO']);
+		$_SESSION['USER']['sexo']			= $result->fields['TP_SEXO'];
 	}
 
 	public function deleteAllByUserID( $userID ) {

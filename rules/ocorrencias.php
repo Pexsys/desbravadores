@@ -11,7 +11,7 @@ function getQueryByFilter( $parameters ) {
 		return $GLOBALS['conn']->Execute("
 				SELECT o.ID, a.NM, o.TP, o.CD, o.DH, o.FG_PEND, l.DH_READ
 				  FROM CAD_OCORRENCIA o
-			INNER JOIN CON_ATIVOS a ON (a.ID = o.ID_CAD_PESSOA)
+			INNER JOIN CON_ATIVOS a ON (a.ID_CAD_PESSOA = o.ID_CAD_PESSOA)
 			INNER JOIN LOG_MENSAGEM l ON (l.ID_ORIGEM = o.ID AND l.TP = 'O')
 				 WHERE YEAR(o.DH) = YEAR(NOW())
 				   AND o.FG_PEND = 'N'
