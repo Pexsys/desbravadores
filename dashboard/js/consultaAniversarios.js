@@ -24,7 +24,7 @@ $(document).ready(function(){
 			type	: "GET",
 			url	: jsLIB.rootDir+"rules/membros.php",
 			data	: function (d) {
-					d.MethodName = "getMembros",
+					d.MethodName = "getAniversariantes",
 					d.data = { 
 						 filtro: 'A',
 						 filters: jsFilter.jSON()

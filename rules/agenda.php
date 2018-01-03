@@ -245,7 +245,7 @@ function fGetClass($strTipoEvento){
 
 function agendaConsulta( $parameters ) {
 	session_start();
-	$membroID = $_SESSION['USER']['id_cad_pessoa'];
+	$cadMembroID = $_SESSION['USER']['id_cad_membro'];
 
 	$out = array();
 	fConnDB();
@@ -254,7 +254,7 @@ function agendaConsulta( $parameters ) {
 	if ( empty($ano) || is_null($ano) ):
 		$out["years"] = array();
 		$query = "SELECT DISTINCT NR_ANO 
-			  FROM CAD_ATIVOS ". ( is_null($membroID) ? "" : "WHERE ID = $membroID" ) ." ORDER BY NR_ANO DESC";
+			  FROM CAD_ATIVOS ". ( is_null($cadMembroID) ? "" : "WHERE ID_CAD_MEMBRO = $cadMembroID" ) ." ORDER BY NR_ANO DESC";
 		$result = $GLOBALS['conn']->Execute($query);
 		$ano = $result->fields["NR_ANO"];
 		foreach ($result as $k => $line):

@@ -106,25 +106,28 @@ function getQueryByFilter( $parameters ) {
 	endif;	
 	if ( isset($parameters["filtro"]) ):
 		if ( $parameters["filtro"] == "A" ):
-			$where .= " AND a.id IS NOT NULL";
+			$where .= " AND a.ID_CAD_PESSOA IS NOT NULL";
 		endif;
 	endif;
 
 //echo $where;
 //exit;
 
-	return $GLOBALS['conn']->Execute(
-		"SELECT DISTINCT
-			p.id,
+	return $GLOBALS['conn']->Execute("
+	  SELECT DISTINCT
+			m.ID,
+			m.ID_MEMBRO,
+			m.ID_CAD_PESSOA,
 			p.NM,
 			a.DS_UNIDADE,
 			a.DS_CARGO,
 			a.DT_NASC,
 			a.IDADE_HOJE,
 			a.IDADE_ANO
-		FROM CAD_PESSOA p
-		LEFT JOIN CON_ATIVOS a ON (a.id = p.id)
-		LEFT JOIN CON_APR_PESSOA cap ON (cap.ID_CAD_PESSOA = a.ID AND cap.DT_CONCLUSAO IS NULL)
+		FROM CAD_MEMBRO m
+		INNER JOIN CAD_PESSOA p ON (p.ID = m.ID_CAD_PESSOA)
+		LEFT JOIN CON_ATIVOS a ON (a.ID_CAD_PESSOA = p.ID)
+		LEFT JOIN CON_APR_PESSOA cap ON (cap.ID_CAD_PESSOA = p.ID AND cap.DT_CONCLUSAO IS NULL)
 		WHERE 1=1 $where ORDER BY p.NM"
 	,$aWhere);
 }
@@ -135,24 +138,15 @@ function getMembros( $parameters ) {
 	
 	$qtdZeros = zeroSizeID();
 	$result = getQueryByFilter( $parameters );
-	while (!$result->EOF):
-		$dtNascimento = strtotime($result->fields['DT_NASC']);
-	
-		$aniversario = mktime(0, 0, 0, strftime("%m",$dtNascimento), strftime("%d",$dtNascimento), date("Y") );
-		if ( $result->fields['IDADE_ANO'] == $result->fields['IDADE_HOJE'] && strftime("%Y%m",$aniversario) < date("Ym") ):
-			$aniversario = mktime(0, 0, 0, strftime("%m",$dtNascimento), strftime("%d",$dtNascimento), date("Y")+1 );
-		endif;
-		
+	foreach ($result as $k => $f):
 		$arr[] = array( 
-			"id" => fStrZero($result->fields['id'], $qtdZeros),
-			"nm" => ($result->fields['NM']),
-			"uni" => ($result->fields['DS_UNIDADE']),
-			"cgo" => ($result->fields['DS_CARGO']),
-			"dm" => $aniversario,
-			"ih" => $result->fields['IDADE_HOJE']
+			"id" => $f['ID_CAD_PESSOA'],
+			"ic" => fStrZero($f['ID_MEMBRO'], $qtdZeros),
+			"nm" => $f['NM'],
+			"uni" => $f['DS_UNIDADE'],
+			"cgo" => $f['DS_CARGO']
 		);
-		$result->MoveNext();
-	endwhile;
+	endforeach;
 
 	return array( "result" => true, "membros" => $arr );
 }
@@ -624,5 +618,29 @@ function getAnosDir( $parameters ) {
 		endif;
 	endif;
 	return $arr;
+}
+
+function getAniversariantes( $parameters ){
+	$arr = array();
+	fConnDB();
+
+	$result = getQueryByFilter( $parameters );
+	foreach ($result as $k => $f):
+		$dtNascimento = strtotime($f['DT_NASC']);
+	
+		$aniversario = mktime(0, 0, 0, strftime("%m",$dtNascimento), strftime("%d",$dtNascimento), date("Y") );
+		if ( $f['IDADE_ANO'] == $f['IDADE_HOJE'] && strftime("%Y%m",$aniversario) < date("Ym") ):
+			$aniversario = mktime(0, 0, 0, strftime("%m",$dtNascimento), strftime("%d",$dtNascimento), date("Y")+1 );
+		endif;
+		
+		$arr[] = array( 
+			"nm" => $f['NM'],
+			"uni" => $f['DS_UNIDADE'],
+			"dm" => $aniversario,
+			"ih" => $f['IDADE_HOJE']
+		);
+	endforeach;
+
+	return array( "result" => true, "membros" => $arr );
 }
 ?>
