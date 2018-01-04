@@ -99,11 +99,14 @@ class LISTAEVENTOAUTORIZGENERO extends TCPDF {
 		$this->newPage();
 		
 		$rsM = $GLOBALS['conn']->Execute("
-			SELECT ca.NM, ca.DS_CARGO, ca.DT_NASC, ca.FONE_RES, ca.FONE_CEL, ca.IDADE_HOJE
-			FROM EVE_SAIDA_PESSOA esp
-		    INNER JOIN CON_ATIVOS ca ON (ca.ID = esp.ID_CAD_PESSOA)
-		    WHERE esp.ID_EVE_SAIDA = ?
-			  AND esp.FG_AUTORIZ = 'S'
+			SELECT ca.NM, at.CD_CARGO, IF(ca.TP_SEXO='F',cg.DSF,cg.DSM) AS DS_CARGO, ca.DT_NASC, ca.FONE_RES, ca.FONE_CEL, ca.IDADE_HOJE
+			FROM EVE_SAIDA es
+			INNER JOIN EVE_SAIDA_MEMBRO esp on (esp.ID_EVE_SAIDA = es.ID AND esp.FG_AUTORIZ = 'S')
+			INNER JOIN CAD_MEMBRO cm on (cm.ID = esp.ID_CAD_MEMBRO)
+			INNER JOIN CAD_ATIVOS at on (at.ID_CAD_MEMBRO = esp.ID_CAD_MEMBRO AND at.NR_ANO = YEAR(es.DH_R))
+			INNER JOIN TAB_CARGO cg ON (cg.CD = at.CD_CARGO)
+			INNER JOIN CON_PESSOA ca on (ca.ID_CAD_PESSOA = cm.ID_CAD_PESSOA)
+		    WHERE es.ID = ?
 			  AND ca.TP_SEXO = ?
 			ORDER BY ca.NM
 		", array( $g["ID_EVE_SAIDA"], $g["TP_SEXO"] ) );
@@ -185,8 +188,11 @@ $result = $GLOBALS['conn']->Execute("
 	SELECT DISTINCT es.DS, es.DS_TEMA, es.DS_ORG, es.DS_DEST, 
 					esp.ID_EVE_SAIDA, ca.TP_SEXO 
    	FROM EVE_SAIDA es
-    INNER JOIN EVE_SAIDA_PESSOA esp on (esp.ID_EVE_SAIDA = es.ID AND esp.FG_AUTORIZ = 'S')
-    INNER JOIN CON_ATIVOS ca on (ca.ID = esp.ID_CAD_PESSOA)
+	INNER JOIN EVE_SAIDA_MEMBRO esp on (esp.ID_EVE_SAIDA = es.ID)
+	INNER JOIN CAD_MEMBRO cm on (cm.ID = esp.ID_CAD_MEMBRO)
+	INNER JOIN CAD_ATIVOS at on (at.ID_CAD_MEMBRO = esp.ID_CAD_MEMBRO AND at.NR_ANO = YEAR(es.DH_R))
+	INNER JOIN TAB_CARGO cg ON (cg.CD = at.CD_CARGO)
+	INNER JOIN CON_PESSOA ca on (ca.ID_CAD_PESSOA = cm.ID_CAD_PESSOA)
     WHERE es.ID = ?
 	ORDER BY ca.TP_SEXO
 ", array($eveID) );

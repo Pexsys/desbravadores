@@ -147,7 +147,7 @@ class ESPCR extends TCPDF {
 		
 		$dtS = strtotime($this->line["DH_S"]);
 		$dtR = strtotime($this->line["DH_R"]);
-		$linhaASS = trim($this->line["NM_RESP"]).", ".$this->line["DOC_RESP"].", CPF ".fCPF($this->line["CPF_RESP"]). (!empty($this->line["TEL_RESP"]) ? ", Fone ".$this->line["TEL_RESP"] : "");
+		$linhaASS = trim($this->line["NM_RESP"]).", ".$this->line["NR_DOC_RESP"].", CPF ".fCPF($this->line["NR_CPF_RESP"]). (!empty($this->line["FONE_CEL_RESP"]) ? ", Fone ".$this->line["FONE_CEL_RESP"] : "");
 		$barCODE = $GLOBALS['pattern']->getBars()->encode(array(
 			"id" => "D",
 			"fi" => $this->line["ID"],
@@ -205,7 +205,7 @@ class ESPCR extends TCPDF {
 	    
 		$dtS = strtotime($this->line["DH_S"]);
 		$dtR = strtotime($this->line["DH_R"]);
-		$linhaASS = trim($this->line["NM_RESP"]).", ".$this->line["DOC_RESP"].", CPF ".fCPF($this->line["CPF_RESP"]). (!empty($this->line["TEL_RESP"]) ? ", Fone ".$this->line["TEL_RESP"] : "");
+		$linhaASS = trim($this->line["NM_RESP"]).", ".$this->line["NR_DOC_RESP"].", CPF ".fCPF($this->line["NR_CPF_RESP"]). (!empty($this->line["FONE_CEL_RESP"]) ? ", Fone ".$this->line["FONE_CEL_RESP"] : "");
 
 		$this->SetTextColor(0,0,0);
 		$this->SetY(85);
@@ -330,7 +330,7 @@ $aP = 0;
 $query = "
 	SELECT es.ID, es.DS, es.DH_S, es.DH_R, es.DS_TEMA, es.DS_ORG, es.DS_DEST, es.DS_ORIG, es.FG_CAMPORI,
 	       esp.ID_CAD_PESSOA, 
-	       ca.NM, ca.TP_SEXO, ca.NR_DOC, ca.NR_CPF, ca.TP_SEXO_RESP, ca.DS_RESP, ca.NM_RESP, ca.DOC_RESP, ca.CPF_RESP, ca.TEL_RESP, ca.CD_CARGO, ca.DS_CARGO,
+	       ca.NM, ca.TP_SEXO, ca.NR_DOC, ca.NR_CPF, ca.TP_SEXO_RESP, ca.DS_TP, ca.NM_RESP, ca.NR_DOC_RESP, ca.NR_CPF_RESP, ca.FONE_CEL_RESP, ca.CD_CARGO, ca.DS_CARGO,
 	       cd.NOME_DIRETOR, cd.IDENT_DIRETOR
 	  FROM EVE_SAIDA es,
 	       EVE_SAIDA_PESSOA esp,

@@ -107,11 +107,12 @@ $classes = getDomainFilter( array( "type" => "C" ) );
 		<?php
 		$qtdZeros = zeroSizeID();
         	$result = $GLOBALS['conn']->Execute("
-        	   SELECT DISTINCT cp.ID, cp.NM
-                 FROM CAD_PESSOA cp
-                WHERE EXISTS (SELECT 1 FROM APR_HISTORICO WHERE ID_CAD_PESSOA = cp.ID)
-                   OR EXISTS (SELECT 1 FROM EVE_SAIDA_PESSOA WHERE ID_CAD_PESSOA = cp.ID)
-                ORDER BY cp.NM
+				SELECT DISTINCT cm.ID, cp.NM
+				FROM CAD_MEMBRO cm
+				INNER JOIN CAD_PESSOA cp ON (cp.ID = cm.ID_CAD_PESSOA)
+			WHERE EXISTS (SELECT 1 FROM APR_HISTORICO WHERE ID_CAD_PESSOA = cm.ID_CAD_PESSOA)
+				OR EXISTS (SELECT 1 FROM EVE_SAIDA_MEMBRO WHERE ID_CAD_MEMBRO = cm.ID)
+			ORDER BY cp.NM
             ");
         	foreach($result as $l => $fields):
         		$id = fStrZero($fields['ID'], $qtdZeros);

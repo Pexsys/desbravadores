@@ -21,7 +21,7 @@ function getQueryByFilter( $parameters ) {
 			elseif ( $key == "T" ):
 				$where .= " AND ca.ID_CAD_MEMBRO ".$notStr."IN";
 			elseif ( $key == "I" ):
-				$where .= " AND cp.ID ".$notStr."IN";
+				$where .= " AND cm.ID ".$notStr."IN";
 			elseif ( $key == "U" ):
 				$where .= " AND ca.ID_UNIDADE ".$notStr."IN";
 			elseif ( $key == "C" ):
@@ -99,6 +99,7 @@ function getQueryByFilter( $parameters ) {
 				ah.DT_AVALIACAO,
 				tm.NR_PG_ASS
 			FROM CAD_PESSOA cp
+			INNER JOIN CAD_MEMBRO cm ON (cm.ID_CAD_PESSOA = cp.ID)
 			LEFT JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = cp.ID)
 			LEFT JOIN APR_HISTORICO ah ON (ah.id_cad_pessoa = cp.id AND ah.DT_INVESTIDURA IS NOT NULL)
 			LEFT JOIN TAB_APRENDIZADO ap ON (ap.id = ah.id_tab_aprend)
@@ -108,6 +109,7 @@ function getQueryByFilter( $parameters ) {
 		 ORDER BY ca.NM, ap.CD_ITEM_INTERNO
 		";
 		//echo $query;
+		//print_r($aWhere);
 		return $GLOBALS['conn']->Execute( $query, $aWhere );
 	endif;
 	return null;
@@ -125,8 +127,8 @@ function getAprHist( $parameters ) {
 			$ds = ($fields['DS_ITEM']) . ($fields['TP_ITEM'] == "ES" ? " - ".$fields['CD_ITEM_INTERNO'] : "");
 			$arr[] = array( 
 				"id" => $fields['ID'],
-				"nm" => ($fields['NM']),
-				"dstpi" => ($fields['DS']),
+				"nm" => $fields['NM'],
+				"dstpi" => $fields['DS'],
 				"dsitm" => $ds,
 				"dta" => (empty($fields['DT_AVALIACAO']) ? "" : strtotime($fields['DT_AVALIACAO']) ),
 				"pg" =>  ($fields['TP_ITEM'] == "ES" ? $fields['NR_PG_ASS'] : "")

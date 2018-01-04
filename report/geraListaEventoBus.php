@@ -114,9 +114,10 @@ class LISTAEVENTOBUS extends TCPDF {
 	    $this->newPage();
 	    
 	    $rsM = $GLOBALS['conn']->Execute("
-		  SELECT ca.NM, ca.DT_NASC, ca.FONE_RES, ca.FONE_CEL, ca.NR_DOC, ca.NR_CPF, ca.CPF_RESP
-			FROM EVE_SAIDA_PESSOA esp
-		    INNER JOIN CON_ATIVOS ca ON (ca.ID = esp.ID_CAD_PESSOA)
+		  SELECT ca.NM, ca.DT_NASC, ca.FONE_RES, ca.FONE_CEL, ca.NR_DOC, ca.NR_CPF, ca.NR_CPF_RESP
+		  FROM EVE_SAIDA_MEMBRO esp
+		  INNER JOIN CAD_MEMBRO cm on (cm.ID = esp.ID_CAD_MEMBRO)
+		  INNER JOIN CON_PESSOA ca on (ca.ID_CAD_PESSOA = cm.ID_CAD_PESSOA)
 		    WHERE esp.ID_EVE_SAIDA = ?
 			  AND esp.BUS = ?
 			ORDER BY ca.NM
@@ -164,7 +165,7 @@ class LISTAEVENTOBUS extends TCPDF {
 		$this->setX(118);
 		$this->Cell(24, 5, $f["NR_DOC"], 0, false, 'L', true, false, 1);
 		$this->setX(142);
-		$this->Cell(21, 5, ( is_null($f["NR_CPF"]) ? fCPF($f["CPF_RESP"]): fCPF($f["NR_CPF"]) ), 0, false, 'L', true, false, 1);
+		$this->Cell(21, 5, ( is_null($f["NR_CPF"]) ? fCPF($f["NR_CPF_RESP"]): fCPF($f["NR_CPF"]) ), 0, false, 'L', true, false, 1);
 		$this->setX(163);
 		$this->Cell(42, 5, trim($f["FONE_RES"]."   ".$f["FONE_CEL"]), 0, false, 'L', true, false, 1);
 		$this->posY+=5;
@@ -191,7 +192,8 @@ fConnDB();
 $result = $GLOBALS['conn']->Execute("
 	SELECT DISTINCT es.ID, es.DS, es.DS_TEMA, es.DS_ORG, es.DS_DEST, esp.BUS
       FROM EVE_SAIDA es
-INNER JOIN EVE_SAIDA_PESSOA esp ON (esp.ID_EVE_SAIDA = es.ID AND esp.BUS IS NOT NULL)
+	  INNER JOIN EVE_SAIDA_MEMBRO esp on (esp.ID_EVE_SAIDA = es.ID AND esp.BUS IS NOT NULL)
+	  INNER JOIN CAD_MEMBRO cm on (cm.ID = esp.ID_CAD_MEMBRO)
      WHERE es.ID = ?
     ORDER BY esp.BUS
 ", array($eveID) );

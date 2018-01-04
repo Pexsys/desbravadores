@@ -34,7 +34,7 @@ class LISTAESTRELAS extends TCPDF {
 
 		$this->SetCreator(PDF_CREATOR);
 		$this->SetAuthor('Ricardo J. Cesar');
-		$this->SetTitle('Listagem de Membros Ativos');
+		$this->SetTitle('Listagem de Requisição de Estrelas');
 		$this->SetSubject($GLOBALS['pattern']->getClubeDS(array("cl","nm")));
 		$this->SetKeywords('Estrelas, ' . str_replace(" ", ", ", $GLOBALS['pattern']->getClubeDS( array("db","nm","ig") ) ) );
 		$this->setImageScale(PDF_IMAGE_SCALE_RATIO);

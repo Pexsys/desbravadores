@@ -23,7 +23,7 @@ function getDomainMembrosInativos(){
 		SELECT cm.ID, cm.ID_MEMBRO, cp.NM
 		FROM CAD_MEMBRO cm
 		INNER JOIN CAD_PESSOA cp ON (cp.ID = cm.ID_CAD_PESSOA)
-		WHERE NOT EXISTS (SELECT 1 FROM CAD_ATIVOS WHERE ID_CAD_MEMBRO = cm.ID)
+		WHERE NOT EXISTS (SELECT 1 FROM CON_ATIVOS WHERE ID_CAD_MEMBRO = cm.ID)
 		ORDER BY cp.NM
 	");
 	foreach($result as $l => $f):
