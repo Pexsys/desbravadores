@@ -24,13 +24,13 @@ $nomeDiretor = titleCase($rDIR->fields["NOME_DIRETOR"]);
 //******* SECRETARIA - FELIZ ANIVERSADIO
 $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.01-Analisando Aniversário...')");
 	$rA = $GLOBALS['conn']->Execute("
-		SELECT cp.NM, cp.TP_SEXO, Year(NOW())-Year(cp.DT_NASC) AS IDADE_ANO, EMAIL
-		  FROM CAD_PESSOA cp
-		 WHERE cp.DT_NASC IS NOT NULL
-		  AND cp.EMAIL IS NOT NULL
-		  AND MONTH(cp.DT_NASC) = MONTH(NOW())
-		  AND DAY(cp.DT_NASC) = DAY(NOW())
-		  AND cp.ID != ?
+		SELECT NM, TP_SEXO, Year(NOW())-Year(DT_NASC) AS IDADE_ANO, EMAIL
+		  FROM CAD_PESSOA
+		 WHERE DT_NASC IS NOT NULL
+		  AND EMAIL IS NOT NULL
+		  AND MONTH(DT_NASC) = MONTH(NOW())
+		  AND DAY(DT_NASC) = DAY(NOW())
+		  AND ID != ?
 	", array($rDIR->fields["ID_DIRETOR"]) );
 	foreach ($rA as $lA => $fA):
 		$a = explode(" ",titleCase($fA["NM"]));
@@ -78,7 +78,7 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
                 INNER JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = car.ID_RQ AND ah.ID_CAD_PESSOA = ? AND ah.DT_CONCLUSAO IS NOT NULL)
                      WHERE tar.ID_TAB_APREND = ?
                   GROUP BY tar.ID, tar.QT_MIN
-        	", array( "ES", $fA["ID"], $fg["ID"] ) );
+        	", array( "ES", $fA["ID_CAD_PESSOA"], $fg["ID"] ) );
     	    foreach($rR as $lR => $fR):
                 $feitas += min( $fR["QT_MIN"], $fR["QT_FEITAS"] );
             endforeach;
@@ -92,7 +92,7 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
                     FROM APR_HISTORICO 
                     WHERE ID_CAD_PESSOA = ?
                       AND ID_TAB_APREND = ?
-        	    ", array( $fA["ID"], $fg["ID"] ) );	
+        	    ", array( $fA["ID_CAD_PESSOA"], $fg["ID"] ) );	
         	    if ($rI->EOF || is_null($rI->fields["DT_CONCLUSAO"]) ):
         	        
         	        //INSERE NOTIFICAÇOES SE NÃO EXISTIR.
@@ -100,12 +100,12 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
         				INSERT INTO LOG_MENSAGEM ( ID_ORIGEM, TP, ID_USUARIO, EMAIL, DH_GERA )
         				SELECT ?, 'M', cu.ID_USUARIO, ca.EMAIL, NOW()
         				  FROM CON_ATIVOS ca
-        			INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID)
-        				 WHERE ca.ID = ?
+        			INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
+        				 WHERE ca.ID_CAD_PESSOA = ?
         				   AND NOT EXISTS (SELECT 1 FROM LOG_MENSAGEM WHERE ID_ORIGEM = ? AND TP = 'M' AND ID_USUARIO = cu.ID_USUARIO)
-        			", array( $fg["ID"], $fA["ID"], $fg["ID"] ) );
+        			", array( $fg["ID"], $fA["ID_CAD_PESSOA"], $fg["ID"] ) );
         			
-					if (!empty($fA["EMAIL"]) && $fA["ID"] != $rDIR->fields["ID_DIRETOR"] ):
+					if (!empty($fA["EMAIL"]) && $fA["ID_CAD_PESSOA"] != $rDIR->fields["ID_DIRETOR"] ):
 						$message = new MESSAGE( array( "np" => $a[0], "nm" => $fg["DS_ITEM"], "sx" => $fA["SEXO"], "nd" => $nomeDiretor ) );
 
             			$GLOBALS['mail']->ClearAllRecipients();
@@ -136,16 +136,20 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
 $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.03-Excluindo Perfis de Membros Inativos...')");
 $profile = new PROFILE();
 $result = $GLOBALS['conn']->Execute("
-		SELECT DISTINCT cu.ID_USUARIO
+	  SELECT DISTINCT cu.ID_USUARIO
 		FROM CAD_PESSOA cp 
   INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = cp.ID)
   INNER JOIN CAD_USU_PERFIL cup ON (cup.ID_CAD_USUARIOS = cu.ID_USUARIO)
-		WHERE NOT EXISTS (SELECT 1 FROM CAD_ATIVOS WHERE ID = cp.ID AND NR_ANO = YEAR(NOW())) 
+	   WHERE NOT EXISTS (SELECT 1 
+							FROM CAD_ATIVOS a 
+					  INNER JOIN CAD_MEMBRO m ON (m.ID = a.ID_CAD_MEMBRO)
+					  WHERE m.ID_CAD_PESSOA = cp.ID
+						AND a.NR_ANO = YEAR(NOW())
+						)
 ");
 foreach($result as $l => $fields):
 	$profile->deleteAllByUserID( $fields['ID_USUARIO'] );
 endforeach;
-
 
 //*******  SECRETARIA - REORGANIZACAO DA BASE EM 01/JANEIRO
 if ($md == "01-01"):
@@ -154,15 +158,15 @@ if ($md == "01-01"):
 	$GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.04-Reorganizando base de compras...')");
 	$result = $GLOBALS['conn']->Execute("
 		SELECT * 
-		  FROM CAD_COMPRAS_PESSOA 
+		  FROM CAD_COMPRAS
 		 WHERE FG_PREVISAO = 'N' 
-	  ORDER BY ID_CAD_PESSOA, ID_TAB_MATERIAIS, COMPL
+	  ORDER BY ID_CAD_MEMBRO, ID_TAB_MATERIAIS, COMPL
 	");
-	$GLOBALS['conn']->Execute("TRUNCATE CAD_COMPRAS_PESSOA");
+	$GLOBALS['conn']->Execute("TRUNCATE CAD_COMPRAS");
 	foreach($result as $l => $f):
 		$GLOBALS['conn']->Execute("
-			INSERT INTO CAD_COMPRAS_PESSOA(
-				ID_CAD_PESSOA,
+			INSERT INTO CAD_COMPRAS(
+				ID_CAD_MEMBRO,
 				ID_TAB_MATERIAIS,
 				TP,
 				COMPL,
@@ -171,7 +175,7 @@ if ($md == "01-01"):
 				FG_PREVISAO
 			) VALUES (?,?,?,?,?,?,?)
 		", array(
-			$f["ID_CAD_PESSOA"],
+			$f["ID_CAD_MEMBRO"],
 			$f["ID_TAB_MATERIAIS"],
 			$f["TP"],
 			$f["COMPL"],
@@ -203,8 +207,8 @@ if ($md == "01-01"):
 	//MENSAGEM DE FELIZ ANO NOVO
 	$GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.06-Felicitando pelo novo ano...')");
 	$rA = $GLOBALS['conn']->Execute("
-		SELECT cp.NM, cp.TP_SEXO, EMAIL
-		  FROM CAD_PESSOA cp
+		SELECT NM, TP_SEXO, EMAIL
+		  FROM CAD_PESSOA
 		 WHERE EMAIL IS NOT NULL
 		   AND ID != ?
 	", array($rDIR->fields["ID_DIRETOR"]) );

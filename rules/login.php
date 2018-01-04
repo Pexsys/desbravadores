@@ -96,6 +96,7 @@ function login( $parameters ) {
 				if ($rsHA->EOF):
 					$psw = null;
 				endif;
+				fInsertUserProfile($result->fields["ID_USUARIO"], 10 );
 			else:
 				$resp = verificaRespByCPF($usr);
 				if (!is_null($resp) && !existeMenorByRespID($resp["ID_CAD_PESSOA"])):

@@ -1,5 +1,6 @@
 <?php
-$membroID = $_SESSION['USER']['id_cad_pessoa'];
+$pessoaID = $_SESSION['USER']['id_cad_pessoa'];
+$cadMembroID = $_SESSION['USER']['id_cad_membro'];
 
 function drawBoxesArea($title,$result,$boxClass){
 	if (!$result->EOF):
@@ -31,13 +32,13 @@ function drawBoxesArea($title,$result,$boxClass){
 
 //MEMBRO LOGADO
 $result = $GLOBALS['conn']->Execute("
-	SELECT es.ID, es.DS, esp.ID_CAD_PESSOA, es.DH_S 
-	  FROM EVE_SAIDA_PESSOA esp 
+	SELECT es.ID, es.DS, esp.ID_CAD_MEMBRO, es.DH_S 
+	  FROM EVE_SAIDA_MEMBRO esp 
 INNER JOIN EVE_SAIDA es ON (es.ID = esp.ID_EVE_SAIDA AND es.DH_R > NOW() AND es.FG_IMPRIMIR = ?)
      WHERE esp.FG_AUTORIZ = ?
-       AND esp.ID_CAD_PESSOA = ?
+       AND esp.ID_CAD_MEMBRO = ?
   ORDER BY es.DH_S DESC
-", array( "S", "S", $membroID ) );
+", array( "S", "S", $cadMembroID ) );
 if ( !$result->EOF ):
     ?>
     <div class="row" id="minhasAutoriz">
@@ -48,7 +49,7 @@ if ( !$result->EOF ):
 	<?php
 	foreach ($result as $k => $fields):
 	    	echo "<div class=\"col-md-8 col-xs-12 col-sm-12 col-lg-4\">";
-			echo "  <div class=\"panel panel-success\" name=\"reprint\" cad-id=\"".$fields["ID_CAD_PESSOA"]."\" aut-id=\"".$fields["ID"]."\">";
+			echo "  <div class=\"panel panel-success\" name=\"reprint\" cad-id=\"".$fields["ID_CAD_MEMBRO"]."\" aut-id=\"".$fields["ID"]."\">";
 			echo "	<div class=\"panel-heading\" style=\"cursor:pointer;\">";
 	        echo "	    <div class=\"row\">
     					<div class=\"col-xs-3\"><i class=\"fa fa-id-card-o fa-4x\"></i></div>
