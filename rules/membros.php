@@ -349,7 +349,7 @@ function verificaResp( $parameters ) {
 	$id = NULL;
 
 	$membroID = $parameters["id"];
-	$cpf = $parameters["cpf"];
+	$cpf = fClearBN($parameters["cpf"]);
 		
 	fConnDB();
 

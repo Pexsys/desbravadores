@@ -182,7 +182,7 @@ function fSetRead( $parameters ){
 							FROM CAD_RESP cr
 							INNER JOIN CON_ATIVOS ca ON (ca.ID_RESP = cr.ID)
 							INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID)
-							WHERE REPLACE(REPLACE(cr.CPF_RESP,'.',''),'-','') = ?		
+							WHERE cr.CPF_RESP = ?		
 							)
 		  AND DH_READ IS NULL
 		  AND ID_ORIGEM = ?
