@@ -58,7 +58,7 @@ function login( $parameters ) {
 						"page"		=> $pag,
 						"username"	=> $result->fields["CD_USUARIO"],
 						"password"	=> $result->fields["DS_SENHA"] ) );
-								
+
 				//VERIFICA SE RESPONSAVEL TEM ALGUM DEPENDENTE ATIVO
 				elseif ( existeMenorByRespID($resp["ID_CAD_PESSOA"]) ):
 					$psw = sha1(str_replace("-","",str_replace(".","",$usr)));
@@ -68,6 +68,7 @@ function login( $parameters ) {
 						"page"		=> $pag,
 						"username"	=> $usr,
 						"password"	=> $psw ) );
+
 				endif;
 			endif;
 
@@ -109,6 +110,7 @@ function login( $parameters ) {
 
 			if ($password == $psw):
 				$profile->fSetSessionLogin($result);
+
 				$GLOBALS['conn']->Execute("UPDATE CAD_USUARIOS SET DH_ATUALIZACAO = NOW() WHERE ID_USUARIO = ?",
 					array( $result->fields['ID_USUARIO'] ) );
 
@@ -169,16 +171,30 @@ function fDeleteUserAndProfile( $userID, $profileID ){
 }
 
 function checkMemberByCPF($cpf){
-	$noFormat = str_replace("-","",str_replace(".","",$cpf));
 	return $GLOBALS['conn']->Execute("
 		SELECT cu.ID_USUARIO, cu.CD_USUARIO, cu.DS_USUARIO, cu.DS_SENHA, ca.ID AS ID_CAD_PESSOA, ca.TP_SEXO
 		  FROM CON_ATIVOS ca
 		INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
 		 WHERE ca.NR_CPF = ?
-	",array( $noFormat ) );
+	",array( fClearBN($cpf) ) );
 }
 
 function checkUser($cdUser, $pag){
+
+	//VERIFICA SE PRECISA ATUALIZAR USUARIO
+	$rs = $GLOBALS['conn']->Execute("
+		SELECT cu.ID_USUARIO, cp.ID
+		FROM CAD_USUARIOS cu
+		INNER JOIN CAD_PESSOA cp ON (cp.NR_CPF = cu.CD_USUARIO)
+		WHERE cu.CD_USUARIO = ? 
+		  AND cu.ID_CAD_PESSOA IS NULL
+	", array($cdUser) );
+	if (!$rs->EOF):
+		$GLOBALS['conn']->Execute("
+			UPDATE CAD_USUARIOS SET ID_CAD_PESSOA = ? WHERE ID_USUARIO = ?
+		", array( $rs->fields["ID"], $rs->fields["ID_USUARIO"] ) );
+	endif;
+
 	return $GLOBALS['conn']->Execute("
 		SELECT cu.ID_USUARIO, cu.CD_USUARIO, cu.DS_USUARIO, cu.DS_SENHA, cm.ID_CAD_PESSOA, cp.TP_SEXO, cm.ID AS ID_CAD_MEMBRO, cm.ID_CLUBE, cm.ID_MEMBRO
 		  FROM CAD_USUARIOS cu
@@ -188,7 +204,7 @@ function checkUser($cdUser, $pag){
 		 WHERE cu.CD_USUARIO = ?",
 	array( $cdUser, $cdUser ) );
 }
-
+//28550424889
 function logout() {
 	session_start();
 	session_destroy();
