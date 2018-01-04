@@ -56,7 +56,7 @@ function getQueryByFilter( $parameters ) {
 						elseif ( $value == "DOC" ):
 							$where .= (!$prim ? " OR " : "") ."(p.NR_DOC IS NULL OR LENGTH(p.NR_DOC) < 7 OR INSTR(TRIM(p.NR_DOC),' ') < 3)";
 						elseif ( $value == "CPF" ):
-							$where .= (!$prim ? " OR " : "") ."((p.NR_CPF IS NULL OR LENGTH(p.NR_CPF)=0) AND a.CPF_RESP IS NULL)";
+							$where .= (!$prim ? " OR " : "") ."((p.NR_CPF IS NULL OR LENGTH(p.NR_CPF)=0) AND a.NR_CPF_RESP IS NULL)";
 						elseif ( $value == "LOG" ):
 							$where .= (!$prim ? " OR " : "") ."(p.LOGRADOURO IS NULL OR LENGTH(p.LOGRADOURO) = 0)";
 						elseif ( $value == "NLG" ):

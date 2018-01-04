@@ -68,7 +68,7 @@ function getQueryByFilter( $parameters ) {
 				cmh.DT_ENTREGA,
 				cmh.COMPL
 			FROM CON_MAT_HISTORICO cmh
-			INNER JOIN CON_ATIVOS ca ON (ca.ID = cmh.ID_CAD_PESSOA)
+			INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_MEMBRO = cmh.ID_CAD_MEMBRO)
 			WHERE 1=1 $where
 		 ORDER BY ca.NM, cmh.TP
 		";

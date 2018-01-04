@@ -93,7 +93,7 @@ class LISTAPRESENCA extends TCPDF {
 		$this->Line(140, $this->posY+8, 205, $this->posY+8, $this->stLine3);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'I', 5);
 		$this->setXY(140, $this->posY+10);
-		$this->Cell(0, 0, ($f["NM_RESP"] ." - ". $f["DOC_RESP"] ." - ". $f["TEL_RESP"]), 0, false, 'L', false, false, 1, false, 'L', 'C');
+		$this->Cell(0, 0, $f["NM_RESP"] ." - ". $f["NR_DOC_RESP"] ." - ". $f["FONE_CEL_RESP"], 0, false, 'L', false, false, 1, false, 'L', 'C');
 
 		$this->posY+=12;
 		$this->lineAlt = !$this->lineAlt;

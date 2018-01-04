@@ -179,10 +179,10 @@ function fSetRead( $parameters ){
 			  DH_READ = NOW()
 		WHERE ID_USUARIO IN (
 							SELECT cu.ID_USUARIO
-							FROM CAD_RESP cr
-							INNER JOIN CON_ATIVOS ca ON (ca.ID_RESP = cr.ID)
+							FROM CON_RESP_LEGAL cr
+							INNER JOIN CON_ATIVOS ca ON (ca.ID_PESSOA_RESP = cr.ID)
 							INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
-							WHERE cr.CPF_RESP = ?		
+							WHERE cr.NR_CPF = ?		
 							)
 		  AND DH_READ IS NULL
 		  AND ID_ORIGEM = ?

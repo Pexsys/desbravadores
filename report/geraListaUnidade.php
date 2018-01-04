@@ -66,7 +66,7 @@ class LISTAUNIDADE extends TCPDF {
 
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 8);
 		$this->SetTextColor(255,255,255);
-		$this->SetFillColor(13,110,195);
+		$this->SetFillColor(0,0,0);
 		$this->setCellPaddings(1,0,1,0);
 		$this->setXY(5, 22);
 		$this->Cell(85, 6, "Nome Completo", 0, false, 'L', true);
@@ -80,39 +80,40 @@ class LISTAUNIDADE extends TCPDF {
 	}
 	
 	private function addUnidadeTitle($af) {
-		$this->setCellPaddings(2,1,1,1);
 		$rsM = $GLOBALS['conn']->Execute("
-			SELECT ID, NM, CD_CARGO, DS_CARGO, DT_NASC, FONE_RES, FONE_CEL,
+			SELECT ID_CAD_MEMBRO, NM, CD_CARGO, DS_CARGO, DT_NASC, FONE_RES, FONE_CEL,
 			       LOGRADOURO, NR_LOGR, COMPLEMENTO, BAIRRO, CIDADE, UF, CEP
 			FROM CON_ATIVOS
 			WHERE ID_UNIDADE = ?
 			ORDER BY CD_CARGO, NM
 		", array( $af["ID"] ) );
+		if (!$rsM->EOF):
 		
-		$coloruR = base_convert(substr($af["CD_COR"],1,2),16,10);
-		$coloruG = base_convert(substr($af["CD_COR"],3,2),16,10);
-		$coloruB = base_convert(substr($af["CD_COR"],5,2),16,10);
+			$this->setCellPaddings(2,1,1,1);
+			$coloruR = base_convert(substr($af["CD_COR"],1,2),16,10);
+			$coloruG = base_convert(substr($af["CD_COR"],3,2),16,10);
+			$coloruB = base_convert(substr($af["CD_COR"],5,2),16,10);
+			
+			$colorgR = base_convert(substr($af["CD_COR_GENERO"],1,2),16,10);
+			$colorgG = base_convert(substr($af["CD_COR_GENERO"],3,2),16,10);
+			$colorgB = base_convert(substr($af["CD_COR_GENERO"],5,2),16,10);
 		
-		$colorgR = base_convert(substr($af["CD_COR_GENERO"],1,2),16,10);
-		$colorgG = base_convert(substr($af["CD_COR_GENERO"],3,2),16,10);
-		$colorgB = base_convert(substr($af["CD_COR_GENERO"],5,2),16,10);
-	
-		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 10);
-		$this->SetTextColor(255,255,255);
-		
-		$this->SetFillColor($coloruR, $coloruG, $coloruB);
-		$this->setXY(5, $this->posY);
-		$this->Cell(175, 7, ($af["DS"])." - ".$af["IDADE"]." anos (".$rsM->RecordCount().")", 0, false, 'L', true);
-		
-		$this->SetFillColor($colorgR, $colorgG, $colorgB);
-		$this->setX(175);
-		$this->Cell(30, 7, ($af["TP"] == "F" ? "FEMININA" : ( $af["TP"] == "M" ? "MASCULINA" : "AMBOS") ), 0, false, 'C', true);
-		
-		$this->posY += 7;
-		$this->lineAlt = false;
-		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 7);
-		$this->SetTextColor(0,0,0);
-		
+			$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 10);
+			$this->SetTextColor(255,255,255);
+			
+			$this->SetFillColor($coloruR, $coloruG, $coloruB);
+			$this->setXY(5, $this->posY);
+			$this->Cell(175, 7, ($af["DS"])." - ".$af["IDADE"]." anos (".$rsM->RecordCount().")", 0, false, 'L', true);
+			
+			$this->SetFillColor($colorgR, $colorgG, $colorgB);
+			$this->setX(175);
+			$this->Cell(30, 7, ($af["TP"] == "F" ? "FEMININA" : ( $af["TP"] == "M" ? "MASCULINA" : "AMBOS") ), 0, false, 'C', true);
+			
+			$this->posY += 7;
+			$this->lineAlt = false;
+			$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 7);
+			$this->SetTextColor(0,0,0);
+		endif;
 		return $rsM;
 	}
 
@@ -170,26 +171,28 @@ class LISTAUNIDADE extends TCPDF {
 		$this->startTransaction();
 		$start_page = $this->getPage();
 		$rsM = $this->addUnidadeTitle($af);
-		if  ($this->getNumPages() != $start_page):
-			$this->rollbackTransaction(true);
-			$this->newPage();
-			$rsM = $this->addUnidadeTitle($af);
-		else:
-			$this->commitTransaction();
-		endif;
-
-		foreach ($rsM as $k => $f):
-			$this->startTransaction();
-			$start_page = $this->getPage();
-			$this->addLine($f);
+		if (!$rsM->EOF):
 			if  ($this->getNumPages() != $start_page):
 				$this->rollbackTransaction(true);
 				$this->newPage();
-				$this->addLine($f);
+				$rsM = $this->addUnidadeTitle($af);
 			else:
-				$this->commitTransaction();     
+				$this->commitTransaction();
 			endif;
-		endforeach;
+
+			foreach ($rsM as $k => $f):
+				$this->startTransaction();
+				$start_page = $this->getPage();
+				$this->addLine($f);
+				if  ($this->getNumPages() != $start_page):
+					$this->rollbackTransaction(true);
+					$this->newPage();
+					$this->addLine($f);
+				else:
+					$this->commitTransaction();     
+				endif;
+			endforeach;
+		endif;
 	}
 	
 	public function newPage() {

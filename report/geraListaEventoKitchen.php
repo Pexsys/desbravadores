@@ -127,8 +127,9 @@ fConnDB();
 $result = $GLOBALS['conn']->Execute("
 		SELECT es.DS, es.DS_TEMA, es.DS_ORG, es.DS_DEST, ca.NM, esp.KITCHEN
 	      FROM EVE_SAIDA es
-	INNER JOIN EVE_SAIDA_PESSOA esp ON (esp.ID_EVE_SAIDA = es.ID AND esp.KITCHEN IS NOT NULL)
-	INNER JOIN CON_ATIVOS ca ON (ca.ID = esp.ID_CAD_PESSOA)
+		  INNER JOIN EVE_SAIDA_MEMBRO esp on (esp.ID_EVE_SAIDA = es.ID AND esp.KITCHEN IS NOT NULL)
+		  INNER JOIN CAD_MEMBRO cm on (cm.ID = esp.ID_CAD_MEMBRO)
+		  INNER JOIN CON_PESSOA ca on (ca.ID_CAD_PESSOA = cm.ID_CAD_PESSOA)
 	     WHERE es.ID = ?
 	  ORDER BY ca.NM
 ", array($eveID) );

@@ -66,7 +66,7 @@ class LISTACLASSE extends TCPDF {
 
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 8);
 		$this->SetTextColor(255,255,255);
-		$this->SetFillColor(135,102,35);
+		$this->SetFillColor(0,0,0);
 		$this->setCellPaddings(1,0,1,0);
 		$this->setXY(5, 22);
 		$this->Cell(85, 6, "Nome Completo", 0, false, 'L', true);
@@ -80,49 +80,49 @@ class LISTACLASSE extends TCPDF {
 	}
 	
 	private function addGrupoAprendTitle($af) {
-		$this->setCellPaddings(2,1,1,1);
 		$rsM = $GLOBALS['conn']->Execute("
-			SELECT ca.ID, ca.NM, ca.CD_CARGO, ca.DS_CARGO, ca.DT_NASC, ca.FONE_RES, ca.FONE_CEL
+			SELECT ca.ID_CAD_PESSOA, ca.NM, ca.CD_CARGO, ca.DS_CARGO, ca.DT_NASC, ca.FONE_RES, ca.FONE_CEL
 			FROM CON_ATIVOS ca
-			INNER JOIN APR_HISTORICO ah ON (ah.ID_CAD_PESSOA = ca.ID)
+			INNER JOIN APR_HISTORICO ah ON (ah.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
 			WHERE ah.DT_CONCLUSAO IS NULL
 			  AND ah.ID_TAB_APREND = ?
 			ORDER BY SUBSTR(ca.CD_CARGO,1,2), ca.IDADE_HOJE, ca.NM
 		", array( $af["ID"] ) );
-		
-		$colorR = base_convert(substr($af["CD_COR"],1,2),16,10);
-		$colorG = base_convert(substr($af["CD_COR"],3,2),16,10);
-		$colorB = base_convert(substr($af["CD_COR"],5,2),16,10);
-		
-		$this->SetFillColor($colorR, $colorG, $colorB);
-		if ($af["ID"] > 10):
+		if (!$rsM->EOF):
+			$this->setCellPaddings(2,1,1,1);
+			$colorR = base_convert(substr($af["CD_COR"],1,2),16,10);
+			$colorG = base_convert(substr($af["CD_COR"],3,2),16,10);
+			$colorB = base_convert(substr($af["CD_COR"],5,2),16,10);
+			
+			$this->SetFillColor($colorR, $colorG, $colorB);
+			if ($af["ID"] > 10):
+				$this->SetTextColor(0,0,0);
+			else:
+				$this->SetTextColor(255,255,255);
+			endif;
+			$this->setXY(5, $this->posY);
+			$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 10);
+			$this->Cell(200, 7, $af["DS_ITEM"]."-".$af["NR_IDADE_MINIMA"]." anos (".$rsM->RecordCount().")", 0, false, 'L', true);
+			$this->posY += 7;
+			$this->lineAlt = false;
+			$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 7);
 			$this->SetTextColor(0,0,0);
-		else:
-			$this->SetTextColor(255,255,255);
 		endif;
-		$this->setXY(5, $this->posY);
-		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 10);
-		$this->Cell(200, 7, $af["DS_ITEM"]."-".$af["NR_IDADE_MINIMA"]." anos (".$rsM->RecordCount().")", 0, false, 'L', true);
-		$this->posY += 7;
-		$this->lineAlt = false;
-		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 7);
-		$this->SetTextColor(0,0,0);
-		
 		return $rsM;
 	}
 
 	private function addLine($f){
 		$this->setCellPaddings(1,1,1,1);
 		if ($this->lineAlt):
-		$this->SetFillColor(240,240,240);
+			$this->SetFillColor(240,240,240);
 		else:
-		$this->SetFillColor(255,255,255);
+			$this->SetFillColor(255,255,255);
 		endif;
 		$this->setXY(5, $this->posY);
 		$this->Cell(85, 5, $f["NM"], 0, false, 'L', true, false, 1);
 		$this->setX(90);
 		if (fStrStartWith($f["CD_CARGO"], "1-")):
-		$this->SetTextColor(255,0,0);
+			$this->SetTextColor(255,0,0);
 		endif;
 		$this->Cell(50, 5, $f["DS_CARGO"], 0, false, 'L', true, false, 1);
 		$this->SetTextColor(0,0,0);
@@ -138,26 +138,28 @@ class LISTACLASSE extends TCPDF {
 		$this->startTransaction();
 		$start_page = $this->getPage();
 		$rsM = $this->addGrupoAprendTitle($af);
-		if  ($this->getNumPages() != $start_page):
-			$this->rollbackTransaction(true);
-			$this->newPage();
-			$rsM = $this->addGrupoAprendTitle($af);
-		else:
-			$this->commitTransaction();
-		endif;
-
-		foreach ($rsM as $k => $f):
-			$this->startTransaction();
-			$start_page = $this->getPage();
-			$this->addLine($f);
+		if (!$rsM->EOF):
 			if  ($this->getNumPages() != $start_page):
 				$this->rollbackTransaction(true);
 				$this->newPage();
-				$this->addLine($f);
+				$rsM = $this->addGrupoAprendTitle($af);
 			else:
-				$this->commitTransaction();     
+				$this->commitTransaction();
 			endif;
-		endforeach;
+
+			foreach ($rsM as $k => $f):
+				$this->startTransaction();
+				$start_page = $this->getPage();
+				$this->addLine($f);
+				if  ($this->getNumPages() != $start_page):
+					$this->rollbackTransaction(true);
+					$this->newPage();
+					$this->addLine($f);
+				else:
+					$this->commitTransaction();     
+				endif;
+			endforeach;
+		endif;
 	}
 	
 	public function newPage() {

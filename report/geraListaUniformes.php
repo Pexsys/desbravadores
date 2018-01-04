@@ -72,7 +72,7 @@ class LISTAMATERIAIS extends TCPDF {
 		
 		$this->setXY(20,$this->posY);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 16);
-		$this->Cell(185, 6, "LISTAGEM PARA CONTROLE DE ". ($this->tipoUniforme == "A" ? "AGASALHOS" : "CAMISETAS: _________________" ), 0, false, 'C', false, false, false, false, 'T', 'M');
+		$this->Cell(185, 6, "LISTAGEM PARA CONTROLE DE ". ($this->tipoUniforme == "A" ? "AGASALHOS" : "CAMISETAS: ______________" ), 0, false, 'C', false, false, false, false, 'T', 'M');
 		$this->posY += 7;
 		
 		$this->setXY(20,$this->posY);
@@ -173,20 +173,26 @@ $eventoID = fRequest("eve");
 $pdf->setEventoID($eventoID);
 
 fConnDB();
-$str = "
-	SELECT ca.NM, ". ($pdf->tipoUniforme == "C" ? " ca.TP_CAMISETA" : "ca.TP_AGASALHO") ." AS TP 
 
-	".(!empty($eventoID) 
-		? ", es.DS, es.DS_TEMA, es.DS_ORG, es.DS_DEST" : "")."
+if (!empty($eventoID)):
+	$str = "
+		SELECT ca.NM, ". ($pdf->tipoUniforme == "C" ? " at.TP_CAMISETA" : "at.TP_AGASALHO") ." AS TP, 
+		es.DS, es.DS_TEMA, es.DS_ORG, es.DS_DEST
+		FROM CAD_MEMBRO cm
+		INNER JOIN EVE_SAIDA_MEMBRO esp ON (esp.ID_CAD_MEMBRO = cm.ID AND esp.ID_EVE_SAIDA = $eventoID)
+		INNER JOIN EVE_SAIDA es ON (es.ID = esp.ID_EVE_SAIDA)
+		INNER JOIN CAD_ATIVOS at on (at.ID_CAD_MEMBRO = esp.ID_CAD_MEMBRO AND at.NR_ANO = YEAR(es.DH_R))
+		INNER JOIN CON_PESSOA ca on (ca.ID_CAD_PESSOA = cm.ID_CAD_PESSOA)
+		ORDER BY ca.NM
+	";
+else:
+	$str = "
+		SELECT ca.NM, ". ($pdf->tipoUniforme == "C" ? " ca.TP_CAMISETA" : "ca.TP_AGASALHO") ." AS TP 
+		FROM CON_ATIVOS ca	
+		ORDER BY ca.NM
+	";
+endif;
 
-	FROM CON_ATIVOS ca
-
-	".(!empty($eventoID) 
-		? " INNER JOIN EVE_SAIDA_PESSOA esp ON (esp.ID_CAD_PESSOA = ca.ID AND esp.ID_EVE_SAIDA = $eventoID)
-			INNER JOIN EVE_SAIDA es ON (es.ID = esp.ID_EVE_SAIDA)" : "")."
-					
-	ORDER BY ca.NM
-";
 $result = $GLOBALS['conn']->Execute($str);
 if (!$result->EOF):
 	$pdf->setHeaderFields($result->fields);
@@ -221,7 +227,7 @@ if (!$result->EOF):
 	    $result = $GLOBALS['conn']->Execute("
 	    	SELECT ca.TP_CAMISETA AS TP, COUNT(*) AS QTD
 	    	FROM CON_ATIVOS ca
-			".(!empty($eventoID) ? " INNER JOIN EVE_SAIDA_PESSOA esp ON (esp.ID_CAD_PESSOA = ca.ID AND esp.ID_EVE_SAIDA = $eventoID) " : "")."
+			".(!empty($eventoID) ? " INNER JOIN EVE_SAIDA_MEMBRO esp ON (esp.ID_CAD_MEMBRO = ca.ID_CAD_MEMBRO AND esp.ID_EVE_SAIDA = $eventoID) " : "")."
 	    	LEFT JOIN TAB_TAMANHOS tt ON (tt.TP = 'C' AND tt.CD = ca.TP_CAMISETA)
 	    	GROUP BY ca.TP_CAMISETA
 	    	ORDER BY tt.ORD
@@ -230,7 +236,7 @@ if (!$result->EOF):
 	    $result = $GLOBALS['conn']->Execute("
 	    	SELECT ca.TP_AGASALHO AS TP, COUNT(*) AS QTD
 	    	FROM CON_ATIVOS ca
-			".(!empty($eventoID) ? " INNER JOIN EVE_SAIDA_PESSOA esp ON (esp.ID_CAD_PESSOA = ca.ID AND esp.ID_EVE_SAIDA = $eventoID) " : "")."
+			".(!empty($eventoID) ? " INNER JOIN EVE_SAIDA_MEMBRO esp ON (esp.ID_CAD_MEMBRO = ca.ID_CAD_MEMBRO AND esp.ID_EVE_SAIDA = $eventoID) " : "")."
 	    	LEFT JOIN TAB_TAMANHOS tt ON (tt.TP = 'A' AND tt.CD = ca.TP_AGASALHO)
 	    	GROUP BY ca.TP_AGASALHO
 	    	ORDER BY tt.ORD

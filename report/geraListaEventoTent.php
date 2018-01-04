@@ -87,8 +87,9 @@ class LISTAEVENTOTENT extends TCPDF {
 		
 		$rs = $GLOBALS['conn']->Execute("
 			SELECT ca.NM
-			  FROM EVE_SAIDA_PESSOA esp
-		INNER JOIN CON_ATIVOS ca ON (ca.ID = esp.ID_CAD_PESSOA) 
+			FROM EVE_SAIDA_MEMBRO esp
+			INNER JOIN CAD_MEMBRO cm on (cm.ID = esp.ID_CAD_MEMBRO)
+			INNER JOIN CON_PESSOA ca on (ca.ID_CAD_PESSOA = cm.ID_CAD_PESSOA)
 			 WHERE esp.ID_EVE_SAIDA = ?
 			   AND esp.TENT = ?
 		  ORDER BY ca.NM
@@ -132,8 +133,9 @@ $pdf = new LISTAEVENTOTENT();
 fConnDB();
 $result = $GLOBALS['conn']->Execute("
 		SELECT DISTINCT es.ID, es.DS, es.DS_TEMA, es.DS_ORG, es.DS_DEST, esp.TENT
-	      FROM EVE_SAIDA es
-	INNER JOIN EVE_SAIDA_PESSOA esp ON (esp.ID_EVE_SAIDA = es.ID AND esp.TENT IS NOT NULL)
+		FROM EVE_SAIDA es
+		INNER JOIN EVE_SAIDA_MEMBRO esp on (esp.ID_EVE_SAIDA = es.ID AND esp.TENT IS NOT NULL)
+		INNER JOIN CAD_MEMBRO cm on (cm.ID = esp.ID_CAD_MEMBRO)
 	     WHERE es.ID = ?
 	  ORDER BY esp.TENT 
 ", array($eveID) );

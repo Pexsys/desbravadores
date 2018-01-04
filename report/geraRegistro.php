@@ -234,26 +234,27 @@ class ESPCR extends TCPDF {
         
         $rYear = $GLOBALS['conn']->Execute("
             SELECT YEAR(es.DH_S) as YEAR_INDEX
-            FROM EVE_SAIDA_PESSOA esp
+            FROM EVE_SAIDA_MEMBRO esp
             INNER JOIN EVE_SAIDA es ON (es.ID = esp.ID_EVE_SAIDA)
-            WHERE esp.ID_CAD_PESSOA = ? 
+            WHERE esp.ID_CAD_MEMBRO = ? 
             UNION 
             SELECT YEAR(DT_INICIO) as YEAR_INDEX
               FROM APR_HISTORICO 
              WHERE ID_CAD_PESSOA = ?
             ORDER BY 1
-        ", array($this->line['ID'], $this->line['ID']) );
+        ", array($this->line['ID'], $this->line['ID_CAD_PESSOA']) );
         
         foreach ($rYear as $yK => $f):
             $o = $GLOBALS['conn']->Execute("
-                SELECT tu.DS, IF(cp.TP_SEXO='F',tc.DSF,tc.DSM) AS DS_CARGO
-                FROM CAD_ATIVOS ca
-                INNER JOIN CAD_PESSOA cp ON (cp.ID = ca.ID)
-                INNER JOIN TAB_UNIDADE tu ON (tu.ID = ca.ID_UNIDADE)
-                INNER JOIN TAB_CARGO tc ON (tc.CD = ca.CD_CARGO)
-                WHERE ca.ID = ?
-                  AND ca.NR_ANO = ?
-            ", array($this->line['ID'],$f["YEAR_INDEX"]));
+				SELECT tu.DS, IF(cp.TP_SEXO='F',tc.DSF,tc.DSM) AS DS_CARGO
+				FROM CAD_ATIVOS ca
+				INNER JOIN CAD_MEMBRO cm ON (cm.ID = ca.ID_CAD_MEMBRO)
+				INNER JOIN CAD_PESSOA cp ON (cp.ID = cm.ID_CAD_PESSOA)
+				INNER JOIN TAB_UNIDADE tu ON (tu.ID = ca.ID_UNIDADE)
+				INNER JOIN TAB_CARGO tc ON (tc.CD = ca.CD_CARGO)
+				WHERE cm.ID = ?
+				AND ca.NR_ANO = ?
+            ", array($this->line['ID_CAD_PESSOA'],$f["YEAR_INDEX"]));
             
      		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 8);
     		$this->SetFillColor(0,0,0);
@@ -275,7 +276,7 @@ class ESPCR extends TCPDF {
                  WHERE ah.ID_CAD_PESSOA = ?
                    AND YEAR(ah.DT_INICIO) = ?
                 ORDER BY ah.DT_INICIO, ta.TP_ITEM, ta.CD_AREA_INTERNO DESC, ta.DS_ITEM
-            ", array($this->line['ID'], $f["YEAR_INDEX"]));
+            ", array($this->line['ID_CAD_PESSOA'], $f["YEAR_INDEX"]));
             if (!$aprend->EOF):
 				
 				//AGRUPADOR DE APRENDIZADO
@@ -309,9 +310,9 @@ class ESPCR extends TCPDF {
         	//EVENTOS
             $events = $GLOBALS['conn']->Execute("
             SELECT es.DS, es.DS_TEMA, es.DS_ORG, es.DH_S, es.DH_R
-            FROM EVE_SAIDA_PESSOA esp
+            FROM EVE_SAIDA_MEMBRO esp
             INNER JOIN EVE_SAIDA es on (es.ID = esp.ID_EVE_SAIDA)
-            WHERE esp.ID_CAD_PESSOA = ? 
+            WHERE esp.ID_CAD_MEMBRO = ? 
               AND YEAR(es.DH_S) = ?
             ORDER BY es.DH_S
             ", array($this->line['ID'], $f["YEAR_INDEX"]));
@@ -363,9 +364,10 @@ fConnDB();
 
 $pdf = new ESPCR();
 $result = $GLOBALS['conn']->Execute("
-   SELECT cp.ID, cp.NM, cp.DT_NASC
-     FROM CAD_PESSOA cp
-    WHERE cp.ID IN ($filter)
+	SELECT cm.ID, cm.ID_CAD_PESSOA, cp.NM, cp.DT_NASC
+		FROM CAD_MEMBRO cm
+  INNER JOIN CAD_PESSOA cp ON (cp.ID = cm.ID_CAD_PESSOA)
+    WHERE cm.ID IN ($filter)
     ORDER BY cp.NM
 ");
 if (!$result->EOF):
