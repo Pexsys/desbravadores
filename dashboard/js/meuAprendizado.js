@@ -95,14 +95,14 @@ const mapDetail = function(){
 
 function mapPrint(){
 	$("[name=print]").unbind('click').on('click',function(){
-		printClick( $(this).attr('what'), $(this).attr('id-pess'), $(this).attr('cd-item') );
+		printClick( $(this).attr('what'), $(this).attr('id-membro'), $(this).attr('cd-item') );
 	});
 }
 
-function printClick( what, idpess, cditem ){
+function printClick( what, id, cditem ){
 	 var url = jsLIB.rootDir+'report/';
      if (what == 'capa'){
-         url += 'geraCapa.php?nome='+idpess+'|&list='+cditem;
+         url += 'geraCapa.php?nome='+id+'|&list='+cditem;
      }
      window.open(
 		url,
