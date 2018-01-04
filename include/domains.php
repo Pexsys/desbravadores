@@ -4,13 +4,12 @@ function getDomainMembrosAtivos(){
 	$arr = array();
 	
 	$qtdZeros = zeroSizeID();
-	$result = $GLOBALS['conn']->Execute("SELECT ID, NM FROM CON_ATIVOS ORDER BY NM");
+	$result = $GLOBALS['conn']->Execute("SELECT ID_CAD_MEMBRO, ID_MEMBRO, NM FROM CON_ATIVOS ORDER BY NM");
 	foreach($result as $l => $f):
-		$id = fStrZero($f['ID'], $qtdZeros);
 		$arr[] = array(
-			"id" => $f['ID'],
+			"id" => $f['ID_CAD_MEMBRO'],
 			"ds" => $f['NM'],
-			"sb" => $id
+			"sb" => fStrZero($f['ID_MEMBRO'], $qtdZeros)
 		);
 	endforeach;
 	return $arr;
@@ -20,13 +19,18 @@ function getDomainMembrosInativos(){
 	$arr = array();
 	
 	$qtdZeros = zeroSizeID();
-	$result = $GLOBALS['conn']->Execute("SELECT cp.ID, cp.NM FROM CAD_PESSOA cp WHERE NOT EXISTS (SELECT 1 FROM CAD_ATIVOS WHERE ID = cp.ID AND NR_ANO = YEAR(NOW())) ORDER BY cp.NM");
+	$result = $GLOBALS['conn']->Execute("
+		SELECT cm.ID, cm.ID_MEMBRO, cp.NM
+		FROM CAD_MEMBRO cm
+		INNER JOIN CAD_PESSOA cp ON (cp.ID = cm.ID_CAD_PESSOA)
+		WHERE NOT EXISTS (SELECT 1 FROM CAD_ATIVOS WHERE ID_CAD_MEMBRO = cm.ID)
+		ORDER BY cp.NM
+	");
 	foreach($result as $l => $f):
-		$id = fStrZero($f['ID'], $qtdZeros);
 		$arr[] = array(
 			"id" => $f['ID'],
 			"ds" => $f['NM'],
-			"sb" => $id
+			"sb" => fStrZero($f['ID_MEMBRO'], $qtdZeros)
 		);
 	endforeach;
 	return $arr;
