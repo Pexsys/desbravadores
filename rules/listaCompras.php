@@ -354,9 +354,10 @@ function batchInsert($compras, $qtItens, $cmpl, $cadMembroID, $id){
 		$compras->forceInsert(
 			array(
 				fReturnNumberNull($cadMembroID),
-				$frm["id"],
+				$id,
 				"M",
 				fReturnStringNull( $cm ),
+				"N",
 				"N"
 			) 
 		);

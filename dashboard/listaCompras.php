@@ -258,7 +258,7 @@ function filtroDatasAvaliacao(){
 						<div class="panel-body" style="padding:4px 10px 0px">
 							<div class="row">
 								<div class="form-group col-xs-12">
-									<select field="id_pessoa" name="cmNome" id="cmNome" opt-value="id" opt-label="ds" class="selectpicker form-control input-sm" multiple data-actions-box="true" opt-subtext="sb" data-live-search="true" data-selected-text-format="count" data-container="body" data-width="100%"></select>
+									<select field="id_cad_membro" name="cmNome" id="cmNome" opt-value="id" opt-label="ds" class="selectpicker form-control input-sm" multiple data-actions-box="true" opt-subtext="sb" data-live-search="true" data-selected-text-format="count" data-container="body" data-width="100%"></select>
 								</div>
 							</div>
 						</div>
