@@ -212,7 +212,7 @@ function about(){
 				</div>
             </div>
 			<div class="col-md-4">
-			<?php fListDocumentos("docs/outros/","<h4><i class=\"fa fa-fw fa-pencil\"></i>&nbsp;Outros Documentos</h4>",".doc;.docx;.xls;.xlsx;.pdf;","panel-primary","h5");?>
+			<?php echo fListDocumentos("docs/outros/","<h4><i class=\"fa fa-fw fa-pencil\"></i>&nbsp;Outros Documentos</h4>",".doc;.docx;.xls;.xlsx;.pdf;","panel-primary","h5");?>
 			</div>
 		</div>
         <!-- /.row -->

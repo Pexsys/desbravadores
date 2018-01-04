@@ -237,16 +237,17 @@ function fMontaCarrousel($relativePath,$extentions){
 }
 
 function insDocs(){
-	?>
-	<div class="col-md-6 col-sm-9 col-lg-4">
-	<?php fListDocumentos("docs/inscricoes/".date('Y')."/","<h4><i class=\"fa fa-fw fa-pencil\"></i>&nbsp;Inscri&ccedil;&otilde;es ".date('Y')."</h4>",".pdf", ( date("m") < 4 ? "panel-danger" : "panel-warning" ) ,"h4");?>
-    </div>
-<?php   
+	$retorno = fListDocumentos("docs/inscricoes/".date('Y')."/","<h4><i class=\"fa fa-fw fa-pencil\"></i>&nbsp;Inscri&ccedil;&otilde;es ".date('Y')."</h4>",".pdf", ( date("m") < 4 ? "panel-danger" : "panel-warning" ) ,"h4");
+	if (!empty($retorno)):
+		echo "<div class=\"col-md-6 col-sm-9 col-lg-4\">$retorno</div>";
+	endif; 
 }
 
 function fListDocumentos($relativePath,$title,$extentions,$classPanel,$tagItem){
 	$capa = $GLOBALS['pattern']->getVD() . $relativePath;
 	$capa_img = $GLOBALS['pattern']->getVD() ."img/";
+
+	$strRetorno = "";
 	
 	$document_root = $_SERVER['DOCUMENT_ROOT'];
 	$fisico_capas = dirname(dirname(__FILE__)) . "/$relativePath";
@@ -267,9 +268,9 @@ function fListDocumentos($relativePath,$title,$extentions,$classPanel,$tagItem){
 
 			if (count($capaFiles) > 0):
 				sort($capaFiles);
-				echo "<div class=\"panel $classPanel\">";
-				echo "<div class=\"panel-heading\">$title</div>";
-				echo "<div class=\"panel-body\">";
+				$strRetorno .= "<div class=\"panel $classPanel\">";
+				$strRetorno .= "<div class=\"panel-heading\">$title</div>";
+				$strRetorno .= "<div class=\"panel-body\">";
 				//$pos = rand(0, count($capaFiles)-1);
 
 				$qtdCol = 7;
@@ -291,43 +292,44 @@ function fListDocumentos($relativePath,$title,$extentions,$classPanel,$tagItem){
 							$fileImg = $capa_img.$midFile.".gif";
 						endif;
 						$desc = preg_replace('/_/', ' ', $midFile);
-						?>
-						<div class="media">
-							<a href="<?php echo $link;?>" target="_new">
-							  <div class="media-left">
-								  <img class="media-object" src="<?php echo $fileImg;?>" width="22px" height="22px" border="0">
+						$strRetorno .= "
+						<div class=\"media\">
+							<a href=\"$link\" target=\"_new\">
+							  <div class=\"media-left\">
+								  <img class=\"media-object\" src=\"$fileImg\" width=\"22px\" height=\"22px\" border=\"0\">
 							  </div>
-							  <div class="media-body">
-								<?php echo "<$tagItem class=\"media-heading\">$desc</$tagItem>";?>
+							  <div class=\"media-body\">
+								<$tagItem class=\"media-heading\">$desc</$tagItem>
 							  </div>
 							</a>
 						</div>
-						<?php
+						";
 						$pos++;
 					endfor;
 					$nFalta = count($capaFiles) - $pos;
 				endfor;
 				
 				if ( $relativePath == "docs/outros/" ):
-					?>
-					<div class="media">
-						<a href="http://desbravadores.org.br.s3.amazonaws.com/materiais/2013/RUD.pdf" target="_new">
-						  <div class="media-left">
-							  <img class="media-object" src="<?php echo $capa_img?>reguladesb.jpg" alt="Regulamento de Uniformes Desbravadores, Aventureiros e Ministério Jovem" width="22px" height="22px" border="0">
+					$strRetorno .= "
+					<div class=\"media\">
+						<a href=\"http://desbravadores.org.br.s3.amazonaws.com/materiais/2013/RUD.pdf\" target=\"_new\">
+						  <div class=\"media-left\">
+							  <img class=\"media-object\" src=\"".$capa_img."reguladesb.jpg\" alt=\"Regulamento de Uniformes Desbravadores, Aventureiros e Ministério Jovem\" width=\"22px\" height=\"22px\" border=\"0\">
 						  </div>
-						  <div class="media-body">
-							<?php echo "<$tagItem class=\"media-heading\">Regulamento de Uniformes</$tagItem>";?>
+						  <div class=\"media-body\">
+							<$tagItem class=\"media-heading\">Regulamento de Uniformes</$tagItem>
 						  </div>
 						</a>
 					</div>
-					<?php
+					";
 				endif;
 				
-				echo "</div>";
-				echo "</div>";
+				$strRetorno .= "</div>";
+				$strRetorno .= "</div>";
 			endif;
 		endif;
 	endif;
+	return $strRetorno;
 }
 
 function fListFanfarra($relativePath,$title,$extentions){
