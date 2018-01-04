@@ -61,15 +61,15 @@ function fComunicado( $parameters ) {
 				INSERT INTO LOG_MENSAGEM (ID_ORIGEM, TP, ID_USUARIO, EMAIL, DH_GERA)
 				SELECT $id, 'C',  cu.ID_USUARIO, ca.EMAIL, NOW() 
 				  FROM CON_ATIVOS ca
-		    INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID) 
+		    INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA) 
 				
 				UNION
 				
-				SELECT $id, 'C', cu.ID_USUARIO, cr.EMAIL_RESP AS EMAIL, NOW()
-				FROM CAD_RESP cr
-				INNER JOIN CON_ATIVOS ca ON (ca.ID_RESP = cr.ID)
-				INNER JOIN CAD_USUARIOS cu ON (cu.CD_USUARIO = cr.CPF_RESP)
-				WHERE NOT EXISTS (SELECT 1 FROM CON_ATIVOS WHERE NR_CPF = cr.CPF_RESP)
+				SELECT $id, 'C', cu.ID_USUARIO, cr.EMAIL, NOW() 
+				FROM CON_RESP_LEGAL cr 
+				INNER JOIN CON_ATIVOS ca ON (ca.ID_PESSOA_RESP = cr.ID) 
+				INNER JOIN CAD_USUARIOS cu ON (cu.CD_USUARIO = cr.NR_CPF) 
+				WHERE NOT EXISTS (SELECT 1 FROM CON_ATIVOS WHERE NR_CPF = cr.NR_CPF) 
 			");
 		endif;
 		
@@ -77,13 +77,13 @@ function fComunicado( $parameters ) {
 		$out["so"] = $fg_pend;
 		$out["success"] = true;
 
-	//EXCLUSAO DE SAIDA
+	//EXCLUSAO DE COMUNICADO
 	elseif ( $op == "DELETE" ):
 		$GLOBALS['conn']->Execute("DELETE FROM LOG_MENSAGEM WHERE ID_ORIGEM = ? AND TP = ?", Array( $parameters["id"], "C" ) );
 		$GLOBALS['conn']->Execute("DELETE FROM CAD_COMUNICADO WHERE ID = ?", Array( $parameters["id"] ) );
 		$out["success"] = true;
 
-	//GET SAIDA
+	//GET COMUNICADO
 	else:
 		if ( $parameters["id"] == "Novo" ):
 			$result = $GLOBALS['conn']->Execute("SELECT YEAR(NOW()) AS ANO, COUNT(*)+1 AS CD FROM CAD_COMUNICADO WHERE YEAR(DH) = YEAR(NOW())" );
@@ -181,7 +181,7 @@ function fSetRead( $parameters ){
 							SELECT cu.ID_USUARIO
 							FROM CAD_RESP cr
 							INNER JOIN CON_ATIVOS ca ON (ca.ID_RESP = cr.ID)
-							INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID)
+							INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
 							WHERE cr.CPF_RESP = ?		
 							)
 		  AND DH_READ IS NULL
