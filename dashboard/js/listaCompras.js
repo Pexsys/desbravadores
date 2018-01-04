@@ -488,9 +488,17 @@ function ruleBtnDelete( force ){
 	$("#btnDel").visible( force != undefined ? force : selected );
 }
 
+function showBtnEdit(selected){
+	$("#btnEdit")
+		.attr("id-item",selected)
+		.visible( selected != "" );
+}
+
 function ruleBtnEdit( force ){
 	var data = dataTable.rows('.selected').data();
 	var selected = "";
+	showBtnEdit(selected);
+
 	if (force == undefined){
 		if (data.length == 1 && data[0].ip == 'N'){
 			selected = data[0].id;
@@ -503,11 +511,9 @@ function ruleBtnEdit( force ){
 					if (!data || !data.edit){
 						selected = "";
 					}
+					showBtnEdit(selected);
 				}
 			});
 		}
 	}
-	$("#btnEdit")
-		.attr("id-item",selected)
-		.visible( selected != "" );
 }
