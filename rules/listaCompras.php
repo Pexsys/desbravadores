@@ -19,13 +19,11 @@ function getQueryByFilter( $parameters ) {
 			endif;
 			$notStr = ( $not ? "NOT " : "" );
 			if ( $key == "X" ):
-				$where .= " AND at.TP_SEXO ".$notStr."IN";
+				$where .= " AND ca.TP_SEXO ".$notStr."IN";
 			elseif ( $key == "U" ):
-				$where .= " AND at.ID_UNIDADE ".$notStr."IN";
+				$where .= " AND ca.ID_UNIDADE ".$notStr."IN";
 			elseif ( $key == "T" ):
-				$where .= " AND at.ID ".$notStr."IN";
-			elseif ( $key == "T" ):
-				$where .= " AND at.ID ".$notStr."IN";
+				$where .= " AND ca.ID_CAD_MEMBRO ".$notStr."IN";
 			elseif ( $key == "C" ):
 				$where .= " AND ap.TP_ITEM = ? AND ap.ID ".$notStr."IN";
 				$aWhere[] = "CL";
@@ -49,15 +47,15 @@ function getQueryByFilter( $parameters ) {
 				foreach ($parameters["filters"][$key]["vl"] as $value):
 					if ( $key == "G" ):
 						if ( $value == "3" ):
-							$where .= (!$prim ? " OR " : "") ."at.CD_FANFARRA IS ".( !$not ? "NOT NULL" : "NULL");
+							$where .= (!$prim ? " OR " : "") ."ca.CD_FANFARRA IS ".( !$not ? "NOT NULL" : "NULL");
 						elseif ( $value == "4" ):
-						    $where .= (!$prim ? " OR " : "") ."at.CD_CARGO ". ( empty($value) ? "IS ".$notStr."NULL" : $notStr."LIKE '2-04%'");
+						    $where .= (!$prim ? " OR " : "") ."ca.CD_CARGO ". ( empty($value) ? "IS ".$notStr."NULL" : $notStr."LIKE '2-04%'");
 						elseif ( $value == "5" ):
-						    $where .= (!$prim ? " OR " : "") ."at.CD_CARGO ". ( empty($value) ? "IS ".$notStr."NULL" : $notStr."LIKE '2-07%'");
+						    $where .= (!$prim ? " OR " : "") ."ca.CD_CARGO ". ( empty($value) ? "IS ".$notStr."NULL" : $notStr."LIKE '2-07%'");
 						elseif ( $value == "6" ):
-						    $where .= (!$prim ? " OR " : "") ."at.CD_CARGO ". ( empty($value) ? "IS ".$notStr."NULL" : $notStr."LIKE '1-01%'");
+						    $where .= (!$prim ? " OR " : "") ."ca.CD_CARGO ". ( empty($value) ? "IS ".$notStr."NULL" : $notStr."LIKE '1-01%'");
 						else:
-							$where .= (!$prim ? " OR " : "") ."at.CD_CARGO ". ( empty($value) ? "IS ".$notStr."NULL" : $notStr."LIKE '$value%'");
+							$where .= (!$prim ? " OR " : "") ."ca.CD_CARGO ". ( empty($value) ? "IS ".$notStr."NULL" : $notStr."LIKE '$value%'");
 						endif;
 					elseif ( $key == "IC" ):
 						if ( $value == "0" ):
@@ -109,8 +107,8 @@ function getQueryByFilter( $parameters ) {
 			ca.NM,
 			ap.TP_ITEM,
 			ap.DS_ITEM
-		FROM CAD_COMPRAS_PESSOA ccp
-		INNER JOIN CON_ATIVOS ca ON (ca.ID = ccp.id_cad_pessoa)
+		FROM CAD_COMPRAS ccp
+		INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_MEMBRO = ccp.ID_CAD_MEMBRO)
 		INNER JOIN TAB_MATERIAIS tm ON (tm.id = ccp.id_tab_materiais)
 		 LEFT JOIN TAB_APRENDIZADO ap ON (ap.id = tm.id_tab_aprend)
 		WHERE 1=1 $where
@@ -162,15 +160,15 @@ function process(){
 
 	//SELECIONA PESSOAS POR ORDEM ALFABETICA
 	$result = $GLOBALS['conn']->Execute("
-		    SELECT DISTINCT ca.ID
+		    SELECT DISTINCT ca.ID_CAD_PESSOA
 		      FROM APR_HISTORICO ah
-		INNER JOIN CON_ATIVOS ca ON (ca.ID = ah.ID_CAD_PESSOA)
+		INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = ah.ID_CAD_PESSOA)
 		     WHERE ah.DT_AVALIACAO IS NOT NULL 
 		       AND ah.DT_INVESTIDURA IS NULL
 		  ORDER BY ca.NM
 	");
 	foreach ($result as $k => $ls):
-		$compras->processaListaPessoaID( $ls['ID'], "A" );
+		$compras->processaListaPessoaID( $ls['ID_CAD_PESSOA'], "A" );
 	endforeach;
 	
 	return array( "result" => true );
@@ -217,13 +215,12 @@ function getData( $parameters ) {
 		if ( $f == "nomes" ):
 			$arr["nomes"] = array();
 			$qtdZeros = zeroSizeID();
-			$result = $GLOBALS['conn']->Execute("SELECT ID, NM FROM CON_ATIVOS ORDER BY NM");
+			$result = $GLOBALS['conn']->Execute("SELECT ID_CAD_MEMBRO, ID_MEMBRO, NM FROM CON_ATIVOS ORDER BY NM");
 			foreach ($result as $k => $fields):
-				$id = fStrZero($fields['ID'], $qtdZeros);
 				$arr["nomes"][] = array( 
-					"id" => $id,
+					"id" => $fields['ID_CAD_MEMBRO'],
 					"ds" => $fields['NM'],
-					"sb" => $id
+					"sb" => fStrZero($fields['ID_MEMBRO'], $qtdZeros)
 				);
 			endforeach;
 		endif;
@@ -278,7 +275,7 @@ function getData( $parameters ) {
 			$arr["nomes"] = array();
 			$qtdZeros = zeroSizeID();
 			$result = $GLOBALS['conn']->Execute("
-				SELECT DISTINCT ID_CAD_PESSOA, NM 
+				SELECT DISTINCT ID_CAD_MEMBRO, ID_MEMBRO, NM 
 				  FROM CON_COMPRAS 
 				 WHERE FG_COMPRA = 'S' 
 				   AND FG_ENTREGUE = 'N'
@@ -286,11 +283,10 @@ function getData( $parameters ) {
 			  ORDER BY NM
 			");
 			foreach ($result as $k => $fields):
-				$id = fStrZero($fields['ID_CAD_PESSOA'], $qtdZeros);
 				$arr["nomes"][] = array( 
-					"id" => $fields['ID_CAD_PESSOA'],
+					"id" => $fields['ID_CAD_MEMBRO'],
 					"ds" => $fields['NM'],
-					"sb" => $id
+					"sb" => fStrZero($fields['ID_MEMBRO'], $qtdZeros)
 				);
 			endforeach;
 		endif;
@@ -321,25 +317,25 @@ function addCompras( $parameters ) {
 		fConnDB();
 		$compras = new COMPRAS();
 		
-		if ( isset($frm["id_pessoa"]) ):
-			foreach ($frm["id_pessoa"] as $k => $pessoaID):
-				batchInsert($compras, $qtItens, $cmpl, $pessoaID, $frm["id"]);
+		if ( isset($frm["id_cad_membro"]) ):
+			foreach ($frm["id_cad_membro"] as $k => $cadMembroID):
+				batchInsert($compras, $qtItens, $cmpl, $cadMembroID, $frm["id"]);
 			endforeach;
 		else:
 			batchInsert($compras, $qtItens, $cmpl, null, $frm["id"]);
 		endif;
 
 	//SETAR ITENS ENTREGUES POR PESSOA
-	elseif ( $act == "SET" && isset($frm["id_pessoa"]) ):
+	elseif ( $act == "SET" && isset($frm["id_cad_membro"]) ):
 		fConnDB();
-		foreach ($frm["id_pessoa"] as $k => $pessoaID):
+		foreach ($frm["id_cad_membro"] as $k => $cadMembroID):
 			$result = $GLOBALS['conn']->Execute("
 				SELECT *
 				FROM CON_COMPRAS
 				WHERE FG_COMPRA = 'S'
 				AND FG_ENTREGUE = 'N'
-				AND ID_CAD_PESSOA = ?
-			", array($pessoaID) );
+				AND ID_CAD_MEMBRO = ?
+			", array($cadMembroID) );
 			foreach ($result as $k => $ln):
 				updateEstoque( $ln, "fg_entregue", "S" );
 			endforeach;
@@ -349,7 +345,7 @@ function addCompras( $parameters ) {
 	return array("result" => true);
 }
 
-function batchInsert($compras, $qtItens, $cmpl, $pessoaID, $id){
+function batchInsert($compras, $qtItens, $cmpl, $cadMembroID, $id){
 	for ($qtd=1;$qtd<=$qtItens;$qtd++):
 		$cm = $cmpl;
 		if ($qtItens>1):
@@ -357,7 +353,7 @@ function batchInsert($compras, $qtItens, $cmpl, $pessoaID, $id){
 		endif;
 		$compras->forceInsert(
 			array(
-				fReturnNumberNull($pessoaID),
+				fReturnNumberNull($cadMembroID),
 				$frm["id"],
 				"M",
 				fReturnStringNull( $cm ),
@@ -464,7 +460,7 @@ function updateEstoque( $ln, $fd, $vl ){
 
 			//EXCLUI SE INCLUSAO MANUAL.
 			if ($ln["TP_INCL"] == "M"):
-				$GLOBALS['conn']->Execute("DELETE FROM CAD_COMPRAS_PESSOA WHERE ID = ?", array( $ln["ID"] ) );
+				$GLOBALS['conn']->Execute("DELETE FROM CAD_COMPRAS WHERE ID = ?", array( $ln["ID"] ) );
 				
 			else:
 				updateCADCompras( $fd, array( $vl, $ln["ID"] ) );
@@ -473,7 +469,7 @@ function updateEstoque( $ln, $fd, $vl ){
 			//INSERE LOG DE ENTREGA DE MATERIAIS
 			if ($ln["FG_LOG_MATERIAL"] == "S"):
 				$materiais = new MATERIAIS();
-				$materiais->forceInsert( array( $ln["ID_CAD_PESSOA"], $ln["ID_TAB_MATERIAIS"], date("Y-m-d") ) );
+				$materiais->forceInsert( array( $ln["ID_CAD_MEMBRO"], $ln["ID_TAB_MATERIAIS"], date("Y-m-d") ) );
 				$arr["close"] = "S";
 			endif;
 
@@ -486,7 +482,7 @@ function updateEstoque( $ln, $fd, $vl ){
 
 function updateCADCompras($fd, $arr){
 	$GLOBALS['conn']->Execute("
-		UPDATE CAD_COMPRAS_PESSOA 
+		UPDATE CAD_COMPRAS 
 		SET $fd = ?
 		WHERE ID = ?
 	", $arr );
@@ -510,7 +506,7 @@ function distribuirEstoque(){
 			", array( $ln["QT_ATTR"], $matID ) );
 		
 		$GLOBALS['conn']->Execute("
-			UPDATE CAD_COMPRAS_PESSOA 
+			UPDATE CAD_COMPRAS 
 			  SET FG_COMPRA = 'N'
 			 WHERE ID_TAB_MATERIAIS = ?
 			   AND FG_COMPRA = 'S'

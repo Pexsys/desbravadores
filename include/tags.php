@@ -12,7 +12,7 @@ class TAGS {
 	}
 	
 	public function deleteByID( $id ) {
-		 $GLOBALS['conn']->Execute("DELETE FROM CAD_COMPRAS_PESSOA WHERE ID = ?", array($id) );
+		 $GLOBALS['conn']->Execute("DELETE FROM CAD_COMPRAS WHERE ID = ?", array($id) );
 	}
 	
 	public function forceInsert( $arr ){
