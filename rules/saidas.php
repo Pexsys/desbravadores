@@ -35,16 +35,16 @@ function getQueryByFilter( $parameters ) {
 		endif;
 	endif;
 
-	$strQuery .= "SELECT  a.NM,
-				a.ID_CAD_PESSOA,
-				a.ID_CAD_MEMBRO,
+	$strQuery .= "SELECT  ca.NM,
+				ca.ID_CAD_PESSOA,
+				ca.ID_CAD_MEMBRO,
 				esm.ID AS ID_EVE_MEMBRO, 
 				es.ID AS ID_EVE_SAIDA, 
-				a.IDADE_HOJE, 
-				YEAR(es.DH_R)-YEAR(a.DT_NASC) - IF(DATE_FORMAT(a.DT_NASC,'%m%d')>DATE_FORMAT(es.DH_R,'%m%d'),1,0) AS IDADE_EVENTO_FIM,
+				ca.IDADE_HOJE, 
+				YEAR(es.DH_R)-YEAR(ca.DT_NASC) - IF(DATE_FORMAT(ca.DT_NASC,'%m%d')>DATE_FORMAT(es.DH_R,'%m%d'),1,0) AS IDADE_EVENTO_FIM,
 				esm.FG_AUTORIZ 
-		FROM CON_ATIVOS a 
-		LEFT JOIN EVE_SAIDA_MEMBRO esm ON (esm.ID_CAD_MEMBRO = a.ID_CAD_MEMBRO AND esm.ID_EVE_SAIDA = ?) 
+		FROM CON_ATIVOS ca 
+		LEFT JOIN EVE_SAIDA_MEMBRO esm ON (esm.ID_CAD_MEMBRO = ca.ID_CAD_MEMBRO AND esm.ID_EVE_SAIDA = ?) 
 		LEFT JOIN EVE_SAIDA es ON (es.ID = esm.ID_EVE_SAIDA)
 		WHERE 1=1 
 	";
@@ -56,9 +56,9 @@ function getQueryByFilter( $parameters ) {
 	
 	//if ( isset($parameters["dhr"]) ):
 	//	$dhr = fStrToDate($parameters["dhr"]);
-	//	$where .= " AND YEAR(DATE('$dhr'))-YEAR(a.DT_NASC) - IF(DATE_FORMAT(a.DT_NASC,'%m%d')>DATE_FORMAT(DATE('$dhr'),'%m%d'),1,0) < 18";
+	//	$where .= " AND YEAR(DATE('$dhr'))-YEAR(ca.DT_NASC) - IF(DATE_FORMAT(ca.DT_NASC,'%m%d')>DATE_FORMAT(DATE('$dhr'),'%m%d'),1,0) < 18";
 	//else:
-	//	$where .= " a.IDADE_HOJE < ?";
+	//	$where .= " ca.IDADE_HOJE < ?";
 	//	$aWhere[] = 18;
 	//endif;
 	
@@ -71,15 +71,15 @@ function getQueryByFilter( $parameters ) {
 			endif;
 			$notStr = ( $not ? "NOT " : "" );
 			if ( $key == "X" ):
-				$where .= " AND a.tp_sexo ".$notStr."IN";
+				$where .= " AND ca.tp_sexo ".$notStr."IN";
 			elseif ( $key == "U" ):
-				$where .= " AND a.id_unidade ".$notStr."IN";
+				$where .= " AND ca.id_unidade ".$notStr."IN";
 			elseif ( $key == "C" ):
 				$where .= " AND EXISTS (
 							SELECT DISTINCT 1
 							FROM TAB_APRENDIZADO ta 
 							LEFT JOIN APR_HISTORICO ah ON (ah.id_tab_aprend = ta.id AND ah.dt_conclusao IS NULL)
-							WHERE ta.tp_item = ? AND ah.ID_CAD_PESSOA = a.ID_CAD_PESSOA AND
+							WHERE ta.tp_item = ? AND ah.ID_CAD_PESSOA = ca.ID_CAD_PESSOA AND
 							ta.ID ".$notStr."IN";
 				$aWhere[] = "CL";
 			else:
@@ -92,25 +92,25 @@ function getQueryByFilter( $parameters ) {
 				foreach ($parameters["filters"][$key]["vl"] as $value):
 					if ( $key == "B" ):
 						if ($value == "S"):
-							$where .= (!$prim ? " OR " : "") ."a.dt_bat IS ". ( $value == "S" && !$not ? "NOT NULL" : "NULL");
+							$where .= (!$prim ? " OR " : "") ."ca.dt_bat IS ". ( $value == "S" && !$not ? "NOT NULL" : "NULL");
 						elseif ($value == "N"):
-							$where .= (!$prim ? " OR " : "") ."a.dt_bat IS ". ( $value == "N" && !$not ? "NULL" : "NOT NULL");
+							$where .= (!$prim ? " OR " : "") ."ca.dt_bat IS ". ( $value == "N" && !$not ? "NULL" : "NOT NULL");
 						elseif (fStrStartWith($value,"A")):
-							$where .= (!$prim ? " OR " : "") ."YEAR(a.dt_bat) ". ( !$not ? " < " : " >= ") . substr($value,1,4);
+							$where .= (!$prim ? " OR " : "") ."YEAR(ca.dt_bat) ". ( !$not ? " < " : " >= ") . substr($value,1,4);
 						else:
-							$where .= (!$prim ? " OR " : "") ."YEAR(a.dt_bat) ". ( !$not ? " = " : " <> ") . $value;
+							$where .= (!$prim ? " OR " : "") ."YEAR(ca.dt_bat) ". ( !$not ? " = " : " <> ") . $value;
 						endif;
 					elseif ( $key == "G" ):
 						if ( $value == "3" ):
-							$where .= (!$prim ? " OR " : "") ."a.CD_FANFARRA IS ".( !$not ? "NOT NULL" : "NULL");
+							$where .= (!$prim ? " OR " : "") ."ca.CD_FANFARRA IS ".( !$not ? "NOT NULL" : "NULL");
 						elseif ( $value == "4" ):
-						    $where .= (!$prim ? " OR " : "") ."a.CD_CARGO ". ( empty($value) ? "IS ".$notStr."NULL" : $notStr."LIKE '2-04%'");
+						    $where .= (!$prim ? " OR " : "") ."ca.CD_CARGO ". ( empty($value) ? "IS ".$notStr."NULL" : $notStr."LIKE '2-04%'");
 						elseif ( $value == "5" ):
-						    $where .= (!$prim ? " OR " : "") ."a.CD_CARGO ". ( empty($value) ? "IS ".$notStr."NULL" : $notStr."LIKE '2-07%'");
+						    $where .= (!$prim ? " OR " : "") ."ca.CD_CARGO ". ( empty($value) ? "IS ".$notStr."NULL" : $notStr."LIKE '2-07%'");
 						elseif ( $value == "6" ):
-						    $where .= (!$prim ? " OR " : "") ."a.CD_CARGO ". ( empty($value) ? "IS ".$notStr."NULL" : $notStr."LIKE '1-01%'");
+						    $where .= (!$prim ? " OR " : "") ."ca.CD_CARGO ". ( empty($value) ? "IS ".$notStr."NULL" : $notStr."LIKE '1-01%'");
 						else:
-							$where .= (!$prim ? " OR " : "") ."a.CD_CARGO ". ( empty($value) ? "IS ".$notStr."NULL" : $notStr."LIKE '$value%'");
+							$where .= (!$prim ? " OR " : "") ."ca.CD_CARGO ". ( empty($value) ? "IS ".$notStr."NULL" : $notStr."LIKE '$value%'");
 						endif;
 					elseif ( empty($value) ):
 						$aWhere[] = "NULL";
@@ -459,12 +459,12 @@ function fSaidaMembro( $saidaID, $arrayParticip ) {
 
 		$aAutoriz = array();
 		$result = $GLOBALS['conn']->Execute("
-			SELECT a.ID_CAD_MEMBRO
-			FROM CON_ATIVOS a
-			INNER JOIN EVE_SAIDA_MEMBRO e ON (e.ID_CAD_MEMBRO = a.ID_CAD_MEMBRO)
+			SELECT ca.ID_CAD_MEMBRO
+			FROM CON_ATIVOS ca
+			INNER JOIN EVE_SAIDA_MEMBRO e ON (e.ID_CAD_MEMBRO = ca.ID_CAD_MEMBRO)
 			INNER JOIN EVE_SAIDA es ON (es.ID = e.ID_EVE_SAIDA)
 			WHERE e.ID_EVE_SAIDA = ? 
-				AND ( YEAR(es.DH_R)-YEAR(a.DT_NASC) - IF(DATE_FORMAT(a.DT_NASC,'%m%d')>DATE_FORMAT(es.DH_R,'%m%d'),1,0) < ? )
+				AND ( YEAR(es.DH_R)-YEAR(ca.DT_NASC) - IF(DATE_FORMAT(ca.DT_NASC,'%m%d')>DATE_FORMAT(es.DH_R,'%m%d'),1,0) < ? )
 		", array( $saidaID, 18 ) );
 		foreach ($result as $k => $fields):
 			$aAutoriz[] = $fields["ID_CAD_MEMBRO"];

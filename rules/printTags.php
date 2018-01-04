@@ -12,13 +12,13 @@ function getQueryByFilter( $parameters ) {
 	
 	$query = "
 		SELECT DISTINCT 
-			at.ID,
-			at.NM
-		FROM CON_ATIVOS at 
-		LEFT JOIN APR_HISTORICO ah ON (ah.ID_CAD_PESSOA = at.ID)
+			ca.ID,
+			ca.NM
+		FROM CON_ATIVOS ca 
+		LEFT JOIN APR_HISTORICO ah ON (ah.ID_CAD_PESSOA = ca.ID)
 		LEFT JOIN TAB_APRENDIZADO ap ON (ap.ID = ah.ID_TAB_APREND)
 		LEFT JOIN TAB_TP_APRENDIZADO ta ON (ta.ID = ap.TP_ITEM)
-		LEFT JOIN CAD_COMPRAS_PESSOA ccp ON (ccp.ID_CAD_PESSOA = at.ID)
+		LEFT JOIN CAD_COMPRAS_PESSOA ccp ON (ccp.ID_CAD_PESSOA = ca.ID)
 		WHERE 1=1
 	";
 	
@@ -31,15 +31,15 @@ function getQueryByFilter( $parameters ) {
 			endif;
 			$notStr = ( $not ? "NOT " : "" );
 			if ( $key == "X" ):
-				$where .= " AND at.TP_SEXO ".$notStr."IN";
+				$where .= " AND ca.TP_SEXO ".$notStr."IN";
 			elseif ( $key == "U" ):
-				$where .= " AND at.ID_UNIDADE ".$notStr."IN";
+				$where .= " AND ca.ID_UNIDADE ".$notStr."IN";
 			elseif ( $key == "C" ):
 				$where .= " AND NOT EXISTS (
 							SELECT DISTINCT 1
 							FROM TAB_APRENDIZADO ta1
 							LEFT JOIN APR_HISTORICO ah1 ON (ah1.id_tab_aprend = ta1.id AND (ah1.dt_conclusao IS NOT NULL OR ah1.dt_investidura IS NOT NULL))
-							WHERE ah1.id_cad_pessoa = at.ID
+							WHERE ah1.id_cad_pessoa = ca.ID
 							  AND ta1.ID ".$notStr."IN
 						";
 			else:
@@ -52,15 +52,15 @@ function getQueryByFilter( $parameters ) {
 				foreach ($parameters["filters"][$key]["vl"] as $value):
 					if ( $key == "G" ):
 						if ( $value == "3" ):
-							$where .= (!$prim ? " OR " : "") ."at.CD_FANFARRA IS ".( !$not ? "NOT NULL" : "NULL");
+							$where .= (!$prim ? " OR " : "") ."ca.CD_FANFARRA IS ".( !$not ? "NOT NULL" : "NULL");
 						elseif ( $value == "4" ):
-						    $where .= (!$prim ? " OR " : "") ."at.CD_CARGO ". ( empty($value) ? "IS ".$notStr."NULL" : $notStr."LIKE '2-04%'");
+						    $where .= (!$prim ? " OR " : "") ."ca.CD_CARGO ". ( empty($value) ? "IS ".$notStr."NULL" : $notStr."LIKE '2-04%'");
 						elseif ( $value == "5" ):
-						    $where .= (!$prim ? " OR " : "") ."at.CD_CARGO ". ( empty($value) ? "IS ".$notStr."NULL" : $notStr."LIKE '2-07%'");
+						    $where .= (!$prim ? " OR " : "") ."ca.CD_CARGO ". ( empty($value) ? "IS ".$notStr."NULL" : $notStr."LIKE '2-07%'");
 						elseif ( $value == "6" ):
-						    $where .= (!$prim ? " OR " : "") ."at.CD_CARGO ". ( empty($value) ? "IS ".$notStr."NULL" : $notStr."LIKE '1-01%'");
+						    $where .= (!$prim ? " OR " : "") ."ca.CD_CARGO ". ( empty($value) ? "IS ".$notStr."NULL" : $notStr."LIKE '1-01%'");
 						else:
-							$where .= (!$prim ? " OR " : "") ."at.CD_CARGO ". ( empty($value) ? "IS ".$notStr."NULL" : $notStr."LIKE '$value%'");
+							$where .= (!$prim ? " OR " : "") ."ca.CD_CARGO ". ( empty($value) ? "IS ".$notStr."NULL" : $notStr."LIKE '$value%'");
 						endif;
 					elseif ( $key == "IC" ):
 						if ( $value == "0" ):
@@ -93,7 +93,7 @@ function getQueryByFilter( $parameters ) {
 			endif;
 		endforeach;
 	endif;	
-	$query .= " $where ORDER BY at.NM";
+	$query .= " $where ORDER BY ca.NM";
 
 	return $GLOBALS['conn']->Execute( $query, $aWhere );
 }
@@ -107,17 +107,17 @@ function getTags( $parameters ) {
 		SELECT DISTINCT pt.ID,
 				pt.TP,
 				pt.MD,
-				at.NM,
+				ca.NM,
 				ap.TP_ITEM,
 				ap.CD_ITEM_INTERNO,
 				ta.DS,
 				ap.DS_ITEM
 		FROM TMP_PRINT_TAGS pt
-		INNER JOIN CON_ATIVOS at ON (at.ID = pt.ID_CAD_PESSOA)
+		INNER JOIN CON_ATIVOS ca ON (ca.ID = pt.ID_CAD_PESSOA)
 		 LEFT JOIN CAD_COMPRAS_PESSOA ccp ON (ccp.ID_CAD_PESSOA = pt.ID_CAD_PESSOA)
 		 LEFT JOIN TAB_APRENDIZADO ap ON (ap.ID = pt.ID_TAB_APREND)
 		 LEFT JOIN TAB_TP_APRENDIZADO ta ON (ta.ID = ap.TP_ITEM)
-	 ORDER BY pt.BC, ap.CD_ITEM_INTERNO, at.NM
+	 ORDER BY pt.BC, ap.CD_ITEM_INTERNO, ca.NM
 	");
 	foreach ($result as $k => $fields):
 		$option = $GLOBALS['pattern']->getBars()->getTagByID($fields['TP']);

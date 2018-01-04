@@ -246,14 +246,14 @@ function fOcorrencia( $parameters ) {
 			);
 			$qtdZeros = zeroSizeID();
 			$result = $GLOBALS['conn']->Execute("
-				  SELECT DISTINCT at.NM, at.ID
+				  SELECT DISTINCT ca.NM, ca.ID
 					FROM APR_HISTORICO ah
-			  INNER JOIN CON_ATIVOS at ON (at.ID = ah.ID_CAD_PESSOA)
+			  INNER JOIN CON_ATIVOS ca ON (ca.ID = ah.ID_CAD_PESSOA)
 			  INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
-				   WHERE at.IDADE_HOJE < 18
+				   WHERE ca.IDADE_HOJE < 18
 					 AND ah.DT_CONCLUSAO IS NULL 
 				     AND ta.CD_ITEM_INTERNO LIKE '$like%'
-				ORDER BY at.NM
+				ORDER BY ca.NM
 			");
 			foreach ($result as $r => $f):
 				$id = fStrZero($f['ID'], $qtdZeros);

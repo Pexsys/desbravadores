@@ -17,13 +17,13 @@ function getQueryByFilter( $parameters ) {
 			endif;
 			$notStr = ( $not ? "NOT " : "" );
 			if ( $key == "X" ):
-				$where .= " AND at.TP_SEXO ".$notStr."IN";
+				$where .= " AND ca.TP_SEXO ".$notStr."IN";
 			elseif ( $key == "T" ):
-				$where .= " AND at.ID ".$notStr."IN";
+				$where .= " AND ca.ID_CAD_MEMBRO ".$notStr."IN";
 			elseif ( $key == "HT" ):
 				$where .= " AND cmh.TP ".$notStr."IN";
 			elseif ( $key == "U" ):
-				$where .= " AND at.ID_UNIDADE ".$notStr."IN";
+				$where .= " AND ca.ID_UNIDADE ".$notStr."IN";
 			else:
 				$where .= " AND";
 			endif;
@@ -34,9 +34,9 @@ function getQueryByFilter( $parameters ) {
 				foreach ($parameters["filters"][$key]["vl"] as $value):
 					if ( $key == "G" ):
 						if ( $value == "3" ):
-							$where .= (!$prim ? " OR " : "") ."at.CD_FANFARRA IS ".( !$not ? "NOT NULL" : "NULL");
+							$where .= (!$prim ? " OR " : "") ."ca.CD_FANFARRA IS ".( !$not ? "NOT NULL" : "NULL");
 						else:
-							$where .= (!$prim ? " OR " : "") ."at.CD_CARGO ". ( empty($value) ? "IS ".$notStr."NULL" : $notStr."LIKE '$value%'");
+							$where .= (!$prim ? " OR " : "") ."ca.CD_CARGO ". ( empty($value) ? "IS ".$notStr."NULL" : $notStr."LIKE '$value%'");
 						endif;
 					elseif ( empty($value) ):
 						$aWhere[] = "NULL";
@@ -62,15 +62,15 @@ function getQueryByFilter( $parameters ) {
 		$query = "
 			SELECT
 				cmh.ID,
-				at.NM,
+				ca.NM,
 				cmh.TP,
 				cmh.DS,
 				cmh.DT_ENTREGA,
 				cmh.COMPL
 			FROM CON_MAT_HISTORICO cmh
-			INNER JOIN CON_ATIVOS at ON (at.ID = cmh.ID_CAD_PESSOA)
+			INNER JOIN CON_ATIVOS ca ON (ca.ID = cmh.ID_CAD_PESSOA)
 			WHERE 1=1 $where
-		 ORDER BY at.NM, cmh.TP
+		 ORDER BY ca.NM, cmh.TP
 		";
 		//echo $query;
 		return $GLOBALS['conn']->Execute( $query, $aWhere );

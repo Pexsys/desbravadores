@@ -20,11 +20,11 @@ function getQueryByFilter( $parameters ) {
 			endif;
 			$notStr = ( $not ? "NOT " : "" );
 			if ( $key == "X" ):
-				$where .= " AND at.TP_SEXO ".$notStr."IN";
+				$where .= " AND ca.TP_SEXO ".$notStr."IN";
 			elseif ( $key == "U" ):
-				$where .= " AND at.ID_UNIDADE ".$notStr."IN";
+				$where .= " AND ca.ID_UNIDADE ".$notStr."IN";
 			elseif ( $key == "T" ):
-				$where .= " AND at.ID ".$notStr."IN";
+				$where .= " AND ca.ID_CAD_MEMBRO ".$notStr."IN";
 			elseif ( $key == "C" ):
 				$where .= " AND ap.TP_ITEM = ? AND ap.ID ".$notStr."IN";
 				$aWhere[] = "CL";
@@ -48,9 +48,9 @@ function getQueryByFilter( $parameters ) {
 				foreach ($parameters["filters"][$key]["vl"] as $value):
 					if ( $key == "G" ):
 						if ( $value == "3" ):
-							$where .= (!$prim ? " OR " : "") ."at.CD_FANFARRA IS ".( !$not ? "NOT NULL" : "NULL");
+							$where .= (!$prim ? " OR " : "") ."ca.CD_FANFARRA IS ".( !$not ? "NOT NULL" : "NULL");
 						else:
-							$where .= (!$prim ? " OR " : "") ."at.CD_CARGO ". ( empty($value) ? "IS ".$notStr."NULL" : $notStr."LIKE '$value%'");
+							$where .= (!$prim ? " OR " : "") ."ca.CD_CARGO ". ( empty($value) ? "IS ".$notStr."NULL" : $notStr."LIKE '$value%'");
 						endif;
 					elseif ( $key == "IC" ):
 						if ( $value == "0" ):
@@ -103,20 +103,20 @@ function getQueryByFilter( $parameters ) {
 	$query = "
 		SELECT DISTINCT
 			ah.ID,
-			at.ID as ID_CAD_PESSOA,
-			at.NM,
+			ca.ID_CAD_PESSOA,
+			ca.NM,
 			ah.DT_INICIO,
 			ap.TP_ITEM,
 			ap.CD_ITEM_INTERNO,
 			ta.DS,
 			ap.DS_ITEM
-		FROM CON_ATIVOS at
-		INNER JOIN APR_HISTORICO ah ON (ah.id_cad_pessoa = at.id AND ah.DT_INVESTIDURA IS NULL)
+		FROM CON_ATIVOS ca
+		INNER JOIN APR_HISTORICO ah ON (ah.ID_CAD_PESSOA = ca.ID_CAD_PESSOA AND ah.DT_INVESTIDURA IS NULL)
 		INNER JOIN TAB_APRENDIZADO ap ON (ap.id = ah.id_tab_aprend)
 		INNER JOIN TAB_TP_APRENDIZADO ta ON (ta.id = ap.tp_item)
-		 LEFT JOIN CON_COMPRAS cc ON (cc.id_cad_pessoa = ah.id_cad_pessoa AND cc.id_tab_aprend = ah.id_tab_aprend)
+		 LEFT JOIN CON_COMPRAS cc ON (cc.ID_CAD_PESSOA = ah.ID_CAD_PESSOA AND cc.id_tab_aprend = ah.id_tab_aprend)
 		WHERE 1=1 $where
-	 ORDER BY at.NM, ap.CD_ITEM_INTERNO, ah.DT_INICIO
+	 ORDER BY ca.NM, ap.CD_ITEM_INTERNO, ah.DT_INICIO
 	";
 
 	return $GLOBALS['conn']->Execute( $query, $aWhere );

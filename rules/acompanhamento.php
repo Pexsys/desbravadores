@@ -23,7 +23,7 @@ function getQueryByFilter( $parameters ) {
 	endif;
 	if ($cargo != "2-04-00" && fStrStartWith($cargo,"2-04")):
 		$like = "01-".substr($cargo,-2);
-		$where .= " AND cap.CD_ITEM_INTERNO LIKE '$like%' AND at.CD_CARGO NOT LIKE '2-%'";
+		$where .= " AND cap.CD_ITEM_INTERNO LIKE '$like%' AND ca.CD_CARGO NOT LIKE '2-%'";
 	endif;	
 	
 	$aWhere = array();
@@ -36,9 +36,9 @@ function getQueryByFilter( $parameters ) {
 			endif;
 			$notStr = ( $not ? "NOT " : "" );
 			if ( $key == "X" ):
-				$where .= " AND at.TP_SEXO ".$notStr."IN";
+				$where .= " AND ca.TP_SEXO ".$notStr."IN";
 			elseif ( $key == "U" ):
-				$where .= " AND at.ID_UNIDADE ".$notStr."IN";
+				$where .= " AND ca.ID_UNIDADE ".$notStr."IN";
 			elseif ( $key == "C" ):
 				$where .= " AND cap.TP_ITEM = ? AND cap.ID_TAB_APREND ".$notStr."IN";
 				$aWhere[] = "CL";
@@ -52,9 +52,9 @@ function getQueryByFilter( $parameters ) {
 				foreach ($parameters["filters"][$key]["vl"] as $value):
 					if ( $key == "G" ):
 						if ( $value == "3" ):
-							$where .= (!$prim ? " OR " : "") ."at.CD_FANFARRA IS ".( !$not ? "NOT NULL" : "NULL");
+							$where .= (!$prim ? " OR " : "") ."ca.CD_FANFARRA IS ".( !$not ? "NOT NULL" : "NULL");
 						else:
-							$where .= (!$prim ? " OR " : "") ."at.CD_CARGO ". ( empty($value) ? "IS ".$notStr."NULL" : $notStr."LIKE '$value%'");
+							$where .= (!$prim ? " OR " : "") ."ca.CD_CARGO ". ( empty($value) ? "IS ".$notStr."NULL" : $notStr."LIKE '$value%'");
 						endif;
 					elseif ( $key == "HA" ):
 						if ( $value == "0" ):
@@ -92,7 +92,7 @@ function getQueryByFilter( $parameters ) {
 
 	$query = "
 		SELECT 
-			at.NM,
+			ca.NM,
 			cap.ID_CAD_PESSOA,
 			cap.ID_TAB_APREND,
 			cap.CD_ITEM_INTERNO,			
@@ -104,12 +104,12 @@ function getQueryByFilter( $parameters ) {
 			COUNT(*) AS QTD
 		FROM CON_APR_PESSOA cap
 		INNER JOIN CON_APR_ITEM cai ON (cai.ID = cap.ID_TAB_APREND)
-		INNER JOIN CON_ATIVOS at ON (at.ID = cap.ID_CAD_PESSOA)
+		INNER JOIN CON_ATIVOS ca ON (ca.ID = cap.ID_CAD_PESSOA)
 		WHERE cap.DT_ASSINATURA IS NOT NULL 
 		  AND cap.DT_INVESTIDURA IS NULL
 		  $where
-	 GROUP BY at.NM, cap.ID_CAD_PESSOA, cap.TP_ITEM, cap.CD_ITEM_INTERNO, cap.DS_ITEM, cap.DT_INICIO, cap.DT_CONCLUSAO, cap.DT_AVALIACAO, cai.QTD
-	 ORDER BY at.NM, cap.DT_INICIO, cap.CD_ITEM_INTERNO
+	 GROUP BY ca.NM, cap.ID_CAD_PESSOA, cap.TP_ITEM, cap.CD_ITEM_INTERNO, cap.DS_ITEM, cap.DT_INICIO, cap.DT_CONCLUSAO, cap.DT_AVALIACAO, cai.QTD
+	 ORDER BY ca.NM, cap.DT_INICIO, cap.CD_ITEM_INTERNO
 	";
 
 	return $GLOBALS['conn']->Execute( $query, $aWhere );
