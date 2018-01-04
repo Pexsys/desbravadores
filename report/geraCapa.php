@@ -115,7 +115,7 @@ class ESPCR extends TCPDF {
 
 		$this->Ln(5);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'I', 13);
-		$this->writeHTMLCell(0, 0, '', '', "<span>$codEsp - #$pgAss</span><span style=\"color:#888888\">&nbsp;[".$result->fields["ID"]."]</span>", 0, 0, 0, true, 'C', true);
+		$this->writeHTMLCell(0, 0, '', '', "<span>$codEsp - #$pgAss</span>", 0, 0, 0, true, 'C', true); //<span style=\"color:#888888\">&nbsp;[".$result->fields["ID"]."]</span>
 		
 		if (!empty($membroID)):
 			$barCODE = $GLOBALS['pattern']->getBars()->encode(array(

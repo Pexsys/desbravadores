@@ -241,10 +241,10 @@ function getPainelMestradoPessoa( $ruleID, $membroID ){
 
 function getMasterRules( $parameters ) {
 	session_start();
-	return getMasterRulesPessoa( $parameters["id"], $_SESSION['USER']['id_cad_pessoa'] );
+	return getMasterRulesPessoa( $parameters["id"], $_SESSION['USER']['id_cad_membro'] );
 }
 	
-function getMasterRulesPessoa( $ruleID, $pessoaID ){
+function getMasterRulesPessoa( $ruleID, $cadMembroID ){
 	$title = "";
 	$message = "";
 	fConnDB();
@@ -267,12 +267,12 @@ function getMasterRulesPessoa( $ruleID, $pessoaID ){
 		//ADICIONAR REGRA E SELECAO DA REGRA.
 		//LE PARAMETRO MINIMO E HISTORICO PARA A REGRA
 		$rS = $GLOBALS['conn']->Execute("
-                    SELECT car.CD_ITEM_INTERNO_RQ, car.DS_ITEM_RQ, ah.DT_INICIO, ah.DT_CONCLUSAO
-                      FROM CON_APR_REQ car
-                 LEFT JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = car.ID_RQ AND ah.ID_CAD_PESSOA = ?)
-                     WHERE car.ID_TAB_APR_ITEM = ?
-            ORDER BY car.DS_ITEM_RQ
-            	", array( $pessoaID, $fR["ID"] ) );
+			SELECT car.CD_ITEM_INTERNO_RQ, car.DS_ITEM_RQ, ah.DT_INICIO, ah.DT_CONCLUSAO
+			FROM CON_APR_REQ car
+			LEFT JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = car.ID_RQ AND ah.ID_CAD_PESSOA = (SELECT ID_CAD_PESSOA FROM CAD_MEMBRO WHERE ID = ?) )
+			WHERE car.ID_TAB_APR_ITEM = ?
+			ORDER BY car.DS_ITEM_RQ
+        ", array( $cadMembroID, $fR["ID"] ) );
 		foreach($rS as $lS => $fS):
 			$arr[ $fR["ID"] ]["hist"][] = $fS;
 		endforeach;
@@ -297,7 +297,7 @@ function getMasterRulesPessoa( $ruleID, $pessoaID ){
 			elseif (!is_null($z['DT_INICIO'])):
 				$dsItem = "<u>$dsItem</u>";
 			else:
-				$dsItem = "<a style=\"cursor:pointer\" name=\"print\" what=\"capa\" id-pess=\"$pessoaID\" cd-item=\"$cdItem\">$dsItem</a>";
+				$dsItem = "<a style=\"cursor:pointer\" name=\"print\" what=\"capa\" id-membro=\"$cadMembroID\" cd-item=\"$cdItem\">$dsItem</a>";
 			endif;
 			$list .= "<div class=\"col-sm-6\">$seq) ".$dsItem."</div>";
 		endforeach;
