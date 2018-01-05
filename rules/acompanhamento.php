@@ -5,7 +5,7 @@
 responseMethod();
 
 /****************************
- * Methods defined for use. *
+ * Methods defined for use. * 
  ****************************/
 function getQueryByFilter( $parameters ) {
 	session_start();
