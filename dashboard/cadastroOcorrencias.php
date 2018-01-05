@@ -21,9 +21,9 @@
 			"filterTo" => "#ocoDataTable",
 			"filters" => 
 				array( 
-					array( "id" => "X", "ds" => "Sexo" ),
-					array( "id" => "U", "ds" => "Unidade" ),
-					array( "id" => "TO", "ds" => "Tipo" )
+					array( "id" => "X", "ds" => "Sexo", "icon" => "fa fa-venus-mars" ),
+					array( "id" => "U", "ds" => "Unidade", "icon" => "fa fa-universal-access" ),
+					array( "id" => "TO", "ds" => "Tipo", "icon" => "fa fa-check" )
 				)
 		) 
 	);?>
@@ -85,11 +85,11 @@
 										</div>
 										<div class="form-group col-xs-2">
 											<label for="tpOcor" class="control-label">Tipo</label>
-											<input type="checkbox" name="tpOcor" id="tpOcor" field="tp" value-on="P" value-off="N" data-toggle="toggle" data-onstyle="success" data-offstyle="danger" data-on="<b>POSITIVA</b>" data-off="NEGATIVA" data-size="small" data-width="120"/>
+											<input type="checkbox" name="tpOcor" id="tpOcor" field="tp" value-on="P" value-off="N" data-toggle="toggle" data-onstyle="success" data-offstyle="danger" data-on="<i class='fa fa-thumbs-up'></i>&nbsp;<b>POSITIVA</b>" data-off="<i class='fa fa-thumbs-down'></i>&nbsp;NEGATIVA" data-size="small" data-width="120"/>
 										</div>
 										<div class="form-group col-xs-2">
 											<label for="fgPend" class="control-label">Status</label>
-											<input type="checkbox" name="fgPend" id="fgPend" field="fg_pend" value-on="N" value-off="S" data-toggle="toggle" data-onstyle="success" data-offstyle="warning" data-on="<b>EFETIVADO</b>" data-off="RASCUNHO" data-size="small" data-width="120"/>
+											<input type="checkbox" name="fgPend" id="fgPend" field="fg_pend" value-on="N" value-off="S" data-toggle="toggle" data-onstyle="success" data-offstyle="warning" data-on="<i class='fa fa-gavel'></i>&nbsp;<b>EFETIVADO</b>" data-off="<i class='fa fa-pencil'></i>&nbsp;RASCUNHO" data-size="small" data-width="120"/>
 										</div>
 									</div>
 									<div class="row">

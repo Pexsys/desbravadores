@@ -93,7 +93,7 @@ function fDashBoard( $panelClass, $iconLeft, $query, $showZero, $titulo, $urlDet
 			) c",
 			false, "Pend&ecirc;ncias", $GLOBALS['pattern']->getVD()."dashboard/index.php?id=5&flt=PC&op=ALL" );
 			
-		fDashBoard( "panel-green", "fa fa-child  fa-4x", 
+		fDashBoard( "panel-green", "fa fa-toggle-on fa-4x", 
 			"SELECT COUNT(*) AS qtd FROM CON_ATIVOS", 
 			true, "Ativos", $GLOBALS['pattern']->getVD()."dashboard/index.php?id=5" );
 
@@ -101,12 +101,12 @@ function fDashBoard( $panelClass, $iconLeft, $query, $showZero, $titulo, $urlDet
 			"SELECT COUNT(*) AS qtd FROM CON_ATIVOS WHERE dt_bat IS NULL",
 			false, "N&atilde;o Batizados", $GLOBALS['pattern']->getVD()."dashboard/index.php?id=5&flt=B&op=N" );
 
-		fDashBoard( "panel-primary", "fa fa-thumbs-up fa-4x", 
+		fDashBoard( "panel-primary", "fa fa-bath fa-4x", 
 			"SELECT COUNT(*) AS qtd FROM CON_ATIVOS WHERE dt_bat IS NOT NULL",
 			false, "Batizados", $GLOBALS['pattern']->getVD()."dashboard/index.php?id=5&flt=B&op=S" );
 			
 		fDashBoard( "panel-info", "fa fa-info-circle fa-4x", 
-			"SELECT COUNT(*) AS qtd FROM CAD_PESSOA",
+			"SELECT COUNT(*) AS qtd FROM CAD_MEMBRO",
 			true, "Cadastrados", $GLOBALS['pattern']->getVD()."dashboard/index.php?id=5&flt=ALL" );
 	?>
 </div>

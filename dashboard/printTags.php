@@ -83,11 +83,11 @@
 									"filterTo" => "#cbNomes",
 									"filters" => 
 										array( 
-											array( "id" => "G", "ds" => "Grupo" ),
-											array( "id" => "X", "ds" => "Sexo" ),
-											array( "id" => "U", "ds" => "Unidade" ),
-											array( "id" => "IC", "ds" => "Compras" ),
-											array( "id" => "C", "ds" => "Classe" )
+											array( "id" => "G", "ds" => "Grupo", "icon" => "fa fa-group" ),
+											array( "id" => "X", "ds" => "Sexo", "icon" => "fa fa-venus-mars" ),
+											array( "id" => "U", "ds" => "Unidade", "icon" => "fa fa-universal-access" ),
+											array( "id" => "IC", "ds" => "Compras", "icon" => "fa fa-shopping-cart" ),
+											array( "id" => "C", "ds" => "Classe", "icon" => "fa fa-graduation-cap" )
 										)
 								) 
 							);

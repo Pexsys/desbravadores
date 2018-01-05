@@ -371,9 +371,11 @@ function populateOcorrencia( ocorrenciaID ) {
 		url: jsLIB.rootDir+"rules/ocorrencias.php",
 		data: { MethodName : 'fOcorrencia', data : { id : ocorrenciaID } },
 		success: function(oc){
-			jsLIB.populateOptions( $("#cmNome"), oc.nomes );
-			jsLIB.populateForm( $("#cadOcoForm"), oc.ocorrencia );
-			valuePendOrig = oc.ocorrencia.fg_pend;
+			if (oc){
+				jsLIB.populateOptions( $("#cmNome"), oc.nomes );
+				jsLIB.populateForm( $("#cadOcoForm"), oc.ocorrencia );
+				valuePendOrig = oc.ocorrencia.fg_pend;				
+			}
 			valuePend = jsLIB.getValueFromField( $("#fgPend") );
 			rulefields();
 			buttons();

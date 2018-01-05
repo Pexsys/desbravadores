@@ -13,11 +13,11 @@
 			"filterTo" => "#matHstTable",
 			"filters" => 
 				array( 
-					array( "id" => "X", "ds" => "Sexo" ),
-					array( "id" => "G", "ds" => "Grupo" ),
-					array( "id" => "U", "ds" => "Unidade" ),
-					array( "id" => "T", "ds" => "Membros Ativos" ),
-					array( "id" => "HT", "ds" => "Tipo de Material" )
+					array( "id" => "X", "ds" => "Sexo", "icon" => "fa fa-venus-mars" ),
+					array( "id" => "G", "ds" => "Grupo", "icon" => "fa fa-group" ),
+					array( "id" => "U", "ds" => "Unidade", "icon" => "fa fa-universal-access" ),
+					array( "id" => "T", "ds" => "Membros Ativos", "icon" => "fa fa-toggle-on" ),
+					array( "id" => "HT", "ds" => "Tipo de Material", "icon" => "fa fa-shopping-basket" )
 				)
 		) 
 	);?>

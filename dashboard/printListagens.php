@@ -17,7 +17,7 @@ $classes = getDomainFilter( array( "type" => "C" ) );
 		<select name="cbListagem" id="cbListagem" class="selectpicker form-control input-sm" title="Escolha uma Listagem" data-width="100%" data-container="body" data-actions-box="true">
 			<option data-icon="fa fa-history" show="divRegistro" value="geraRegistro.php?filter=">REGISTRO DE HISTÓRICO DE MEMBROS</option>
 			<option data-divider="true"></option>
-			<option data-icon="fa fa-address-card-o" value="geraListaAtivos.php?">LISTAGEM DE MEMBROS</option>
+			<option data-icon="fa fa-toggle-on" value="geraListaAtivos.php?">LISTAGEM DE MEMBROS</option>
 			<option data-icon="fa fa-bath" show="divBatismo" value="geraListaBatismos.php?filter=">LISTAGEM DE MEMBROS - SITUACAO DE BATISMO</option>
 			<option data-icon="fa fa-graduation-cap" show="divClasses" value="geraListaClasse.php?filter=">LISTAGEM DE MEMBROS - CLASSE</option>
 			<option data-icon="fa fa-universal-access" show="divUnidades" value="geraListaUnidade.php?filter=">LISTAGEM DE MEMBROS - UNIDADE</option>
@@ -35,7 +35,7 @@ $classes = getDomainFilter( array( "type" => "C" ) );
 			<option data-icon="glyphicon glyphicon-tent" show="divEventos" value="geraListaEventoTent.php?eve=">LISTAGEM DE SA&Iacute;DA - BARRACAS</option>
 			<option data-icon="fa fa-cutlery" show="divEventos" value="geraListaEventoKitchen.php?eve=">LISTAGEM DE SA&Iacute;DA - COZINHA</option>
 			<option data-icon="fa fa-bus" show="divEventos" value="geraListaEventoBus.php?eve=">LISTAGEM DE SA&Iacute;DA - PASSAGEIROS</option>
-			<option data-icon="fa fa fa-user" show="divEventos" value="geraListaUniformes.php?filter=C&eve=">LISTAGEM DE SA&Iacute;DA - CAMISETAS - GERAL</option>
+			<option data-icon="fa fa-user" show="divEventos" value="geraListaUniformes.php?filter=C&eve=">LISTAGEM DE SA&Iacute;DA - CAMISETAS - GERAL</option>
 			<option data-icon="fa fa-male" show="divEventos" value="geraListaUniformes.php?filter=A&eve=">LISTAGEM DE SA&Iacute;DA - AGASALHOS - GERAL</option>
 		</select>
 	</div>

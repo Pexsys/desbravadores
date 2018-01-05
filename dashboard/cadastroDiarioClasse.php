@@ -72,7 +72,7 @@
 										</div>
 										<div class="form-group col-xs-2">
 											<label for="fgPend" class="control-label">Status</label>
-											<input type="checkbox" name="fgPend" id="fgPend" field="fg_pend" value-on="N" value-off="S" data-toggle="toggle" data-onstyle="success" data-offstyle="warning" data-on="<b>Conclu&iacute;do</b>" data-off="PLANEJADO" data-size="small" data-width="120"/>
+											<input type="checkbox" name="fgPend" id="fgPend" field="fg_pend" value-on="N" value-off="S" data-toggle="toggle" data-onstyle="success" data-offstyle="warning" data-on="<i class='fa fa-gavel'></i>&nbsp;<b>Conclu&iacute;do</b>" data-off="<i class='fa fa-pencil'></i>&nbsp;PLANEJADO" data-size="small" data-width="120"/>
 										</div>
 									</div>
 									<div class="row">

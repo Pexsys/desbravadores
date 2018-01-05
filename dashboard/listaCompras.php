@@ -34,16 +34,16 @@ function filtroDatasAvaliacao(){
 			"filterTo" => "#comprasDatatable",
 			"filters" => 
 				array( 
-					array( "id" => "Z", "ds" => "Tipo" ),
-					array( "id" => "X", "ds" => "Sexo" ),
-					array( "id" => "C", "ds" => "Classe" ),
-					array( "id" => "G", "ds" => "Grupo" ),
-					array( "id" => "U", "ds" => "Unidade" ),
-					array( "id" => "A", "ds" => "&Aacute;reas" ),
-					array( "id" => "IC", "ds" => "Compras" ),
-					array( "id" => "T", "ds" => "Membros Ativos" ),
-					array( "id" => "E", "ds" => "Especialidade" ),
-					array( "id" => "M", "ds" => "Mestrado" )
+					array( "id" => "Z", "ds" => "Tipo", "icon" => "fa fa-check" ),
+					array( "id" => "X", "ds" => "Sexo", "icon" => "fa fa-venus-mars" ),
+					array( "id" => "C", "ds" => "Classe", "icon" => "fa fa-graduation-cap" ),
+					array( "id" => "G", "ds" => "Grupo", "icon" => "fa fa-group" ),
+					array( "id" => "U", "ds" => "Unidade", "icon" => "fa fa-universal-access" ),
+					array( "id" => "A", "ds" => "&Aacute;reas", "icon" => "fa fa-bookmark" ),
+					array( "id" => "IC", "ds" => "Compras", "icon" => "fa fa-shopping-cart" ),
+					array( "id" => "T", "ds" => "Membros Ativos", "icon" => "fa fa-toggle-on" ),
+					array( "id" => "E", "ds" => "Especialidade", "icon" => "fa fa-check-circle-o" ),
+					array( "id" => "M", "ds" => "Mestrado", "icon" => "fa fa-check-circle" )
 				)
 		) 
 	);?>

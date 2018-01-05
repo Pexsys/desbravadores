@@ -13,11 +13,11 @@
 			"filterTo" => "#birthTable",
 			"filters" => 
 				array( 
-					array( "id" => "X", "ds" => "Sexo" ),
-					array( "id" => "C", "ds" => "Classe" ),
-					array( "id" => "G", "ds" => "Grupo" ),
-					array( "id" => "MA", "ds" => "Mês de Aniversário" ),
-					array( "id" => "U", "ds" => "Unidade" )
+					array( "id" => "X", "ds" => "Sexo", "icon" => "fa fa-venus-mars" ),
+					array( "id" => "C", "ds" => "Classe", "icon" => "fa fa-graduation-cap" ),
+					array( "id" => "G", "ds" => "Grupo", "icon" => "fa fa-group" ),
+					array( "id" => "MA", "ds" => "Mês de Aniversário", "icon" => "fa fa-calendar-o" ),
+					array( "id" => "U", "ds" => "Unidade", "icon" => "fa fa-universal-access" )
 				)
 		) 
 	);?>

@@ -3,6 +3,8 @@
 @require_once("../include/sendmail.php");
 @require_once("../include/_message.php");
 
+use MESSAGE;
+
 $md = date("m-d");
 
 fConnDB();
