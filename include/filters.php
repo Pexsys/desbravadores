@@ -156,7 +156,7 @@ function getDomainFilter( $parameters ) {
 	
 	//TIPO APRENDIZADO
 	elseif ( $type == "Z" ):
-		$domain = funct();
+		$domain = getTipoAprendizado();
 		
 	//CLASSE
 	elseif ( $type == "C" ):
