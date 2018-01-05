@@ -20,11 +20,11 @@
 			"filterTo" => "#acompDatatable",
 			"filters" => 
 				array( 
-					array( "id" => "HA", "ds" => "Avaliações" ),
-					array( "id" => "X", "ds" => "Sexo" ),
-					array( "id" => "C", "ds" => "Classe" ),
-					array( "id" => "G", "ds" => "Grupo" ),
-					array( "id" => "U", "ds" => "Unidade" )
+					array( "id" => "HA", "ds" => "Avaliações", "icon" => "fa fa-thermometer-half" ),
+					array( "id" => "X", "ds" => "Sexo", "icon" => "fa fa-venus-mars" ),
+					array( "id" => "C", "ds" => "Classe", "icon" => "fa fa-graduation-cap" ),
+					array( "id" => "G", "ds" => "Grupo", "icon" => "fa fa-group" ),
+					array( "id" => "U", "ds" => "Unidade", "icon" => "fa fa-universal-access" )
 				)
 		) 
 	);?>

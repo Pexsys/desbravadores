@@ -13,7 +13,7 @@
 			"filterTo" => "#matEstTable",
 			"filters" => 
 				array( 
-					array( "id" => "HT", "ds" => "Tipo de Material" )
+					array( "id" => "HT", "ds" => "Tipo de Material", "icon" => "fa fa-shopping-basket" )
 				)
 		) 
 	);?>

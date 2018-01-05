@@ -110,11 +110,11 @@ $autorizIcon = "fa fa-circle";
 												"filterTo" => "#cbParticip",
 												"filters" => 
 													array( 
-														array( "id" => "G", "ds" => "Grupo",		"icon" => "fa fa-group" ),
-														array( "id" => "X", "ds" => "Sexo",			"icon" => "fa fa-user" ),
-														array( "id" => "B", "ds" => "Batizado",		"icon" => "fa fa-smile-o" ),
-														array( "id" => "U", "ds" => "Unidade",		"icon" => "fa fa-universal-access" ),
-														array( "id" => "C", "ds" => "Classe",		"icon" => "fa fa-universal-access" )
+														array( "id" => "G", "ds" => "Grupo", "icon" => "fa fa-group" ),
+														array( "id" => "X", "ds" => "Sexo", "icon" => "fa fa-venus-mars" ),
+														array( "id" => "B", "ds" => "Batizado", "icon" => "fa fa-bath" ),
+														array( "id" => "U", "ds" => "Unidade", "icon" => "fa fa-universal-access" ),
+														array( "id" => "C", "ds" => "Classe", "icon" => "fa fa-graduation-cap" )
 													)
 											) 
 										);
@@ -181,9 +181,9 @@ $autorizIcon = "fa fa-circle";
 								<div class="row">
 									<div class="form-group col-xs-12">
 										<select name="cmLista" opt-value="cd" opt-label="ds" class="selectpicker form-control input-sm" data-container="body" data-width="100%">
-											<option value="geraAutorizacao.php?">AUTORIZA&Ccedil;&Otilde;ES</option>
-											<option show="divPartic">LISTAGEM DE PARTICIPANTES</option>
-											<option show="divAttrib">LISTAGEM DE ATRIBUI&Ccedil;&Otilde;ES</option>
+											<option data-icon="fa fa-id-card-o" value="geraAutorizacao.php?">AUTORIZA&Ccedil;&Otilde;ES</option>
+											<option data-icon="fa fa-users" show="divPartic">LISTAGEM DE PARTICIPANTES</option>
+											<option data-icon="fa fa-paperclip" show="divAttrib">LISTAGEM DE ATRIBUI&Ccedil;&Otilde;ES</option>
 										</select>
 									</div>
 								</div>
@@ -199,21 +199,21 @@ $autorizIcon = "fa fa-circle";
 								<div class="row" name="rowFilter" id="divPartic" style="display:none">
 									<div class="form-group col-xs-12">
 										<select name="cmSubLista" opt-value="cd" opt-label="ds" class="selectpicker form-control input-sm" data-container="body" data-width="100%">
-											<option value="geraListaEvento.php?">ALFAB&Eacute;TICA</option>
-											<option value="geraListaDispensaEscola.php?">DISPENSA ESCOLAR</option>
-											<option value="geraListaEventoAutoriz.php?">CONTROLE DE AUTORIZA&Ccedil;&Otilde;ES - ALFAB&Eacute;TICA</option>
-											<option value="geraListaEventoAutorizGen.php?">CONTROLE DE AUTORIZA&Ccedil;&Otilde;ES - POR GENERO</option>
-											<option value="geraListaUniformes.php?filter=A">CONTROLE DE AGASALHOS - GERAL</option>
-											<option value="geraListaUniformes.php?filter=C">CONTROLE DE CAMISETAS - GERAL</option>
+											<option data-icon="fa fa-sort-alpha-asc" value="geraListaEvento.php?">ALFAB&Eacute;TICA</option>
+											<option data-icon="fa fa-leanpub" value="geraListaDispensaEscola.php?">DISPENSA ESCOLAR</option>
+											<option data-icon="fa fa-list" value="geraListaEventoAutoriz.php?">CONTROLE DE AUTORIZA&Ccedil;&Otilde;ES - ALFAB&Eacute;TICA</option>
+											<option data-icon="fa fa-venus-mars" value="geraListaEventoAutorizGen.php?">CONTROLE DE AUTORIZA&Ccedil;&Otilde;ES - POR GENERO</option>
+											<option data-icon="fa fa-user" value="geraListaUniformes.php?filter=C">CONTROLE DE CAMISETAS - GERAL</option>
+											<option data-icon="fa fa-male" value="geraListaUniformes.php?filter=A">CONTROLE DE AGASALHOS - GERAL</option>
 										</select>
 									</div>
 								</div>
 								<div class="row" name="rowFilter" id="divAttrib" style="display:none">
 									<div class="form-group col-xs-12">
 										<select name="cmSubLista" opt-value="cd" opt-label="ds" class="selectpicker form-control input-sm" data-container="body" data-width="100%">
-											<option value="geraListaEventoTent.php?">LISTAGEM DE BARRACAS</option>
-											<option value="geraListaEventoKitchen.php?">LISTAGEM DE SACOLINHAS</option>
-											<option value="geraListaEventoBus.php?">LISTAGEM DE PASSAGEIROS/&Ocirc;NIBUS</option>
+											<option data-icon="glyphicon glyphicon-tent" value="geraListaEventoTent.php?">LISTAGEM DE BARRACAS</option>
+											<option data-icon="fa fa-cutlery" value="geraListaEventoKitchen.php?">LISTAGEM DE SACOLINHAS</option>
+											<option data-icon="fa fa-bus" value="geraListaEventoBus.php?">LISTAGEM DE PASSAGEIROS/&Ocirc;NIBUS</option>
 										</select>
 									</div>
 								</div>

@@ -14,11 +14,11 @@
 			"filterTo" => "#membrosDatatable",
 			"filters" => 
 				array( 
-					array( "id" => "G", "ds" => "Grupo" ),
-					array( "id" => "X", "ds" => "Sexo" ),
-					array( "id" => "B", "ds" => "Batizado" ),
-					array( "id" => "U", "ds" => "Unidade" ),
-					array( "id" => "PC", "ds" => "Pend&ecirc;ncia Cadastral" )
+					array( "id" => "G", "ds" => "Grupo", "icon" => "fa fa-group" ),
+					array( "id" => "X", "ds" => "Sexo", "icon" => "fa fa-venus-mars" ),
+					array( "id" => "B", "ds" => "Batizado", "icon" => "fa fa-bath" ),
+					array( "id" => "U", "ds" => "Unidade", "icon" => "fa fa-universal-access" ),
+					array( "id" => "PC", "ds" => "Pend&ecirc;ncia Cadastral", "icon" => "fa fa-exclamation-triangle" )
 				)
 		) 
 	);?>

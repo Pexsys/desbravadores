@@ -397,11 +397,13 @@ function populateRegistro( diarioID ) {
 		url: jsLIB.rootDir+"rules/diarioClasse.php",
 		data: { MethodName : 'fRegistro', data : { id : diarioID } },
 		success: function(oc){
-			jsLIB.populateOptions( $("#cmClasse"), oc.classe );
-			jsLIB.populateOptions( $("#cmReq"), oc.req );
-			jsLIB.populateOptions( $("#cmRef"), oc.ref );
-			jsLIB.populateForm( $("#cadRegForm"), oc.diario );
-			valuePendOrig = oc.diario.fg_pend;
+			if (oc){
+				jsLIB.populateOptions( $("#cmClasse"), oc.classe );
+				jsLIB.populateOptions( $("#cmReq"), oc.req );
+				jsLIB.populateOptions( $("#cmRef"), oc.ref );
+				jsLIB.populateForm( $("#cadRegForm"), oc.diario );
+				valuePendOrig = oc.diario.fg_pend;				
+			}
 			valuePend = jsLIB.getValueFromField( $("#fgPend") );
 			rulefields();
 			buttons();
