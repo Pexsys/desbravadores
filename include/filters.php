@@ -27,7 +27,9 @@ function fDataFilters( $parameters ){
 	foreach ($arr as $key => $value):
 		$strFilter .= "<option value=\"".$value["id"]."\"";
 		if ( isset($value["icon"]) ):
-			$strFilter .= " data-icon=\"".$value["icon"]."\"";
+			$strFilter .= " data-icon=\"".$value["icon"];
+			$strFilter .= (isset($value["icon-color"]) ? " ".$value["icon-color"] : " text-muted" );
+			$strFilter .= "\"";
 		endif;
 		$strFilter .= ">".$value["ds"]."</option>";
 	endforeach;
@@ -62,7 +64,7 @@ function getDomainFilter( $parameters ) {
 	elseif ( $type == "G" ):
 		$domain = array(
 			array( "id" => "1", "ds" => "DESBRAVADORES", "icon" => "fa fa-child" ),
-			array( "id" => "2", "ds" => "DIRETORIA GERAL", "icon" => "fa fa-sitemap" ),
+			array( "id" => "2", "ds" => "DIRETORIA GERAL", "icon" => "fa fa-user-secret" ),
 			array( "id" => "3", "ds" => "FANFARRA", "icon" => "fa fa-music" ),
 			array( "id" => "4", "ds" => "INSTRUTORES", "icon" => "fa fa-graduation-cap" ),
 			array( "id" => "5", "ds" => "CONSELHEIROS", "icon" => "fa fa-heart" ),
@@ -73,7 +75,7 @@ function getDomainFilter( $parameters ) {
 	elseif ( $type == "HA" ):
 		$year = date("Y");
 		$domain = array(
-			array( "id" => "0", "ds" => "EM ANDAMENTO", "icon" => "fa fa-battery-quarter" ),
+			array( "id" => "0", "ds" => "EM ANDAMENTO", "icon" => "fa fa-battery-half" ),
 			array( "id" => "1", "ds" => "PENDENTES DE AVALIAÇÃO", "icon" => "fa fa-battery-full" ),
 			array( "id" => "2", "ds" => "AVALIADOS EM $year", "icon" => "fa fa-eye" ),
 			array( "id" => "3", "ds" => "PENDENTES DE INVESTIDURA", "icon" => "fa fa-graduation-cap" )
@@ -97,7 +99,6 @@ function getDomainFilter( $parameters ) {
 			array( "id" => "UNI", "ds" => "UNIDADE INVÁLIDA", "icon" => "fa fa-universal-access" ),
 			array( "id" => "CAR", "ds" => "CARGO/FUNÇÃO INVÁLIDA", "icon" => "fa fa-user-md" )
 		);
-
 		
 	//ITENS COMPRADOS
 	elseif ( $type == "IC" ):
@@ -222,7 +223,9 @@ function addFilter( $parameters ){
 			$str .= " data-subtext=\"".$k["sb"]."\"";
 		endif;
 		if (isset($k["icon"])):
-			$str .= " data-icon=\"".$k["icon"]."\"";
+			$str .= " data-icon=\"".$k["icon"];
+			$str .= (isset($k["icon-color"]) ? " ".$k["icon-color"] : " text-muted" );
+			$str .= "\"";
 		endif;
 		$str .= ">".$k["ds"]."</option>";
 	endforeach;

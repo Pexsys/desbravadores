@@ -104,7 +104,7 @@ function getQueryByFilter( $parameters ) {
 			COUNT(*) AS QTD
 		FROM CON_APR_PESSOA cap
 		INNER JOIN CON_APR_ITEM cai ON (cai.ID = cap.ID_TAB_APREND)
-		INNER JOIN CON_ATIVOS ca ON (ca.ID = cap.ID_CAD_PESSOA)
+		INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = cap.ID_CAD_PESSOA)
 		WHERE cap.DT_ASSINATURA IS NOT NULL 
 		  AND cap.DT_INVESTIDURA IS NULL
 		  $where
