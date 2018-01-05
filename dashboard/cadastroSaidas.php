@@ -105,7 +105,7 @@ $autorizIcon = "fa fa-circle text-danger";
 									</div>
 									<div class="row">
 										<div class="col-xs-12">
-										<?php fDataFilters( 
+										<?php fDataFilters(
 											array( 
 												"filterTo" => "#cbParticip",
 												"filters" => 

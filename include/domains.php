@@ -1,5 +1,6 @@
 <?php
 fConnDB();
+
 function getDomainMembrosAtivos(){
 	$arr = array();
 	
