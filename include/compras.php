@@ -14,11 +14,11 @@ class COMPRAS {
 		", array( $cadMembroID, $itemAprendID ) );
 	}
 	
-	public function deletePessoa( $cadMembroID ) {
+	public function deleteByPessoa( $pessoaID ) {
 		$GLOBALS['conn']->Execute("
 			DELETE FROM CAD_COMPRAS
-			 WHERE ID_CAD_MEMBRO = ?
-		", array( $cadMembroID ) );
+			 WHERE ID_CAD_MEMBRO IN (SELECT ID_CAD_MEMBRO FROM CAD_MEMBRO WHERE ID_CAD_PESSOA = ?)
+		", array( $pessoaID ) );
 	}
 	
 	public function deleteByID( $id ) {

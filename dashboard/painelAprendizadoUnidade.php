@@ -1,12 +1,12 @@
 <?php
-$membroID = $_SESSION['USER']['id_cad_pessoa'];
+$cadMembroID = $_SESSION['USER']['id_cad_membro'];
 $unidade = "";
 $result = $GLOBALS['conn']->Execute("
 	SELECT TP_SEXO, CD_CARGO, ID_UNIDADE, DS_UNIDADE
 	  FROM CON_ATIVOS 
 	 WHERE NR_ANO = YEAR(NOW()) 
-	   AND ID = ?
-", array($membroID) );
+	   AND ID_CAD_MEMBRO = ?
+", array($cadMembroID) );
 $unidadeID = $result->fields['ID_UNIDADE'];
 if (empty($unidadeID)):
 	exit;
@@ -77,7 +77,7 @@ endif;
 $result = $GLOBALS['conn']->Execute("
 	SELECT ta.TP_ITEM, ta.CD_AREA_INTERNO, COUNT(*) as QTD
 	  FROM APR_HISTORICO ah
-	INNER JOIN CON_ATIVOS ca ON (ca.ID = ah.ID_CAD_PESSOA)
+	INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = ah.ID_CAD_PESSOA)
 	INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
 	 WHERE ah.DT_CONCLUSAO IS NULL AND ta.TP_ITEM = ?". (!empty($where)?" AND ($where)":"")." 
 	  GROUP BY ta.CD_AREA_INTERNO DESC
@@ -107,7 +107,7 @@ endif;
 $result = $GLOBALS['conn']->Execute("
 	SELECT ta.ID, ta.TP_ITEM, ta.CD_ITEM_INTERNO, ta.CD_AREA_INTERNO, ta.CD_COR, ta.DS_ITEM, COUNT(*) as QTD
 	  FROM APR_HISTORICO ah
-	INNER JOIN CON_ATIVOS ca ON (ca.ID = ah.ID_CAD_PESSOA)
+	INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = ah.ID_CAD_PESSOA)
 	INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
 	 WHERE ah.DT_CONCLUSAO IS NULL". (!empty($where)?" AND ($where)":"")." 
 	  GROUP BY ta.ID, ta.TP_ITEM, ta.CD_ITEM_INTERNO, ta.CD_AREA_INTERNO, ta.CD_COR, ta.DS_ITEM
@@ -149,29 +149,30 @@ endif;
 		<div id="phGhaphC" style="width:100%;height:300px"></div>
 	</div>
 </div>
-<div class="row">
-	<div class="col-lg-12">
-		<h4 class="page-header">An&aacute;lise individual</h4>
-	</div>
-</div>
 <?php
 $result = $GLOBALS['conn']->Execute("
-	SELECT DISTINCT ca.NM, ca.ID
+	SELECT DISTINCT ca.NM, ca.ID_CAD_PESSOA, ca.ID_MEMBRO
 	  FROM APR_HISTORICO ah
-	INNER JOIN CON_ATIVOS ca ON (ca.ID = ah.ID_CAD_PESSOA)
+	INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = ah.ID_CAD_PESSOA)
 	INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
 	  WHERE (ah.DT_INVESTIDURA IS NULL OR YEAR(ah.DT_INICIO) = YEAR(NOW()))". (!empty($where)?" AND ($where)":"")." 
 	  ORDER BY ca.NM
 ");
 if (!$result->EOF):
-	echo "<div class=\"row\">";
+	echo "
+	<div class=\"row\">
+		<div class=\"col-lg-12\">
+			<h4 class=\"page-header\">An&aacute;lise individual</h4>
+		</div>
+	</div>
+	<div class=\"row\">";
 
 	//ALUNOS DA CLASSE
 	foreach ($result as $k => $line):
-		$id = $line["ID"];
+		$id = $line["ID_CAD_PESSOA"];
 
 		$barCODE = $GLOBALS['pattern']->getBars()->encode(array(
-			"ni" => $id
+			"ni" => $line["ID_MEMBRO"]
 		));
 
 		echo "<div class=\"col-md-12 col-xs-12 col-sm-12 col-lg-6\">";

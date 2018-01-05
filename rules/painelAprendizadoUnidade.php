@@ -7,7 +7,7 @@ responseMethod();
  ****************************/
 function getGraphData() {
 	session_start();
-	$membroID = $_SESSION['USER']['id_cad_pessoa'];
+	$cadMembroID = $_SESSION['USER']['id_cad_membro'];
 
 	$arr = array();
 	fConnDB();
@@ -18,8 +18,8 @@ function getGraphData() {
 		SELECT ID_UNIDADE, CD_CARGO
 		  FROM CAD_ATIVOS 
 		 WHERE NR_ANO = YEAR(NOW()) 
-		   AND ID = ?
-	", array($membroID) );
+		   AND ID_CAD_MEMBRO = ?
+	", array($cadMembroID) );
 	$unidadeID = $result->fields['ID_UNIDADE'];
 	if (empty($unidadeID)):
 		return $arr;
@@ -36,7 +36,7 @@ function getGraphData() {
 		FROM (
 			SELECT cap.ID_CAD_PESSOA, cap.CD_COR, cap.DS_ITEM, cap.ID_TAB_APREND, cap.CD_ITEM_INTERNO, COUNT(*) AS QTD 
 			FROM CON_APR_PESSOA cap
-		  INNER JOIN CON_ATIVOS ca ON (ca.ID = cap.ID_CAD_PESSOA)
+		  INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = cap.ID_CAD_PESSOA)
 			WHERE ($where)
 			  AND cap.DT_ASSINATURA IS NOT NULL
 			  AND cap.DT_CONCLUSAO IS NULL

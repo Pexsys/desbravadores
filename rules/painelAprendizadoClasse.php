@@ -7,7 +7,7 @@ responseMethod();
  ****************************/
 function getGraphData() {
 	session_start();
-	$membroID = $_SESSION['USER']['id_cad_pessoa'];
+	$cadMembroID = $_SESSION['USER']['id_cad_membro'];
 
 	$arr = array();
 	fConnDB();
@@ -18,8 +18,8 @@ function getGraphData() {
 	$result = $GLOBALS['conn']->Execute("
 		SELECT CD_CARGO, CD_CARGO2
 		  FROM CON_ATIVOS
-		 WHERE ID = ?
-	", array($membroID) );
+		 WHERE ID_CAD_MEMBRO = ?
+	", array($cadMembroID) );
 	$cargo = $result->fields['CD_CARGO'];
 	if (fStrStartWith($cargo,"2-07")):
 		$cargo = $result->fields['CD_CARGO2'];
@@ -35,7 +35,7 @@ function getGraphData() {
 		FROM (
 			SELECT cap.ID_CAD_PESSOA, cap.CD_COR, cap.DS_ITEM, cap.ID_TAB_APREND, cap.CD_ITEM_INTERNO, COUNT(*) AS QTD 
 			FROM CON_APR_PESSOA cap
-		  INNER JOIN CON_ATIVOS at ON (at.ID = cap.ID_CAD_PESSOA)
+		  INNER JOIN CON_ATIVOS at ON (at.ID_CAD_PESSOA = cap.ID_CAD_PESSOA)
 			WHERE cap.CD_ITEM_INTERNO LIKE '$like%'
 			  AND cap.DT_ASSINATURA IS NOT NULL
 			  AND cap.DT_CONCLUSAO IS NULL

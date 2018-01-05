@@ -284,7 +284,10 @@ class ETIQUETAS extends TCPDF {
 			$this->setXY($x+2,$y+83);
 			$this->SetTextColor(180,180,180);
 			$this->SetFont(PDF_FONT_NAME_MAIN, 'I', 7);
-			$this->MultiCell(126, 6, $GLOBALS['pattern']->getClubeDS( array("cl","nm") ) . " - desde 1959\nIASD Capão Redondo - 6ª Região - APS - UCB - DSA", false, 'C', false, 2, "", "", true, 0, false, true, 0, "M", false );
+			$this->MultiCell(126, 6, 
+				$GLOBALS['pattern']->getClubeDS( array("cl","nm") ) ." - desde ".
+				$GLOBALS['pattern']->getClubeDS( array("af") )."\n".
+				$GLOBALS['pattern']->getClubeDS( array("ig","rg","as","un","dv","sp") ), false, 'C', false, 2, "", "", true, 0, false, true, 0, "M", false );
 			
 		//TIPO E - CARTAO DE ESPECIALIDADE
 		elseif ($ln["TP"] == "E"):
@@ -340,7 +343,7 @@ endif;
 
 $ip = fRequest("ip");
 if (isset($ip) && !empty($ip)):
-	$where .= " AND pt.ID_CAD_PESSOA IN ($ip)";
+	$where .= " AND pt.ID_CAD_MEMBRO IN ($ip)";
 endif;
 
 $query = "
@@ -383,7 +386,7 @@ foreach ($result as $k => $l):
 				ap.CD_COR,
 				ap.DS_ITEM
 		FROM TMP_PRINT_TAGS pt
-		INNER JOIN CON_ATIVOS at ON (at.ID = pt.ID_CAD_PESSOA)
+		INNER JOIN CON_ATIVOS at ON (at.ID_CAD_MEMBRO = pt.ID_CAD_MEMBRO)
 		 LEFT JOIN TAB_APRENDIZADO ap ON (ap.ID = pt.ID_TAB_APREND)
 		WHERE pt.MD = ?
 		  $where

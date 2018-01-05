@@ -18,7 +18,7 @@ class TAGS {
 	public function forceInsert( $arr ){
 		$GLOBALS['conn']->Execute("
 			INSERT INTO TMP_PRINT_TAGS (
-				ID_CAD_PESSOA,
+				ID_CAD_MEMBRO,
 				TP,
 				MD,
 				ID_TAB_APREND,
@@ -27,7 +27,7 @@ class TAGS {
 		", $arr );
 	}
 	
-	public function insertItemTag( $tp, $pessoaID, $aprendID = null ) {
+	public function insertItemTag( $tp, $cadMembroID, $aprendID = null ) {
 		$option = $GLOBALS['pattern']->getBars()->getTagByID($tp);
 
 		//SE NAO APONTADO APRENDIZADO, PROCURA MAIOR APRENDIZADO AVALIADO
@@ -35,35 +35,35 @@ class TAGS {
 			$r = $GLOBALS['conn']->Execute("
 			SELECT * FROM (
 				SELECT '1', MAX(ta.ID) AS ID_TAB_APREND
-				  FROM CON_ATIVOS ca
-			INNER JOIN APR_HISTORICO ah ON (ah.ID_CAD_PESSOA = ca.ID)
+				  FROM CAD_MEMBRO cm
+			INNER JOIN APR_HISTORICO ah ON (ah.ID_CAD_PESSOA = cm.ID_CAD_PESSOA)
 			INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND AND ta.TP_ITEM = 'CL')
 				 WHERE YEAR(ah.DT_AVALIACAO) = YEAR(NOW()) 
-				   AND ca.ID = ?
+				   AND cm.ID = ?
 			UNION 
 				SELECT '2', MAX(ta.ID) AS ID_TAB_APREND
-				FROM CON_ATIVOS ca
-		INNER JOIN APR_HISTORICO ah ON (ah.ID_CAD_PESSOA = ca.ID)
+				FROM CAD_MEMBRO cm
+		INNER JOIN APR_HISTORICO ah ON (ah.ID_CAD_PESSOA = cm.ID_CAD_PESSOA)
 		INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND AND ta.TP_ITEM = 'CL')
 			WHERE YEAR(ah.DT_INICIO) = YEAR(NOW())
-				AND ca.ID = ?
+				AND cm.ID = ?
 			UNION 
 				SELECT '3', MAX(ta.ID) AS ID_TAB_APREND
-				FROM CON_ATIVOS ca
-		INNER JOIN APR_HISTORICO ah ON (ah.ID_CAD_PESSOA = ca.ID)
+				FROM CAD_MEMBRO cm
+		INNER JOIN APR_HISTORICO ah ON (ah.ID_CAD_PESSOA = cm.ID_CAD_PESSOA)
 		INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND AND ta.TP_ITEM = 'CL')
 			WHERE ah.DT_AVALIACAO IS NOT NULL
-				AND ca.ID = ?
+				AND cm.ID = ?
 			) x
 			WHERE x.ID_TAB_APREND IS NOT NULL
 			ORDER BY 1
-			", array($pessoaID,$pessoaID,$pessoaID) );
+			", array($cadMembroID,$cadMembroID,$cadMembroID) );
 			if (!$r->EOF):
 				$aprendID = $r->fields["ID_TAB_APREND"];
 			endif;
 		endif;
 
-		$arr = array( $tp, $option["md"], $pessoaID );
+		$arr = array( $tp, $option["md"], $cadMembroID );
 		if ( !is_null($aprendID) ):
 			$arr[] = $aprendID;
 		endif;
@@ -73,19 +73,21 @@ class TAGS {
 			  FROM TMP_PRINT_TAGS
 			 WHERE TP = ?
 			   AND MD = ?
-			   AND ID_CAD_PESSOA = ?
+			   AND ID_CAD_MEMBRO = ?
 			   AND ID_TAB_APREND ". (!is_null($aprendID) ? "= ?" : "IS NULL") ."
 		", $arr );
 		if ($r->EOF):
+			$r = $GLOBALS['conn']->Execute("SELECT ID_MEMBRO FROM CAD_MEMBRO WHERE ID = ?", $cadMembroID );
+
 			$barCODE = $GLOBALS['pattern']->getBars()->encode(array(
 				"id" => $tp,
 				"fi" => $aprendID,
-				"ni" => $pessoaID
+				"ni" => $r->fields["ID_MEMBRO"]
 			));
 
 			$this->forceInsert(
 				array(
-					$pessoaID,
+					$cadMembroID,
 					$tp,
 					$option["md"],
 					$aprendID,
