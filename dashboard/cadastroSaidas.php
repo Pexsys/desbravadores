@@ -1,6 +1,6 @@
 <?php
 @require_once("../include/filters.php");
-$autorizIcon = "fa fa-circle";
+$autorizIcon = "fa fa-circle text-danger";
 ?>
 <div class="row">
 	<div class="col-lg-12">
@@ -124,7 +124,7 @@ $autorizIcon = "fa fa-circle";
 									<div class="row">
 										<div class="form-group col-xs-12">
 											<label for="cbParticip" class="control-label"><i class="<?echo $autorizIcon;?>" aria-hidden="true">&nbsp;</i>Autoriza&ccedil;&atilde;o&nbsp;&nbsp;|&nbsp;&nbsp;Participa&ccedil;&atilde;o<i class="fa fa-check" aria-hidden="true"></i></label>
-											<select name="cbParticip" id="cbParticip" class="selectpicker form-control input-sm" opt-value="id" opt-label="nm" opt-subtext="sb" opt-selected="pt" opt-links="fg" opt-link-icons="S=<?echo $autorizIcon;?>;N=fa fa-circle-thin" multiple data-live-search="true" field="particip" title="Escolha um ou mais nomes" data-selected-text-format="count > 2" data-width="100%" data-container="body" data-actions-box="true"></select>
+											<select name="cbParticip" id="cbParticip" class="selectpicker form-control input-sm" opt-value="id" opt-label="nm" opt-subtext="sb" opt-selected="pt" opt-links="fg" opt-link-icons="S=<?echo $autorizIcon;?>;N=fa fa-circle-thin text-muted" multiple data-live-search="true" field="particip" title="Escolha um ou mais nomes" data-selected-text-format="count > 2" data-width="100%" data-container="body" data-actions-box="true"></select>
 										</div>
 									</div>
 								</div>
