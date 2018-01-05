@@ -148,7 +148,7 @@ function delete( $parameters ) {
 	foreach ($ids as $k => $id):
 		$rs = $GLOBALS['conn']->Execute("SELECT ID_CAD_PESSOA, ID_TAB_APREND FROM APR_HISTORICO WHERE ID = ?", array($id) );
 		if (!$rs->EOF):
-			$compras->deletePessoa($rs->fields["ID_CAD_PESSOA"]);
+			$compras->deleteByPessoa($rs->fields["ID_CAD_PESSOA"]);
 			
             //REMOVE NOTIFICACOES, SE EXISTIREM.
             $GLOBALS['conn']->Execute("
@@ -342,13 +342,12 @@ function getData(){
 	
 	fConnDB();
 	$qtdZeros = zeroSizeID();
-	$result = $GLOBALS['conn']->Execute("SELECT ID, NM FROM CON_ATIVOS ORDER BY NM");
+	$result = $GLOBALS['conn']->Execute("SELECT ID_CAD_PESSOA, ID_MEMBRO, NM FROM CON_ATIVOS ORDER BY NM");
 	while (!$result->EOF):
-		$id = fStrZero($result->fields['ID'], $qtdZeros);
 		$arr["nomes"][] = array( 
-			"id" => $id,
+			"id" => $result->fields['ID_CAD_PESSOA'],
 			"ds" => $result->fields['NM'],
-			"sb" => $id
+			"sb" => fStrZero($result->fields['ID_MEMBRO'], $qtdZeros)
 		);
 		$result->MoveNext();
 	endwhile;

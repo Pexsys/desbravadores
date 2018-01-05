@@ -12,13 +12,14 @@ function getQueryByFilter( $parameters ) {
 	
 	$query = "
 		SELECT DISTINCT 
-			ca.ID,
+			ca.ID_CAD_MEMBRO,
+			ca.ID_MEMBRO,
 			ca.NM
 		FROM CON_ATIVOS ca 
-		LEFT JOIN APR_HISTORICO ah ON (ah.ID_CAD_PESSOA = ca.ID)
+		LEFT JOIN APR_HISTORICO ah ON (ah.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
 		LEFT JOIN TAB_APRENDIZADO ap ON (ap.ID = ah.ID_TAB_APREND)
 		LEFT JOIN TAB_TP_APRENDIZADO ta ON (ta.ID = ap.TP_ITEM)
-		LEFT JOIN CAD_COMPRAS_PESSOA ccp ON (ccp.ID_CAD_PESSOA = ca.ID)
+		LEFT JOIN CAD_COMPRAS ccp ON (ccp.ID_CAD_MEMBRO = ca.ID_CAD_MEMBRO)
 		WHERE 1=1
 	";
 	
@@ -39,7 +40,7 @@ function getQueryByFilter( $parameters ) {
 							SELECT DISTINCT 1
 							FROM TAB_APRENDIZADO ta1
 							LEFT JOIN APR_HISTORICO ah1 ON (ah1.id_tab_aprend = ta1.id AND (ah1.dt_conclusao IS NOT NULL OR ah1.dt_investidura IS NOT NULL))
-							WHERE ah1.id_cad_pessoa = ca.ID
+							WHERE ah1.ID_CAD_PESSOA = ca.ID_CAD_PESSOA
 							  AND ta1.ID ".$notStr."IN
 						";
 			else:
@@ -113,8 +114,8 @@ function getTags( $parameters ) {
 				ta.DS,
 				ap.DS_ITEM
 		FROM TMP_PRINT_TAGS pt
-		INNER JOIN CON_ATIVOS ca ON (ca.ID = pt.ID_CAD_PESSOA)
-		 LEFT JOIN CAD_COMPRAS_PESSOA ccp ON (ccp.ID_CAD_PESSOA = pt.ID_CAD_PESSOA)
+		INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_MEMBRO = pt.ID_CAD_MEMBRO)
+		 LEFT JOIN CAD_COMPRAS ccp ON (ccp.ID_CAD_MEMBRO = pt.ID_CAD_MEMBRO)
 		 LEFT JOIN TAB_APRENDIZADO ap ON (ap.ID = pt.ID_TAB_APREND)
 		 LEFT JOIN TAB_TP_APRENDIZADO ta ON (ta.ID = ap.TP_ITEM)
 	 ORDER BY pt.BC, ap.CD_ITEM_INTERNO, ca.NM
@@ -152,11 +153,10 @@ function getMembros( $parameters ) {
 	
 	$result = getQueryByFilter( $parameters );
 	foreach ($result as $k => $fields):
-		$id = fStrZero($fields['ID'], $qtdZeros);
 		$arr[] = array(
-			"id" => $id,
+			"id" => $fields['ID_CAD_MEMBRO'],
 			"nm" => $fields['NM'],
-			"sb" => $id
+			"sb" => fStrZero($fields['ID_MEMBRO'], $qtdZeros)
 		);
 	endforeach;
 	return $arr;
@@ -165,11 +165,9 @@ function getMembros( $parameters ) {
 function getMembrosFilter( $parameters ) {
 	$arr = array();
 	fConnDB();
-	$qtdZeros = zeroSizeID();
-
 	$result = getQueryByFilter( $parameters );
 	foreach ($result as $k => $fields):
-		$arr[] = $id = fStrZero($fields['ID'], $qtdZeros);
+		$arr[] = $fields['ID_CAD_MEMBRO'];
 	endforeach;
 	return array( "filter" => $arr );
 }

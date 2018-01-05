@@ -20,11 +20,10 @@ function fDataFilters( $parameters ){
 			endif;
 		endforeach;
 	endif;
-	
 	$strFilter .= "</div>";
+	$arr = array_msort( $pFilters, array("ds" => SORT_LOCALE_STRING) );
 	$strFilter .= "<div class=\"input-group col-xs-4 pull-right\">";
 	$strFilter .= "<select class=\"selectpicker form-control input-sm\" id=\"addFilter\" onchange=\"jsFilter.addFilter(this);\" data-width=\"100%\" title=\"Adicionar filtros\" data-width=\"auto\" data-container=\"body\">";
-	$arr = array_msort( $pFilters, array('label' => SORT_ASC) );
 	foreach ($arr as $key => $value):
 		$strFilter .= "<option value=\"".$value["id"]."\"";
 		if ( isset($value["icon"]) ):

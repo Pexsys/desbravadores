@@ -7,7 +7,6 @@ responseMethod();
  ****************************/
 function getGraphData() {
 	session_start();
-	$membroID = $_SESSION['USER']['id_cad_pessoa'];
 
 	$arr = array();
 	fConnDB();
@@ -18,7 +17,7 @@ function getGraphData() {
 		FROM (
 			SELECT cap.ID_CAD_PESSOA, cap.CD_COR, cap.DS_ITEM, cap.ID_TAB_APREND, cap.CD_ITEM_INTERNO, COUNT(*) AS QTD 
 			  FROM CON_APR_PESSOA cap
-	    INNER JOIN CON_ATIVOS ca ON (ca.ID = cap.ID_CAD_PESSOA AND ca.FG_REU_SEM = 'S')
+	    INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = cap.ID_CAD_PESSOA AND ca.FG_REU_SEM = 'S')
 			 WHERE cap.CD_ITEM_INTERNO LIKE '01%'
 			   AND cap.DT_ASSINATURA IS NOT NULL
 			   AND cap.DT_CONCLUSAO IS NULL
@@ -49,7 +48,7 @@ function getGraphData() {
 			FROM (
 				SELECT cap.ID_CAD_PESSOA, cap.ID_TAB_APREND, COUNT(*) AS QTD 
 				  FROM CON_APR_PESSOA cap
-	        INNER JOIN CON_ATIVOS ca ON (ca.ID = cap.ID_CAD_PESSOA AND ca.FG_REU_SEM = 'S')
+	        INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = cap.ID_CAD_PESSOA AND ca.FG_REU_SEM = 'S')
 				 WHERE cap.CD_ITEM_INTERNO LIKE '01%00'
 			       AND cap.DT_ASSINATURA IS NOT NULL
 				   AND cap.DT_CONCLUSAO IS NULL
@@ -84,7 +83,7 @@ function getGraphData() {
 			FROM (
 				SELECT cap.ID_CAD_PESSOA, cap.ID_TAB_APREND, COUNT(*) AS QTD 
 				  FROM CON_APR_PESSOA cap
-	        INNER JOIN CON_ATIVOS ca ON (ca.ID = cap.ID_CAD_PESSOA AND ca.FG_REU_SEM = 'S')
+	        INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = cap.ID_CAD_PESSOA AND ca.FG_REU_SEM = 'S')
 				 WHERE cap.CD_ITEM_INTERNO LIKE '01%01'
 			       AND cap.DT_ASSINATURA IS NOT NULL
 				   AND cap.DT_CONCLUSAO IS NULL
@@ -162,10 +161,10 @@ function getGraphData() {
 	 LEFT JOIN (SELECT ah.ID_CAD_PESSOA, COUNT(*) AS QT
 				  FROM APR_HISTORICO ah 
 			INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
-			INNER JOIN CON_ATIVOS ca ON (ca.ID = ah.ID_CAD_PESSOA AND ca.FG_REU_SEM = 'S')
+			INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = ah.ID_CAD_PESSOA AND ca.FG_REU_SEM = 'S')
 				 WHERE ta.CD_ITEM_INTERNO LIKE '01%00'
 				   AND YEAR(ah.DT_AVALIACAO) < YEAR(NOW())
-			  GROUP BY ah.ID_CAD_PESSOA) AS a ON (a.ID_CAD_PESSOA = at.ID)
+			  GROUP BY ah.ID_CAD_PESSOA) AS a ON (a.ID_CAD_PESSOA = at.ID_CAD_PESSOA)
 		WHERE (a.QT IS NULL OR a.QT < ?) 
 		  AND at.FG_REU_SEM = 'S'
 	", $qtdRegulares );
@@ -181,10 +180,10 @@ function getGraphData() {
 	 LEFT JOIN (SELECT ah.ID_CAD_PESSOA, COUNT(*) AS QT
 				  FROM APR_HISTORICO ah 
 			INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
-			INNER JOIN CON_ATIVOS ca ON (ca.ID = ah.ID_CAD_PESSOA AND ca.FG_REU_SEM = 'S')
+			INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = ah.ID_CAD_PESSOA AND ca.FG_REU_SEM = 'S')
 				 WHERE ta.CD_ITEM_INTERNO LIKE '01%00'
 				   AND (YEAR(ah.DT_CONCLUSAO) = YEAR(NOW()) OR YEAR(ah.DT_INVESTIDURA) = YEAR(NOW()))
-			  GROUP BY ah.ID_CAD_PESSOA) AS a ON (a.ID_CAD_PESSOA = at.ID)
+			  GROUP BY ah.ID_CAD_PESSOA) AS a ON (a.ID_CAD_PESSOA = at.ID_CAD_PESSOA)
 		WHERE a.QT < ?
 		  AND at.FG_REU_SEM = 'S'
 	", $qtdRegulares );
@@ -213,10 +212,10 @@ function getGraphData() {
 	 LEFT JOIN (SELECT ah.ID_CAD_PESSOA, COUNT(*) AS QT
 				  FROM APR_HISTORICO ah 
 			INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
-			INNER JOIN CON_ATIVOS ca ON (ca.ID = ah.ID_CAD_PESSOA AND ca.FG_REU_SEM = 'S')
+			INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = ah.ID_CAD_PESSOA AND ca.FG_REU_SEM = 'S')
 				 WHERE ta.CD_ITEM_INTERNO LIKE '01%01'
 				   AND YEAR(ah.DT_AVALIACAO) < YEAR(NOW())
-			  GROUP BY ah.ID_CAD_PESSOA) AS a ON (a.ID_CAD_PESSOA = at.ID)
+			  GROUP BY ah.ID_CAD_PESSOA) AS a ON (a.ID_CAD_PESSOA = at.ID_CAD_PESSOA)
 		WHERE (a.QT IS NULL OR a.QT < ?)
 		  AND at.FG_REU_SEM = 'S'
 	", $qtdRegulares );
@@ -232,10 +231,10 @@ function getGraphData() {
 	 LEFT JOIN (SELECT ah.ID_CAD_PESSOA, COUNT(*) AS QT
 				  FROM APR_HISTORICO ah 
 			INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
-			INNER JOIN CON_ATIVOS ca ON (ca.ID = ah.ID_CAD_PESSOA AND ca.FG_REU_SEM = 'S')
+			INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = ah.ID_CAD_PESSOA AND ca.FG_REU_SEM = 'S')
 				 WHERE ta.CD_ITEM_INTERNO LIKE '01%01'
 				   AND (YEAR(ah.DT_CONCLUSAO) = YEAR(NOW()) OR YEAR(ah.DT_INVESTIDURA) = YEAR(NOW()))
-			  GROUP BY ah.ID_CAD_PESSOA) AS a ON (a.ID_CAD_PESSOA = at.ID)
+			  GROUP BY ah.ID_CAD_PESSOA) AS a ON (a.ID_CAD_PESSOA = at.ID_CAD_PESSOA)
 		WHERE a.QT < ?
 		  AND at.FG_REU_SEM = 'S'
 	", $qtdRegulares );
@@ -522,7 +521,7 @@ function getEspec( $parameters ) {
 		SELECT ta.CD_ITEM_INTERNO, ta.DS_ITEM, COUNT(*) AS QTD
 		  FROM APR_HISTORICO h
 	INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = h.ID_TAB_APREND)
-    INNER JOIN CON_ATIVOS a ON (a.ID = h.ID_CAD_PESSOA)
+    INNER JOIN CON_ATIVOS a ON (a.ID_CAD_PESSOA = h.ID_CAD_PESSOA)
 		 WHERE ta.TP_ITEM = ?
 		   AND ta.CD_AREA_INTERNO = ?
 		   AND YEAR(h.DT_CONCLUSAO) = YEAR(NOW())
@@ -558,7 +557,7 @@ function getEspecPeople( $parameters ) {
 		SELECT a.NM
 		  FROM APR_HISTORICO h
 	INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = h.ID_TAB_APREND)
- 	INNER JOIN CON_ATIVOS a ON (a.ID = h.ID_CAD_PESSOA)
+ 	INNER JOIN CON_ATIVOS a ON (a.ID_CAD_PESSOA = h.ID_CAD_PESSOA)
 		 WHERE ta.CD_ITEM_INTERNO = ?
 		   AND YEAR(h.DT_CONCLUSAO) = YEAR(NOW())
 	      GROUP BY a.NM
