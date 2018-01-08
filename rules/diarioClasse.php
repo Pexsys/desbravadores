@@ -4,20 +4,56 @@ responseMethod();
 
 function getQueryByFilter( $parameters ) {
 	session_start();
-	$usuarioID = $_SESSION['USER']['id_usuario'];
-
-	$aWhere = array(date("Y"));
-	$where = "";
 	
-	return $GLOBALS['conn']->Execute("
-			SELECT cd.ID, cd.SQ, ta.DS_ITEM, taa.CD AS CD_AREA, taa.DS AS DS_AREA, tap.CD_REQ_INTERNO, tap.DS, cd.DH, cd.FG_PEND
-			  FROM CAD_DIARIO cd
-		INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = cd.ID_TAB_APREND)
-		 LEFT JOIN TAB_APR_ITEM tap ON (tap.ID = cd.ID_TAB_APR_ITEM)
-		 LEFT JOIN TAB_APR_AREA taa ON (taa.ID = tap.ID_TAB_APR_AREA)
-			 WHERE YEAR(cd.DH) >= ? $where 
-			ORDER BY cd.SQ DESC
-	",$aWhere);
+	$userID = $_SESSION['USER']['id_usuario'];
+	$membroID = $_SESSION['USER']['id_cad_pessoa'];
+	$out = array();
+	$frm = null;
+	
+	$like = "";
+	$result = $GLOBALS['conn']->Execute("
+		SELECT CD_CARGO, CD_CARGO2
+		  FROM CON_ATIVOS
+		 WHERE ID_CAD_PESSOA = ?
+	", array($membroID) );
+	$cargo = $result->fields['CD_CARGO'];
+	if (fStrStartWith($cargo,"2-07")):
+		$cargo = $result->fields['CD_CARGO2'];
+	endif;
+	if (empty($cargo)):
+		return $arr;
+	endif;
+	if ($cargo != "2-04-00" && fStrStartWith($cargo,"2-04")):
+		$like = "01-".substr($cargo,-2);
+	endif;
+
+	$str = "
+		SELECT cd.ID, cd.SQ, cd.DH, cd.FG_PEND, 
+			ta.DS_ITEM, 
+			taa.CD AS CD_AREA, taa.DS AS DS_AREA, 
+			tap.CD_REQ_INTERNO, tap.DS,
+			(SELECT COUNT(*)
+				FROM CON_APR_PESSOA
+				WHERE ID = tap.ID
+				  AND DT_CONCLUSAO IS NULL
+				". ($parameters["filter"] == "Y" ? " AND YEAR(DT_INICIO) = YEAR(NOW())" : "") .") AS QTD_TOTAL,
+			(SELECT COUNT(*)
+				FROM CON_APR_PESSOA 
+				WHERE ID = tap.ID
+				  AND DT_CONCLUSAO IS NULL
+				  AND DT_ASSINATURA IS NOT NULL
+				  ". ($parameters["filter"] == "Y" ? " AND YEAR(DT_INICIO) = YEAR(NOW())" : "") .") AS QTD_COMPL
+		FROM CAD_DIARIO cd
+	INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = cd.ID_TAB_APREND)
+	LEFT JOIN TAB_APR_ITEM tap ON (tap.ID = cd.ID_TAB_APR_ITEM)
+	LEFT JOIN TAB_APR_AREA taa ON (taa.ID = tap.ID_TAB_APR_AREA)
+		WHERE ta.CD_ITEM_INTERNO LIKE '$like%'
+		". ($parameters["filter"] == "Y" ? " AND YEAR(cd.DH) = YEAR(NOW())" : "") ."
+		ORDER BY cd.SQ DESC
+	";
+	//exit($str);
+
+	return $GLOBALS['conn']->Execute($str);
 }
 
 function fRegistro( $parameters ) {
@@ -140,7 +176,7 @@ function fRegistro( $parameters ) {
 					"fg_pend"		=> $result->fields['FG_PEND']
 				);
 				$out["req"] = fGetReq( $result->fields['ID_TAB_APREND'] );
-				$out["ref"] = fGetRefs( $result->fields['ID_TAB_APR_ITEM'] );
+				$out["ref"] = fGetRefByID( $result->fields['ID_TAB_APR_ITEM'] );
 			endif;
 			
 		endif;
@@ -209,7 +245,7 @@ function fGetRef( $parameters ){
 
 function fGetRefByID( $refID ){
 	$arr = array();
-	$result = $result = $GLOBALS['conn']->Execute("
+	$result = $GLOBALS['conn']->Execute("
 		SELECT tais.ID, ta.CD_AREA_INTERNO, ta.CD_ITEM_INTERNO, ta.DS_ITEM
 		FROM TAB_APR_ITEM_SEL tais
 		INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = tais.ID_REF)
@@ -236,7 +272,15 @@ function getListaDiario( $parameters ){
 	foreach ($result as $k => $fields):
 		$dsReq = (!is_null($fields['CD_AREA']) ? $fields['CD_AREA']."-" : "") . 
 				substr($fields['CD_REQ_INTERNO'],-2) . 
-				 (!is_null($fields['DS']) ? " ".substr($fields['DS'],0,60) : "");
+				 (!is_null($fields['DS']) ? " ".substr($fields['DS'],0,70) : "");
+
+		$perc = floor(($fields['QTD_COMPL'] / max(1,$fields['QTD_TOTAL']))*100);		
+		$cl = 'success';
+		if ($perc < 75):
+			$cl = 'danger';
+		elseif ($perc < 100):
+			$cl = 'primary';
+		endif;
 
 		$arr[] = array(
 			"id" => $fields['ID'],
@@ -245,9 +289,77 @@ function getListaDiario( $parameters ){
 			"rq" => $dsReq,
 			"st" => $fields['FG_PEND'],
 			"so" => $fields['FG_PEND'],
-			"dh" => strtotime($fields['DH'])
+			"dh" => strtotime($fields['DH']),
+			"in" => array( "pc" => $perc, "cl" => $cl)
 		);
 	endforeach;
 	return array( "result" => true, "diario" => $arr );
+}
+
+function fDetalheItem( $parameters ){
+	fConnDB();
+	$str = "";
+
+	$pendentes = $GLOBALS['conn']->Execute("
+		SELECT cap.DS, ca.NM
+		FROM CAD_DIARIO cd
+		INNER JOIN CON_APR_PESSOA cap ON (cap.ID = cd.ID_TAB_APR_ITEM)
+		INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = cap.ID_CAD_PESSOA)
+		WHERE cap.TP_ITEM = 'CL'
+		AND cap.DT_CONCLUSAO IS NULL
+		AND cap.DT_ASSINATURA IS NULL
+		". ($parameters["filter"] == "Y" ? " AND YEAR(cap.DT_INICIO) = YEAR(NOW())" : "") ."
+		AND cd.ID = ?
+		ORDER BY ca.NM
+	", array( $parameters["id"] ) );
+
+	$completados = $GLOBALS['conn']->Execute("
+		SELECT cap.DS, ca.NM, cap.DT_ASSINATURA
+		FROM CAD_DIARIO cd
+		INNER JOIN CON_APR_PESSOA cap ON (cap.ID = cd.ID_TAB_APR_ITEM)
+		INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = cap.ID_CAD_PESSOA)
+		WHERE cap.TP_ITEM = 'CL'
+		AND cap.DT_CONCLUSAO IS NULL
+		AND cap.DT_ASSINATURA IS NOT NULL
+		". ($parameters["filter"] == "Y" ? " AND YEAR(cap.DT_INICIO) = YEAR(NOW())" : "") ."
+		AND cd.ID = ?
+		ORDER BY cap.DT_ASSINATURA, ca.NM
+	", array( $parameters["id"] ) );
+
+	if (!$pendentes->EOF || !$completados->EOF):
+		$titulo = !$pendentes->EOF ? $pendentes->fields["DS"] : $completados->fields["DS"];
+		$str .= "
+		<div class=\"col-xs-12 col-md-12 col-sm-12 col-xl-12 col-lg-12\">
+		<div class=\"panel panel-{$parameters["cl"]}\">
+		<div class=\"panel-heading\"><h6 class=\"panel-title\">$titulo</h6></div>
+			<div class=\"panel-body\">
+		";
+		$str .= blocoItemReq($pendentes, "danger", "fa-frown-o", "Pendentes");
+		$str .= blocoItemReq($completados, "success", "fa-smile-o", "Completados");
+		$str .= "</div></div></div>";
+	endif;
+
+	return $str;
+}
+
+function blocoItemReq($result, $class, $icon, $titulo){
+	$str = "";
+	if (!$result->EOF):
+		$str .= "<div class=\"col-sm-6 col-xs-6 col-md-6 col-lg-6\">";
+		$str .= "<div class=\"row\">";
+		$str .= "<div class=\"panel panel-$class\" style=\"margin-bottom:1px\">";
+		$str .= "<div class=\"panel-heading\" style=\"padding:3px 10px\">
+					<i class=\"fa $icon\" aria-hidden=\"true\"></i>&nbsp;$titulo
+					<span class=\"badge badge-pill progress-bar-$class pull-right\">{$result->RecordCount()}</span>
+				</div>";
+		$str .= "<div class=\"panel-body\" style=\"padding:5px 10px\">";
+		$str .= "<div class=\"col-sm-12 col-xs-12 col-md-12 col-lg-12\">";
+		foreach ($result as $k => $f):
+			$aux = ( !is_null($f["DT_ASSINATURA"]) ? "<span class=\"badge pull-left\">".strftime("%d/%m/%Y",strtotime($f["DT_ASSINATURA"]))."</span>" : "");
+			$str .= "<div class=\"row\">$aux&nbsp;{$f["NM"]}</div>";
+		endforeach;
+		$str .= "</div></div></div></div></div>";
+	endif;
+	return $str;
 }
 ?>

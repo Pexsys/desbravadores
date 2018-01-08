@@ -1,11 +1,23 @@
 <?php
 @require_once("../include/filters.php");
+/*
+td.details-control {
+    background: url('../img/details_open.png') no-repeat center center;
+
+}
+tr.shown td.details-control {
+    background: url('../img/details_close.png') no-repeat center center;
+}
+*/
 ?>
 <style>
 .btn-default.active { 
     background-color: #337ab7;
     border-color: #2e6da4;
     color: #fff;
+}
+td.details-control {
+	cursor: pointer;
 }
 </style>
 <div class="row">
@@ -25,6 +37,7 @@
 					<th>Requisito</th>
 					<th>Data</th>
 					<th>Status</th>
+					<th>%</th>
 				</tr>
 			</thead>
 			<tbody/>
@@ -33,10 +46,12 @@
 	</div>
 	<div class="row">
 		<div class="col-xs-6">
-			<a role="button" class="btn btn-warning pull-left" id="btnNovo"><i class="fa fa-plus"></i>&nbsp;Nova</a>
+			<a role="button" class="btn btn-warning pull-left" id="btnNovo"><i class="fa fa-plus"></i>&nbsp;Novo</a>
+			<a role="button" class="btn btn-info pull-right" data-toggle="modal" id="btnPrepare" style="display:none"><i class="glyphicon glyphicon-print"></i>&nbsp;Preparar</a>
 		</div>
 		<div class="col-xs-6">
-			<a role="button" class="btn btn-info pull-right" data-toggle="modal" id="btnPrepare" style="display:none"><i class="glyphicon glyphicon-print"></i>&nbsp;Preparar</a>
+			<a role="button" class="btn btn-primary pull-right" name="filtro" id="btnAtivos" tp-filtro="Y"><i class="fa fa-filter"></i>&nbsp;<?php echo date("Y");?></a>
+			<a role="button" class="btn btn-primary-outline pull-right" name="filtro" id="btnTodos" tp-filtro="T"><i class="fa fa-globe"></i>&nbsp;Todos</a>
 		</div>
 	</div>
 </div>

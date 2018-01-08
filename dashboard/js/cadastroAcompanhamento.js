@@ -54,17 +54,18 @@ $(document).ready(function(){
 			{	data: "da",
 				width: "8%"
 			},
-			{	data: "pg",
-				width: "5%"
+			{	
+				className: 'dt-right',
+				data: 'pg',
+				width: "5%",
+				render: function (data, type, row) {
+					return '<span class="badge badge-pill progress-bar-'+ data.cl +'">'+ data.pc +'</span>';
+				}
 			}
 		],
 		fnRowCallback: function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
 			var row = nRow.cells[5];
-			if ( aData.pg < 51 ) {
-				$(row).css('color', '#cc0000').css('font-weight', 'bold');
-			} else if ( aData.pg < 85 ) {
-				$(row).css('color', '#ccaa00');
-			} else if ( aData.pg == 100 ) {
+			if ( aData.pg == 100 ) {
 				$('td', nRow).css('background-color', '#b3ffb3');
 			}
         },
