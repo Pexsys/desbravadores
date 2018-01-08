@@ -23,7 +23,7 @@ function getQueryByFilter( $parameters ) {
 	endif;
 	if ($cargo != "2-04-00" && fStrStartWith($cargo,"2-04")):
 		$like = "01-".substr($cargo,-2);
-		$where .= " AND cap.CD_ITEM_INTERNO LIKE '$like%' AND ca.CD_CARGO NOT LIKE '2-%'";
+		$where .= " AND cai.CD_ITEM_INTERNO LIKE '$like%' AND ca.CD_CARGO NOT LIKE '2-%'";
 	endif;	
 	
 	$aWhere = array();
@@ -40,7 +40,7 @@ function getQueryByFilter( $parameters ) {
 			elseif ( $key == "U" ):
 				$where .= " AND ca.ID_UNIDADE ".$notStr."IN";
 			elseif ( $key == "C" ):
-				$where .= " AND cap.TP_ITEM = ? AND cap.ID_TAB_APREND ".$notStr."IN";
+				$where .= " AND cai.TP_ITEM = ? AND ah.ID_TAB_APREND ".$notStr."IN";
 				$aWhere[] = "CL";
 			else:
 				$where .= " AND";
@@ -58,17 +58,17 @@ function getQueryByFilter( $parameters ) {
 						endif;
 					elseif ( $key == "HA" ):
 						if ( $value == "0" ):
-							$where .= (!$prim ? " OR " : "") ."cap.DT_CONCLUSAO IS ".( !$not ? "NULL" : "NOT NULL");
+							$where .= (!$prim ? " OR " : "") ."ah.DT_CONCLUSAO IS ".( !$not ? "NULL" : "NOT NULL");
 						elseif ( $value == "1" ):
-							$where .= (!$prim ? " OR " : "") ."cap.DT_CONCLUSAO IS NOT NULL AND cap.DT_AVALIACAO IS ".( !$not ? "NULL" : "NOT NULL");
+							$where .= (!$prim ? " OR " : "") ."ah.DT_CONCLUSAO IS NOT NULL AND ah.DT_AVALIACAO IS ".( !$not ? "NULL" : "NOT NULL");
 						elseif ( $value == "2" ):
-							$where .= (!$prim ? " OR " : "") ."YEAR(cap.DT_AVALIACAO) ".( !$not ? " = " : " <> ")." YEAR(NOW())";
+							$where .= (!$prim ? " OR " : "") ."YEAR(ah.DT_AVALIACAO) ".( !$not ? " = " : " <> ")." YEAR(NOW())";
 						elseif ( $value == "3" ):
-							$where .= (!$prim ? " OR " : "") ."cap.DT_CONCLUSAO IS NOT NULL AND cap.DT_AVALIACAO IS NOT NULL AND cap.DT_INVESTIDURA IS ".( !$not ? "NULL" : "NOT NULL");
+							$where .= (!$prim ? " OR " : "") ."ah.DT_CONCLUSAO IS NOT NULL AND ah.DT_AVALIACAO IS NOT NULL AND ah.DT_INVESTIDURA IS ".( !$not ? "NULL" : "NOT NULL");
 						elseif ( $value == "4" ):
-							$where .= (!$prim ? " OR " : "") ."YEAR(cap.DT_INVESTIDURA) ".( !$not ? " = " : " <> ")." YEAR(NOW())";
+							$where .= (!$prim ? " OR " : "") ."YEAR(ah.DT_INVESTIDURA) ".( !$not ? " = " : " <> ")." YEAR(NOW())";
 						elseif ( $value == "5" ):
-							$where .= (!$prim ? " OR " : "") ."YEAR(cap.DT_AVALIACAO) ".( !$not ? " < " : " <> ")." YEAR(NOW())";
+							$where .= (!$prim ? " OR " : "") ."YEAR(ah.DT_AVALIACAO) ".( !$not ? " < " : " <> ")." YEAR(NOW())";
 						endif;
 					elseif ( empty($value) ):
 						$aWhere[] = "NULL";
