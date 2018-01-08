@@ -16,7 +16,7 @@ function getParamDates( $frm ) {
 	);
 }
 
-function marcaRequisitoID( $assDT, $pessoaID, $histID, $reqID ) {
+function marcaRequisitoID( $assDT, $histID, $reqID ) {
 	
 	//APAGA CASO DATA DE ASSINATURA NULA
 	if ( is_null($assDT) || empty($assDT) ):
@@ -111,7 +111,7 @@ function updateHistorico( $barpessoaid, $barfnid, $paramDates, $compras = null )
 	$rh = $GLOBALS['conn']->Execute("
 		SELECT ah.ID, ah.DT_INICIO, ah.DT_CONCLUSAO, ah.DT_AVALIACAO, ah.DT_INVESTIDURA
 		  FROM APR_HISTORICO	ah
-	INNER JOIN CON_ATIVOS 		at ON (at.ID = ah.ID_CAD_PESSOA)
+	INNER JOIN CON_ATIVOS 		at ON (at.ID_CAD_PESSOA = ah.ID_CAD_PESSOA)
 		 WHERE ah.ID_CAD_PESSOA = ?
 		   AND ah.ID_TAB_APREND = ?
 	", array( $barpessoaid, $barfnid ) );
@@ -267,7 +267,7 @@ function regraRequisitoEspecialidade($barfnid, $barpessoaid, $dtInicio, $dtConcl
 
 		//SE NAO ATINGIU O MINIMO PARA A AREA
 		if ( $fg["MIN_AREA"] > $feitas ):
-			marcaRequisitoID( null, $barpessoaid, $rI->fields["ID"], $fg["ID_TAB_APR_ITEM"] );
+			marcaRequisitoID( null, $rI->fields["ID"], $fg["ID_TAB_APR_ITEM"] );
 		
 		//SE ATINGIU O MINIMO PARA A AREA
 		else:
@@ -275,7 +275,7 @@ function regraRequisitoEspecialidade($barfnid, $barpessoaid, $dtInicio, $dtConcl
 			//SE COMPLETOU ALGUMA ESPECIADADE DE CLASSE
 			if ($fg["TP_ITEM"] == "CL"):
 				if ($dtConclusao >= $rI->fields["DT_INICIO"]):
-					marcaRequisitoID( $dtConclusao, $barpessoaid, $rI->fields["ID"], $fg["ID_TAB_APR_ITEM"] );
+					marcaRequisitoID( $dtConclusao, $rI->fields["ID"], $fg["ID_TAB_APR_ITEM"] );
 				endif;
 
 			//SE COMPLETOU ALGUMA ESPECIADADE DE MESTRADO
@@ -288,8 +288,8 @@ function regraRequisitoEspecialidade($barfnid, $barpessoaid, $dtInicio, $dtConcl
 						INSERT INTO LOG_MENSAGEM ( ID_ORIGEM, TP, ID_USUARIO, EMAIL, DH_GERA )
 						SELECT ?, 'M', cu.ID_USUARIO, ca.EMAIL, NOW()
 							FROM CON_ATIVOS ca
-					INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID)
-							WHERE ca.ID = ?
+					INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
+							WHERE ca.ID_CAD_PESSOA = ?
 							AND NOT EXISTS (SELECT 1 FROM LOG_MENSAGEM WHERE ID_ORIGEM = ? AND TP = 'M' AND ID_USUARIO = cu.ID_USUARIO)
 					", array( $fg["ID"], $barpessoaid, $fg["ID"] ) );
 					$logID = $GLOBALS['conn']->Insert_ID();
@@ -303,7 +303,7 @@ function regraRequisitoEspecialidade($barfnid, $barpessoaid, $dtInicio, $dtConcl
 							), 
 						$compras );
 						
-					$rA = $GLOBALS['conn']->Execute("SELECT * FROM CON_ATIVOS WHERE ID = ?",array($barpessoaid));
+					$rA = $GLOBALS['conn']->Execute("SELECT * FROM CON_ATIVOS WHERE ID_CAD_PESSOA = ?",array($barpessoaid));
 					$a = explode(" ",titleCase($rA->fields["NM"]));
 						
 					if (!empty($rA->fields["EMAIL"])):
@@ -346,7 +346,7 @@ function consultaAprendizadoPessoa( $tabAprendID, $pessoaID ){
 	$rp = $GLOBALS['conn']->Execute("
 		SELECT *
 		  FROM CON_ATIVOS
-		 WHERE ID = ?
+		 WHERE ID_CAD_PESSOA = ?
 	", array( $pessoaID ) );
 	if (!$rp->EOF):
 		$arr["nm"] = ($rp->fields["NM"]);

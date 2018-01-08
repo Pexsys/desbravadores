@@ -532,7 +532,7 @@ function getSaidas( $parameters ) {
     	$result = $GLOBALS['conn']->Execute("
     		SELECT cu.ID_CAD_MEMBRO, ca.ID_UNIDADE, ca.CD_CARGO, ca.CD_CARGO2, ca.NM, ca.IDADE_HOJE
     		  FROM CON_ATIVOS ca
-    	INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID)
+    	INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
     	     WHERE cu.ID_USUARIO = ? 
     	", array( $usuarioID ) );
     	if ( !$result->EOF && fStrStartWith($result->fields["CD_CARGO"], "1") ):

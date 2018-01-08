@@ -310,7 +310,7 @@ $pdf = new ESPCR();
 $query = "
     	SELECT esp.ID_EVE_SAIDA, esp.ID_CAD_PESSOA, ca.NM
     	  FROM EVE_SAIDA_PESSOA esp
-    INNER JOIN CON_ATIVOS ca ON (ca.ID = esp.ID_CAD_PESSOA)
+    INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = esp.ID_CAD_PESSOA)
          WHERE esp.FG_AUTORIZ = 'S'
     	   ".($list ? " AND esp.ID_EVE_SAIDA IN ($eventoID) " : "AND esp.ID_EVE_SAIDA = $eventoID")."
     	 ORDER BY esp.ID_EVE_SAIDA, ca.NM
@@ -338,7 +338,7 @@ $query = "
 	       CON_DIRETOR cd
          WHERE esp.ID_EVE_SAIDA = es.ID 
            AND esp.FG_AUTORIZ = 'S'
-           AND ca.ID = esp.ID_CAD_PESSOA
+           AND ca.ID_CAD_PESSOA = esp.ID_CAD_PESSOA
 	   ".($list ? " AND esp.ID_CAD_PESSOA IN ($pID) AND esp.ID_EVE_SAIDA IN ($eventoID) " : "AND es.ID = $eventoID")."
 	 ORDER BY ca.NM
 ";

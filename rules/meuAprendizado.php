@@ -213,7 +213,7 @@ function getPainelMestradoPessoa( $ruleID, $membroID ){
 				 INSERT INTO LOG_MENSAGEM ( ID_ORIGEM, TP, ID_USUARIO, EMAIL, DH_GERA )
 				 SELECT ?, 'M', cu.ID_USUARIO, ca.EMAIL, NOW()
 				 FROM CON_ATIVOS ca
-				 INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID)
+				 INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
 				 WHERE ca.ID = ?
 				 AND NOT EXISTS (SELECT 1 FROM LOG_MENSAGEM WHERE ID_ORIGEM = ? AND TP = 'M' AND ID_USUARIO = cu.ID_USUARIO)
 			 ", array( $fg["ID"], $membroID, $ruleID ) );

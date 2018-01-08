@@ -31,7 +31,7 @@ function barcode( $parameters ) {
 		$barDecode	= $GLOBALS['pattern']->getBars()->decode($brdt);
 		
 		fConnDB();
-		if ( $barDecode["ci"] !== $GLOBALS['pattern']->getBars()->getClubePrefix() || 
+		if ( $barDecode["cp"] !== $GLOBALS['pattern']->getBars()->getClubePrefix() || 
 			$barDecode["lg"] <> $GLOBALS['pattern']->getBars()->getLength() ):
 			$arr['result'] = "Código não pertence ao ".$GLOBALS['pattern']->getClubeDS(array("cl","nm"));
 
