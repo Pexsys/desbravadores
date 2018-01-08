@@ -3,6 +3,7 @@ var rowSelected = undefined;
 var valuePend = undefined;
 var valuePendOrig = undefined;
 var formPopulated = false;
+var tpFiltro = (jsLIB.parameters.flt === 'ALL' ? 'T' : 'Y');
 
 $(document).ready(function(){
 	$.fn.dataTable.moment( 'DD/MM/YYYY HH:mm' );
@@ -29,13 +30,12 @@ $(document).ready(function(){
 			data	: function (d) {
 					d.MethodName = "getListaDiario",
 					d.data = { 
-						filtro: 'A',
-						filters: jsFilter.jSON()
+						filter: tpFiltro
 					}
 				},
 			dataSrc: "diario"
 		},
-		order: [ 2, 'desc' ],
+		order: [ 3, 'desc' ],
 		columns: [
 			{	data: 'id',
 				visible: false
@@ -49,15 +49,15 @@ $(document).ready(function(){
 			},
 			{	data: 'cl',
 				sortable: true,
-				width: "25%"
+				width: "30%"
 			},
 			{	data: 'rq',
 				sortable: true,
-				width: "50%"
+				width: "47%"
 			},
 			{	data: 'dh',
 				sortable: true,
-				width: "10%",
+				width: "5%",
 				render: function (data) {
 					return moment.unix(data).format("DD/MM")
 				}
@@ -68,7 +68,16 @@ $(document).ready(function(){
 				render: function (data) {
 					return (data == 'S' ? "PLANEJADO" : "Concluído");
 				}
-			}
+			},
+			{
+				width: "3%",
+                className: 'details-control dt-right',
+                sortable: false,
+                data: 'in',
+				render: function (data, type, row) {
+					return '<span class="badge badge-pill progress-bar-'+ data.cl +'">'+ data.pc +'</span>';
+				}
+            }
 		],
 		fnInitComplete: function(oSettings, json) {
 		  buttonsPrimary();
@@ -92,6 +101,10 @@ $(document).ready(function(){
 	}).on('dp.change',function(){
 		$("#cadRegForm").formValidation('revalidateField', 'regDH');
 		buttons();
+	});
+
+	$('#btnAtivos, #btnTodos').click(function(){
+		switchSelecion( $(this).attr('tp-filtro') );
 	});
 
 	tinymce.init({
@@ -122,12 +135,35 @@ $(document).ready(function(){
 		verticaldownclass: 'glyphicon glyphicon-minus'
 	});
 
-	$('#diaDataTable tbody').on('click', 'tr', function () {
-		rowSelected = this;
-		valuePendOrig = diaDataTable.row( rowSelected ).data().so;
-		populateRegistro( diaDataTable.row( rowSelected ).data().id );
-		$("#diaModal").modal();
-	});
+	$('#diaDataTable tbody')
+		.on('click', 'tr', function (e) {
+			if ($(this).attr('class')){
+				rowSelected = this;
+				valuePendOrig = diaDataTable.row( rowSelected ).data().so;
+				populateRegistro( diaDataTable.row( rowSelected ).data().id );
+				$("#diaModal").modal();
+			}
+
+		}).on('click', 'td.details-control', function (e) {
+			rowSelected = this.parentNode;
+			e.stopPropagation();
+			e.preventDefault();
+
+			var row = diaDataTable.row( rowSelected );
+			if ( row.child.isShown() ) {
+				row.child.hide();
+			} else {
+				jsLIB.ajaxCall({
+					type: "GET",
+					url: jsLIB.rootDir+"rules/diarioClasse.php",
+					data: { MethodName : 'fDetalheItem', data : { filter: tpFiltro, id: row.data().id, cl: row.data().in.cl } },
+					success: function(oc){
+						row.child( oc ).show();
+					}
+				});
+
+			}
+		});
 	
 	$("#cadRegForm")
 		.on("change", "[field]", function(e) {
@@ -289,7 +325,6 @@ $(document).ready(function(){
 
 	$("#cmReq").change(function(){
 		if (this.options.selectedIndex > 0){
-			$('#divReferencia').visible( this.options[this.options.selectedIndex].getAttribute('tp') == 'E' );
 			$("#cadRegForm").formValidation('revalidateField', "cmRef");
 			populateRefs();
 			buttons();
@@ -342,6 +377,22 @@ $(document).ready(function(){
 		$("#prepareModal").modal('hide');
 	});
 });
+
+function ruleButtonSelection( filtro ){
+	if ( filtro == 'Y' && !$('#btnAtivos').hasClass("btn-primary") ) {
+		$('#btnAtivos').removeClass("btn-primary-outline").addClass("btn-primary");
+		$('#btnTodos').removeClass("btn-primary").addClass("btn-primary-outline");
+	} else if ( filtro == 'T' && !$('#btnTodos').hasClass("btn-primary") ) {
+		$('#btnTodos').removeClass("btn-primary-outline").addClass("btn-primary");
+		$('#btnAtivos').removeClass("btn-primary").addClass("btn-primary-outline");
+	}
+}
+
+function switchSelecion( filtro ) {
+	tpFiltro = filtro;
+	ruleButtonSelection( filtro );
+	refreshAndButtons();
+}
 
 function getFunctions(parameter){
 	var retorno = {};
@@ -431,7 +482,7 @@ function populateMembers(){
 
 function populateReqs(){
 	var classeID = $("#cmClasse").val();
-	if (classeID){
+	if (formPopulated && classeID){
 		jsLIB.ajaxCall({
 			type: "GET",
 			url: jsLIB.rootDir+"rules/diarioClasse.php",
@@ -450,17 +501,26 @@ function populateReqs(){
 }
 
 function populateRefs(){
-	var parameter = {
-		id_req: $("#cmReq").val()
-	};
-	jsLIB.ajaxCall({
-		type: "GET",
-		url: jsLIB.rootDir+"rules/diarioClasse.php",
-		data: { MethodName : 'fGetRef', data : parameter },
-		success: function(cm){
-			jsLIB.populateOptions( $("#cmRef"), cm );
-		}
-	});
+	$('#divReferencia').visible( false );
+	var selectedOption = $('#cmReq option:selected');
+	if (formPopulated && selectedOption.attr("tp") == 'E'){
+		var parameter = {
+			id_req: $("#cmReq").val()
+		};
+		jsLIB.ajaxCall({
+			type: "GET",
+			url: jsLIB.rootDir+"rules/diarioClasse.php",
+			data: { MethodName : 'fGetRef', data : parameter },
+			success: function(cm){
+				jsLIB.populateOptions( $("#cmRef"), cm );
+				if (cm.length == 1){
+					$("#cmRef").selectpicker('val',cm[0].id);
+				} else {
+					$('#divReferencia').visible( true );
+				}
+			}
+		});
+	}
 }
 
 function updateRegistro(){

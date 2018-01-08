@@ -304,7 +304,11 @@ var jsLIB = {
 					}
 				case "hidden":
 				default:
-					ctrl.val(value).change();
+					if (ctrl.hasClass("selectpicker")){
+						ctrl.selectpicker('val',value).change();
+					} else {
+						ctrl.val(value).change();
+					}
 			}  
 		}); 
 	},

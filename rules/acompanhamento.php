@@ -124,15 +124,26 @@ function getData( $parameters ) {
 	fConnDB();
 	$result = getQueryByFilter( $parameters );
 	foreach ($result as $k => $fields):
+
+		$perc = floor(($fields['QTD'] / max(1,$fields['QT_TOTAL']))*100);		
+		
+		if ($perc < 51):
+			$cl = 'danger';
+		elseif ($perc < 85):
+			$cl = 'warning';
+		elseif ($perc == 100):
+			$cl = 'success';
+		endif;
+
 		$arr[] = array( 
-			"ip" => ($fields['ID_CAD_PESSOA']),
-			"ia" => ($fields['ID_TAB_APREND']),
+			"ip" => $fields['ID_CAD_PESSOA'],
+			"ia" => $fields['ID_TAB_APREND'],
 			"di" => is_null($fields['DT_INICIO']) ? "" : strftime("%d/%m/%Y",strtotime($fields['DT_INICIO'])),
 			"dc" => is_null($fields['DT_CONCLUSAO']) ? "" : strftime("%d/%m/%Y",strtotime($fields['DT_CONCLUSAO'])),
 			"da" => is_null($fields['DT_AVALIACAO']) ? "" : strftime("%d/%m/%Y",strtotime($fields['DT_AVALIACAO'])),
-			"nm" => ($fields['NM']),
-			"tp" => ($fields['DS_ITEM']),
-			"pg" => floor(($fields['QTD'] / $fields['QT_TOTAL'])*100)
+			"nm" => $fields['NM'],
+			"tp" => $fields['DS_ITEM'],
+			"pg" => array( "pc" => $perc, "cl" => $cl)
 		);
 	endforeach;
 	

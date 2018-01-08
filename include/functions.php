@@ -25,6 +25,9 @@ function zeroSizeID(){
 }
 
 function responseMethod(){
+	error_reporting(E_ALL & ~ E_NOTICE ); //& ~ E_DEPRECATED
+	ini_set('display_errors', TRUE);
+	ini_set('display_startup_errors', TRUE);
     header('Content-type: application/json');
 	// Getting the json data from the request
 	$response = '';
@@ -204,7 +207,7 @@ function fMontaCarrousel($relativePath,$extentions){
 					echo "<!-- Indicators -->";
 					echo "<ol class=\"carousel-indicators\">";
 					for ($x=0;$x<$aCarrousel[$c];$x++):
-					echo "<li data-target=\"#carousel-example-generic$c\" data-slide-to=\"$x\"". ($x == 0 ? " class=\"active\"" : "") ."></li>";
+						echo "<li data-target=\"#carousel-example-generic$c\" data-slide-to=\"$x\"". ($x == 0 ? " class=\"active\"" : "") ."></li>";
 					endfor;
 					echo "</ol>";
 					
@@ -212,9 +215,9 @@ function fMontaCarrousel($relativePath,$extentions){
 					echo "<div class=\"carousel-inner\" role=\"listbox\">";
 					
 					for ($x=0;$x<$aCarrousel[$c];$x++):
-					echo "<div class=\"item". ($x == 0 ? " active" : "") ."\">";
-					echo "<img src=\"".$capa.$capaFiles[$icF++]."\" alt=\"$x\" width=\"100%\" height=\"100%\"/>";
-					echo "</div>";
+						echo "<div class=\"item". ($x == 0 ? " active" : "") ."\">";
+						echo "<img src=\"".$capa.$capaFiles[$icF++]."\" alt=\"$x\" width=\"100%\" height=\"100%\"/>";
+						echo "</div>";
 					endfor;
 					echo "</div>";
 					

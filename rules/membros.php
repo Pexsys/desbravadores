@@ -179,7 +179,7 @@ function updateMember( $parameters ) {
 
 			$GLOBALS['conn']->Execute( "
 				UPDATE CAD_MEMBRO SET QT_UNIFORMES = NULL
-				WHERE ID = ?"
+				WHERE ID_CAD_MEMBRO = ? AND NR_ANO = YEAR(NOW())"
 			, array( $id ) );
 		
 			if ( $vl == "N" ):
@@ -291,7 +291,7 @@ function updateMember( $parameters ) {
 			$str .= " ID_CAD_PESSOA = ? AND ID_PESSOA_RESP = ?";
 			$aUpdate[] = $parameters["rid"];
 		elseif ($table == "CAD_ATIVOS"):
-			$str .= " ID = ? AND NR_ANO = YEAR(NOW())";
+			$str .= " ID_CAD_MEMBRO = ? AND NR_ANO = YEAR(NOW())";
 		else:
 			$str .= " ID = ?";
 		endif;
