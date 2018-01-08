@@ -4,14 +4,14 @@
 
 class COMPRAS {
 	
-	public function deleteItemPessoaEntregue( $cadMembroID, $itemAprendID ) {
+	public function deleteItemPessoaEntregue( $pessoaID, $itemAprendID ) {
 		$GLOBALS['conn']->Execute("
 			DELETE FROM CAD_COMPRAS
 			 WHERE FG_COMPRA = 'S'
 			   AND FG_ENTREGUE = 'S'
-			   AND ID_CAD_MEMBRO = ?
+			   AND ID_CAD_MEMBRO = IN (SELECT ID_CAD_MEMBRO FROM CAD_MEMBRO WHERE ID_CAD_PESSOA = ?)
 			   AND ID_TAB_MATERIAIS IN (SELECT ID FROM TAB_MATERIAIS WHERE ID_TAB_APREND = ?) 
-		", array( $cadMembroID, $itemAprendID ) );
+		", array( $pessoaID, $itemAprendID ) );
 	}
 	
 	public function deleteByPessoa( $pessoaID ) {

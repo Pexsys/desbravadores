@@ -9,13 +9,13 @@ responseMethod();
  ****************************/
 function getQueryByFilter( $parameters ) {
 	session_start();
-	$membroID = $_SESSION['USER']['id_cad_pessoa'];
+	$cadMembroID = $_SESSION['USER']['id_cad_membro'];
 
 	$where = "";
 	$result = $GLOBALS['conn']->Execute("
 		SELECT CD_CARGO, CD_CARGO2
 		  FROM CON_ATIVOS
-		 WHERE ID = ?
+		 WHERE ID_CAD_MEMBRO = ?
 	", array($membroID) );
 	$cargo = $result->fields['CD_CARGO'];
 	if (fStrStartWith($cargo,"2-07")):
@@ -93,23 +93,26 @@ function getQueryByFilter( $parameters ) {
 	$query = "
 		SELECT 
 			ca.NM,
-			cap.ID_CAD_PESSOA,
-			cap.ID_TAB_APREND,
-			cap.CD_ITEM_INTERNO,			
-			cap.DS_ITEM,
-			cap.DT_INICIO,
-			cap.DT_CONCLUSAO,
-			cap.DT_AVALIACAO,
+			ah.ID_CAD_PESSOA,
+			ah.ID_TAB_APREND,
+			cai.TP_ITEM,
+			cai.CD_ITEM_INTERNO,			
+			cai.DS_ITEM,
+			ah.DT_INICIO,
+			ah.DT_CONCLUSAO,
+			ah.DT_AVALIACAO,
 			cai.QTD AS QT_TOTAL,
-			COUNT(*) AS QTD
-		FROM CON_APR_PESSOA cap
-		INNER JOIN CON_APR_ITEM cai ON (cai.ID = cap.ID_TAB_APREND)
-		INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = cap.ID_CAD_PESSOA)
-		WHERE cap.DT_ASSINATURA IS NOT NULL 
-		  AND cap.DT_INVESTIDURA IS NULL
-		  $where
-	 GROUP BY ca.NM, cap.ID_CAD_PESSOA, cap.TP_ITEM, cap.CD_ITEM_INTERNO, cap.DS_ITEM, cap.DT_INICIO, cap.DT_CONCLUSAO, cap.DT_AVALIACAO, cai.QTD
-	 ORDER BY ca.NM, cap.DT_INICIO, cap.CD_ITEM_INTERNO
+			(SELECT COUNT(*) 
+               FROM CON_APR_PESSOA 
+              WHERE ID_TAB_APREND = ah.ID_TAB_APREND 
+                AND ID_CAD_PESSOA = ah.ID_CAD_PESSOA
+                AND DT_ASSINATURA IS NOT NULL) AS QTD
+		FROM APR_HISTORICO ah
+		INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = ah.ID_CAD_PESSOA)
+		INNER JOIN CON_APR_ITEM cai ON (cai.ID = ah.ID_TAB_APREND)
+		WHERE ah.DT_INVESTIDURA IS NULL 
+		  AND TP_ITEM = 'CL' $where
+		ORDER BY ca.NM, ah.DT_INICIO, cai.CD_ITEM_INTERNO
 	";
 
 	return $GLOBALS['conn']->Execute( $query, $aWhere );
@@ -161,7 +164,7 @@ function setRequisito( $parameters ) {
 					), 
 					null
 				);
-				marcaRequisitoID( getDateNull($v), $ip, $uh["id"], $reqID );
+				marcaRequisitoID( getDateNull($v), $uh["id"], $reqID );
 			endif;
 		endif;
 	endforeach;

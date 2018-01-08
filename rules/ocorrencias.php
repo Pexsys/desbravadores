@@ -59,7 +59,7 @@ function getQueryByFilter( $parameters ) {
 		return $GLOBALS['conn']->Execute("
 				SELECT o.ID, a.NM, o.TP, o.CD, o.DH, o.FG_PEND
 				  FROM CAD_OCORRENCIA o
-			INNER JOIN CON_ATIVOS a ON (a.ID = o.ID_CAD_PESSOA)
+			INNER JOIN CON_ATIVOS a ON (a.ID_CAD_PESSOA = o.ID_CAD_PESSOA)
 				 WHERE YEAR(o.DH) = ? $where 
 			  ORDER BY o.ID DESC
 		",$aWhere);
@@ -73,7 +73,7 @@ function fGetMembros(){
 	$result = $GLOBALS['conn']->Execute("
 		SELECT o.ID_CAD_PESSOA, a.NM
 		  FROM CAD_OCORRENCIA o
-	INNER JOIN CON_ATIVOS a ON (a.ID = o.ID_CAD_PESSOA)
+	INNER JOIN CON_ATIVOS a ON (a.ID_CAD_PESSOA = o.ID_CAD_PESSOA)
 		 WHERE YEAR(o.DH) = YEAR(NOW()) 
 		   AND o.FG_PEND = ?
 	  ORDER BY a.NM
@@ -102,7 +102,7 @@ function fOcorrencia( $parameters ) {
 	$result = $GLOBALS['conn']->Execute("
 		SELECT CD_CARGO, CD_CARGO2
 		  FROM CON_ATIVOS
-		 WHERE ID = ?
+		 WHERE ID_CAD_PESSOA = ?
 	", array($membroID) );
 	$cargo = $result->fields['CD_CARGO'];
 	if (fStrStartWith($cargo,"2-07")):
@@ -173,22 +173,20 @@ function fOcorrencia( $parameters ) {
 		//GRAVACAO DEFINITIVA PARA O RESPONSAVEL, ENVIO POR EMAIL
 		if ($fg_pend == "N"):
 			$GLOBALS['conn']->Execute("
-				INSERT INTO LOG_MENSAGEM (ID_ORIGEM, TP, ID_USUARIO, EMAIL, DH_GERA )
-				SELECT $id, 'O',  cu.ID_USUARIO, cr.EMAIL_RESP, NOW()
+				INSERT INTO LOG_MENSAGEM (ID_ORIGEM, TP, ID_USUARIO, EMAIL, DH_GERA)
+				SELECT $id, 'O', cu.ID_USUARIO, ca.EMAIL, NOW() 
 				  FROM CON_ATIVOS ca
-			INNER JOIN CAD_RESP cr ON (cr.ID = ca.ID_RESP)
-			INNER JOIN CON_ATIVOS cab ON (cab.NR_CPF = cr.CPF_RESP)
-			INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = cab.ID)
-				 WHERE ca.ID = ?
-					
+		    INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA) 
+ 				 WHERE ca.ID_CAD_PESSOA = ? 
+				
 				UNION
-					
-				SELECT $id, 'O', cu.ID_USUARIO, cr.EMAIL_RESP, NOW()
-				FROM CON_ATIVOS ca
-				INNER JOIN CAD_RESP cr ON (cr.ID = ca.ID_RESP)
-				INNER JOIN CAD_USUARIOS cu ON (cu.CD_USUARIO = cr.CPF_RESP)
-				WHERE NOT EXISTS (SELECT 1 FROM CON_ATIVOS WHERE NR_CPF = cr.CPF_RESP)
-				  AND ca.ID = ?
+				
+				SELECT $id, 'O', cu.ID_USUARIO, cr.EMAIL, NOW() 
+				FROM CON_RESP_LEGAL cr 
+				INNER JOIN CON_ATIVOS ca ON (ca.ID_PESSOA_RESP = cr.ID) 
+				INNER JOIN CAD_USUARIOS cu ON (cu.CD_USUARIO = cr.NR_CPF) 
+				WHERE NOT EXISTS (SELECT 1 FROM CON_ATIVOS WHERE NR_CPF = cr.NR_CPF)
+				WHERE ca.ID_CAD_PESSOA = ? 
 			", array( $frm["id_pessoa"], $frm["id_pessoa"] ) );
 		
 			sendOcorrenciaByID($id);	
@@ -218,7 +216,7 @@ function fOcorrencia( $parameters ) {
 			$result = $GLOBALS['conn']->Execute("
 				SELECT co.*, ca.NM, cu.DS_USUARIO
 				  FROM CAD_OCORRENCIA co
-			INNER JOIN CON_ATIVOS ca ON (ca.id = co.id_cad_pessoa)
+			INNER JOIN CON_ATIVOS ca ON (ca.id_cad_pessoa = co.id_cad_pessoa)
 			INNER JOIN CAD_USUARIOS cu ON (cu.ID_USUARIO = co.ID_USUARIO_INS)
 				 WHERE co.ID = ?
 			", array( $parameters["id"] ) );
@@ -248,7 +246,7 @@ function fOcorrencia( $parameters ) {
 			$result = $GLOBALS['conn']->Execute("
 				  SELECT DISTINCT ca.NM, ca.ID
 					FROM APR_HISTORICO ah
-			  INNER JOIN CON_ATIVOS ca ON (ca.ID = ah.ID_CAD_PESSOA)
+			  INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = ah.ID_CAD_PESSOA)
 			  INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
 				   WHERE ca.IDADE_HOJE < 18
 					 AND ah.DT_CONCLUSAO IS NULL 

@@ -33,7 +33,7 @@ function fRegistro( $parameters ) {
 	$result = $GLOBALS['conn']->Execute("
 		SELECT CD_CARGO, CD_CARGO2
 		  FROM CON_ATIVOS
-		 WHERE ID = ?
+		 WHERE ID_CAD_PESSOA = ?
 	", array($membroID) );
 	$cargo = $result->fields['CD_CARGO'];
 	if (fStrStartWith($cargo,"2-07")):

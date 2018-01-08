@@ -36,7 +36,7 @@ function marcaRequisito( $pessoaID, $itemID, $reqCD, $assDT ) {
 			null
 		);
 		
-		marcaRequisitoID( $assDT, $pessoaID, $uh["id"], $arr["idreq"] );
+		marcaRequisitoID( $assDT, $uh["id"], $arr["idreq"] );
 	endif;
 
 	analiseHistoricoPessoa($pessoaID);
