@@ -48,7 +48,6 @@ rect:hover { opacity:0.5; }
 </div>
 <div class="row" id="divphGhaph" style="display:none;">
 	<div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
-		<center><h4>An&aacute;lise gr&aacute;fica das classes</h4></center>
 		<div id="phGhaph"></div>
 	</div>
 	<hr/>

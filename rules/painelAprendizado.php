@@ -223,15 +223,17 @@ function getGraphData() {
 		ORDER BY ta.CD_ITEM_INTERNO
 	", array( $a1, $a1, $a2 ) );
 	foreach ($result as $k => $f):
-		$arr[] = array(
-			"Aprend" => PATTERNS::toConvert($f['ID']),
-			"color" => $f['CD_COR'],
-			"freq"	=> array( 
-				"low" => ($f['QT_1'] * 1),
-				"mid" => ($f['QT_2'] * 1),
-				"full" => ($f['QT_3'] * 1)
-			 )
-		);
+		if ( ($f['QT_1'] + $f['QT_2'] + $f['QT_3']) > 0):
+			$arr[] = array(
+				"Aprend" => PATTERNS::toConvert($f['ID']),
+				"color" => $f['CD_COR'],
+				"freq"	=> array(
+						"low" => ($f['QT_1'] * 1),
+						"mid" => ($f['QT_2'] * 1),
+						"full" => ($f['QT_3'] * 1)
+				)
+			);
+		endif;
 	endforeach;
 	return $arr;
 }
