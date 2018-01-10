@@ -1,36 +1,57 @@
+<style>
+path.slice{
+	stroke-width:2px;
+}
+polyline{
+	opacity: 1;
+	stroke: black;
+	stroke-width: 2px;
+	fill: none;
+} 
+svg text.percent{
+	fill:white;
+	text-anchor:middle;
+	font-size:12px;
+}
+path { stroke: #fff; }
+path:hover { opacity:0.5; }
+rect { opacity:1; }
+rect:hover { opacity:0.5; }
+.legend tr{ border-bottom:1px solid grey;}
+.legend tr:first-child { border-top:1px solid grey; }
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+}
+.legend{
+    margin-bottom:76px;
+    display:inline-block;
+    border-collapse: collapse;
+    border-spacing: 0px;
+}
+.legend td{
+    padding:4px 5px;
+    vertical-align:middle;
+}
+.legendFreq {
+    text-align:center;
+}
+.legendPerc{
+    text-align:right;
+}
+</style>
 <div class="row">
 	<div class="col-lg-12">
 		<h3 class="page-header">Painel de Aprendizado do Clube em <?echo date("Y");?></h3>
 	</div>
 </div>
-<div class="row">
-	<div class="col-md-12 col-sm-12 col-xs-12 col-lg-6">
-		<center><h4>An&aacute;lise gr&aacute;fica das classes em andamento</h4></center>
-		<div id="phGhaphP" style="width:100%;height:300px"></div>
+<div class="row" id="divphGhaph" style="display:none;">
+	<div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+		<center><h4>An&aacute;lise gr&aacute;fica das classes</h4></center>
+		<div id="phGhaph"></div>
 	</div>
-	<div class="col-md-6 col-sm-12 col-xs-12 col-lg-3">
-		<center><h4>Requisitos das Classes Regulares</h4></center>
-		<div id="phRegularP" style="width:100%;height:250px"></div>
-	</div>
-	<div class="col-md-6 col-sm-12 col-xs-12 col-lg-3">
-		<center><h4>Requisitos das Classes Avan&ccedil;adas</h4></center>
-		<div id="phAvancadaP" style="width:100%;height:250px"></div>
-	</div>
-</div>
-<hr/>
-<div class="row">
-	<div class="col-md-12 col-sm-12 col-xs-12 col-lg-6">
-		<center><h4>An&aacute;lise gr&aacute;fica de classes conclu&iacute;das</h4></center>
-		<div id="phGhaphC" style="width:100%;height:300px"></div>
-	</div>
-	<div class="col-md-6 col-sm-12 col-xs-12 col-lg-3">
-		<center><h4>Classes Regulares Conclu&iacute;das</h4></center>
-		<div id="phRegularC" style="width:100%;height:250px"></div>
-	</div>
-	<div class="col-md-6 col-sm-12 col-xs-12 col-lg-3">
-		<center><h4>Classes Avan&ccedil;adas Conclu&iacute;das</h4></center>
-		<div id="phAvancadaC" style="width:100%;height:250px"></div>
-	</div>
+	<hr/>
 </div>
 <?php
 $result = $GLOBALS['conn']->Execute("
@@ -87,11 +108,6 @@ if (!$result->EOF):
 	<?php
 endif;
 ?>
-<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/flot/jquery.flot.min.js"></script>
-<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/flot/jquery.flot.resize.min.js"></script>
-<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/flot/jquery.flot.pie.min.js"></script>
-<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/flot/jquery.flot.axislabels.js"></script>
-<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/flot/jquery.flot.labels.js"></script>
-<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/flot/jquery.flot.orderBars.js"></script>
+<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/d3.min.js"></script>
 <script src="<?php echo $GLOBALS['pattern']->getVD();?>dashboard/js/aprendizadoFunctions.js<?php echo "?".microtime();?>"></script>
 <script src="<?php echo $GLOBALS['pattern']->getVD();?>dashboard/js/painelAprendizado.js<?php echo "?".microtime();?>"></script>

@@ -11,6 +11,7 @@ function getGraphData() {
 	$arr = array();
 	fConnDB();
 	
+	/*
 	$arr["clsP"] = array();
 	$result = $GLOBALS['conn']->Execute("
 		SELECT a.CD_ITEM_INTERNO, a.CD_COR, a.DS_ITEM, cai.QTD, AVG(a.QTD) AS QT_MD
@@ -254,7 +255,82 @@ function getGraphData() {
 		"data"		=> array(1,floor(100-$pct)),
 		"color"		=> "#FF0000"
 	);
+	*/
 
+	$a1 = 50;
+	$a2 = 85;
+
+	$result = $GLOBALS['conn']->Execute("
+		SELECT ta.ID, ta.CD_COR,
+
+				(SELECT COUNT(*)
+				FROM (
+					SELECT ID_TAB_APREND, FLOOR((QTD/QT_TOTAL)*100) AS PCT_CMPL
+					FROM (
+						SELECT 
+							ah.ID_TAB_APREND,
+							cai.QTD AS QT_TOTAL,
+							(SELECT COUNT(*) 
+								FROM CON_APR_PESSOA 
+								WHERE ID_TAB_APREND = ah.ID_TAB_APREND 
+								AND ID_CAD_PESSOA = ah.ID_CAD_PESSOA
+								AND DT_ASSINATURA IS NOT NULL) AS QTD
+						FROM APR_HISTORICO ah
+						INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = ah.ID_CAD_PESSOA)
+						INNER JOIN CON_APR_ITEM cai ON (cai.ID = ah.ID_TAB_APREND)
+						WHERE ah.DT_INVESTIDURA IS NULL 
+						AND cai.CD_ITEM_INTERNO LIKE '01%'
+					) AS x
+				) AS y
+				WHERE y.PCT_CMPL <= ?
+					AND y.ID_TAB_APREND = ta.ID) AS QT_1,
+
+				(SELECT COUNT(*)
+				FROM (
+					SELECT ID_TAB_APREND, FLOOR((QTD/QT_TOTAL)*100) AS PCT_CMPL
+					FROM (
+						SELECT 
+							ah.ID_TAB_APREND,
+							cai.QTD AS QT_TOTAL,
+							(SELECT COUNT(*) 
+								FROM CON_APR_PESSOA 
+								WHERE ID_TAB_APREND = ah.ID_TAB_APREND 
+								AND ID_CAD_PESSOA = ah.ID_CAD_PESSOA
+								AND DT_ASSINATURA IS NOT NULL) AS QTD
+						FROM APR_HISTORICO ah
+						INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = ah.ID_CAD_PESSOA)
+						INNER JOIN CON_APR_ITEM cai ON (cai.ID = ah.ID_TAB_APREND)
+						WHERE ah.DT_INVESTIDURA IS NULL 
+						AND cai.CD_ITEM_INTERNO LIKE '01%'
+					) AS x
+				) AS y
+				WHERE (y.PCT_CMPL > ? AND y.PCT_CMPL <= ?)
+				AND y.ID_TAB_APREND = ta.ID) AS QT_2,
+
+				(SELECT COUNT(*)
+					FROM APR_HISTORICO 
+					WHERE ID_TAB_APREND = ta.ID
+					AND (
+							(YEAR(DT_INICIO) = YEAR(NOW()) AND YEAR(DT_CONCLUSAO) = YEAR(NOW()))
+							OR
+							( YEAR(DT_INICIO) < YEAR(NOW()) AND YEAR(DT_CONCLUSAO) = YEAR(NOW()) AND YEAR(DT_INVESTIDURA) = YEAR(NOW()) )
+						) ) AS QT_3
+
+			FROM TAB_APRENDIZADO ta
+			WHERE ta.CD_ITEM_INTERNO LIKE '01%'
+		ORDER BY ta.CD_ITEM_INTERNO
+	", array( $a1, $a1, $a2 ) );
+	foreach ($result as $k => $f):
+		$arr[] = array(
+			"Aprend" => PATTERNS::toConvert($f['ID']),
+			"color" => $f['CD_COR'],
+			"freq"	=> array( 
+				"low" => ($f['QT_1'] * 1),
+				"mid" => ($f['QT_2'] * 1),
+				"full" => ($f['QT_3'] * 1)
+			 )
+		);
+	endforeach;
 	return $arr;
 }
 

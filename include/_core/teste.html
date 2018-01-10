@@ -1,35 +1,52 @@
-$(document).ready(function(){	
-	jsLIB.ajaxCall({
-		waiting : true,
-		type: "GET",
-		url: jsLIB.rootDir+"rules/painelAprendizado.php",
-		data: { MethodName : 'getGraphData' },
-		success: function(data){
-			if (data){
-				$("#divphGhaph").show();
-				dashboard('#phGhaph',data);
-			}
-		}
-	});
-
-	$('[cd-area]')
-		.on('click', function (e) {
-		})
-		.on('show.bs.collapse', function (e) {
-			e.stopPropagation();
-
-			var area = $(this).attr("cd-area");
-			showDetailEspec( $(this).find("#"+area ), { cdArea : area } );
-			
-			$('[it-int]')
-				.on('click', function (ex) {
-					ex.stopPropagation();
-					showDetailEspecPeople( $(this).find("#detalhes"), { item: $(this).attr("it-int") } );
-					 $(this).find("#detalhes").addClass('in');
-				});
-		});
-});
-
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+path.slice{
+	stroke-width:2px;
+}
+polyline{
+	opacity: 1;
+	stroke: black;
+	stroke-width: 2px;
+	fill: none;
+} 
+svg text.percent{
+	fill:white;
+	text-anchor:middle;
+	font-size:12px;
+}
+path { stroke: #fff; }
+path:hover { opacity:0.5; }
+rect { opacity:1; }
+rect:hover { opacity:0.5; }
+.legend tr{ border-bottom:1px solid grey;}
+.legend tr:first-child { border-top:1px solid grey; }
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+}
+.legend{
+    margin-bottom:76px;
+    display:inline-block;
+    border-collapse: collapse;
+    border-spacing: 0px;
+}
+.legend td{
+    padding:4px 5px;
+    vertical-align:middle;
+}
+.legendFreq {
+    text-align:center;
+}
+.legendPerc{
+    text-align:right;
+}
+</style>
+<body>
+<div id='dashboard'></div>
+<script src="js/d3.min.js"></script>
+<script>
 function dashboard(id, fData){
     var duration = 1000;
     function segColor(c){ return {low:"#ff0000", mid:"#eeee00",full:"#41ab5d"}[c]; }
@@ -243,3 +260,19 @@ function dashboard(id, fData){
         pC = pieChart(tF), // create the pie-chart.
         leg= legend(tF);  // create the legend.
 }
+
+dashboard('#dashboard',[
+    {Aprend:'1',color:"#0000CC",freq:{low:4, mid:4, full:2}},
+    {Aprend:'2',color:"#3399FF",freq:{low:5, mid:2, full:7}},
+    {Aprend:'3',color:"#D60000",freq:{low:3, mid:3, full:1}},
+    {Aprend:'4',color:"#FF8080",freq:{low:7, mid:1, full:0}},
+    {Aprend:'5',color:"#267E43",freq:{low:6, mid:0, full:3}},
+    {Aprend:'6',color:"#37B962",freq:{low:1, mid:3, full:0}},
+    {Aprend:'7',color:"#555555",freq:{low:4, mid:5, full:2}},
+    {Aprend:'8',color:"#AAAAAA",freq:{low:0, mid:1, full:1}},
+    {Aprend:'9',color:"#550055",freq:{low:1, mid:5, full:0}},
+    {Aprend:'A',color:"#B300B3",freq:{low:1, mid:1, full:0}},
+    {Aprend:'B',color:"#FFCC00",freq:{low:0, mid:2, full:1}},
+    {Aprend:'C',color:"#FFFF22",freq:{low:0, mid:1, full:3}}
+]);
+</script>
