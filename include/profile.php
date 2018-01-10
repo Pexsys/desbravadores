@@ -1,9 +1,7 @@
 <?php
-@require_once('functions.php');
-
 class PROFILE {
 	
-	public function fGetPerfil( $cd = NULL ) {
+	public static function fGetProfiles( $cd = NULL ) {
 		$arr = array();
 		$query = "SELECT DISTINCT td.id, td.cd, td.iconm, td.iconf, td.ds_menu, tf.ds_url
 		    FROM CAD_USU_PERFIL cpp
@@ -19,7 +17,7 @@ class PROFILE {
 		$query .= " ORDER BY td.cd";
 		$result = $GLOBALS['conn']->Execute($query, array($_SESSION['USER']['id_usuario']) );
 		while (!$result->EOF):
-			$child = $this->fGetPerfil( $result->fields['cd'] );
+			$child = PROFILE::fGetProfiles( $result->fields['cd'] );
 			$arr[ $result->fields['id'] ] = array(
 					"opt"	 => ($result->fields['ds_menu']),
 					"ico"	 => ( $_SESSION['USER']['sexo'] == "F" && isset($result->fields['iconf']) ? $result->fields['iconf'] :  $result->fields['iconm'] ),
@@ -35,7 +33,7 @@ class PROFILE {
 		return $arr;
 	}
 	
-	public function verificaPerfil(){
+	public static function verificaPerfil(){
 		$temPerfil = isset($_SESSION['USER']['ssid']);
 		if (!$temPerfil):
 			session_destroy();
@@ -44,7 +42,7 @@ class PROFILE {
 		endif;
 	}
 	
-	public function fSetSessionLogin( $result ){
+	public static function fSetSessionLogin( $result ){
 		session_start();
 		$_SESSION['USER']['ssid']			= session_id();
 		$_SESSION['USER']['cd_usuario']		= $result->fields['CD_USUARIO'];
@@ -57,24 +55,24 @@ class PROFILE {
 		$_SESSION['USER']['sexo']			= $result->fields['TP_SEXO'];
 	}
 
-	public function deleteAllByUserID( $userID ) {
+	public static function deleteAllByUserID( $userID ) {
 		$GLOBALS['conn']->Execute("
 			DELETE FROM CAD_USU_PERFIL
 			 WHERE ID_CAD_USUARIOS = ? 
 		", array( $userID ) );		
 	}
 
-	public function deleteAllByPessoaID( $pessoaID ){
+	public static function deleteAllByPessoaID( $pessoaID ){
 		$rs = $GLOBALS['conn']->Execute("
 			SELECT ID_USUARIO FROM CAD_USUARIOS
 			WHERE ID_CAD_PESSOA = ?
 		", array( $pessoaID ) );
 		if (!$rs->EOF):
-			$this->deleteAllByUserID( $rs->fields["ID_USUARIO"] );
+			PROFILE::deleteAllByUserID( $rs->fields["ID_USUARIO"] );
 		endif;
 	}
 
-	public function deleteByUserID( $userID, $profileID ) {
+	public static function deleteByUserID( $userID, $profileID ) {
 		$GLOBALS['conn']->Execute("
 			DELETE FROM CAD_USU_PERFIL
 			 WHERE ID_CAD_USUARIOS = ? 
@@ -82,29 +80,29 @@ class PROFILE {
 		", array( $userID, $profileID ) );		
 	}
 
-	 public function deleteByPessoaID( $pessoaID, $profileID ){
+	 public static function deleteByPessoaID( $pessoaID, $profileID ){
 		$rs = $GLOBALS['conn']->Execute("
 			SELECT ID_USUARIO
 			FROM CAD_USUARIOS
 			WHERE ID_CAD_PESSOA = ? 
 		", array( $pessoaID ) );
 		if (!$rs->EOF):
-			$this->deleteByUserID( $rs->fields["ID_USUARIO"], $profileID );
+			PROFILE::deleteByUserID( $rs->fields["ID_USUARIO"], $profileID );
 		endif;
 	}
 
-	 public function insertByPessoaID( $pessoaID, $profileID ) {
+	 public static function insertByPessoaID( $pessoaID, $profileID ) {
 		$rs = $GLOBALS['conn']->Execute("
 			SELECT ID_USUARIO
 			  FROM CAD_USUARIOS
 			 WHERE ID_CAD_PESSOA = ? 
 		", array( $pessoaID ) );
 		if (!$rs->EOF):
-			$this->insert( $rs->fields["ID_USUARIO"], $profileID );
-		endif;		
+			PROFILE::insert( $rs->fields["ID_USUARIO"], $profileID );
+		endif;
 	}
 
-	 public function insert( $userID, $profileID ) {
+	 public static function insert( $userID, $profileID ) {
 		$rs = $GLOBALS['conn']->Execute("
 			SELECT 1 FROM CAD_USU_PERFIL
 			WHERE ID_CAD_USUARIOS = ? 
@@ -123,7 +121,16 @@ class PROFILE {
 		endif;
 	}
 
-	 public function rulesCargos( $pessoaID, $cargoCD, $cargo2CD ) {
+	public static function applyCargos( $pessoaID, $cargoCD, $cargo2CD ) {
+		$rules = PROFILE::rulesCargos( $pessoaID, $cargoCD, $cargo2CD );
+
+		PROFILE::deleteAllByPessoaID($pessoaID);
+		foreach ($rules as $k => $l):
+			PROFILE::insertByPessoaID($pessoaID,$l);
+		endforeach;
+	}
+
+	public static function rulesCargos( $pessoaID, $cargoCD, $cargo2CD ) {
 		//0 TODOS - LOGIN
 		//1 ADMINISTRADOR
 		//2 SECRETARIA
@@ -148,8 +155,8 @@ class PROFILE {
 			if ( $cargoCD == "2-01-00" || $cargo2CD == "2-01-00" ):
 				$arr[] = 1;
 
-			//DIRETORES ASSOCIADOS
-			elseif ( $cargoCD == "2-01-01" || $cargo2CD == "2-01-01" ):
+			//DIRETORES ASSOCIADOS // ANCIAO/PASTORES
+			elseif ( $cargoCD == "2-01-01" || $cargo2CD == "2-01-01" || fStrStartWith($cargoCD,"2-05") || fStrStartWith($cargo2CD,"2-05") ):
 				$arr[] = 9;
 
 			//SECRETARIA
@@ -168,25 +175,16 @@ class PROFILE {
 			elseif ( fStrStartWith($cargoCD,"2-04") || fStrStartWith($cargo2CD,"2-04") ):
 				$arr[] = 5;
 
-			//ANCIAO/PASTORES
-			elseif ( fStrStartWith($cargoCD,"2-05") || fStrStartWith($cargo2CD,"2-05") ):
-				$arr[] = 9;
-
 			//CONSELHEIROS
 			elseif ( fStrStartWith($cargoCD,"2-07") || fStrStartWith($cargo2CD,"2-07") ):
 				$arr[] = 6;
 
 			endif;
-
-			$this->deleteAllByPessoaID($pessoaID);
-			foreach ($arr as $k => $l):
-				$this->insertByPessoaID( $pessoaID, $l );
-			endforeach;
 		endif;
+		return $arr;
 	 }
 }
 
-//$PROFILE = new PROFILE();
 //fConnDB();
-//$PROFILE->rulesCargos( 40, "2-02-00", null );
+//$PROFILE::rulesCargos( 40, "2-02-00", null );
 ?>

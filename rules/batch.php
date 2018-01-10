@@ -136,7 +136,6 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
 
 //*******  SECRETARIA - EXCLUSAO DE ACESSOS/PERFIS DE MEMBROS INATIVOS
 $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.03-Excluindo Perfis de Membros Inativos...')");
-$profile = new PROFILE();
 $result = $GLOBALS['conn']->Execute("
 	  SELECT DISTINCT cu.ID_USUARIO
 		FROM CAD_PESSOA cp 
@@ -150,7 +149,7 @@ $result = $GLOBALS['conn']->Execute("
 						)
 ");
 foreach($result as $l => $fields):
-	$profile->deleteAllByUserID( $fields['ID_USUARIO'] );
+	PROFILE::deleteAllByUserID( $fields['ID_USUARIO'] );
 endforeach;
 
 //*******  SECRETARIA - REORGANIZACAO DA BASE EM 01/JANEIRO

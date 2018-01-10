@@ -154,8 +154,6 @@ function getMembros( $parameters ) {
 function updateMember( $parameters ) {
 	$arr = array();
 	$arr["result"] = false;
-
-	$PROFILE = new PROFILE();
 	
 	fConnDB();
 
@@ -188,7 +186,7 @@ function updateMember( $parameters ) {
 					WHERE ID_CAD_MEMBRO = ? AND NR_ANO = YEAR(NOW())"
 				, array( $id ) );
 
-				$PROFILE->deleteAllByPessoaID($pessoaID);
+				PROFILE::deleteAllByPessoaID($pessoaID);
 		
 			else:
 				$unid	= null;
@@ -252,7 +250,7 @@ function updateMember( $parameters ) {
 						?
 					)", array( $id, $unid, $cargo, $cargo2, $tpCami, $tpAgas, $instr, $reun ) );
 
-					$PROFILE->rulesCargos( $pessoaID, $cargo, $cargo2 );
+					PROFILE::applyCargos( $pessoaID, $cargo, $cargo2 );
 					
 				return getMember( array( "id" => $id ) );
 			endif;
@@ -331,7 +329,7 @@ function updateMember( $parameters ) {
 			
 		elseif ( $field == "CD_CARGO" || $field == "CD_CARGO2"):
 			if (!$rc->EOF):
-				$PROFILE->rulesCargos( $pessoaID, $rc->fields['CD_CARGO'], $rc->fields['CD_CARGO2'] );
+				PROFILE::applyCargos( $pessoaID, $rc->fields['CD_CARGO'], $rc->fields['CD_CARGO2'] );
 			endif;
 		    
 		endif;
