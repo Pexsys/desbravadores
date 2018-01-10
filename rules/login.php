@@ -9,8 +9,6 @@ responseMethod();
 function login( $parameters ) {
 	unset($_SESSION);
 	
-	$profile = new PROFILE();
-	
 	$arr = array();
 	$arr['page'] = "";
 	$arr['login'] = false;
@@ -44,23 +42,41 @@ function login( $parameters ) {
 
 		//SE NAO ENCONTROU
 		elseif ($result->EOF):
-		
-			//VERIFICA SE CPF CONSTA COMO RESPONSAVEL
-			$resp = verificaRespByCPF($usr);
-			if (!is_null($resp)):
-			
-				//RESPONSAVEL E MEMBRO ATIVO
-				$result = checkMemberByCPF($usr);
-				if (!$result->EOF):
-					fInsertUserProfile($result->fields["ID_USUARIO"], 10 );
-						
-					return login( array(
-						"page"		=> $pag,
-						"username"	=> $result->fields["CD_USUARIO"],
-						"password"	=> $result->fields["DS_SENHA"] ) );
 
-				//VERIFICA SE RESPONSAVEL TEM ALGUM DEPENDENTE ATIVO
-				elseif ( existeMenorByRespID($resp["ID_CAD_PESSOA"]) ):
+			//VERIFICA SE CPF É DE UM MEMBRO ATIVO
+			$result = checkMemberByCPF($usr);
+			if (!$result->EOF):
+				$usuarioID = $result->fields["ID_USUARIO"];
+				$usr = $result->fields["CD_USUARIO"];
+				$psw = $result->fields["DS_SENHA"];
+
+				if (is_null($usuarioID) && 
+				   (!is_null($result->fields["CD_CARGO"]) || !is_null($result->fields["CD_CARGO2"])) ):
+
+					$usr = $GLOBALS['pattern']->getBars()->encode(array(
+						"ni" => $result->fields["ID_MEMBRO"]
+					));
+					$psw = sha1(strtolower($usr));
+
+					fInsertUser( $usr, $result->fields['NM'], $psw, $result->fields['ID_CAD_PESSOA'] );
+
+					PROFILE::applyCargos(
+						$result->fields['ID_CAD_PESSOA'], 
+						$result->fields["CD_CARGO"], 
+						$result->fields["CD_CARGO2"]
+					);
+				endif;
+
+				return login( array(
+					"page"		=> $pag,
+					"username"	=> $usr,
+					"password"	=> $psw ) );
+
+			//VERIFICA SE RESPONSAVEL TEM ALGUM DEPENDENTE ATIVO e SE CPF CONSTA COMO RESPONSAVEL
+			else:
+		
+				$resp = verificaRespByCPF($usr);			
+				if ( !is_null($resp) && existeMenorByRespID($resp["ID_CAD_PESSOA"]) ):
 					$psw = sha1(str_replace("-","",str_replace(".","",$usr)));
 					fInsertUserProfile( fInsertUser( $usr, $resp["NM"], $psw, null ), 10 );
 					
@@ -109,7 +125,7 @@ function login( $parameters ) {
 			$password = $result->fields['DS_SENHA'];
 
 			if ($password == $psw):
-				$profile->fSetSessionLogin($result);
+				PROFILE::fSetSessionLogin($result);
 
 				$GLOBALS['conn']->Execute("UPDATE CAD_USUARIOS SET DH_ATUALIZACAO = NOW() WHERE ID_USUARIO = ?",
 					array( $result->fields['ID_USUARIO'] ) );
@@ -172,9 +188,9 @@ function fDeleteUserAndProfile( $userID, $profileID ){
 
 function checkMemberByCPF($cpf){
 	return $GLOBALS['conn']->Execute("
-		SELECT cu.ID_USUARIO, cu.CD_USUARIO, cu.DS_USUARIO, cu.DS_SENHA, ca.ID AS ID_CAD_PESSOA, ca.TP_SEXO
+		SELECT cu.ID_USUARIO, cu.CD_USUARIO, cu.DS_USUARIO, cu.DS_SENHA, ca.ID_CAD_PESSOA, ca.TP_SEXO, ca.CD_CARGO, ca.CD_CARGO2, ca.NM, ca.ID_MEMBRO
 		  FROM CON_ATIVOS ca
-		INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
+	 LEFT JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
 		 WHERE ca.NR_CPF = ?
 	",array( fClearBN($cpf) ) );
 }
@@ -198,21 +214,11 @@ function checkUser($cdUser, $pag){
 	return $GLOBALS['conn']->Execute("
 		SELECT cu.ID_USUARIO, cu.CD_USUARIO, cu.DS_USUARIO, cu.DS_SENHA, cm.ID_CAD_PESSOA, cp.TP_SEXO, cm.ID AS ID_CAD_MEMBRO, cm.ID_CLUBE, cm.ID_MEMBRO
 		  FROM CAD_USUARIOS cu
-		LEFT JOIN CAD_PESSOA cp ON (cp.ID = cu.ID_CAD_PESSOA)
+		LEFT JOIN CAD_PESSOA cp ON (cp.ID = cu.ID_CAD_PESSOA OR cp.NR_CPF = ?)
 		LEFT JOIN CAD_MEMBRO cm ON (cm.ID_CAD_PESSOA = cp.ID)
 	". ($pag == "READDATA" ? " INNER JOIN CAD_USU_PERFIL cuf ON (cuf.ID_CAD_USUARIOS = cu.ID_USUARIO AND cuf.ID_PERFIL = 2) " : "") ."
 		 WHERE cu.CD_USUARIO = ?
-
-	UNION
-
-		SELECT cu.ID_USUARIO, cu.CD_USUARIO, cu.DS_USUARIO, cu.DS_SENHA, cm.ID_CAD_PESSOA, cp.TP_SEXO, cm.ID AS ID_CAD_MEMBRO, cm.ID_CLUBE, cm.ID_MEMBRO
-		 FROM CAD_USUARIOS cu
-	   INNER JOIN CAD_PESSOA cp ON (cp.ID = cu.ID_CAD_PESSOA)
-	   INNER JOIN CAD_MEMBRO cm ON (cm.ID_CAD_PESSOA = cp.ID)
-	   ". ($pag == "READDATA" ? " INNER JOIN CAD_USU_PERFIL cuf ON (cuf.ID_CAD_USUARIOS = cu.ID_USUARIO AND cuf.ID_PERFIL = 2) " : "") ."
-		WHERE cp.NR_CPF = ?
-		 
-	", array( $cdUser, $cdUser, $cdUser ) );
+	", array( $cdUser, $cdUser ) );
 }
 //28550424889
 function logout() {

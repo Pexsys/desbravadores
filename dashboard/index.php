@@ -3,8 +3,7 @@ session_start();
 @require_once("../include/functions.php");
 @require_once("include/control.php");
 
-$profile = new PROFILE();
-$profile->verificaPerfil();
+PROFILE::verificaPerfil();
 fConnDB();
 fHeaderDashboard();
 ?>
