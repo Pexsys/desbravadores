@@ -33,7 +33,7 @@ function fDashBoard( $panelClass, $iconLeft, $query, $showZero, $titulo, $urlDet
 		$rs = $GLOBALS['conn']->Execute("
 			SELECT 1
 			  FROM CAD_USUARIOS cu
-		  INNER JOIN CON_ATIVOS cp ON (cp.ID = cu.ID_CAD_PESSOA)
+		  INNER JOIN CON_ATIVOS cp ON (cp.ID_CAD_PESSOA = cu.ID_CAD_PESSOA)
 		  INNER JOIN CAD_USU_PERFIL cuf ON (cuf.ID_CAD_USUARIOS = cu.ID_USUARIO)
 		  INNER JOIN TAB_PERFIL_ITEM tpi ON (tpi.ID_TAB_PERFIL = cuf.ID_PERFIL AND tpi.ID_TAB_DASHBOARD = 5)
 			 WHERE cu.ID_USUARIO = ?
