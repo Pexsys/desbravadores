@@ -11,104 +11,7 @@ function getGraphData() {
 	$arr = array();
 	fConnDB();
 	
-	$arr["clsP"] = array();
-	$result = $GLOBALS['conn']->Execute("
-		SELECT a.CD_ITEM_INTERNO, a.CD_COR, a.DS_ITEM, cai.QTD, AVG(a.QTD) AS QT_MD
-		FROM (
-			SELECT cap.ID_CAD_PESSOA, cap.CD_COR, cap.DS_ITEM, cap.ID_TAB_APREND, cap.CD_ITEM_INTERNO, COUNT(*) AS QTD 
-			  FROM CON_APR_PESSOA cap
-	    INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = cap.ID_CAD_PESSOA AND ca.FG_REU_SEM = 'S')
-			 WHERE cap.CD_ITEM_INTERNO LIKE '01%'
-			   AND cap.DT_ASSINATURA IS NOT NULL
-			   AND cap.DT_CONCLUSAO IS NULL
-		  GROUP BY cap.ID_CAD_PESSOA, cap.CD_COR, cap.DS_ITEM, cap.ID_TAB_APREND, cap.CD_ITEM_INTERNO
-			) AS a
-		INNER JOIN CON_APR_ITEM cai ON (cai.ID = a.ID_TAB_APREND)
-		GROUP BY a.CD_ITEM_INTERNO, a.CD_COR, a.DS_ITEM, cai.QTD
-		ORDER BY a.CD_ITEM_INTERNO
-	");
-	$series = 0;
-	foreach ($result as $k => $line):
-		$pctCalc = floor( ($line['QT_MD'] / $line['QTD'])*100 );
-		$arr["clsP"][] = array(
-			"label" => $pctCalc,
-			"color" => $line['CD_COR'],
-			"data"	=> array( array( $series, $pctCalc ) ),
-			"bars"	=> array( "order" => floor($series/2) )
-		);
-		$series++;
-	endforeach;
-
-	//ANDAMENDO MÉDIO DAS CLASSES REGULARES
-	$arr["rgP"] = array();
-	$result = $GLOBALS['conn']->Execute("
-		SELECT AVG(b.PCT) AS MED
-		FROM (
-			SELECT a.ID_TAB_APREND, ((AVG(a.QTD) / cai.QTD)*100) AS PCT
-			FROM (
-				SELECT cap.ID_CAD_PESSOA, cap.ID_TAB_APREND, COUNT(*) AS QTD 
-				  FROM CON_APR_PESSOA cap
-	        INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = cap.ID_CAD_PESSOA AND ca.FG_REU_SEM = 'S')
-				 WHERE cap.CD_ITEM_INTERNO LIKE '01%00'
-			       AND cap.DT_ASSINATURA IS NOT NULL
-				   AND cap.DT_CONCLUSAO IS NULL
-			  GROUP BY cap.ID_CAD_PESSOA, cap.ID_TAB_APREND
-				) AS a
-			INNER JOIN CON_APR_ITEM cai ON (cai.ID = a.ID_TAB_APREND)
-			GROUP BY a.ID_TAB_APREND
-			ORDER BY a.ID_TAB_APREND
-		) AS b
-	");
-	$pct = 0;
-	if (!$result->EOF):
-		$pct = $result->fields['MED'];
-		$arr["rgP"][] = array( 
-			"label"		=> "Completado", 
-			"data"		=> array(0,floor($pct)),
-			"color"		=> "#00FF00"
-		);
-	endif;
-	$arr["rgP"][] = array( 
-		"label"		=> "Pendente", 
-		"data"		=> array(1,floor(100-$pct)),
-		"color"		=> "#FF0000"
-	);
-	
-	//ANDAMENDO MÉDIO DAS CLASSES AVANÇADAS
-	$arr["avP"] = array();
-	$result = $GLOBALS['conn']->Execute("
-		SELECT AVG(b.PCT) AS MED
-		FROM (
-			SELECT a.ID_TAB_APREND, ((AVG(a.QTD) / cai.QTD)*100) AS PCT
-			FROM (
-				SELECT cap.ID_CAD_PESSOA, cap.ID_TAB_APREND, COUNT(*) AS QTD 
-				  FROM CON_APR_PESSOA cap
-	        INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = cap.ID_CAD_PESSOA AND ca.FG_REU_SEM = 'S')
-				 WHERE cap.CD_ITEM_INTERNO LIKE '01%01'
-			       AND cap.DT_ASSINATURA IS NOT NULL
-				   AND cap.DT_CONCLUSAO IS NULL
-			  GROUP BY cap.ID_CAD_PESSOA, cap.ID_TAB_APREND
-				) AS a
-			INNER JOIN CON_APR_ITEM cai ON (cai.ID = a.ID_TAB_APREND)
-			GROUP BY a.ID_TAB_APREND
-			ORDER BY a.ID_TAB_APREND
-		) AS b
-	");
-	$pct = 0;
-	if (!$result->EOF):
-		$pct = $result->fields['MED'];
-		$arr["avP"][] = array( 
-			"label"		=> "Completado", 
-			"data"		=> array(0,floor($pct)),
-			"color"		=> "#00FF00"
-		);
-	endif;
-	$arr["avP"][] = array( 
-		"label"		=> "Pendente", 
-		"data"		=> array(1,floor(100-$pct)),
-		"color"		=> "#FF0000"
-	);
-	
+	/*
 	$qtdRegulares = 0;
 	$result = $GLOBALS['conn']->Execute("
 		SELECT COUNT(*) AS QT
@@ -254,7 +157,82 @@ function getGraphData() {
 		"data"		=> array(1,floor(100-$pct)),
 		"color"		=> "#FF0000"
 	);
+	*/
 
+	$a1 = 50;
+	$a2 = 85;
+
+	$result = $GLOBALS['conn']->Execute("
+		SELECT ta.ID, ta.CD_COR,
+
+				(SELECT COUNT(*)
+				FROM (
+					SELECT ID_TAB_APREND, FLOOR((QTD/QT_TOTAL)*100) AS PCT_CMPL
+					FROM (
+						SELECT 
+							ah.ID_TAB_APREND,
+							cai.QTD AS QT_TOTAL,
+							(SELECT COUNT(*) 
+								FROM CON_APR_PESSOA 
+								WHERE ID_TAB_APREND = ah.ID_TAB_APREND 
+								AND ID_CAD_PESSOA = ah.ID_CAD_PESSOA
+								AND DT_ASSINATURA IS NOT NULL) AS QTD
+						FROM APR_HISTORICO ah
+						INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = ah.ID_CAD_PESSOA)
+						INNER JOIN CON_APR_ITEM cai ON (cai.ID = ah.ID_TAB_APREND)
+						WHERE ah.DT_INVESTIDURA IS NULL 
+						AND cai.CD_ITEM_INTERNO LIKE '01%'
+					) AS x
+				) AS y
+				WHERE y.PCT_CMPL <= ?
+					AND y.ID_TAB_APREND = ta.ID) AS QT_1,
+
+				(SELECT COUNT(*)
+				FROM (
+					SELECT ID_TAB_APREND, FLOOR((QTD/QT_TOTAL)*100) AS PCT_CMPL
+					FROM (
+						SELECT 
+							ah.ID_TAB_APREND,
+							cai.QTD AS QT_TOTAL,
+							(SELECT COUNT(*) 
+								FROM CON_APR_PESSOA 
+								WHERE ID_TAB_APREND = ah.ID_TAB_APREND 
+								AND ID_CAD_PESSOA = ah.ID_CAD_PESSOA
+								AND DT_ASSINATURA IS NOT NULL) AS QTD
+						FROM APR_HISTORICO ah
+						INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = ah.ID_CAD_PESSOA)
+						INNER JOIN CON_APR_ITEM cai ON (cai.ID = ah.ID_TAB_APREND)
+						WHERE ah.DT_INVESTIDURA IS NULL 
+						AND cai.CD_ITEM_INTERNO LIKE '01%'
+					) AS x
+				) AS y
+				WHERE (y.PCT_CMPL > ? AND y.PCT_CMPL <= ?)
+				AND y.ID_TAB_APREND = ta.ID) AS QT_2,
+
+				(SELECT COUNT(*)
+					FROM APR_HISTORICO 
+					WHERE ID_TAB_APREND = ta.ID
+					AND (
+							(YEAR(DT_INICIO) = YEAR(NOW()) AND YEAR(DT_CONCLUSAO) = YEAR(NOW()))
+							OR
+							( YEAR(DT_INICIO) < YEAR(NOW()) AND YEAR(DT_CONCLUSAO) = YEAR(NOW()) AND YEAR(DT_INVESTIDURA) = YEAR(NOW()) )
+						) ) AS QT_3
+
+			FROM TAB_APRENDIZADO ta
+			WHERE ta.CD_ITEM_INTERNO LIKE '01%'
+		ORDER BY ta.CD_ITEM_INTERNO
+	", array( $a1, $a1, $a2 ) );
+	foreach ($result as $k => $f):
+		$arr[] = array(
+			"Aprend" => PATTERNS::toConvert($f['ID']),
+			"color" => $f['CD_COR'],
+			"freq"	=> array( 
+				"low" => ($f['QT_1'] * 1),
+				"mid" => ($f['QT_2'] * 1),
+				"full" => ($f['QT_3'] * 1)
+			 )
+		);
+	endforeach;
 	return $arr;
 }
 

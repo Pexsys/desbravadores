@@ -25,7 +25,7 @@ function zeroSizeID(){
 }
 
 function responseMethod(){
-	error_reporting(E_ALL & ~ E_NOTICE ); //& ~ E_DEPRECATED
+	error_reporting(E_ALL & ~ E_NOTICE); //& ~ E_DEPRECATED
 	ini_set('display_errors', TRUE);
 	ini_set('display_startup_errors', TRUE);
     header('Content-type: application/json');

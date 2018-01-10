@@ -111,7 +111,7 @@ function getQueryByFilter( $parameters ) {
 		INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = ah.ID_CAD_PESSOA)
 		INNER JOIN CON_APR_ITEM cai ON (cai.ID = ah.ID_TAB_APREND)
 		WHERE ah.DT_INVESTIDURA IS NULL 
-		  AND TP_ITEM = 'CL' $where
+		  AND cai.TP_ITEM = 'CL' $where
 		ORDER BY ca.NM, ah.DT_INICIO, cai.CD_ITEM_INTERNO
 	";
 
