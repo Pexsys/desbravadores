@@ -101,7 +101,7 @@ function getQueryByFilter( $parameters ) {
 			FROM CAD_PESSOA cp
 			INNER JOIN CAD_MEMBRO cm ON (cm.ID_CAD_PESSOA = cp.ID)
 			LEFT JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = cp.ID)
-			LEFT JOIN APR_HISTORICO ah ON (ah.id_cad_pessoa = cp.id AND ah.DT_INVESTIDURA IS NOT NULL)
+			LEFT JOIN APR_HISTORICO ah ON (ah.id_cad_pessoa = cp.ID AND ah.DT_INVESTIDURA IS NOT NULL)
 			LEFT JOIN TAB_APRENDIZADO ap ON (ap.id = ah.id_tab_aprend)
 			LEFT JOIN TAB_MATERIAIS tm ON (tm.id_tab_aprend = ah.id_tab_aprend)
 			INNER JOIN TAB_TP_APRENDIZADO ta ON (ta.id = ap.tp_item)
