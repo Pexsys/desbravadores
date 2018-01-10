@@ -473,7 +473,7 @@ function populateCargos(membroID) {
 		type: "GET",
 		url: jsLIB.rootDir+"rules/membros.php",
 		data: { MethodName : 'getCargos', data : { id : membroID } },
-		success: function(){
+		success: function(cg){
 			jsLIB.populateOptions( $("#cmCargo"), cg );
 			$("#cmCargo").val(value).change();
 		
