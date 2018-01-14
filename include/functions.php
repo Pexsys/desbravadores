@@ -856,7 +856,7 @@ function fDtHoraEvento($dhI, $dhF, $fmt = "%d de %B"){
 	//******************************************************************
 	// SE O HORARIO FOR DIFERENTE ENTRE AS DATAS
 	//******************************************************************
-	if ($HORA_EVENTO_INI != $HORA_EVENTO_FIM && empty($DATA_EVENTO_FIM) && empty($HORA_EVENTO_FIM)):
+	if ($HORA_EVENTO_INI != $HORA_EVENTO_FIM):
 		if ($DHOJE >= $DATA_EVENTO_INI && $DHOJE <= $DATA_EVENTO_FIM && $HHOJE >= $HORA_EVENTO_INI && $HHOJE <= $HORA_EVENTO_FIM):
 			$sDataHora .= " at&eacute; ";
 		else:
