@@ -32,13 +32,13 @@ function nextEvents(){
 						
 						echo "<div style='margin-left:23px;margin-top:-10px;margin-bottom:15px'>" .$info = "";
 						if (trim($result->fields['INFO_ADIC']) != ""):
-							$info .= trim($result->fields['INFO_ADIC']);
+							$info .= "<i class=\"fa fa-info-circle\"></i>&nbsp;" .trim($result->fields['INFO_ADIC']);
 						endif;
 						if (trim($result->fields['DESC_LOCAL']) != ""):
-							$info .= " - ".trim($result->fields['DESC_LOCAL']);
+							$info .= "<br/><i class=\"fa fa-map-marker\"></i>&nbsp;".trim($result->fields['DESC_LOCAL']);
 						endif;
 						if ($info != ""):
-							echo "<i class=\"fa fa-info\"></i>&nbsp;". ($info) ."<br/>";
+							echo "$info<br/>";
 						endif;
 						
 						$endereco = "";
@@ -49,7 +49,7 @@ function nextEvents(){
 							$endereco .= " - ".trim($result->fields['DESC_COMPLEMENTO']);
 						endif;
 						if ($endereco != ""):
-							echo "<i class=\"fa fa-map-marker\"></i>&nbsp;". ($endereco) ."<br/>";
+							echo "$endereco<br/>";
 						endif;
 						
 						$cidade = "";
@@ -73,7 +73,7 @@ function nextEvents(){
 						endif;
 						
 						if (trim($result->fields['tp_grupo']) != ""):
-							echo "<i class=\"fa fa-question-circle\"></i>&nbsp;". (fTipoAlvo($result->fields['tp_grupo'])) ."<br/>";
+							echo "<i class=\"fa fa-users\"></i>&nbsp;". (fTipoAlvo($result->fields['tp_grupo'])) ."<br/>";
 						endif;
 						
 						if (trim($result->fields['ds']) != ""):

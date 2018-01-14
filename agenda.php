@@ -63,13 +63,13 @@ fConnDB();
 				<?php 
 				$info = "";
 				if (trim($result->fields['INFO_ADIC']) != ""):
-					$info .= trim($result->fields['INFO_ADIC']);
+					$info .= "<i class=\"fa fa-question-circle\"></i>&nbsp;" .trim($result->fields['INFO_ADIC']);
 				endif;
 				if (trim($result->fields['DESC_LOCAL']) != ""):
-					$info .= " - ".trim($result->fields['DESC_LOCAL']);
+					$info .= "<br/><i class=\"fa fa-map-marker\"></i>&nbsp;".trim($result->fields['DESC_LOCAL']);
 				endif;
 				if ($info != ""):
-					echo ($info) . "<br/>";
+					echo "$info<br/>";
 				endif;
 				
 				$endereco = trim($result->fields['DESC_LOGRADOURO']);
@@ -80,7 +80,7 @@ fConnDB();
 					$endereco .= " - ".trim($result->fields['DESC_COMPLEMENTO']);
 				endif;
 				if ($endereco != ""):
-					echo ($endereco) . "<br/>";
+					echo "$endereco<br/>";
 				endif;
 				
 				$cidade = "";
@@ -104,11 +104,11 @@ fConnDB();
 				endif;
 				
 				if (trim($result->fields['tp_grupo']) != ""):
-					echo ("<i class=\"fa fa-question-circle\"></i>&nbsp;".fTipoAlvo($result->fields['tp_grupo']))."<br/>";
+					echo "<i class=\"fa fa-users\"></i>&nbsp;".fTipoAlvo($result->fields['tp_grupo'])."<br/>";
 				endif;
 				
 				if (trim($result->fields['ds']) != ""):
-					echo ("<i class=\"fa fa-user-secret\"></i>&nbsp;".$result->fields['ds'])."<br/>";
+					echo "<i class=\"fa fa-user-secret\"></i>&nbsp;".$result->fields['ds']."<br/>";
 				endif;
 
 				?>
