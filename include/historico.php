@@ -203,9 +203,10 @@ function updateHistorico( $barpessoaid, $barfnid, $paramDates, $compras = null )
 	//VERIFICA SE ITEM É UMA ESPECIALIDADE E SE EXISTE ALGUM MESTRADO COMPLETADO COM A CONCLUSAO DESSA ESPECIALIDADE.
 	if ( $tpItem == "ES" && $cdInte != "ME" && $paramDates["dt_conclusao"] != "N" ):
 		regraRequisitoEspecialidade($barfnid, $barpessoaid, $paramDates["dt_inicio"], $paramDates["dt_conclusao"] );
+	endif;
 
 	//VERIFICA SE EXISTEM EXPECIALIDADES JA COMPLETADAS VALIDAS NO INICIO DE UMA CLASSE
-	elseif ( $tpItem == "CL" ):
+	if ( $tpItem == "CL" ):
 		$rs = $GLOBALS['conn']->Execute("
 			SELECT DISTINCT car.ID_RQ, ah.DT_INICIO, ar.DT_CONCLUSAO
 			FROM CON_APR_REQ car
