@@ -65,9 +65,9 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
     	$rg = $GLOBALS['conn']->Execute("
     	    SELECT DISTINCT car.ID, car.CD_ITEM_INTERNO, car.CD_AREA_INTERNO, car.DS_ITEM, car.TP_ITEM, car.MIN_AREA
     	      FROM CON_APR_REQ car
-    	     WHERE car.CD_AREA_INTERNO = ?
+    	     WHERE car.CD_AREA_INTERNO = 'ME'
     	  ORDER BY car.CD_ITEM_INTERNO
-    	", array("ME") );
+    	");
     	foreach ($rg as $lg => $fg):
             $min = $fg["MIN_AREA"];
     
@@ -76,11 +76,11 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
     	    $rR = $GLOBALS['conn']->Execute("
                     SELECT tar.ID, tar.QT_MIN, COUNT(*) AS QT_FEITAS
                       FROM TAB_APR_ITEM tar
-                INNER JOIN CON_APR_REQ car ON (car.ID_TAB_APR_ITEM = tar.ID AND car.TP_ITEM_RQ = ?)
+                INNER JOIN CON_APR_REQ car ON (car.ID_TAB_APR_ITEM = tar.ID AND car.TP_ITEM_RQ = 'ES')
                 INNER JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = car.ID_RQ AND ah.ID_CAD_PESSOA = ? AND ah.DT_CONCLUSAO IS NOT NULL)
                      WHERE tar.ID_TAB_APREND = ?
                   GROUP BY tar.ID, tar.QT_MIN
-        	", array( "ES", $fA["ID_CAD_PESSOA"], $fg["ID"] ) );
+        	", array($fA["ID_CAD_PESSOA"], $fg["ID"]) );
     	    foreach($rR as $lR => $fR):
                 $feitas += min( $fR["QT_MIN"], $fR["QT_FEITAS"] );
             endforeach;

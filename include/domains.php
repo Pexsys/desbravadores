@@ -137,8 +137,8 @@ function getDomainClasses(){
 	$result = $GLOBALS['conn']->Execute("
 		SELECT ID, DS_ITEM, CD_AREA_INTERNO
 		  FROM TAB_APRENDIZADO
-		WHERE TP_ITEM = ?
-	  ORDER BY CD_ITEM_INTERNO", array( "CL" ) );
+		WHERE TP_ITEM = 'CL'
+	  ORDER BY CD_ITEM_INTERNO");
 	foreach ($result as $k => $f):
 		$arr[] = array( 
 			"id"	=> $f['ID'],
@@ -156,10 +156,10 @@ function getDomainMestrados(){
 	$result = $GLOBALS['conn']->Execute("
 		SELECT ID, DS_ITEM, CD_ITEM_INTERNO
 		  FROM TAB_APRENDIZADO
-		WHERE TP_ITEM = ?
-		  AND CD_AREA_INTERNO = ?
+		WHERE TP_ITEM = 'ES'
+		  AND CD_AREA_INTERNO = 'ME'
 		  AND CD_ITEM_INTERNO IS NOT NULL
-	  ORDER BY DS_ITEM", array( "ES", "ME" ) );
+	  ORDER BY DS_ITEM" );
 	foreach ($result as $k => $f):
 		$arr[] = array( 
 			"id"	=> $f['ID'],
@@ -177,10 +177,10 @@ function getDomainEspecialidades(){
 	$result = $GLOBALS['conn']->Execute("
 		SELECT ID, DS_ITEM, CD_ITEM_INTERNO
 		  FROM TAB_APRENDIZADO
-		WHERE TP_ITEM = ?
-		  AND CD_AREA_INTERNO <> ?
+		WHERE TP_ITEM = 'ES'
+		  AND CD_AREA_INTERNO <> 'ME'
 		  AND CD_ITEM_INTERNO IS NOT NULL
-	  ORDER BY DS_ITEM", array( "ES", "ME" ) );
+	  ORDER BY DS_ITEM" );
 	foreach ($result as $k => $f):
 		$arr[] = array( 
 			"id"	=> $f['ID'],
@@ -198,9 +198,9 @@ function getDomainAreasEspecialidades(){
 	$result = $GLOBALS['conn']->Execute("
 		SELECT CD_AREA_INTERNO, DS_ITEM, CD_ITEM_INTERNO
 		  FROM TAB_APRENDIZADO
-		WHERE TP_ITEM = ?
+		WHERE TP_ITEM = 'ES'
 		  AND CD_ITEM_INTERNO IS NULL
-	  ORDER BY DS_ITEM", array( "ES" ) );
+	  ORDER BY DS_ITEM" );
 	foreach ($result as $k => $f):
 		$arr[] = array( 
 			"id"	=> $f['CD_AREA_INTERNO'],

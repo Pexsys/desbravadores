@@ -58,20 +58,20 @@ $result = $GLOBALS['conn']->Execute("
 	FROM APR_HISTORICO h
 	INNER JOIN CON_ATIVOS a ON (a.ID_CAD_PESSOA = h.ID_CAD_PESSOA)
 	INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = h.ID_TAB_APREND)
-	WHERE ta.TP_ITEM = ?
+	WHERE ta.TP_ITEM = 'ES'
 	AND YEAR(h.DT_CONCLUSAO) = YEAR(NOW())
-", array("ES") );
+");
 if (!$result->EOF):
 	$rs = $GLOBALS['conn']->Execute("
 		SELECT r.CD_ITEM_INTERNO, r.DS_ITEM, COUNT(*) AS QTD
 		FROM APR_HISTORICO h
 		INNER JOIN TAB_APRENDIZADO r ON (r.ID = h.ID_TAB_APREND)
 		INNER JOIN CON_ATIVOS a ON (a.ID_CAD_PESSOA = h.ID_CAD_PESSOA)
-		WHERE r.TP_ITEM = ?
+		WHERE r.TP_ITEM = 'ES'
 		AND YEAR(h.DT_CONCLUSAO) = YEAR(NOW())
 		GROUP BY r.CD_ITEM_INTERNO, r.DS_ITEM
 		ORDER BY r.CD_ITEM_INTERNO	
-	", array("ES") );
+	");
 	?>
 	<div class="row">
 		<div class="col-lg-12">
@@ -86,11 +86,11 @@ if (!$result->EOF):
 		INNER JOIN TAB_APRENDIZADO r ON (r.ID = h.ID_TAB_APREND)
 		INNER JOIN TAB_APRENDIZADO ra ON (ra.TP_ITEM = r.TP_item AND ra.CD_AREA_INTERNO = r.CD_AREA_INTERNO AND ra.CD_ITEM_INTERNO IS NULL)
 		INNER JOIN CON_ATIVOS a ON (a.ID_CAD_PESSOA = h.ID_CAD_PESSOA)
-		WHERE r.TP_ITEM = ?
+		WHERE r.TP_ITEM = 'ES'
 		  AND YEAR(h.DT_CONCLUSAO) = YEAR(NOW())
 		GROUP BY ra.CD_AREA_INTERNO, ra.DS_ITEM
 		ORDER BY ra.CD_AREA_INTERNO
-	", array("ES") );
+	");
 
 	foreach ($result as $k => $line):
 		$cdArea = $line["CD_AREA_INTERNO"];

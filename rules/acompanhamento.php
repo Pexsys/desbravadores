@@ -40,8 +40,7 @@ function getQueryByFilter( $parameters ) {
 			elseif ( $key == "U" ):
 				$where .= " AND ca.ID_UNIDADE ".$notStr."IN";
 			elseif ( $key == "C" ):
-				$where .= " AND cai.TP_ITEM = ? AND ah.ID_TAB_APREND ".$notStr."IN";
-				$aWhere[] = "CL";
+				$where .= " AND cai.TP_ITEM = 'CL' AND ah.ID_TAB_APREND ".$notStr."IN";
 			else:
 				$where .= " AND";
 			endif;

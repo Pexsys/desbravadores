@@ -78,10 +78,9 @@ function getQueryByFilter( $parameters ) {
 				$where .= " AND EXISTS (
 							SELECT DISTINCT 1
 							FROM TAB_APRENDIZADO ta 
-							LEFT JOIN APR_HISTORICO ah ON (ah.id_tab_aprend = ta.id AND ah.dt_conclusao IS NULL)
-							WHERE ta.tp_item = ? AND ah.ID_CAD_PESSOA = ca.ID_CAD_PESSOA AND
+							LEFT JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = ta.ID AND ah.DT_CONCLUSAO IS NULL)
+							WHERE ta.TP_ITEM = 'CL' AND ah.ID_CAD_PESSOA = ca.ID_CAD_PESSOA AND
 							ta.ID ".$notStr."IN";
-				$aWhere[] = "CL";
 			else:
 				$where .= " AND";
 			endif;
@@ -92,13 +91,13 @@ function getQueryByFilter( $parameters ) {
 				foreach ($parameters["filters"][$key]["vl"] as $value):
 					if ( $key == "B" ):
 						if ($value == "S"):
-							$where .= (!$prim ? " OR " : "") ."ca.dt_bat IS ". ( $value == "S" && !$not ? "NOT NULL" : "NULL");
+							$where .= (!$prim ? " OR " : "") ."ca.DT_BAT IS ". ( $value == "S" && !$not ? "NOT NULL" : "NULL");
 						elseif ($value == "N"):
-							$where .= (!$prim ? " OR " : "") ."ca.dt_bat IS ". ( $value == "N" && !$not ? "NULL" : "NOT NULL");
+							$where .= (!$prim ? " OR " : "") ."ca.DT_BAT IS ". ( $value == "N" && !$not ? "NULL" : "NOT NULL");
 						elseif (fStrStartWith($value,"A")):
-							$where .= (!$prim ? " OR " : "") ."YEAR(ca.dt_bat) ". ( !$not ? " < " : " >= ") . substr($value,1,4);
+							$where .= (!$prim ? " OR " : "") ."YEAR(ca.DT_BAT) ". ( !$not ? " < " : " >= ") . substr($value,1,4);
 						else:
-							$where .= (!$prim ? " OR " : "") ."YEAR(ca.dt_bat) ". ( !$not ? " = " : " <> ") . $value;
+							$where .= (!$prim ? " OR " : "") ."YEAR(ca.DT_BAT) ". ( !$not ? " = " : " <> ") . $value;
 						endif;
 					elseif ( $key == "G" ):
 						if ( $value == "3" ):

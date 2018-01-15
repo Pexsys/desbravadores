@@ -92,8 +92,8 @@ class ESPCR extends TCPDF {
 			SELECT ta.ID, ta.DS_ITEM, ta.CD_AREA_INTERNO, tm.NR_PG_ASS
 			  FROM TAB_APRENDIZADO ta
 		INNER JOIN TAB_MATERIAIS tm ON (tm.ID_TAB_APREND = ta.ID)
-			 WHERE ta.CD_ITEM_INTERNO = ?
-			   AND ta.TP_ITEM = ?", Array( $codEsp, "ES" ) );
+			 WHERE ta.CD_ITEM_INTERNO = 'ES'
+			   AND ta.TP_ITEM = ?");
  
 		if ($result->EOF):
 			return;
@@ -213,11 +213,11 @@ class ESPCR extends TCPDF {
 			$rR = $GLOBALS['conn']->Execute("
 					SELECT tar.ID, tar.QT_MIN, COUNT(*) AS QT_FEITAS
 						FROM TAB_APR_ITEM tar
-				INNER JOIN CON_APR_REQ car ON (car.ID_TAB_APR_ITEM = tar.ID AND car.TP_ITEM_RQ = ?)
+				INNER JOIN CON_APR_REQ car ON (car.ID_TAB_APR_ITEM = tar.ID AND car.TP_ITEM_RQ = 'ES')
 				INNER JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = car.ID_RQ AND ah.ID_CAD_PESSOA = ? AND ah.DT_INICIO IS NOT NULL)
 						WHERE tar.ID_TAB_APREND = ?
 					GROUP BY tar.ID, tar.QT_MIN
-			", array( "ES", $pessoaID, $result->fields["ID"] ) );
+			", array( $pessoaID, $result->fields["ID"] ) );
 			foreach($rR as $lR => $fR):
 				$fazReq = ( $fR["QT_FEITAS"] >= $fR["QT_MIN"] );
 				
