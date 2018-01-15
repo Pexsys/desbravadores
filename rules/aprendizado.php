@@ -26,16 +26,11 @@ function getQueryByFilter( $parameters ) {
 			elseif ( $key == "T" ):
 				$where .= " AND ca.ID_CAD_MEMBRO ".$notStr."IN";
 			elseif ( $key == "C" ):
-				$where .= " AND ap.TP_ITEM = ? AND ap.ID ".$notStr."IN";
-				$aWhere[] = "CL";
+				$where .= " AND ap.TP_ITEM = 'CL' AND ap.ID ".$notStr."IN";
 			elseif ( $key == "E" ):
-				$where .= " AND ap.TP_ITEM = ? AND ap.CD_AREA_INTERNO <> ? AND ap.ID ".$notStr."IN";
-				$aWhere[] = "ES";
-				$aWhere[] = "ME";
+				$where .= " AND ap.TP_ITEM = 'ES' AND ap.CD_AREA_INTERNO <> 'ME' AND ap.ID ".$notStr."IN";
 			elseif ( $key == "M" ):
-				$where .= " AND ap.TP_ITEM = ? AND ap.CD_AREA_INTERNO = ? AND ap.ID ".$notStr."IN";
-				$aWhere[] = "ES";
-				$aWhere[] = "ME";
+				$where .= " AND ap.TP_ITEM = 'ES' AND ap.CD_AREA_INTERNO = 'ME' AND ap.ID ".$notStr."IN";
 			elseif ( $key == "A" ):
 				$where .= " AND ap.CD_AREA_INTERNO ".$notStr."IN";
 			else:
@@ -295,11 +290,11 @@ function setAprendizado( $parameters ) {
             	    $rR = $GLOBALS['conn']->Execute("
                             SELECT tar.ID, tar.QT_MIN, COUNT(*) AS QT_FEITAS
                               FROM TAB_APR_ITEM tar
-                        INNER JOIN CON_APR_REQ car ON (car.ID_TAB_APR_ITEM = tar.ID AND car.TP_ITEM_RQ = ?)
+                        INNER JOIN CON_APR_REQ car ON (car.ID_TAB_APR_ITEM = tar.ID AND car.TP_ITEM_RQ = 'ES')
                         INNER JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = car.ID_RQ AND ah.ID_CAD_PESSOA = ? AND ah.DT_CONCLUSAO IS NOT NULL)
                              WHERE tar.ID_TAB_APREND = ?
                           GROUP BY tar.ID, tar.QT_MIN
-                	", array( "ES", $idPessoa, $fg["ID"] ) );
+                	", array($idPessoa, $fg["ID"]) );
             	    foreach($rR as $lR => $fR):
                         $feitas += min( $fR["QT_MIN"], $fR["QT_FEITAS"] );
                     endforeach;
@@ -382,8 +377,8 @@ function getClasse(){
 	$result = $GLOBALS['conn']->Execute("
 		SELECT ID, CD_ITEM_INTERNO, DS_ITEM
 		  FROM TAB_APRENDIZADO 
-		 WHERE TP_ITEM = ?
-	  ORDER BY CD_ITEM_INTERNO", array( "CL" ) );
+		 WHERE TP_ITEM = 'CL'
+	  ORDER BY CD_ITEM_INTERNO" );
 	foreach ($result as $k => $line):
 		$arr[] = array( 
 			"id"	=> $line['ID'],
@@ -398,10 +393,10 @@ function getMestrado(){
 	$result = $GLOBALS['conn']->Execute("
 		SELECT ID, CD_ITEM_INTERNO, DS_ITEM
 		  FROM TAB_APRENDIZADO 
-		 WHERE TP_ITEM = ?
-		   AND CD_AREA_INTERNO = ?
+		 WHERE TP_ITEM = 'ES'
+		   AND CD_AREA_INTERNO = 'ME'
 		   AND CD_ITEM_INTERNO IS NOT NULL
-	  ORDER BY DS_ITEM", array( "ES", "ME" ) );
+	  ORDER BY DS_ITEM");
 	foreach ($result as $k => $line):
 		$arr[] = array( 
 			"id"	=> $line['ID'],
@@ -417,10 +412,10 @@ function getEspecialidade(){
 	$result = $GLOBALS['conn']->Execute("
 		SELECT ID, CD_ITEM_INTERNO, DS_ITEM
 		  FROM TAB_APRENDIZADO 
-		 WHERE TP_ITEM = ?
-		   AND CD_AREA_INTERNO <> ?
+		 WHERE TP_ITEM = 'ES'
+		   AND CD_AREA_INTERNO <> 'ME'
 		   AND CD_ITEM_INTERNO IS NOT NULL
-	  ORDER BY DS_ITEM", array( "ES", "ME" ) );
+	  ORDER BY DS_ITEM" );
 	foreach ($result as $k => $line):
 		$arr[] = array( 
 			"id"	=> $line['ID'],

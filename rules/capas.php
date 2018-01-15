@@ -150,9 +150,9 @@ function getEspecialidades() {
 		E.DS_ITEM
 	FROM TAB_APRENDIZADO E
 	INNER JOIN TAB_APRENDIZADO A ON (A.CD_AREA_INTERNO = E.CD_AREA_INTERNO AND A.CD_ITEM_INTERNO IS NULL)
-	WHERE E.TP_ITEM = ?
+	WHERE E.TP_ITEM = 'ES'
 	  AND E.CD_ITEM_INTERNO IS NOT NULL
-	ORDER BY A.DS_ITEM, E.DS_ITEM", array( "ES" ) );
+	ORDER BY A.DS_ITEM, E.DS_ITEM");
 	foreach ($result as $k => $line):
 		$arr[] = array( 
 			"cd_item" => $line['CD_ITEM'],

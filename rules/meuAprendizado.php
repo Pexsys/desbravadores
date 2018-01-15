@@ -120,9 +120,9 @@ function getMestrados(){
 	    SELECT DISTINCT car.ID
 	      FROM CON_APR_REQ car
    LEFT JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = car.ID AND ah.ID_CAD_PESSOA = ?)
-	     WHERE car.CD_AREA_INTERNO = ?
+	     WHERE car.CD_AREA_INTERNO = 'ME'
 	  ORDER BY car.CD_ITEM_INTERNO
-	", array( $_SESSION['USER']['id_cad_pessoa'], "ME") );
+	", array( $_SESSION['USER']['id_cad_pessoa']) );
 	foreach ($rg as $lg => $fg):
 		$arr[] = $fg["ID"];
 	endforeach;
@@ -166,11 +166,11 @@ function getPainelMestradoPessoa( $ruleID, $membroID ){
 	$rR = $GLOBALS['conn']->Execute("
 		 SELECT tar.ID, tar.QT_MIN, COUNT(*) AS QT_FEITAS
 		 FROM TAB_APR_ITEM tar
-		 INNER JOIN CON_APR_REQ car ON (car.ID_TAB_APR_ITEM = tar.ID AND car.TP_ITEM_RQ = ?)
+		 INNER JOIN CON_APR_REQ car ON (car.ID_TAB_APR_ITEM = tar.ID AND car.TP_ITEM_RQ = 'ES')
 		 INNER JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = car.ID_RQ AND ah.ID_CAD_PESSOA = ? AND ah.DT_CONCLUSAO IS NOT NULL)
 		 WHERE tar.ID_TAB_APREND = ?
 		 GROUP BY tar.ID, tar.QT_MIN
-	", array( "ES", $membroID, $ruleID ) );
+	", array( $membroID, $ruleID ) );
 	foreach($rR as $lR => $fR):
 	 	$feitas += min( $fR["QT_MIN"], $fR["QT_FEITAS"] );
 	endforeach;

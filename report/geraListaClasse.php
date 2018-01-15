@@ -185,10 +185,10 @@ $result = $GLOBALS['conn']->Execute("
 	FROM APR_HISTORICO ah
 	INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
 	WHERE ah.DT_CONCLUSAO IS NULL
-	  AND ta.TP_ITEM = ?
+	  AND ta.TP_ITEM = 'CL'
 	  ". (isset($filter) && !is_null($filter) && $filter !== "null" ? " AND ta.ID IN ($filter)" : "" ) ."
 	ORDER BY ta.CD_ITEM_INTERNO
-", array("CL") );
+");
 foreach ( $result as $ra => $f ):
 	$pdf->addGrupoAprendizado($f);
 endforeach;

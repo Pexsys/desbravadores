@@ -17,8 +17,8 @@ function getGraphData() {
 		SELECT COUNT(*) AS QT
 		  FROM TAB_APRENDIZADO 
 		 WHERE CD_ITEM_INTERNO LIKE '01%00'
-		   AND TP_ITEM = ?
-	", array("CL") );
+		   AND TP_ITEM = 'CL'
+	");
 	if (!$result->EOF):
 		$qtdRegulares = $result->fields['QT'];
 	endif;
@@ -28,8 +28,8 @@ function getGraphData() {
 		SELECT COUNT(*) AS QT
 		  FROM TAB_APRENDIZADO 
 		 WHERE CD_ITEM_INTERNO LIKE '01%01'
-		   AND TP_ITEM = ?
-	", array("CL") );
+		   AND TP_ITEM = 'CL'
+	");
 	if (!$result->EOF):
 		$qtdAvancadas = $result->fields['QT'];
 	endif;
@@ -40,11 +40,11 @@ function getGraphData() {
 		SELECT a.TP_ITEM, a.CD_AREA_INTERNO, a.CD_ITEM_INTERNO, a.DS_ITEM, a.CD_COR, COUNT(*) AS QTD
 		FROM APR_HISTORICO h
 		INNER JOIN TAB_APRENDIZADO a ON (a.ID = h.ID_TAB_APREND)
-		WHERE a.TP_ITEM = ?
+		WHERE a.TP_ITEM = 'CL'
 		AND YEAR(h.DT_CONCLUSAO) = YEAR(NOW())
 		GROUP BY a.TP_ITEM, a.CD_AREA_INTERNO, a.CD_ITEM_INTERNO, a.DS_ITEM, a.CD_COR
 		ORDER BY a.CD_ITEM_INTERNO
-	", array("CL") );
+	");
 	$series = 0;
 	foreach ($result as $k => $line):
 		$arr["clsC"][] = array(
@@ -256,10 +256,10 @@ function getClasses( $parameters ) {
 	$rs = $GLOBALS['conn']->Execute("
 		  SELECT ta.ID_TAB_APREND, ta.TP_ITEM, ta.CD_AREA_INTERNO, ta.CD_ITEM_INTERNO, ta.DS_ITEM, COUNT(*) AS QT_REQ
 			FROM CON_APR_PESSOA ta
-		   WHERE ta.ID_CAD_PESSOA = ? AND ta.TP_ITEM = ? AND ta.DT_CONCLUSAO IS NULL $where
+		   WHERE ta.ID_CAD_PESSOA = ? AND ta.TP_ITEM = 'CL' AND ta.DT_CONCLUSAO IS NULL $where
 		GROUP BY ta.ID_TAB_APREND, ta.TP_ITEM, ta.CD_AREA_INTERNO, ta.CD_ITEM_INTERNO, ta.DS_ITEM
 		ORDER BY ta.TP_ITEM, ta.CD_ITEM_INTERNO
-	", array( $id, "CL" ) );
+	", array( $id ) );
 	if (!$rs->EOF):
 		$str .= "<div class=\"row\">";
 		$str .= "<div class=\"panel panel-warning\" style=\"padding-bottom:5px\">";
@@ -307,14 +307,14 @@ function getClasses( $parameters ) {
 	$rs = $GLOBALS['conn']->Execute("
 		  SELECT ta.ID_TAB_APREND, ta.TP_ITEM, ta.CD_AREA_INTERNO, ta.CD_ITEM_INTERNO, ta.DS_ITEM, COUNT(*) AS QT_REQ
 			FROM CON_APR_PESSOA ta
-		   WHERE ta.ID_CAD_PESSOA = ? AND ta.TP_ITEM = ? 
+		   WHERE ta.ID_CAD_PESSOA = ? AND ta.TP_ITEM = 'CL'
 			 AND ta.DT_CONCLUSAO IS NOT NULL 
 			 AND ta.DT_AVALIACAO IS NULL 
 			 AND ta.DT_INVESTIDURA IS NULL 
 			$where
 		GROUP BY ta.ID_TAB_APREND, ta.TP_ITEM, ta.CD_AREA_INTERNO, ta.CD_ITEM_INTERNO, ta.DS_ITEM
 		ORDER BY ta.TP_ITEM, ta.CD_ITEM_INTERNO
-	", array( $id, "CL" ) );
+	", array( $id ) );
 	if (!$rs->EOF):
 		$str .= "<div class=\"row\">";
 		$str .= "<div class=\"panel panel-warning\" style=\"padding-bottom:5px\">";
@@ -337,13 +337,13 @@ function getClasses( $parameters ) {
 			INNER JOIN TAB_MATERIAIS tm ON (tm.ID_TAB_APREND = ta.ID_TAB_APREND)
 			LEFT JOIN CON_COMPRAS cc ON (cc.ID_CAD_PESSOA = ta.ID_CAD_PESSOA AND cc.FG_COMPRA = 'S' AND cc.ID_TAB_APREND = ta.ID_TAB_APREND)
 			LEFT JOIN CON_COMPRAS ccag ON (ccag.ID_CAD_PESSOA = ta.ID_CAD_PESSOA AND ccag.FG_COMPRA = 'S' AND ccag.ID_TAB_APREND = tm.ID_AGRUPADA)
-			WHERE ta.ID_CAD_PESSOA = ? AND ta.TP_ITEM = ? 
+			WHERE ta.ID_CAD_PESSOA = ? AND ta.TP_ITEM = 'CL'
 			 AND ta.DT_CONCLUSAO IS NOT NULL 
 			 AND ta.DT_AVALIACAO IS NOT NULL 
 			 AND ta.DT_INVESTIDURA IS NULL 
 			$where
 			ORDER BY ta.TP_ITEM, ta.CD_ITEM_INTERNO
-			", array( $id, "CL" ) );
+			", array( $id ) );
 	if (!$rs->EOF):
 		$str .= "<div class=\"row\">";
 		$str .= "<div class=\"panel panel-success\" style=\"padding-bottom:5px\">";
@@ -367,12 +367,12 @@ function getClasses( $parameters ) {
 	    INNER JOIN TAB_APRENDIZADO a ON (a.ID = h.ID_TAB_APREND)
 		INNER JOIN TAB_APRENDIZADO ae ON (ae.TP_ITEM = a.TP_ITEM AND ae.CD_AREA_INTERNO = a.CD_AREA_INTERNO AND ae.CD_ITEM_INTERNO IS NULL)
 		 WHERE h.ID_CAD_PESSOA = ?
-		   AND a.TP_ITEM = ?
+		   AND a.TP_ITEM = 'ES'
 			 AND h.DT_CONCLUSAO IS NOT NULL 
 			 AND h.DT_AVALIACAO IS NULL 
 			 AND h.DT_INVESTIDURA IS NULL 
 			ORDER BY a.CD_AREA_INTERNO, a.CD_ITEM_INTERNO
-	", array( $id, "ES" ) );
+	", array( $id ) );
 	$str .= fGetDetailEspClass("panel-warning","Especialidades Pendentes de Avaliação Regional",$result);
 	
 	//ESPECIALIDADES A RECEBER
@@ -384,12 +384,12 @@ function getClasses( $parameters ) {
 		INNER JOIN TAB_APRENDIZADO ae ON (ae.TP_ITEM = a.TP_ITEM AND ae.CD_AREA_INTERNO = a.CD_AREA_INTERNO AND ae.CD_ITEM_INTERNO IS NULL)
 		LEFT JOIN CON_COMPRAS cc ON (cc.ID_CAD_PESSOA = h.ID_CAD_PESSOA AND cc.FG_COMPRA = 'S' AND cc.ID_TAB_APREND = h.ID_TAB_APREND)
 		WHERE h.ID_CAD_PESSOA = ?
-		   AND a.TP_ITEM = ?
+		   AND a.TP_ITEM = 'ES'
 			 AND h.DT_CONCLUSAO IS NOT NULL 
 			 AND h.DT_AVALIACAO IS NOT NULL 
 			 AND h.DT_INVESTIDURA IS NULL 
 			ORDER BY a.CD_AREA_INTERNO, a.CD_ITEM_INTERNO
-	", array( $id, "ES" ) );
+	", array( $id) );
 	$str .= fGetDetailEspClass("panel-success","Especialidades Pendentes de Investidura",$result);
 
 	//ITENS INVESTIDOS
@@ -502,12 +502,12 @@ function getEspec( $parameters ) {
 		  FROM APR_HISTORICO h
 	INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = h.ID_TAB_APREND)
     INNER JOIN CON_ATIVOS a ON (a.ID_CAD_PESSOA = h.ID_CAD_PESSOA)
-		 WHERE ta.TP_ITEM = ?
+		 WHERE ta.TP_ITEM = 'ES'
 		   AND ta.CD_AREA_INTERNO = ?
 		   AND YEAR(h.DT_CONCLUSAO) = YEAR(NOW())
 	      GROUP BY ta.CD_ITEM_INTERNO, ta.DS_ITEM
 	      ORDER BY ta.CD_ITEM_INTERNO
-	", array("ES", $parameters["cdArea"] ) );
+	", array($parameters["cdArea"] ) );
 	$str .= "<div class=\"col-sm-12 col-xs-12 col-md-12 col-lg-12\">";
 	foreach ($rs as $ks => $ls):
 		$itemInterno = $ls["CD_ITEM_INTERNO"];

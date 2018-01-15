@@ -25,16 +25,11 @@ function getQueryByFilter( $parameters ) {
 			elseif ( $key == "U" ):
 				$where .= " AND ca.ID_UNIDADE ".$notStr."IN";
 			elseif ( $key == "C" ):
-				$where .= " AND ap.TP_ITEM = ? AND ap.ID ".$notStr."IN";
-				$aWhere[] = "CL";
+				$where .= " AND ap.TP_ITEM = 'CL' AND ap.ID ".$notStr."IN";
 			elseif ( $key == "E" ):
-				$where .= " AND ap.TP_ITEM = ? AND ap.CD_AREA_INTERNO <> ? AND ap.ID ".$notStr."IN";
-				$aWhere[] = "ES";
-				$aWhere[] = "ME";
+				$where .= " AND ap.TP_ITEM = 'ES' AND ap.CD_AREA_INTERNO <> 'ME' AND ap.ID ".$notStr."IN";
 			elseif ( $key == "M" ):
-				$where .= " AND ap.TP_ITEM = ? AND ap.CD_AREA_INTERNO = ? AND ap.ID ".$notStr."IN";
-				$aWhere[] = "ES";
-				$aWhere[] = "ME";
+				$where .= " AND ap.TP_ITEM = 'ES' AND ap.CD_AREA_INTERNO = 'ME' AND ap.ID ".$notStr."IN";
 			elseif ( $key == "A" ):
 				$where .= " AND ap.CD_AREA_INTERNO ".$notStr."IN";
 			else:
