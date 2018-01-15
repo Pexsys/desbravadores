@@ -451,7 +451,7 @@ function populateRegistro( diarioID ) {
 			if (oc){
 				jsLIB.populateOptions( $("#cmClasse"), oc.classe );
 				jsLIB.populateOptions( $("#cmReq"), oc.req );
-				jsLIB.populateOptions( $("#cmRef"), oc.ref );
+				rulesRefs(oc.ref);
 				jsLIB.populateForm( $("#cadRegForm"), oc.diario );
 				valuePendOrig = oc.diario.fg_pend;				
 			}
@@ -501,7 +501,6 @@ function populateReqs(){
 }
 
 function populateRefs(){
-	$('#divReferencia').visible( false );
 	var selectedOption = $('#cmReq option:selected');
 	if (formPopulated && selectedOption.attr("tp") == 'E'){
 		var parameter = {
@@ -512,14 +511,21 @@ function populateRefs(){
 			url: jsLIB.rootDir+"rules/diarioClasse.php",
 			data: { MethodName : 'fGetRef', data : parameter },
 			success: function(cm){
-				jsLIB.populateOptions( $("#cmRef"), cm );
-				if (cm.length == 1){
-					$("#cmRef").selectpicker('val',cm[0].id);
-				} else {
-					$('#divReferencia').visible( true );
-				}
+				rulesRefs(cm);
 			}
 		});
+	}
+}
+
+function rulesRefs(cm){
+	$('#divReferencia').visible( false );
+	if (cm){
+		jsLIB.populateOptions( $("#cmRef"), cm );
+		if (cm.length == 1){
+			$("#cmRef").selectpicker('val',cm[0].id);
+		} else {
+			$('#divReferencia').visible( true );
+		}
 	}
 }
 

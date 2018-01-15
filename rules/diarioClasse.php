@@ -244,12 +244,33 @@ function fGetRef( $parameters ){
 }
 
 function fGetRefByID( $refID ){
+	session_start();
+	$where = "
+		AND NOT EXISTS (SELECT 1
+		FROM CAD_DIARIO cd
+	INNER JOIN TAB_APR_ITEM_SEL tais2 ON (tais2.ID = cd.ID_TAB_APR_ITEM_SEL)
+	WHERE YEAR(cd.DH) = YEAR(NOW())
+		AND tais2.ID_REF = tais.ID_REF
+	)		
+	";
+	//SE PERFIL DE DIRETORES / INSTRUTOR GERAL, PERMITE A MESMA ESPECIALIDADE PARA MAIS DE UMA CLASSE
+	$pessoaID = $_SESSION['USER']['id_cad_pessoa'];
+	$result = $GLOBALS['conn']->Execute("
+		SELECT CD_CARGO, CD_CARGO2
+		  FROM CON_ATIVOS
+		 WHERE ID_CAD_PESSOA = ?
+	", array($pessoaID) );
+	if (fStrStartWith($result->fields['CD_CARGO'],"2-01") || $result->fields['CD_CARGO'] == "2-04-00"):
+		$where = "";
+	endif;
+
 	$arr = array();
 	$result = $GLOBALS['conn']->Execute("
 		SELECT tais.ID, ta.CD_AREA_INTERNO, ta.CD_ITEM_INTERNO, ta.DS_ITEM
 		FROM TAB_APR_ITEM_SEL tais
 		INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = tais.ID_REF)
-		WHERE tais.ID_TAB_APR_ITEM = ? 
+		WHERE tais.ID_TAB_APR_ITEM = ?
+		$where
 		ORDER BY ta.CD_AREA_INTERNO, ta.DS_ITEM
 	", array( $refID ) );
 
