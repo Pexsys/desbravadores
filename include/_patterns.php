@@ -213,7 +213,7 @@ class PATTERNS {
         $str .= in_array("sp",$p) && in_array("rg",$p) && !empty($str) ? "- " : "";
 		$str .= in_array("rg",$p) ? "6ª Região " : "";
 		$str .= in_array("sp",$p) && in_array("as",$p) && !empty($str) ? "- " : "";
-        $str .= in_array("ab",$p) ? "Associação Paulista Sul " : "";
+        $str .= in_array("as",$p) ? "Associação Paulista Sul " : "";
         $str .= in_array("sp",$p) && in_array("ab",$p) && !empty($str) ? "- " : "";
         $str .= in_array("ab",$p) ? "APS " : "";
         $str .= in_array("sp",$p) && in_array("un",$p) && !empty($str) ? "- " : "";

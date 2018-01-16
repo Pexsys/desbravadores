@@ -168,27 +168,28 @@ $pdf = new LISTAATIVOSALFA();
 $pdf->tipoBatismo = fRequest("filter");
 
 $query = "
-	 SELECT ca.NM, ca.CD_CARGO, ca.DS_CARGO, ca.DT_NASC, ca.FONE_RES, ca.FONE_CEL, ca.IDADE_HOJE,
-			ca.LOGRADOURO, ca.NR_LOGR, ca.COMPLEMENTO, ca.BAIRRO, ca.CIDADE, ca.UF, ca.CEP,
+	 SELECT cp.NM, ca.CD_CARGO, ca.DS_CARGO, cp.DT_NASC, cp.FONE_RES, cp.FONE_CEL, cp.IDADE_HOJE,
+			cp.LOGRADOURO, cp.NR_LOGR, cp.COMPLEMENTO, cp.BAIRRO, cp.CIDADE, cp.UF, cp.CEP,
 			ta.CD_COR_GENERO
-	   FROM CON_ATIVOS ca
- INNER JOIN TAB_UNIDADE ta ON (ta.ID = ca.ID_UNIDADE)
+	   FROM CON_PESSOA cp
+  LEFT JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = cp.ID_CAD_PESSOA)
+  LEFT JOIN TAB_UNIDADE ta ON (ta.ID = ca.ID_UNIDADE)
 	  WHERE ";
 if ($pdf->tipoBatismo == "S"):
-	$query .= "ca.DT_BAT IS NOT NULL";
+	$query .= "cp.DT_BAT IS NOT NULL";
 	$pdf->title = "Listagem de Membros Batizados";
 	$pdf->count = "Total de Membros Batizados";
 elseif ($pdf->tipoBatismo == "N"):
-	$query .= "ca.DT_BAT IS NULL";
+	$query .= "cp.DT_BAT IS NULL";
 	$pdf->title = "Listagem de Membros Não Batizados";
 	$pdf->count = "Total de Membros Não Batizados";
 elseif (fStrStartWith($pdf->tipoBatismo,"A")):
     $antes = substr($pdf->tipoBatismo,1,4);
-	$query .= "YEAR(ca.DT_BAT) < $antes";
+	$query .= "YEAR(cp.DT_BAT) < $antes";
 	$pdf->title = "Listagem de Membros Batizados antes de $antes";
 	$pdf->count = "Total de Membros Batizados antes de $antes";
 else:
-	$query .= "YEAR(ca.DT_BAT) = ". $pdf->tipoBatismo;
+	$query .= "YEAR(cp.DT_BAT) = ". $pdf->tipoBatismo;
 	$pdf->title = "Listagem de Membros Batizados em ". $pdf->tipoBatismo;
 	$pdf->count = "Total de Membros Batizados em ". $pdf->tipoBatismo;
 	
