@@ -160,12 +160,12 @@ function about(){
             <?php
 			nextEvents();
            
-            if ( date("m") < 3 ):
+            if ( date("m") < 5 ):
 				insDocs();
+				myUnit();
 				about();
-                myUnit();
             else:
-                myUnit();
+				myUnit();
 				insDocs();
 				about();
 			endif;	
