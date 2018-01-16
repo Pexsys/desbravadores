@@ -100,7 +100,7 @@ $autorizIcon = "fa fa-circle text-danger";
 											<label for="dsTema" class="control-label">Tipo</label>
 											<select name="cmTipoAutoriz" id="cmTipoAutoriz" class="selectpicker form-control input-sm" field="tp_autoriz" data-width="100%" data-container="body">
 												<option value="OB" data-icon="glyphicon-road" data-content="<span class='label label-default'>COMUM</span>">&nbsp;COMUM</option>
-												<option value="OP-ACM" data-icon="glyphicon-tent">&nbsp;ACAMPAMENTO/CAMINHADA</option>
+												<option value="OP-PAS" data-icon="glyphicon-tent">&nbsp;PASSEIO</option>
 												<option value="OP-CAM" data-icon="glyphicon-fire" data-content="<span class='label label-success'>CAMPORI</span>">&nbsp;CAMPORI</option>
 											</select>
 										</div>
