@@ -35,7 +35,7 @@ class LISTAPRESENCA extends TCPDF {
 		$this->SetAuthor('Ricardo J. Cesar');
 		$this->SetTitle('Listagem Alfabética de Presença na Reunião de Pais');
 		$this->SetSubject($GLOBALS['pattern']->getClubeDS(array("cl","nm")));
-		$this->SetKeywords('Presença, ' . str_replace(" ", ", ", $GLOBALS['pattern']->getClubeDS( array("db","nm","ig") ) ));
+		$this->SetKeywords('Presença, ' . str_replace(" ", ", ", $GLOBALS['pattern']->getClubeDS( array("db","nm","ibd") ) ));
 		$this->setImageScale(PDF_IMAGE_SCALE_RATIO);
 	}
 	

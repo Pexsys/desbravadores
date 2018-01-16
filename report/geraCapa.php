@@ -36,7 +36,7 @@ class ESPCR extends TCPDF {
 		$this->SetAuthor('Ricardo J. Cesar');
 		$this->SetTitle('Geração automática de capas de especialidades');
 		$this->SetSubject($GLOBALS['pattern']->getClubeDS(array("cl","nm")));
-		$this->SetKeywords('Especialidades, ' . str_replace(" ", ", ", $GLOBALS['pattern']->getClubeDS( array("db","nm","ig") ) ));
+		$this->SetKeywords('Especialidades, ' . str_replace(" ", ", ", $GLOBALS['pattern']->getClubeDS( array("db","nm","ibd") ) ));
 		$this->setImageScale(PDF_IMAGE_SCALE_RATIO);
 	}
 

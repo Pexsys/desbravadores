@@ -97,7 +97,12 @@ $autorizIcon = "fa fa-circle text-danger";
 									</div>
 									<div class="row">
 										<div class="form-group col-xs-6">
-											<input type="checkbox" name="cbAtivo" id="cbAtivo" field="fg_campori" value-on="S" value-off="N" data-toggle="toggle" data-onstyle="warning" data-offstyle="default" data-on="AUTORIZAÇÃO CAMPORI" data-off="AUTORIZAÇÃO COMUM" data-size="small" data-width="200"/>
+											<label for="dsTema" class="control-label">Tipo</label>
+											<select name="cmTipoAutoriz" id="cmTipoAutoriz" class="selectpicker form-control input-sm" field="tp_autoriz" data-width="100%" data-container="body">
+												<option value="OB" data-icon="glyphicon-road" data-content="<span class='label label-default'>COMUM</span>">&nbsp;COMUM</option>
+												<option value="OP-ACM" data-icon="glyphicon-tent">&nbsp;ACAMPAMENTO/CAMINHADA</option>
+												<option value="OP-CAM" data-icon="glyphicon-fire" data-content="<span class='label label-success'>CAMPORI</span>">&nbsp;CAMPORI</option>
+											</select>
 										</div>
 										<div class="form-group col-xs-6">
 											<input type="checkbox" name="cbImprimir" id="cbImprimir" field="fg_imprimir" value-on="S" value-off="N" data-toggle="toggle" data-onstyle="default" data-offstyle="warning" data-on="IMPRESSÃO EXTERNA" data-off="IMPRESSÃO INTERNA" data-size="small" data-width="200"/>

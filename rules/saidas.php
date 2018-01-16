@@ -341,7 +341,7 @@ function fSaida( $parameters ) {
 				fReturnStringNull(trim($frm["ds_org"])),
 				fReturnStringNull(trim($frm["ds_dest"])),
 				fReturnStringNull(trim($frm["ds_orig"])),
-				fReturnStringNull(trim($frm["fg_campori"])),
+				fReturnStringNull(trim($frm["tp_autoriz"])),
 				fReturnStringNull(trim($frm["fg_imprimir"])),
 				$frm["id"]
 			);
@@ -355,7 +355,7 @@ function fSaida( $parameters ) {
 					DS_ORG = ?,
 					DS_DEST = ?,
 					DS_ORIG = ?,
-					FG_CAMPORI = ?,
+					TP_AUTORIZ = ?,
 					FG_IMPRIMIR = ?
 				WHERE ID = ?",$arr);
 			
@@ -372,7 +372,7 @@ function fSaida( $parameters ) {
 				fReturnStringNull(trim($frm["ds_org"])),
 				fReturnStringNull(trim($frm["ds_dest"])),
 				fReturnStringNull(trim($frm["ds_orig"])),
-				fReturnStringNull(trim($frm["fg_campori"])),
+				fReturnStringNull(trim($frm["tp_autoriz"])),
 				fReturnStringNull(trim($frm["fg_imprimir"]))
 			);
 			$GLOBALS['conn']->Execute("
@@ -385,7 +385,7 @@ function fSaida( $parameters ) {
 					DS_ORG,
 					DS_DEST,
 					DS_ORIG,
-					FG_CAMPORI,
+					TP_AUTORIZ,
 					FG_IMPRIMIR
 				) VALUES (?,?,?,?,?,?,?,?,?,?)",$arr);
 			$id = $GLOBALS['conn']->Insert_ID();
@@ -418,7 +418,7 @@ function fSaida( $parameters ) {
 						"ds_org"			=> (trim($result->fields['DS_ORG'])),
 						"ds_dest"			=> (trim($result->fields['DS_DEST'])),
 						"ds_orig"			=> (trim($result->fields['DS_ORIG'])),
-						"fg_campori"		=> $result->fields['FG_CAMPORI'],
+						"tp_autoriz"		=> $result->fields['TP_AUTORIZ'],
 						"fg_imprimir"		=> $result->fields['FG_IMPRIMIR']
 					);
 			endif;

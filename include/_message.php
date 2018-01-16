@@ -53,7 +53,7 @@ class MESSAGE {
         $GLOBALS['pattern']->getClubeDS( array( "cl", "db", "nm" ) ).
         "<br/>"
         .
-        $GLOBALS['pattern']->getClubeDS( array( "ig" ) ).
+        $GLOBALS['pattern']->getClubeDS( array( "ibd" ) ).
         "</small>";
     }
 
