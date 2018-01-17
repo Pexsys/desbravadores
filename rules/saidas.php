@@ -430,7 +430,7 @@ function fSaida( $parameters ) {
 function fSaidaMembro( $saidaID, $arrayParticip ) {
 	
 	$result = $GLOBALS['conn']->Execute("
-		SELECT ID_CAD_MEMBRO, BUS, TENT, KITCHEN
+		SELECT *
 		FROM EVE_SAIDA_MEMBRO 
 		WHERE ID_EVE_SAIDA = ?
 	", array( $saidaID ) );	
@@ -442,7 +442,7 @@ function fSaidaMembro( $saidaID, $arrayParticip ) {
 	if ( count($arrayParticip) > 0 ):
 		$GLOBALS['conn']->Execute("
 			INSERT INTO EVE_SAIDA_MEMBRO (ID_EVE_SAIDA, ID_CAD_MEMBRO)
-			SELECT ?, ID_CAD_MEMBRO FROM CON_ATIVOS WHERE ID_CAD_MEMBRO IN (". implode(',',$arrayParticip) .") ORDER BY NM
+			SELECT ?, ID FROM CAD_MEMBRO WHERE ID IN (". implode(',',$arrayParticip) .")
 		", array($saidaID) );
 		
 		foreach ($esp as $k => $f):
@@ -458,15 +458,16 @@ function fSaidaMembro( $saidaID, $arrayParticip ) {
 
 		$aAutoriz = array();
 		$result = $GLOBALS['conn']->Execute("
-			SELECT ca.ID_CAD_MEMBRO
-			FROM CON_ATIVOS ca
-			INNER JOIN EVE_SAIDA_MEMBRO e ON (e.ID_CAD_MEMBRO = ca.ID_CAD_MEMBRO)
+			SELECT cm.ID
+			FROM CAD_MEMBRO cm
+			INNER JOIN CON_PESSOA cp ON (cp.ID_CAD_PESSOA = cm.ID_CAD_PESSOA)
+			INNER JOIN EVE_SAIDA_MEMBRO e ON (e.ID_CAD_MEMBRO = cm.ID)
 			INNER JOIN EVE_SAIDA es ON (es.ID = e.ID_EVE_SAIDA)
 			WHERE e.ID_EVE_SAIDA = ? 
-				AND ( YEAR(es.DH_R)-YEAR(ca.DT_NASC) - IF(DATE_FORMAT(ca.DT_NASC,'%m%d')>DATE_FORMAT(es.DH_R,'%m%d'),1,0) < ? )
-		", array( $saidaID, 18 ) );
+				AND ( YEAR(es.DH_R)-YEAR(cp.DT_NASC) - IF(DATE_FORMAT(cp.DT_NASC,'%m%d')>DATE_FORMAT(es.DH_R,'%m%d'),1,0) < 18 )
+		", array( $saidaID ) );
 		foreach ($result as $k => $fields):
-			$aAutoriz[] = $fields["ID_CAD_MEMBRO"];
+			$aAutoriz[] = $fields["ID"];
 		endforeach;
 		
 		if (count($aAutoriz) > 0):
