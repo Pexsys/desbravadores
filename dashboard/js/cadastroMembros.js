@@ -4,7 +4,7 @@ var formPopulated = false;
 var rowSelected = undefined;
 
 $(document).ready(function(){
-	
+
 	dataTable = $('#membrosDatatable').DataTable({
 		lengthChange: false,
 		ordering: true,
@@ -26,7 +26,7 @@ $(document).ready(function(){
 			url: jsLIB.rootDir+"rules/membros.php",
 			data: function (d) {
 				d.MethodName = "getMembros",
-				d.data = { 
+				d.data = {
 					filtro: tpFiltro,
 					filters: jsFilter.jSON()
 				}
@@ -62,11 +62,11 @@ $(document).ready(function(){
 	.on( 'search.dt', function() {
 		ruleBtnNovo();
 	});
-		
+
 	$('#btnAtivos, #btnTodos').click(function(){
 		 switchSelecion( $(this).attr('tp-filtro') );
 	});
-	
+
 	$('#btnNovo').click(function(){
 		fAbaFirstFocus();
 		ruleButtons();
@@ -263,7 +263,7 @@ $(document).ready(function(){
 		.on("change", "[field]", function(e) {
 			$("#cadMembrosForm")
 				.formValidation('revalidateField', this.id);
-			
+
 			if (formPopulated) {
 				var membroID = $("#membroID").val();
 				var input = $(this);
@@ -280,7 +280,7 @@ $(document).ready(function(){
 					}
 					input.val(value);
 					formPopulated = true;
-					
+
 					if (membroID == 'Novo'){
 						var nome = jsLIB.getValueFromField($("#nmCompleto"));
 						var datn = jsLIB.getValueFromField($("#dtNascimento"));
@@ -306,7 +306,7 @@ $(document).ready(function(){
 								}
 							});
 						}
-						
+
 					//se mudou procura, se nao encontrar cpf, insere. se encontrar, retorna dados e popula.
 					} else if (field == "cad_resp_legal-nr_cpf") {
 						var parameters = {
@@ -324,7 +324,7 @@ $(document).ready(function(){
 								formPopulated = true;
 							}
 						});
-						
+
 					} else {
 						var parameters = {
 							id	: membroID,
@@ -355,7 +355,7 @@ $(document).ready(function(){
 												$("#nrLog").val(ect.cep.nr).attr('valid','ok').trigger("change");
 												$("#dsBai").val(ect.cep.ba).attr('valid','ok').trigger("change");
 												$("#dsCid").val(ect.cep.cd).attr('valid','ok').trigger("change");
-												$("#cmUF").val(ect.cep.uf).attr('valid','ok').trigger("change");											
+												$("#cmUF").val(ect.cep.uf).attr('valid','ok').trigger("change");
 											}
 										}
 									});
@@ -375,7 +375,7 @@ $(document).ready(function(){
 			}
 		})
 	;
-		
+
 	$('.panel-heading').on("click", function (e) {
 		if ( !$(this).hasClass('panel-collapsed') ) {
 			$(this).addClass('panel-collapsed');
@@ -408,7 +408,7 @@ $(document).ready(function(){
 		ruleButtons();
 		$("#membrosModal").modal();
 	});
-	
+
 	$('[name=memberNavigate]').click(function(e){
 		if ( $(this).isEnabled() ) {
 			var row = undefined;
@@ -476,7 +476,7 @@ function populateCargos(membroID) {
 		success: function(cg){
 			jsLIB.populateOptions( $("#cmCargo"), cg );
 			$("#cmCargo").val(value).change();
-		
+
 			if ( value.startsWith("2-07") ) {
 				jsLIB.ajaxCall({
 					async: false,
@@ -495,7 +495,7 @@ function populateCargos(membroID) {
 }
 
 function getMember( membroID ) {
-	var parameters = { 
+	var parameters = {
 		filtro: tpFiltro,
 		id : membroID
 	};
@@ -509,7 +509,7 @@ function getMember( membroID ) {
 
 function populateMember( mb ) {
 	formPopulated = false;
-	
+
 	jsLIB.populateOptions( $("#cmAnoDir"), mb.anos );
 	jsLIB.populateOptions( $("#cmFanfarra"), mb.instrumentos );
 	jsLIB.populateOptions( $("#cmUnidade"), mb.unidades );
