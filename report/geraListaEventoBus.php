@@ -38,7 +38,7 @@ class LISTAEVENTOBUS extends TCPDF {
 		$this->SetAuthor('Ricardo J. Cesar');
 		$this->SetTitle('Listagem de Passageiros do Evento');
 		$this->SetSubject($GLOBALS['pattern']->getClubeDS(array("cl","nm")));
-		$this->SetKeywords('Onibus, ' . str_replace(" ", ", ", $GLOBALS['pattern']->getClubeDS( array("db","nm","ig") ) ));
+		$this->SetKeywords('Onibus, ' . str_replace(" ", ", ", $GLOBALS['pattern']->getClubeDS( array("db","nm","ibd") ) ));
 		$this->setImageScale(PDF_IMAGE_SCALE_RATIO);
 	}
 

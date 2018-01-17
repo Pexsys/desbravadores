@@ -37,7 +37,7 @@ class ESPCR extends TCPDF {
 		$this->SetAuthor('Ricardo J. Cesar');
 		$this->SetTitle('Geração automática de registro de histórico');
 		$this->SetSubject($GLOBALS['pattern']->getClubeDS(array("cl","nm")));
-		$this->SetKeywords('Histórico, ' . str_replace(" ", ", ", $GLOBALS['pattern']->getClubeDS( array("db","nm","ig") ) ));
+		$this->SetKeywords('Histórico, ' . str_replace(" ", ", ", $GLOBALS['pattern']->getClubeDS( array("db","nm","ibd") ) ));
 		$this->setImageScale(PDF_IMAGE_SCALE_RATIO);
 		$this->SetTopMargin(4);
 		$this->SetFooterMargin(0);
@@ -61,21 +61,21 @@ class ESPCR extends TCPDF {
 
  		$this->setXY(167,7);
  		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 7);
- 		$this->Cell(44, 4, "Distrito de Capão Redondo", 0, false, 'L', false, false, false, false, 'T', 'M');
+ 		$this->Cell(44, 4, "Distrito de ".$GLOBALS['pattern']->getClubeDS( array("dst") ), 0, false, 'L', false, false, false, false, 'T', 'M');
  		$this->setXY(167,11);
- 		$this->Cell(44, 4, "Av. Ellis Maas, 520", 0, false, 'L', false, false, false, false, 'T', 'M');
+ 		$this->Cell(44, 4, $GLOBALS['pattern']->getClubeDS( array("add") ), 0, false, 'L', false, false, false, false, 'T', 'M');
  		$this->setXY(167,15);
- 		$this->Cell(44, 4, "Capão Redondo", 0, false, 'L', false, false, false, false, 'T', 'M');
+ 		$this->Cell(44, 4, $GLOBALS['pattern']->getClubeDS( array("dst") ), 0, false, 'L', false, false, false, false, 'T', 'M');
  		$this->setXY(167,19);
- 		$this->Cell(44, 4, "São Paulo - SP", 0, false, 'L', false, false, false, false, 'T', 'M');
+ 		$this->Cell(44, 4, $GLOBALS['pattern']->getClubeDS( array("cid") ), 0, false, 'L', false, false, false, false, 'T', 'M');
  		$this->setXY(167,23);
- 		$this->Cell(44, 4, "CEP 05859-000", 0, false, 'L', false, false, false, false, 'T', 'M');
+ 		$this->Cell(44, 4, $GLOBALS['pattern']->getClubeDS( array("cep") ), 0, false, 'L', false, false, false, false, 'T', 'M');
  		$this->setXY(167,27);
- 		$this->Cell(44, 4, "CNPJ 43.586.122/0121-20", 0, false, 'L', false, false, false, false, 'T', 'M');
+ 		$this->Cell(44, 4, $GLOBALS['pattern']->getClubeDS( array("cnpj") ), 0, false, 'L', false, false, false, false, 'T', 'M');
  		$this->setXY(167,31);
  		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 8);
  		$this->SetTextColor(0,128,128);
- 		$this->Cell(44, 4, "Associação Paulista Sul", 0, false, 'L', false, false, false, false, 'T', 'M');
+ 		$this->Cell(44, 4, $GLOBALS['pattern']->getClubeDS( array("as") ), 0, false, 'L', false, false, false, false, 'T', 'M');
 
  		$this->setXY(5,40);
  		$this->SetTextColor(0,0,0);

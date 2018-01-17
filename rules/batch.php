@@ -44,7 +44,7 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
 		$GLOBALS['mail']->AddAddress( $fA["EMAIL"] );
 		$GLOBALS['mail']->Subject = utf8_decode( $bm["sub"] );
 		$GLOBALS['mail']->MsgHTML( $bm["msg"] );
-			
+
 		if ( $GLOBALS['mail']->Send() ):
 			echo "parabens enviado para ". $fA["EMAIL"]."<br/>";
 		else:
@@ -58,7 +58,7 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
 
     $rA = $GLOBALS['conn']->Execute("SELECT * FROM CON_ATIVOS");
     foreach ($rA as $lA => $fA):
-        
+
         $a = explode(" ",titleCase($fA["NM"]));
 
         //LE REGRAS
@@ -70,7 +70,7 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
     	");
     	foreach ($rg as $lg => $fg):
             $min = $fg["MIN_AREA"];
-    
+
             $feitas = 0;
             //LE PARAMETRO MINIMO E HISTORICO PARA A REGRA
     	    $rR = $GLOBALS['conn']->Execute("
@@ -84,19 +84,19 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
     	    foreach($rR as $lR => $fR):
                 $feitas += min( $fR["QT_MIN"], $fR["QT_FEITAS"] );
             endforeach;
-    	    
+
     		$pct = floor( ( $feitas / $min ) * 100 );
-    		
+
     		//VERIFICA SE COMPLETADO, MAS AINDA NÃO CONCLUIDO/AVALIADO/INVESTIDO
     		if ( $pct >= 100 ):
         	    $rI = $GLOBALS['conn']->Execute("
                     SELECT DT_CONCLUSAO
-                    FROM APR_HISTORICO 
+                    FROM APR_HISTORICO
                     WHERE ID_CAD_PESSOA = ?
                       AND ID_TAB_APREND = ?
-        	    ", array( $fA["ID_CAD_PESSOA"], $fg["ID"] ) );	
+        	    ", array( $fA["ID_CAD_PESSOA"], $fg["ID"] ) );
         	    if ($rI->EOF || is_null($rI->fields["DT_CONCLUSAO"]) ):
-        	        
+
         	        //INSERE NOTIFICAÇOES SE NÃO EXISTIR.
         	        $GLOBALS['conn']->Execute("
         				INSERT INTO LOG_MENSAGEM ( ID_ORIGEM, TP, ID_USUARIO, EMAIL, DH_GERA )
@@ -106,7 +106,7 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
         				 WHERE ca.ID_CAD_PESSOA = ?
         				   AND NOT EXISTS (SELECT 1 FROM LOG_MENSAGEM WHERE ID_ORIGEM = ? AND TP = 'M' AND ID_USUARIO = cu.ID_USUARIO)
         			", array( $fg["ID"], $fA["ID_CAD_PESSOA"], $fg["ID"] ) );
-        			
+
 					if (!empty($fA["EMAIL"]) && $fA["ID_CAD_PESSOA"] != $rDIR->fields["ID_DIRETOR"] ):
 						$message = new MESSAGE( array( "np" => $a[0], "nm" => $fg["DS_ITEM"], "sx" => $fA["SEXO"], "nd" => $nomeDiretor ) );
 
@@ -114,7 +114,7 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
         				$GLOBALS['mail']->AddAddress( $fA["EMAIL"] );
         				$GLOBALS['mail']->Subject = utf8_decode($GLOBALS['pattern']->getClubeDS( array("cl","nm") ) . " - Aviso de Conclusão");
         				$GLOBALS['mail']->MsgHTML( $message->getConclusao() );
-        					
+
         				if ( $GLOBALS['mail']->Send() ):
         					$nrEnviados++;
         					//ATUALIZA ENVIO
@@ -138,11 +138,11 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
 $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.03-Excluindo Perfis de Membros Inativos...')");
 $result = $GLOBALS['conn']->Execute("
 	  SELECT DISTINCT cu.ID_USUARIO
-		FROM CAD_PESSOA cp 
+		FROM CAD_PESSOA cp
   INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = cp.ID)
   INNER JOIN CAD_USU_PERFIL cup ON (cup.ID_CAD_USUARIOS = cu.ID_USUARIO)
-	   WHERE NOT EXISTS (SELECT 1 
-							FROM CAD_ATIVOS a 
+	   WHERE NOT EXISTS (SELECT 1
+							FROM CAD_ATIVOS a
 					  INNER JOIN CAD_MEMBRO m ON (m.ID = a.ID_CAD_MEMBRO)
 					  WHERE m.ID_CAD_PESSOA = cp.ID
 						AND a.NR_ANO = YEAR(NOW())
@@ -158,9 +158,9 @@ if ($md == "01-01"):
 	//BASE DE COMPRAS
 	$GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.04-Reorganizando base de compras...')");
 	$result = $GLOBALS['conn']->Execute("
-		SELECT * 
+		SELECT *
 		  FROM CAD_COMPRAS
-		 WHERE FG_PREVISAO = 'N' 
+		 WHERE FG_PREVISAO = 'N'
 	  ORDER BY ID_CAD_MEMBRO, ID_TAB_MATERIAIS, COMPL
 	");
 	$GLOBALS['conn']->Execute("TRUNCATE CAD_COMPRAS");
@@ -223,7 +223,7 @@ if ($md == "01-01"):
 		$GLOBALS['mail']->AddAddress( $fA["EMAIL"] );
 		$GLOBALS['mail']->Subject = utf8_decode( $bm["sub"] );
 		$GLOBALS['mail']->MsgHTML( $bm["msg"] );
-			
+
 		if ( $GLOBALS['mail']->Send() ):
 			echo "feliz ano novo enviado para ". $fA["EMAIL"]."<br/>";
 		else:
@@ -233,7 +233,7 @@ if ($md == "01-01"):
 
 //MENSAGEM DE FELIZ NATAL
 elseif ($md == "12-25"):
-	
+
 	$GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.07-Felicitando pelo natal...')");
 	$rA = $GLOBALS['conn']->Execute("
 		SELECT cp.NM, cp.TP_SEXO, EMAIL
@@ -251,11 +251,11 @@ elseif ($md == "12-25"):
 		$GLOBALS['mail']->AddAddress( $fA["EMAIL"] );
 		$GLOBALS['mail']->Subject = utf8_decode( $bm["sub"] );
 		$GLOBALS['mail']->MsgHTML( $bm["msg"] );
-			
+
 		if ( $GLOBALS['mail']->Send() ):
-			echo "feliz ano novo enviado para ". $fA["EMAIL"]."<br/>";
+			echo "feliz natal enviado para ". $fA["EMAIL"]."<br/>";
 		else:
-			echo "feliz ano novo não enviado para ". $fA["EMAIL"]."<br/>";
+			echo "feliz natal não enviado para ". $fA["EMAIL"]."<br/>";
 		endif;
 	endforeach;
 endif;

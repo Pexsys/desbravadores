@@ -74,7 +74,7 @@ $autorizIcon = "fa fa-circle text-danger";
 								</div>
 							</div>
 							<div class="panel panel-yellow" aria-expanded="false">
-								<div class="panel-body" style="height:190px;overflow-y:scroll;">
+								<div class="panel-body"> <!-- style="height:220px;overflow-y:scroll;"-->
 									<div class="row">
 										<div class="form-group col-xs-6">
 											<label for="dsLocal" class="control-label">Local do evento</label>
@@ -97,26 +97,32 @@ $autorizIcon = "fa fa-circle text-danger";
 									</div>
 									<div class="row">
 										<div class="form-group col-xs-6">
-											<input type="checkbox" name="cbAtivo" id="cbAtivo" field="fg_campori" value-on="S" value-off="N" data-toggle="toggle" data-onstyle="warning" data-offstyle="default" data-on="AUTORIZAÇÃO CAMPORI" data-off="AUTORIZAÇÃO COMUM" data-size="small" data-width="200"/>
+											<label for="dsTema" class="control-label">Tipo</label>
+											<select name="cmTipoAutoriz" id="cmTipoAutoriz" class="selectpicker form-control input-sm" field="tp_autoriz" data-width="100%" data-container="body">
+												<option value="OB" data-content="<span class='label label-default'>COMUM</span>">&nbsp;COMUM</option>
+												<option value="OP-PAS" data-icon="glyphicon-tent">&nbsp;PASSEIO</option>
+												<option value="OP-CAM" data-icon="glyphicon-fire">&nbsp;CAMPORI</option>
+											</select>
 										</div>
 										<div class="form-group col-xs-6">
-											<input type="checkbox" name="cbImprimir" id="cbImprimir" field="fg_imprimir" value-on="S" value-off="N" data-toggle="toggle" data-onstyle="default" data-offstyle="warning" data-on="IMPRESSÃO EXTERNA" data-off="IMPRESSÃO INTERNA" data-size="small" data-width="200"/>
+											<label for="dsTema" class="control-label">Impressão</label>
+											<input type="checkbox" name="cbImprimir" id="cbImprimir" field="fg_imprimir" value-on="S" value-off="N" data-toggle="toggle" data-onstyle="default" data-offstyle="warning" data-on="INTERNA/EXTERNA" data-off="SOMENTE INTERNA" data-size="small" data-width="200"/>
 										</div>
 									</div>
 									<div class="row">
 										<div class="col-xs-12">
 										<?php fDataFilters(
-											array( 
+											array(
 												"filterTo" => "#cbParticip",
-												"filters" => 
-													array( 
+												"filters" =>
+													array(
 														array( "id" => "G", "ds" => "Grupo", "icon" => "fa fa-group" ),
 														array( "id" => "X", "ds" => "Sexo", "icon" => "fa fa-venus-mars" ),
 														array( "id" => "B", "ds" => "Batizado", "icon" => "fa fa-bath" ),
 														array( "id" => "U", "ds" => "Unidade", "icon" => "fa fa-universal-access" ),
 														array( "id" => "C", "ds" => "Classe", "icon" => "fa fa-graduation-cap" )
 													)
-											) 
+											)
 										);
 										?>
 										</div>
@@ -136,7 +142,7 @@ $autorizIcon = "fa fa-circle text-danger";
 							<?php if (true): //PODE EXCLUIR?>
 							<a role="button" class="btn btn-danger pull-left" data-toggle="modal" id="btnDel"><i class="glyphicon glyphicon-trash"></i>&nbsp;Excluir</a>
 							<?php endif;?>
-						</div>	
+						</div>
 						<div class="col-lg-6 form-group">
 							<?php if (true): //PODE GERAR?>
 							<div class="pull-left" id="divAttr" style="display:none">
@@ -151,15 +157,15 @@ $autorizIcon = "fa fa-circle text-danger";
 							<?php if (true): //PODE GERAR?>
 							<a role="button" class="btn btn-info pull-right" id="btnPrint"><i class="fa fa-print"></i>&nbsp;Imprimir</a>
 							<?php endif;?>
-						</div>	
+						</div>
 						<div class="col-lg-3 form-group">
 							<?php if (true): //PODE INSERIR/ALTERAR?>
 							<button type="submit" class="btn btn-success pull-right"><i class="glyphicon glyphicon-floppy-save"></i>&nbsp;Gravar</button>
 							<?php endif;?>
-						</div>	
-					</div>	
+						</div>
+					</div>
 				</form>
-			</div>	
+			</div>
 		</div>
 	</div>
 </div>
@@ -170,7 +176,7 @@ $autorizIcon = "fa fa-circle text-danger";
 			<div class="modal-content">
 				<div class="modal-header">
 					<button aria-hidden="true" data-dismiss="modal" class="close" type="button" id="btnX">&times;</button>
-				</div>			
+				</div>
 				<div class="modal-body">
 					<div class="panel panel-warning">
 						<div class="panel-heading" style="padding:4px 10px 0px">
@@ -188,7 +194,7 @@ $autorizIcon = "fa fa-circle text-danger";
 									</div>
 								</div>
 							</div>
-						</div>	
+						</div>
 					</div>
 					<div class="panel panel-warning" id="divFilterPrint" style="display:none">
 						<div class="panel-heading" style="padding:4px 10px 0px">
@@ -218,15 +224,15 @@ $autorizIcon = "fa fa-circle text-danger";
 									</div>
 								</div>
 							</div>
-						</div>	
+						</div>
 					</div>
 				</div>
 				<div class="panel-footer">
 					<div class="row">
 						<div class="col-lg-12">
 							<button type="submit" class="btn btn-success pull-right"><i class="fa fa-file-pdf-o"></i>&nbsp;Gerar PDF</button>
-						</div>	
-					</div>	
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -241,7 +247,7 @@ $autorizIcon = "fa fa-circle text-danger";
 					<div class="panel panel-info">
 						<div class="panel-heading">
 							<label id="lblTitle"></label>
-							<button aria-hidden="true" data-dismiss="modal" class="close" type="button" id="btnX">&times;</button>							
+							<button aria-hidden="true" data-dismiss="modal" class="close" type="button" id="btnX">&times;</button>
 						</div>
 						<div class="panel-body">
 							<table class="compact row-border hover stripe" width="100%" id="attrDatatable">
