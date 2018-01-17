@@ -60,7 +60,7 @@ class ETIQUETAS extends TCPDF {
 		$this->SetAuthor('Ricardo J. Cesar');
 		$this->SetTitle('Geração automática de identificação');
 		$this->SetSubject($GLOBALS['pattern']->getClubeDS(array("cl","nm")));
-		$this->SetKeywords('Etiquetas, ' . str_replace(" ", ", ", $GLOBALS['pattern']->getClubeDS( array("db","nm","ig") ) ));
+		$this->SetKeywords('Etiquetas, ' . str_replace(" ", ", ", $GLOBALS['pattern']->getClubeDS( array("db","nm","ibd") ) ));
 		$this->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
 		$this->SetMargins(0, 0, 0);
@@ -287,7 +287,7 @@ class ETIQUETAS extends TCPDF {
 			$this->MultiCell(126, 6, 
 				$GLOBALS['pattern']->getClubeDS( array("cl","nm") ) ." - desde ".
 				$GLOBALS['pattern']->getClubeDS( array("af") )."\n".
-				$GLOBALS['pattern']->getClubeDS( array("ig","rg","as","un","dv","sp") ), false, 'C', false, 2, "", "", true, 0, false, true, 0, "M", false );
+				$GLOBALS['pattern']->getClubeDS( array("ibd","rg","ab","un","dv","sp") ), false, 'C', false, 2, "", "", true, 0, false, true, 0, "M", false );
 			
 		//TIPO E - CARTAO DE ESPECIALIDADE
 		elseif ($ln["TP"] == "E"):

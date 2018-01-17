@@ -39,7 +39,7 @@ class ESPCR extends TCPDF {
 		$this->SetAuthor('Ricardo J. Cesar');
 		$this->SetTitle('Geração automática de autorização de Saída');
 		$this->SetSubject($GLOBALS['pattern']->getClubeDS(array("cl","nm")));
-		$this->SetKeywords('Autorizações, ' . str_replace(" ", ", ", $GLOBALS['pattern']->getClubeDS( array("db","nm","ig") ) ) );
+		$this->SetKeywords('Autorizações, ' . str_replace(" ", ", ", $GLOBALS['pattern']->getClubeDS( array("db","nm","ibd") ) ) );
 		$this->setImageScale(PDF_IMAGE_SCALE_RATIO);
 		$this->SetTopMargin(4);
 		$this->SetFooterMargin(0);
@@ -54,7 +54,7 @@ class ESPCR extends TCPDF {
 	
 	public function setLine($line){
 	    $this->line = $line;
-	    $this->campori = ($this->line["FG_CAMPORI"] == "S");
+	    $this->campori = ($this->line["TP_AUTORIZ"] == "OP-CAM");
 	    $arr = explode(' ',strtolower($this->line["DS_CARGO"]));
 	    $this->dsCargo = (fStrStartWith($this->line["CD_CARGO"],"1") ? ($this->line["TP_SEXO"] == "F" ? "desbravadora" : "desbravador") : $arr[0]);
 	}
@@ -69,21 +69,21 @@ class ESPCR extends TCPDF {
     
      		$this->setXY(172,7);
      		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 7);
-     		$this->Cell(44, 4, "Distrito de Capão Redondo", 0, false, 'L', false, false, false, false, 'T', 'M');
+     		$this->Cell(44, 4, "Distrito de ".$GLOBALS['pattern']->getClubeDS( array("dst") ), 0, false, 'L', false, false, false, false, 'T', 'M');
      		$this->setXY(172,11);
-     		$this->Cell(44, 4, "Av. Ellis Maas, 520", 0, false, 'L', false, false, false, false, 'T', 'M');
+     		$this->Cell(44, 4, $GLOBALS['pattern']->getClubeDS( array("add") ), 0, false, 'L', false, false, false, false, 'T', 'M');
      		$this->setXY(172,15);
-     		$this->Cell(44, 4, "Capão Redondo", 0, false, 'L', false, false, false, false, 'T', 'M');
+     		$this->Cell(44, 4, $GLOBALS['pattern']->getClubeDS( array("dst") ), 0, false, 'L', false, false, false, false, 'T', 'M');
      		$this->setXY(172,19);
-     		$this->Cell(44, 4, "São Paulo - SP", 0, false, 'L', false, false, false, false, 'T', 'M');
+     		$this->Cell(44, 4, $GLOBALS['pattern']->getClubeDS( array("cid") ), 0, false, 'L', false, false, false, false, 'T', 'M');
      		$this->setXY(172,23);
-     		$this->Cell(44, 4, "CEP 05859-000", 0, false, 'L', false, false, false, false, 'T', 'M');
+     		$this->Cell(44, 4, $GLOBALS['pattern']->getClubeDS( array("cep") ), 0, false, 'L', false, false, false, false, 'T', 'M');
      		$this->setXY(172,27);
-     		$this->Cell(44, 4, "CNPJ 43.586.122/0121-20", 0, false, 'L', false, false, false, false, 'T', 'M');
+     		$this->Cell(44, 4, $GLOBALS['pattern']->getClubeDS( array("cnpj") ), 0, false, 'L', false, false, false, false, 'T', 'M');
      		$this->setXY(172,31);
      		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 8);
      		$this->SetTextColor(0,128,128);
-     		$this->Cell(44, 4, "Associação Paulista Sul", 0, false, 'L', false, false, false, false, 'T', 'M');
+     		$this->Cell(44, 4, $GLOBALS['pattern']->getClubeDS( array("as") ), 0, false, 'L', false, false, false, false, 'T', 'M');
      		
      		$this->setXY(5,35);
      		$this->SetTextColor(0,0,0);
@@ -328,7 +328,7 @@ endforeach;
 
 $aP = 0;
 $query = "
-	SELECT es.ID, es.DS, es.DH_S, es.DH_R, es.DS_TEMA, es.DS_ORG, es.DS_DEST, es.DS_ORIG, es.FG_CAMPORI,
+	SELECT es.ID, es.DS, es.DH_S, es.DH_R, es.DS_TEMA, es.DS_ORG, es.DS_DEST, es.DS_ORIG, es.TP_AUTORIZ,
 	       esp.ID_CAD_PESSOA, 
 	       ca.NM, ca.TP_SEXO, ca.NR_DOC, ca.NR_CPF, ca.TP_SEXO_RESP, ca.DS_TP, ca.NM_RESP, ca.NR_DOC_RESP, ca.NR_CPF_RESP, ca.FONE_CEL_RESP, ca.CD_CARGO, ca.DS_CARGO,
 	       cd.NOME_DIRETOR, cd.IDENT_DIRETOR

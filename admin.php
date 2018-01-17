@@ -4,7 +4,7 @@ session_start();
 ?>
 <html>
 <head><meta http-equiv="Content-Type" content="text/html">
-<title><?php echo $GLOBALS['pattern']->getClubeDS(array("cl","nm","sp","ig"));?></title>
+<title><?php echo $GLOBALS['pattern']->getClubeDS(array("cl","nm","sp","ibd"));?></title>
 <?php @require_once("include/_metaheader.php");?>
 <link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
 <link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css"/>

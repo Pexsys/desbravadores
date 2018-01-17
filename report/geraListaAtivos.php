@@ -36,7 +36,7 @@ class LISTAATIVOSALFA extends TCPDF {
 		$this->SetAuthor('Ricardo J. Cesar');
 		$this->SetTitle('Listagem de Membros Ativos');
 		$this->SetSubject($GLOBALS['pattern']->getClubeDS(array("cl","nm")));
-		$this->SetKeywords('Ativos, ' . str_replace(" ", ", ", $GLOBALS['pattern']->getClubeDS( array("db","nm","ig") ) ) );
+		$this->SetKeywords('Ativos, ' . str_replace(" ", ", ", $GLOBALS['pattern']->getClubeDS( array("db","nm","ibd") ) ) );
 		$this->setImageScale(PDF_IMAGE_SCALE_RATIO);
 	}
 
