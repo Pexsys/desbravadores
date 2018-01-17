@@ -103,7 +103,7 @@ $(document).ready(function(){
 							message: 'O nome completo &eacute; obrigat&oacute;rio'
 						},
 						regexp: {
-							regexp: /^([a-zA-ZáàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ\']{2,})+(?:\s[a-zA-ZáàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ\']{1,})+$/,
+							regexp: /^([a-zA-ZáàâãéèêíïóôõöúçñÁÀÂÃÉÈÊÍÏÓÔÕÖÚÇÑ\']{2,})+(?:\s[a-zA-ZáàâãéèêíïóôõöúçñÁÀÂÃÉÈÊÍÏÓÔÕÖÚÇÑ\']{1,})+$/,
 							message: 'Digite no m&iacute;nimo o nome e sobrenome sem espa&ccedil;os no final'
 						}
 				}},
@@ -127,7 +127,7 @@ $(document).ready(function(){
 						message: 'Digite o logradouro'
 					},
 					regexp: {
-						regexp: /^([a-zA-ZáàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ\']{2,})+(?:\s[a-zA-ZáàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ\']{1,})+$/,
+						regexp: /^([a-zA-ZáàâãéèêíïóôõöúçñÁÀÂÃÉÈÊÍÏÓÔÕÖÚÇÑ\.\']{2,})+(?:\s[a-zA-ZáàâãéèêíïóôõöúçñÁÀÂÃÉÈÊÍÏÓÔÕÖÚÇÑ\.\']{1,})+$/,
 						message: 'Digite no m&iacute;nimo dois nomes sem espa&ccedil;os no final'
 					}
 				}},
@@ -166,7 +166,7 @@ $(document).ready(function(){
 						message: 'O nome completo &eacute; obrigat&oacute;rio'
 					},
 					regexp: {
-						regexp: /^([a-zA-ZáàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ\']{2,})+(?:\s[a-zA-ZáàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ\']{1,})+$/,
+						regexp: /^([a-zA-ZáàâãéèêíïóôõöúçñÁÀÂÃÉÈÊÍÏÓÔÕÖÚÇÑ\']{2,})+(?:\s[a-zA-ZáàâãéèêíïóôõöúçñÁÀÂÃÉÈÊÍÏÓÔÕÖÚÇÑ\']{1,})+$/,
 						message: 'Digite no m&iacute;nimo o nome e sobrenome sem espa&ccedil;os no final'
 					}
 				}},
@@ -224,7 +224,7 @@ $(document).ready(function(){
 				}},
 				dsInstEns:		{validators: {
 					regexp: {
-						regexp: /^((\b[a-zA-Z\.áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ\']{1,})\s*){1,}$/,
+						regexp: /^(?:(?:[a-zA-Z\.ªºáàâãéèêíïóôõöúçñÁÀÂÃÉÈÊÍÏÓÔÕÖÚÇÑ\-\']{2,})\s?)+$/,
 						message: 'Digite a onde estuda'
 					}
 				}},
