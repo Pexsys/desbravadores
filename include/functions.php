@@ -888,7 +888,7 @@ function fClearBN($bn){
 }
 
 function fCPF($cpf){
-	if (!is_null($cpf) && !empty($cpf) && !== 0):
+	if (!is_null($cpf) && !empty($cpf) && $cpf !== 0):
 		return fStrFormat("###.###.###-##",fStrZero(fClearBN($cpf),11));
 	endif;
 	return "";
