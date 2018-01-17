@@ -31,7 +31,7 @@ function responseMethod(){
     header('Content-type: application/json');
 	// Getting the json data from the request
 	$response = '';
-	
+
 	$json_data = json_decode( json_encode( empty($_POST) ? $_GET : $_POST ) );
 	// Checking if the data is null..
 	if ( is_null( $json_data ) ):
@@ -45,7 +45,7 @@ function responseMethod(){
 		else:
 			$response = $methodName();
 		endif;
-	endif;    
+	endif;
 	echo json_encode($response);
 }
 
@@ -85,7 +85,7 @@ function fHeaderPage( $aCssFiles = NULL, $aJsFiles = NULL ){
 <?php
 if (isset($aCssFiles)):
 	foreach ($aCssFiles as &$file):
-	?><link href="<?php echo $file;?>" rel="stylesheet" type="text/css"><?php 
+	?><link href="<?php echo $file;?>" rel="stylesheet" type="text/css"><?php
 	endforeach;
 endif;
 ?>
@@ -198,7 +198,7 @@ function fMontaCarrousel($relativePath,$extentions){
 						$i = 0;
 					endif;
 				endwhile;
-				
+
 				$icF = 0;
 				for ($c=0;$c<count($aCarrousel);$c++):
 					echo "<div class=\"col-md-2\">";
@@ -210,17 +210,17 @@ function fMontaCarrousel($relativePath,$extentions){
 						echo "<li data-target=\"#carousel-example-generic$c\" data-slide-to=\"$x\"". ($x == 0 ? " class=\"active\"" : "") ."></li>";
 					endfor;
 					echo "</ol>";
-					
+
 					echo "<!-- Wrapper for slides -->";
 					echo "<div class=\"carousel-inner\" role=\"listbox\">";
-					
+
 					for ($x=0;$x<$aCarrousel[$c];$x++):
 						echo "<div class=\"item". ($x == 0 ? " active" : "") ."\">";
 						echo "<img src=\"".$capa.$capaFiles[$icF++]."\" alt=\"$x\" width=\"100%\" height=\"100%\"/>";
 						echo "</div>";
 					endfor;
 					echo "</div>";
-					
+
 					echo "<!-- Controls -->";
 					echo "<a class=\"left carousel-control\" href=\"#carousel-example-generic$c\" role=\"button\" data-slide=\"prev\">";
 					echo "<span class=\"glyphicon glyphicon-chevron-left\" aria-hidden=\"true\"></span>";
@@ -230,7 +230,7 @@ function fMontaCarrousel($relativePath,$extentions){
 					echo "<span class=\"glyphicon glyphicon-chevron-right\" aria-hidden=\"true\"></span>";
 					echo "<span class=\"sr-only\">Next</span>";
 					echo "</a>";
-					
+
 					echo "</div>";
 					echo "</div>";
 				endfor;
@@ -243,7 +243,7 @@ function insDocs(){
 	$retorno = fListDocumentos("docs/inscricoes/".date('Y')."/","<h4><i class=\"fa fa-fw fa-pencil\"></i>&nbsp;Inscri&ccedil;&otilde;es ".date('Y')."</h4>",".pdf", ( date("m") < 4 ? "panel-danger" : "panel-warning" ) ,"h4");
 	if (!empty($retorno)):
 		echo "<div class=\"col-md-6 col-sm-9 col-lg-4\">$retorno</div>";
-	endif; 
+	endif;
 }
 
 function fListDocumentos($relativePath,$title,$extentions,$classPanel,$tagItem){
@@ -251,7 +251,7 @@ function fListDocumentos($relativePath,$title,$extentions,$classPanel,$tagItem){
 	$capa_img = $GLOBALS['pattern']->getVD() ."img/";
 
 	$strRetorno = "";
-	
+
 	$document_root = $_SERVER['DOCUMENT_ROOT'];
 	$fisico_capas = dirname(dirname(__FILE__)) . "/$relativePath";
 	$fisico_img = dirname(dirname(__FILE__)) . "/img/";
@@ -311,7 +311,7 @@ function fListDocumentos($relativePath,$title,$extentions,$classPanel,$tagItem){
 					endfor;
 					$nFalta = count($capaFiles) - $pos;
 				endfor;
-				
+
 				if ( $relativePath == "docs/outros/" ):
 					$strRetorno .= "
 					<div class=\"media\">
@@ -326,7 +326,7 @@ function fListDocumentos($relativePath,$title,$extentions,$classPanel,$tagItem){
 					</div>
 					";
 				endif;
-				
+
 				$strRetorno .= "</div>";
 				$strRetorno .= "</div>";
 			endif;
@@ -376,7 +376,7 @@ function fListFanfarra($relativePath,$title,$extentions){
 						$qtdFiles = count($capaFiles);
 						if ($qtdFiles > 0):
 							sort($capaFiles);
-							?>	
+							?>
 							<div class="panel panel-warning">
 								<div class="panel-heading" role="tab" id="heading<?php echo $i?>">
 								  <h4 class="panel-title">
@@ -579,15 +579,15 @@ function datediff($interval, $datefrom, $dateto, $using_timestamps = false) {
     n - Number of full minutes
     s - Number of full seconds (default)
     */
-    
+
     if (!$using_timestamps) {
         $datefrom = strtotime($datefrom, 0);
         $dateto = strtotime($dateto, 0);
     }
     $difference = $dateto - $datefrom; // Difference in seconds
-     
+
     switch($interval) {
-     
+
     case 'yyyy': // Number of full years
         $years_difference = floor($difference / 31536000);
         if (mktime(date("H", $datefrom), date("i", $datefrom), date("s", $datefrom), date("n", $datefrom), date("j", $datefrom), date("Y", $datefrom)+$years_difference) > $dateto) {
@@ -646,7 +646,7 @@ function datediff($interval, $datefrom, $dateto, $using_timestamps = false) {
     default: // Number of full seconds (default)
         $datediff = $difference;
         break;
-    }    
+    }
     return $datediff;
 }
 
@@ -694,8 +694,8 @@ function array_msort($array, $cols){
     return $ret;
 }
 
-function titleCase($string, 
-			$delimiters = array(" ", "-", ".", "'", "O'", "Mc"), 
+function titleCase($string,
+			$delimiters = array(" ", "-", ".", "'", "O'", "Mc"),
 			$exceptions = array("a", "e", "da", "de", "do", "na", "no", "em", "das", "dos", "ao", "aos", "com", "I", "II", "III", "IV", "V", "VI") ){
 	$string = mb_convert_case(($string), MB_CASE_TITLE, "UTF-8");
 	foreach ($delimiters as $dlnr => $delimiter):
@@ -788,15 +788,15 @@ function fDescHora($dtHora){
 }
 
 function fDtHoraEvento($dhI, $dhF, $fmt = "%d de %B"){
-	
+
 	$D1 = date("Y-m-d", strtotime("+1 day"));
 	$NOW = strtotime("now");
 	$DHOJE = date("Y-m-d",$NOW);
 	$HHOJE = date("H:i",$NOW);
-	
+
 	$timeI = strtotime($dhI);
 	$timeF = strtotime($dhF);
-	
+
 	$DATA_EVENTO_INI = date("Y-m-d",$timeI);
 	$HORA_EVENTO_INI = date("H:i",$timeI);
 	$DATA_EVENTO_FIM = date("Y-m-d",$timeF);
@@ -827,7 +827,7 @@ function fDtHoraEvento($dhI, $dhF, $fmt = "%d de %B"){
 				$sDataHora .= strftime($fmt,$timeI);
 			endif;
 		endif;
-	
+
 	//******************************************************************
 	// SE DATAS INICIO E FIM SAO DIFERENTES
 	//******************************************************************
@@ -888,6 +888,9 @@ function fClearBN($bn){
 }
 
 function fCPF($cpf){
-	return fStrFormat("###.###.###-##",fStrZero(fClearBN($cpf),11));
+	if (!is_null($cpf) && !empty($cpf) && !== 0):
+		return fStrFormat("###.###.###-##",fStrZero(fClearBN($cpf),11));
+	endif;
+	return "";
 }
 ?>
