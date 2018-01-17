@@ -3,28 +3,28 @@
 @require_once('_core/lib/tcpdf/tcpdf.php');
 
 class COMPRAS {
-	
+
 	public function deleteItemPessoaEntregue( $pessoaID, $itemAprendID ) {
 		$GLOBALS['conn']->Execute("
 			DELETE FROM CAD_COMPRAS
 			 WHERE FG_COMPRA = 'S'
 			   AND FG_ENTREGUE = 'S'
 			   AND ID_CAD_MEMBRO = IN (SELECT ID_CAD_MEMBRO FROM CAD_MEMBRO WHERE ID_CAD_PESSOA = ?)
-			   AND ID_TAB_MATERIAIS IN (SELECT ID FROM TAB_MATERIAIS WHERE ID_TAB_APREND = ?) 
+			   AND ID_TAB_MATERIAIS IN (SELECT ID FROM TAB_MATERIAIS WHERE ID_TAB_APREND = ?)
 		", array( $pessoaID, $itemAprendID ) );
 	}
-	
+
 	public function deleteByPessoa( $pessoaID ) {
 		$GLOBALS['conn']->Execute("
 			DELETE FROM CAD_COMPRAS
 			 WHERE ID_CAD_MEMBRO IN (SELECT ID_CAD_MEMBRO FROM CAD_MEMBRO WHERE ID_CAD_PESSOA = ?)
 		", array( $pessoaID ) );
 	}
-	
+
 	public function deleteByID( $id ) {
 		 $GLOBALS['conn']->Execute("DELETE FROM CAD_COMPRAS WHERE ID = ?", array($id) );
 	}
-	
+
 	public function forceInsert( $arr ){
 		$GLOBALS['conn']->Execute("
 			INSERT INTO CAD_COMPRAS(
@@ -37,7 +37,7 @@ class COMPRAS {
 			) VALUES (?,?,?,?,?,?)
 		", $arr );
 	}
-	
+
 	public function insertItemCompra( $cd, $cadMembroID, $tp, $compl = null, $previsao = "N" ) {
 		$r = $GLOBALS['conn']->Execute("
 			SELECT ID
@@ -46,7 +46,7 @@ class COMPRAS {
 		", array($cd) );
 		if (!$r->EOF):
 			$item = $r->fields["ID"];
-			
+
 			$arr = array( $cadMembroID, $item );
 			if (!is_null($compl)):
 				$arr[] = $compl;
@@ -67,23 +67,23 @@ class COMPRAS {
 						$compl,
 						"N",
 						$previsao
-					) 
+					)
 				);
 			endif;
 		endif;
-	}	
+	}
 
-	function processaListaPessoaID( $cadMembroID, $tp ) {
+	function processaListaMembroID( $cadMembroID, $tp ) {
 		//SELECIONA AS CARACTERISTICAS DA PESSOA
 		$r1 = $GLOBALS['conn']->Execute("SELECT * FROM CON_ATIVOS WHERE ID_CAD_MEMBRO = ?", array($cadMembroID) );
 		$pessoaID = $r1->fields['ID_CAD_PESSOA'];
-		
+
 		$qtItens = max( $r1->fields['QT_UNIFORMES'], 1 );
 		$isProxAnoDir = fIdadeAtual($r1->fields['DT_NASC']) >= 15 && date( 'n' ) >= 10;
 		$fundo = ( fStrStartWith( $r1->fields['CD_CARGO'], "2-") || $isProxAnoDir ? "BR" : "CQ" );
 
 		$GLOBALS['conn']->Execute("
-			DELETE FROM CAD_COMPRAS 
+			DELETE FROM CAD_COMPRAS
 			WHERE FG_COMPRA = 'N'
 			  AND ID_CAD_MEMBRO = ?
 			  AND TP = ?
@@ -91,7 +91,7 @@ class COMPRAS {
 
 		//SELECIONA OS ITENS DE HISTORICO
 		$r1 = $GLOBALS['conn']->Execute("
-				SELECT ah.ID, ah.ID_TAB_APREND, ah.DT_AVALIACAO, 
+				SELECT ah.ID, ah.ID_TAB_APREND, ah.DT_AVALIACAO,
 					   ta.TP_ITEM, ta.TP_PARA, ta.CD_ITEM_INTERNO, ta.CD_AREA_INTERNO
 				  FROM APR_HISTORICO ah
 			INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
@@ -100,7 +100,7 @@ class COMPRAS {
 				  ORDER BY ta.CD_ITEM_INTERNO
 		", array($pessoaID) );
 		foreach ($r1 as $k1 => $l1):
-		
+
 			$aprendID = $l1["ID_TAB_APREND"];
 
 			//ainda nao alterei o select acima... - testar quando implementar
@@ -108,7 +108,7 @@ class COMPRAS {
 
 			//SE O ITEM CLASSE
 			if ( $l1["TP_ITEM"] == "CL" ):
-			
+
 				//RECUPERA AS CLASSES REGULARES CONCLUIDAS
 				if ( $l1["CD_AREA_INTERNO"] == "REGULAR" ):
 					$qtd = 0;
@@ -119,7 +119,7 @@ class COMPRAS {
 					$r2 = $GLOBALS['conn']->Execute("
 						SELECT ta.ID, ta.CD_ITEM_INTERNO, ah.DT_INVESTIDURA
 						  FROM APR_HISTORICO ah
-					INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND) 
+					INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
 						 WHERE ta.CD_ITEM_INTERNO LIKE  '01%00'
 						   AND ah.DT_AVALIACAO IS NOT NULL
 						   AND ah.ID_CAD_PESSOA = ?
@@ -135,13 +135,13 @@ class COMPRAS {
 						endforeach;
 					endif;
 					$a = explode("-", $l1["CD_ITEM_INTERNO"]);
-					
+
 					//***************************************************************
 					//TRATAR TIRA DE CLASSE REGULAR
 					//***************************************************************
 					$materialCD = ($fundo == "BR" ? "05-04-" : "05-03-").$a[1];
 					$this->insertItemCompra( $materialCD, $cadMembroID, $tp, null, $previsao );
-					
+
 					//***************************************************************
 					//TRATAR DISTINTIVO DE REGULARES
 					//***************************************************************
@@ -152,7 +152,7 @@ class COMPRAS {
 						$materialCD = "04-02-01-".$a[1];
 					endif;
 					$this->insertItemCompra( $materialCD, $cadMembroID, $tp, null, $previsao );
-					
+
 					//***************************************************************
 					//TRATAR DIVISA DE CLASSE REGULAR
 					//***************************************************************
@@ -200,7 +200,7 @@ class COMPRAS {
 					if (!$r2->EOF):
 						$materialCD = "";
 						if ($r2->RecordCount() == 6):
-							
+
 							//VERIFICAR SE EXISTEM AS 6 REGULARES CONCLUIDAS
 							$r3 = $GLOBALS['conn']->Execute("
 								SELECT ta.CD_ITEM_INTERNO
@@ -214,10 +214,10 @@ class COMPRAS {
 								$materialCD = "04-02-02-07";
 								$aprendID = 14;
 							endif;
-							
+
 						else:
 							$a = explode("-", $r1->fields["CD_ITEM_INTERNO"]);
-							
+
 							//VERIFICAR SE EXISTE A RESPECTIVA REGULAR CONCLU�DA
 							$r3 = $GLOBALS['conn']->Execute("
 								SELECT ta.CD_ITEM_INTERNO
@@ -231,7 +231,7 @@ class COMPRAS {
 								$materialCD = "04-02-02-".$a[1];
 							endif;
 						endif;
-						
+
 						//***************************************************************
 						//INSERE DISTINTIVO DA CLASSE AVANCADA
 						//***************************************************************
@@ -250,11 +250,11 @@ class COMPRAS {
 			//SE ITEM ESPECIALIDADE
 			elseif ( $l1["TP_ITEM"] == "ES" ):
 				$cd = ( $l1["CD_AREA_INTERNO"] == "ME" ? "07-03-" : "07-02-" ) . $l1["CD_ITEM_INTERNO"];
-				
+
 				//INSERE INSIGNIA DE ESPECIALIDADE/MESTRADO
 				$this->insertItemCompra( $cd, $cadMembroID, $tp, null, $previsao );
 			endif;
 		endforeach;
-	}		
+	}
 }
 ?>

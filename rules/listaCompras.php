@@ -72,7 +72,7 @@ function getQueryByFilter( $parameters ) {
 					else:
 						$aWhere[] = $value;
 						$where .= (!$prim ? "," : "" )."?";
-					endif;				
+					endif;
 					$prim = false;
 				endforeach;
 			else:
@@ -81,13 +81,13 @@ function getQueryByFilter( $parameters ) {
 			endif;
 			$where .= ")";
 		endforeach;
-	endif;	
+	endif;
 
 //echo $where;
 //exit;
 
 	$query = "
-		SELECT 
+		SELECT
 			ccp.ID,
 			ccp.COMPL AS CM,
 			ccp.TP AS TP_INCL,
@@ -115,17 +115,17 @@ function getQueryByFilter( $parameters ) {
 
 function getLista( $parameters ) {
 	$arr = array();
-	
+
 	fConnDB();
 	$result = getQueryByFilter( $parameters );
-	
+
 	foreach ($result as $k => $fields):
 		$ds = $fields['TP'] ." DE ". $fields['DS'];
-	
+
 		if ( $fields['CMPL'] == "S" && $fields['FG_IM'] == 'N'):
 			$ds .= " - ". $fields['DS_ITEM'];
 		endif;
-		
+
 		if ( !empty($fields['FUNDO']) ):
 			$ds .= " - FUNDO ". ($fields['FUNDO'] == "BR" ?  "BRANCO" : "CAQUI");
 		endif;
@@ -134,7 +134,7 @@ function getLista( $parameters ) {
 			$ds .= " [".$fields['CM']."]";
 		endif;
 
-		$arr[] = array( 
+		$arr[] = array(
 			"tp" => $fields['TP_INCL'],
 			"id" => $fields['ID'],
 			"nm" => $fields['NM'],
@@ -150,22 +150,22 @@ function getLista( $parameters ) {
 
 function process(){
 	fConnDB();
-	
+
 	$compras = new COMPRAS();
 
 	//SELECIONA PESSOAS POR ORDEM ALFABETICA
 	$result = $GLOBALS['conn']->Execute("
-		    SELECT DISTINCT ca.ID_CAD_PESSOA
+		    SELECT DISTINCT ca.ID_CAD_MEMBRO
 		      FROM APR_HISTORICO ah
 		INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = ah.ID_CAD_PESSOA)
-		     WHERE ah.DT_AVALIACAO IS NOT NULL 
+		     WHERE ah.DT_AVALIACAO IS NOT NULL
 		       AND ah.DT_INVESTIDURA IS NULL
 		  ORDER BY ca.NM
 	");
 	foreach ($result as $k => $ls):
-		$compras->processaListaPessoaID( $ls['ID_CAD_PESSOA'], "A" );
+		$compras->processaListaMembroID( $ls['ID_CAD_MEMBRO'], "A" );
 	endforeach;
-	
+
 	return array( "result" => true );
 }
 
@@ -175,19 +175,19 @@ function gerarPDF(){
 
 function getData( $parameters ) {
 	$arr = array();
-	
+
 	fConnDB();
 	foreach ($parameters["domains"] as $y => $f):
 		if ( $f == "tipos" ):
 			$arr["tipos"] = array();
 			$result = $GLOBALS['conn']->Execute("
-				SELECT DISTINCT TP 
-				  FROM TAB_MATERIAIS 
+				SELECT DISTINCT TP
+				  FROM TAB_MATERIAIS
 				 WHERE FG_IM = 'S'
 				 ORDER BY TP");
 			foreach ($result as $k => $fields):
 				$tp = $fields['TP'];
-				$arr["tipos"][] = array( 
+				$arr["tipos"][] = array(
 					"id" => $tp,
 					"ds" => $tp
 				);
@@ -196,12 +196,12 @@ function getData( $parameters ) {
 		if ( $f == "tiposEst" ):
 			$arr["tipos"] = array();
 			$result = $GLOBALS['conn']->Execute("
-				SELECT DISTINCT TP 
-				  FROM TAB_MATERIAIS 
+				SELECT DISTINCT TP
+				  FROM TAB_MATERIAIS
 				 ORDER BY TP");
 			foreach ($result as $k => $fields):
 				$tp = $fields['TP'];
-				$arr["tipos"][] = array( 
+				$arr["tipos"][] = array(
 					"id" => $tp,
 					"ds" => $tp
 				);
@@ -212,7 +212,7 @@ function getData( $parameters ) {
 			$qtdZeros = zeroSizeID();
 			$result = $GLOBALS['conn']->Execute("SELECT ID_CAD_MEMBRO, ID_MEMBRO, NM FROM CON_ATIVOS ORDER BY NM");
 			foreach ($result as $k => $fields):
-				$arr["nomes"][] = array( 
+				$arr["nomes"][] = array(
 					"id" => $fields['ID_CAD_MEMBRO'],
 					"ds" => $fields['NM'],
 					"sb" => fStrZero($fields['ID_MEMBRO'], $qtdZeros)
@@ -223,12 +223,12 @@ function getData( $parameters ) {
 			$arr["itens"] = array();
 			$result = $GLOBALS['conn']->Execute("
 				SELECT ID, DS, CMPL, FUNDO
-				  FROM TAB_MATERIAIS 
+				  FROM TAB_MATERIAIS
 				 WHERE FG_IM = 'S' AND TP = ?
 				ORDER BY DS
 			", array($parameters["key"]));
 			foreach ($result as $k => $fields):
-				$arr["itens"][] = array( 
+				$arr["itens"][] = array(
 					"id" => $fields['ID'],
 					"cm" => $fields['CMPL'],
 					"ds" => $fields['DS'],
@@ -250,7 +250,7 @@ function getData( $parameters ) {
 			foreach ($result as $k => $fields):
 				$sb = "";
 				$ds = $fields['DS'];
-				
+
 				if (!is_null($fields['FUNDO'])):
 					$sb =  "FUNDO ". ($fields['FUNDO'] == "BR" ? "BRANCO" : "CAQUI");
 				endif;
@@ -258,7 +258,7 @@ function getData( $parameters ) {
 					$ds = $fields["DS"] ." ". $fields["DS_ITEM"];
 					$sb = $fields["CD_ITEM_INTERNO"];
 			    endif;
-				$arr["itens"][] = array( 
+				$arr["itens"][] = array(
 					"id" => $fields['ID'],
 					"cm" => $fields['CMPL'],
 					"ds" => $ds,
@@ -270,15 +270,15 @@ function getData( $parameters ) {
 			$arr["nomes"] = array();
 			$qtdZeros = zeroSizeID();
 			$result = $GLOBALS['conn']->Execute("
-				SELECT DISTINCT ID_CAD_MEMBRO, ID_MEMBRO, NM 
-				  FROM CON_COMPRAS 
-				 WHERE FG_COMPRA = 'S' 
+				SELECT DISTINCT ID_CAD_MEMBRO, ID_MEMBRO, NM
+				  FROM CON_COMPRAS
+				 WHERE FG_COMPRA = 'S'
 				   AND FG_ENTREGUE = 'N'
 				   AND FG_PREVISAO = 'N'
 			  ORDER BY NM
 			");
 			foreach ($result as $k => $fields):
-				$arr["nomes"][] = array( 
+				$arr["nomes"][] = array(
 					"id" => $fields['ID_CAD_MEMBRO'],
 					"ds" => $fields['NM'],
 					"sb" => fStrZero($fields['ID_MEMBRO'], $qtdZeros)
@@ -286,13 +286,13 @@ function getData( $parameters ) {
 			endforeach;
 		endif;
 	endforeach;
-	
+
 	return $arr;
 }
 
 function delete( $parameters ) {
 	$ids = $parameters["ids"];
-	
+
 	fConnDB();
 	$compras = new COMPRAS();
 	foreach ($ids as $k => $id):
@@ -311,7 +311,7 @@ function addCompras( $parameters ) {
 	if ( $act == "ADD" && isset($frm["id"]) ):
 		fConnDB();
 		$compras = new COMPRAS();
-		
+
 		if ( isset($frm["id_cad_membro"]) ):
 			foreach ($frm["id_cad_membro"] as $k => $cadMembroID):
 				batchInsert($compras, $qtItens, $cmpl, $cadMembroID, $frm["id"]);
@@ -336,7 +336,7 @@ function addCompras( $parameters ) {
 			endforeach;
 		endforeach;
 	endif;
-	
+
 	return array("result" => true);
 }
 
@@ -354,23 +354,23 @@ function batchInsert($compras, $qtItens, $cmpl, $cadMembroID, $id){
 				fReturnStringNull( $cm ),
 				"N",
 				"N"
-			) 
+			)
 		);
 	endfor;
 }
 
 function getAttrPerm( $parameters ) {
 	$id = $parameters["id"];
-	
+
 	fConnDB();
 	$result = $GLOBALS['conn']->Execute("
 		SELECT 1
-		FROM CON_COMPRAS 
+		FROM CON_COMPRAS
 		WHERE ID = ?
 		  AND (QT_EST > 0 OR FG_COMPRA = 'S' OR (FG_COMPRA = 'N' AND TP_INCL = 'M'))
 	", array($parameters["id"]) );
 	$edit = (!$result->EOF);
-	
+
 	return array("result" => true, "edit" => $edit );
 }
 
@@ -380,11 +380,11 @@ function getAttr( $parameters ) {
 		"fg_compra" => "N",
 		"fg_entregue" => "N"
 	);
-	
+
 	fConnDB();
 	$result = $GLOBALS['conn']->Execute("
 		SELECT FG_COMPRA, FG_ENTREGUE, QT_EST
-		FROM CON_COMPRAS 
+		FROM CON_COMPRAS
 		WHERE ID = ?
 	", array($parameters["id"]) );
 	if (!$result->EOF):
@@ -392,7 +392,7 @@ function getAttr( $parameters ) {
 		$arr["fg_entregue"] = $result->fields["FG_ENTREGUE"];
 		$arr["qt_est"] = $result->fields["QT_EST"];
 	endif;
-	
+
 	return array( "result" => true, "attr" => $arr );
 }
 
@@ -401,7 +401,7 @@ function setAttr( $parameters ) {
 	$fd = $parameters["fd"];
 	$vl = $parameters["vl"];
 	$qt = array( "qt" => 0 );
-	
+
 	fConnDB();
 	$result = $GLOBALS['conn']->Execute("
 		SELECT *
@@ -422,10 +422,10 @@ function updateEstoque( $ln, $fd, $vl ){
 	$update = true;
 	if ($fd == "fg_compra"):
 		$update = false;
-		
+
 		//VERIFICA ATUAL
 		$movEstoque = $ln["FG_COMPRA"] == "S" ? +1 : -1;
-				
+
 		$re = $GLOBALS['conn']->Execute("
 			SELECT QT_EST
 			  FROM CON_COMPRAS
@@ -438,30 +438,30 @@ function updateEstoque( $ln, $fd, $vl ){
 		//PARA ITENS SEM ESTOQUE / TRUNFOS / MEDALHAS / EVENTOS DIVERSOS
 		if ($ln["TP_INCL"] == "M" && $ln["FG_ALMOX"] == "N"):
 			$update = true;
-			
+
 		//PARA ITENS COM ESTOQUE / COMPRAS NO ALMOXARIFADO
 		elseif ($arr["qt"] > 0 || $movEstoque > 0):
 			$GLOBALS['conn']->Execute("UPDATE TAB_MATERIAIS SET QT_EST = ? WHERE ID = ?
 			", array( $arr["qt"] + $movEstoque, $ln["ID_TAB_MATERIAIS"] ) );
 			$arr["qt"] += $movEstoque;
 			$update = true;
-		
+
 		endif;
 	endif;
 
 	if ($update):
-	    
+
 	    //SE MATERIAL FOI ENTREGUE
 		if ( $fd == "fg_entregue" && $vl == "S"):
 
 			//EXCLUI SE INCLUSAO MANUAL.
 			if ($ln["TP_INCL"] == "M"):
 				$GLOBALS['conn']->Execute("DELETE FROM CAD_COMPRAS WHERE ID = ?", array( $ln["ID"] ) );
-				
+
 			else:
 				updateCADCompras( $fd, array( $vl, $ln["ID"] ) );
 			endif;
-		    
+
 			//INSERE LOG DE ENTREGA DE MATERIAIS
 			if ($ln["FG_LOG_MATERIAL"] == "S"):
 				$materiais = new MATERIAIS();
@@ -478,7 +478,7 @@ function updateEstoque( $ln, $fd, $vl ){
 
 function updateCADCompras($fd, $arr){
 	$GLOBALS['conn']->Execute("
-		UPDATE CAD_COMPRAS 
+		UPDATE CAD_COMPRAS
 		SET $fd = ?
 		WHERE ID = ?
 	", $arr );
@@ -486,7 +486,7 @@ function updateCADCompras($fd, $arr){
 
 function distribuirEstoque(){
 	fConnDB();
-	
+
 	//MOVIMENTAR ITENS COMPRADOS E NAO ENTREGUES PARA O ESTOQUE
 	$result = $GLOBALS['conn']->Execute("
 		SELECT ID_TAB_MATERIAIS, COUNT(*) AS QT_ATTR
@@ -497,19 +497,19 @@ function distribuirEstoque(){
 	");
 	foreach ($result as $k => $ln):
 		$matID = $ln["ID_TAB_MATERIAIS"];
-	
+
 		$GLOBALS['conn']->Execute("UPDATE TAB_MATERIAIS SET QT_EST = QT_EST + ? WHERE ID = ?
 			", array( $ln["QT_ATTR"], $matID ) );
-		
+
 		$GLOBALS['conn']->Execute("
-			UPDATE CAD_COMPRAS 
+			UPDATE CAD_COMPRAS
 			  SET FG_COMPRA = 'N'
 			 WHERE ID_TAB_MATERIAIS = ?
 			   AND FG_COMPRA = 'S'
 			   AND FG_ENTREGUE = 'N'
 		", array($matID) );
 	endforeach;
-	
+
 	//DISTRIBUIR ITENS DO ESTOQUE
 	$result = $GLOBALS['conn']->Execute("
 		SELECT *

@@ -3,9 +3,9 @@ function fDataFilters( $parameters ){
 	$temFiltro = false;
 
 	$pFilters = $parameters["filters"];
-	
+
 	$strFilter  = "<div class=\"col-xs-8\" id=\"divFilters\" filter-to=\"".$parameters["filterTo"]."\">";
-	
+
 	$flt = fRequest("flt");
 	if (isset($flt) && !empty($flt)):
 		$aParam = explode(",",$flt);
@@ -22,7 +22,7 @@ function fDataFilters( $parameters ){
 	endif;
 	$strFilter .= "</div>";
 	$arr = array_msort( $pFilters, array("ds" => SORT_LOCALE_STRING) );
-	
+
 	$strFilter .= "<div class=\"input-group col-xs-4 pull-right\">";
 	$strFilter .= "<select class=\"selectpicker form-control input-sm\" id=\"addFilter\" onchange=\"jsFilter.addFilter(this);\" data-width=\"100%\" title=\"Adicionar filtros\" data-width=\"auto\" data-container=\"body\">";
 	foreach ($arr as $key => $value):
@@ -45,14 +45,14 @@ function getDomainFilter( $parameters ) {
 	$domain = array();
 
 	$type = $parameters["type"];
-	
+
 	//SEXO
 	if ( $type == "X" ):
 		$domain = array(
 			array( "id" => "F", "ds" => "FEMININO", "icon" => "fa fa-venus" ),
 			array( "id" => "M", "ds" => "MASCULINO", "icon" => "fa fa-mars" )
 		);
-	
+
 	//SITUACAO
 	elseif ( $type == "S" ):
 		$domain = array(
@@ -60,7 +60,15 @@ function getDomainFilter( $parameters ) {
 			array( "id" => "I", "ds" => "INATIVOS", "icon" => "fa fa-toggle-off" ),
 			array( "id" => "T", "ds" => "TODOS", "icon" => "fa-globe" )
 		);
-		
+
+	//SITUACAO
+	elseif ( $type == "SA" ):
+		$domain = array(
+			array( "id" => "C", "ds" => "CONCLUÍDO", "icon" => "fa fa-star" ),
+			array( "id" => "L", "ds" => "LIBERADO", "icon" => "fa fa-star-half-o" ),
+			array( "id" => "P", "ds" => "PENDENTE", "icon" => "fa fa-star-o" )
+		);
+
 	//GRUPO
 	elseif ( $type == "G" ):
 		$domain = array(
@@ -71,7 +79,7 @@ function getDomainFilter( $parameters ) {
 			array( "id" => "5", "ds" => "CONSELHEIROS", "icon" => "fa fa-heart" ),
 			array( "id" => "6", "ds" => "CAPITÃES", "icon" => "fa fa-first-order" )
 		);
-		
+
 	//APRENDIZADO
 	elseif ( $type == "HA" ):
 		$year = date("Y");
@@ -81,7 +89,7 @@ function getDomainFilter( $parameters ) {
 			array( "id" => "2", "ds" => "AVALIADOS EM $year", "icon" => "fa fa-eye" ),
 			array( "id" => "3", "ds" => "PENDENTES DE INVESTIDURA", "icon" => "fa fa-graduation-cap" )
 		);
-		
+
 	//PENDENCIAS CADASTRAIS
 	elseif ( $type == "PC" ):
 		$domain = array(
@@ -100,7 +108,7 @@ function getDomainFilter( $parameters ) {
 			array( "id" => "UNI", "ds" => "UNIDADE INVÁLIDA", "icon" => "fa fa-universal-access" ),
 			array( "id" => "CAR", "ds" => "CARGO/FUNÇÃO INVÁLIDA", "icon" => "fa fa-user-md" )
 		);
-		
+
 	//ITENS COMPRADOS
 	elseif ( $type == "IC" ):
 		$domain = array(
@@ -110,7 +118,7 @@ function getDomainFilter( $parameters ) {
 			array( "id" => "2", "ds" => "ITENS ENTREGUES", "icon" => "fa fa-cart-arrow-down" ),
 			array( "id" => "3", "ds" => "ITENS A ENTREGAR", "icon" => "fa fa-truck" )
 		);
-		
+
 	//MES ANIVERSARIO
 	elseif ( $type == "MA" ):
 		$domain = getMesAniversario();
@@ -122,11 +130,11 @@ function getDomainFilter( $parameters ) {
 			array( "id" => "4", "ds" => "INVESTIDOS EM $year", "icon" => "fa fa-trophy" ),
 			array( "id" => "5", "ds" => "INVESTIDOS ANTES DE $year", "icon" => "fa fa-shield" )
 		);
-		
+
 	//TIPO DE MATERIAIS
 	elseif ( $type == "HT" ):
 		$domain = getTipoMateriais();
-		
+
 	//BATIZADO
 	elseif ( $type == "B" ):
 		$y = date("Y");
@@ -139,26 +147,26 @@ function getDomainFilter( $parameters ) {
 			array( "id" => ($y-3), "ds" => "EM ". ($y-3), "icon" => "fa fa-backward" ),
 			array( "id" => "A". ($y-3), "ds" => "ANTES DE ". ($y-3), "icon" => "fa fa-fast-backward" )
 		);
-		
+
 	//TIPO DE OCORRENCIA
 	elseif ( $type == "TO" ):
 		$domain = array(
 			array( "id" => "P", "ds" => "POSITIVA", "icon" => "fa fa-thumbs-o-up" ),
 			array( "id" => "N", "ds" => "NEGATIVA", "icon" => "fa fa-thumbs-o-down" )
 		);
-		
+
 	//UNIDADE
 	elseif ( $type == "EV" ):
 		$domain = getDomainEventos();
-		
+
 	//UNIDADE
 	elseif ( $type == "U" ):
 		$domain = getDomainUnidades();
-	
+
 	//TIPO APRENDIZADO
 	elseif ( $type == "Z" ):
 		$domain = getTipoAprendizado();
-		
+
 	//CLASSE
 	elseif ( $type == "C" ):
 		$domain = getDomainClasses();
@@ -190,7 +198,7 @@ function getDomainFilter( $parameters ) {
 
 function addFilter( $parameters ){
 	$filter = getDomainFilter( $parameters );
-	
+
 	$value = $parameters["type"];
 	$label = $parameters["desc"];
 	$icon = (isset($parameters["icon"]) ? $parameters["icon"] : "");
@@ -202,7 +210,7 @@ function addFilter( $parameters ){
 			endif;
 		endforeach;
 	endif;
-	
+
 	$str  = "<div class=\"input-group input-group-sm col-xs-12 col-md-12 col-sm-12 col-lg-12\" id=\"divFilter$value\" style=\"padding-bottom:10px\">";
 	$str .= (!empty($icon) ? "<i class=\"pull-left $icon\"></i>&nbsp;" : "" ) ."<label for=\"optFilter$value\" class=\"pull-left\">$label:&nbsp;</label>";
 	$str .= "<span class=\"label label-danger pull-right\" style=\"cursor:pointer\" onclick=\"jsFilter.removeFilter(this);\" filter-value=\"$value\" filter-label=\"$label\" filter-icon=\"$icon\"><i class=\"glyphicon glyphicon-remove\"></i>&nbsp;Remover</span>";
