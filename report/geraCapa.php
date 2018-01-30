@@ -68,7 +68,7 @@ class ESPCR extends TCPDF {
 		$this->top += 5;
 	}
 	
-	public function addEspecialidade(,$params) {
+	public function addEspecialidade($codEsp,$params) {
 		$this->params = $params;
 		$cadMembroID = $this->params[0];
 		$nmPessoa = $this->params[1];
