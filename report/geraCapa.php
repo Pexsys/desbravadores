@@ -2,16 +2,16 @@
 @require_once('../include/functions.php');
 
 class ESPCR extends TCPDF {
-
+	
 	//lines styles
 	private $stLine;
 	private $stLine2;
 	private $params;
 	private $top;
-
+	
 	function __construct() {
 		parent::__construct(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-
+		
 		$this->stLine = array('width' => 1, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0));
 		$this->stLine2 = array('width' => 0.3, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0));
 		$this->stLine3 = array(
@@ -41,7 +41,7 @@ class ESPCR extends TCPDF {
 
  	public function Header() {
 	}
-
+	
 	public function Footer() {
 		if (!empty($this->params[0])):
 			$this->SetY(-20);
@@ -49,7 +49,7 @@ class ESPCR extends TCPDF {
 			$this->Cell(0, 10, PATTERNS::getCDS(), 0, false, 'C');
 		endif;
 	}
-
+	
 	private function newPage() {
 		$this->AddPage();
 		$this->setCellPaddings(0,0,0,0);
@@ -57,7 +57,7 @@ class ESPCR extends TCPDF {
 		$this->setXY(0,0);
 		$this->top = 10;
 	}
-
+	
 	private function addRequisitoMestrado( $req, $f ){
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 10);
 		$this->SetFillColor(255,255,255);
@@ -66,14 +66,14 @@ class ESPCR extends TCPDF {
 		$this->Cell(150, 5, "$req) Ter pelo menos " .$f["min"]. " das seguintes: ", '', 1, 'L', 1);
 		$this->top += 5;
 	}
-
+	
 	public function addEspecialidade($codEsp,$params) {
 		$this->params = $params;
 		$cadMembroID = $this->params[0];
 		$nmPessoa = $this->params[1];
 		$pessoaID = null;
 		$membroID = null;
-
+		
 		if (!empty($cadMembroID)):
 		    $result = $GLOBALS['conn']->Execute("
     			SELECT *
@@ -86,14 +86,14 @@ class ESPCR extends TCPDF {
 				$pessoaID = $result->fields["ID_CAD_PESSOA"];
             endif;
 		endif;
-
+		
 		$result = $GLOBALS['conn']->Execute("
 			SELECT ta.ID, ta.DS_ITEM, ta.CD_AREA_INTERNO, tm.NR_PG_ASS
 			  FROM TAB_APRENDIZADO ta
 		INNER JOIN TAB_MATERIAIS tm ON (tm.ID_TAB_APREND = ta.ID)
-			 WHERE ta.CD_ITEM_INTERNO = ?
-			   AND ta.TP_ITEM = 'ES'", array($codEsp) );
-
+			 WHERE ta.CD_ITEM_INTERNO = 'ES'
+			   AND ta.TP_ITEM = ?");
+ 
 		if ($result->EOF):
 			return;
 		endif;
@@ -115,7 +115,7 @@ class ESPCR extends TCPDF {
 		$this->Ln(5);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'I', 13);
 		$this->writeHTMLCell(0, 0, '', '', "<span>$codEsp - #$pgAss</span>", 0, 0, 0, true, 'C', true); //<span style=\"color:#888888\">&nbsp;[".$result->fields["ID"]."]</span>
-
+		
 		if (!empty($membroID)):
 			$barCODE = PATTERNS::getBars()->encode(array(
 				"id" => "E",
@@ -124,13 +124,13 @@ class ESPCR extends TCPDF {
 			));
 			$this->write1DBarcode($barCODE, 'C39', 73, 178, '', 17, 0.4, $this->stLine3, 'N');
 		endif;
-
+		
 		$tbTop = 205;
 		$this->setY($tbTop);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 17);
 		$this->Cell(0, 0, $nmPessoa, 0, false, 'C', false, false, 1, false, 'C', 'C');
-
-		$tbTop += 5;
+		
+		$tbTop += 5;		
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 9);
 		$this->SetFillColor(50,50,50);
 		$this->SetTextColor(255,255,255);
@@ -201,13 +201,13 @@ class ESPCR extends TCPDF {
 		$this->Cell(80, 10, "", 'TLB', 1, 'C', 1, '', 0, false, 'T', 'C');
 		$this->RoundedRect(142, $tbTop, 48, 10, 2.5, '0100', 'D', $this->stLine2);
 		$this->Line(142, $tbTop-11, 142, $tbTop+10, $this->stLine);
-
+		
 		//MONTA ESPECIALIDADES COMPLETADAS NA SEGUNDA FOLHA DESSE MESTRADO.
 		if (!empty($pessoaID) && $areaEsp == "ME"):
-
+		    
 		    $fazReq = true;
 		    $arr = array();
-
+		    
             //LE PARAMETRO MINIMO E HISTORICO PARA A REGRA
 			$rR = $GLOBALS['conn']->Execute("
 					SELECT tar.ID, tar.QT_MIN, COUNT(*) AS QT_FEITAS
@@ -219,41 +219,41 @@ class ESPCR extends TCPDF {
 			", array( $pessoaID, $result->fields["ID"] ) );
 			foreach($rR as $lR => $fR):
 				$fazReq = ( $fR["QT_FEITAS"] >= $fR["QT_MIN"] );
-
+				
 				if (!$fazReq):
 					break;
 				endif;
-
+					
 				$arr[ $fR["ID"] ] = array(
 					"min" => $fR["QT_MIN"],
 					"hist" => array()
 				);
-
+					
 				//ADICIONAR REGRA E SELECAO DA REGRA.
 				//LE PARAMETRO MINIMO E HISTORICO PARA A REGRA
 				$rS = $GLOBALS['conn']->Execute("
-					SELECT car.ID_RQ, car.CD_AREA_INTERNO_RQ, car.CD_ITEM_INTERNO_RQ, car.DS_ITEM_RQ,
-							tm.NR_PG_ASS,
+					SELECT car.ID_RQ, car.CD_AREA_INTERNO_RQ, car.CD_ITEM_INTERNO_RQ, car.DS_ITEM_RQ, 
+							tm.NR_PG_ASS, 
 							ah.DT_INICIO, ah.DT_CONCLUSAO
 						FROM CON_APR_REQ car
 				INNER JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = car.ID_RQ AND ah.ID_CAD_PESSOA = ? AND ah.DT_CONCLUSAO IS NOT NULL)
 				INNER JOIN TAB_MATERIAIS tm ON (tm.ID_TAB_APREND = car.ID_RQ)
 						WHERE car.ID_TAB_APR_ITEM = ?
-					ORDER BY tm.NR_PG_ASS, car.CD_AREA_INTERNO_RQ, car.CD_ITEM_INTERNO_RQ
+					ORDER BY tm.NR_PG_ASS, car.CD_AREA_INTERNO_RQ, car.CD_ITEM_INTERNO_RQ 
 				", array( $pessoaID, $fR["ID"] ) );
 				foreach($rS as $lS => $fS):
 					$arr[ $fR["ID"] ]["hist"][] = $fS;
                 endforeach;
             endforeach;
-
+    		
 			//VERIFICA SE CONCLUIDO
 			if ( $fazReq ):
                 $this->newPage();
-
+                
                 $req = 0;
                 foreach ($arr as $k => $i):
                     ++$req;
-
+                    
                     //ADICIONA CABECALHO DO REQUISITO.
                     $this->startTransaction();
                 	$start_page = $this->getPage();
@@ -263,10 +263,10 @@ class ESPCR extends TCPDF {
                 		$this->newPage();
                 		$this->addRequisitoMestrado( $req, $i );
                 	else:
-                		$this->commitTransaction();
+                		$this->commitTransaction();     
                 	endif;
                 	$this->top += 3;
-
+                	
                 	//ADICIONA ITENS DO REQUISITO
                     foreach ($i["hist"] as $j => $z):
                         $this->startTransaction();
@@ -277,19 +277,19 @@ class ESPCR extends TCPDF {
                     		$this->newPage();
                     		$this->addItemMestrado( $z );
                     	else:
-                    		$this->commitTransaction();
+                    		$this->commitTransaction();     
                     	endif;
                     endforeach;
-
+                    
                     $this->top += 20;
                 endforeach;
 			endif;
-
+			
 			//REMOVE NOTIFICACAO PARA O MESTRADO
 			$GLOBALS['conn']->Execute("
 				UPDATE LOG_MENSAGEM SET DH_READ = NOW()
-				WHERE ID_ORIGEM = ?
-				AND TP = ?
+				WHERE ID_ORIGEM = ? 
+				AND TP = ? 
 				AND ID_USUARIO = (SELECT ID_USUARIO FROM CAD_USUARIOS WHERE ID_CAD_PESSOA = ?)
 			", array( $result->fields["ID"], "M", $pessoaID ) );
 
@@ -299,13 +299,13 @@ class ESPCR extends TCPDF {
 	private function addItemMestrado( $f ){
 		$areaEsp = $f['CD_AREA_INTERNO_RQ'];
 	    $codEsp = $f['CD_ITEM_INTERNO_RQ'];
-
+	    
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 10);
 		$this->SetFillColor(255,255,255);
 		$this->SetTextColor(0,0,0);
 		$this->setXY(15, $this->top);
 		$this->Image("img/aprendizado/ES/$areaEsp/$codEsp.jpg", 13, $this->top, 26, 21, 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
-
+		
 		$this->top += 2;
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 10);
 		$this->SetFillColor(100,100,100);
@@ -357,11 +357,13 @@ if ( !isset($nome) || empty($nome) || $nome == "null" || $nome == "|" ):
 endif;
 $list = fRequest("list");
 if ( !isset($list) || strlen($list) == 0 || stristr($list, "indispon") ):
-	exit("SELECIONE NA TABELA, AS CAPAS DAS ESPECIALIDADES QUE DESEJA IMPRIMIR!");
+	echo "SELECIONE NA TABELA, AS CAPAS DAS ESPECIALIDADES QUE DESEJA IMPRIMIR!";
+	exit;
 endif;
 $list = explode(",",$list);
 if ( count($list) == 0 ):
-	exit("SELECIONE NA TABELA, AS CAPAS DAS ESPECIALIDADES QUE DESEJA IMPRIMIR!");
+	echo "SELECIONE NA TABELA, AS CAPAS DAS ESPECIALIDADES QUE DESEJA IMPRIMIR!";
+	exit;
 endif;
 
 fConnDB();
@@ -372,7 +374,7 @@ $arrNome = array();
 if ($nome == "ALL"):
 	$result = $GLOBALS['conn']->Execute("
 		SELECT *
-		  FROM CON_ATIVOS
+		  FROM CON_ATIVOS 
 		 ORDER BY NM");
 	foreach ($result as $k => $line):
 		$arrNome[] = $line["ID_CAD_MEMBRO"];
