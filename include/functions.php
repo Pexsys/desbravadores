@@ -20,6 +20,8 @@ mb_http_input('UTF-8');
 @require_once("classes/filters.php");
 @require_once("classes/domains.php");
 @require_once("classes/acompanhamento.php");
+@require_once("classes/sendmail.php");
+@require_once("classes/sendmailOcorrencias.php");
 
 use classes\database\CONNECTION_FACTORY;
 

@@ -1,6 +1,5 @@
 <?php
 @require_once("../include/functions.php");
-@require_once("sendmailOcorrencias.php");
 fConnDB();
 
 //SECRETARIA - COMUNICADOS - EMAILS NAO ENVIADOS
@@ -17,7 +16,7 @@ $rs = $GLOBALS['conn']->Execute("
 ");
 foreach($rs as $k => $l):
 
-	$GLOBALS['mail']->Subject = PATTERNS::getClubeDS( array("cl","nm") ) . " - Comunicado #".$l["CD"]." [".strftime("%d/%m/%Y",strtotime($l["DH"])) ."]";
+	SENDMAIL::get()->Subject = PATTERNS::getClubeDS( array("cl","nm") ) . " - Comunicado #".$l["CD"]." [".strftime("%d/%m/%Y",strtotime($l["DH"])) ."]";
 
 	$rs1 = $GLOBALS['conn']->Execute("
 		SELECT *
@@ -29,15 +28,15 @@ foreach($rs as $k => $l):
       ORDER BY ID
 	", array($l["ID"], "C") );
 	if ( !$rs1->EOF ):
-		$GLOBALS['mail']->ClearAllRecipients();
+		SENDMAIL::get()->ClearAllRecipients();
 		foreach($rs1 as $k1 => $l1):
-			//$GLOBALS['mail']->AddAddress();
-			$GLOBALS['mail']->addBCC( $l1["EMAIL"] );
+			//SENDMAIL::get()->AddAddress();
+			SENDMAIL::get()->addBCC( $l1["EMAIL"] );
 			$nrEnviados++;
 		endforeach;
 
-		$GLOBALS['mail']->MsgHTML($l["TXT"]);
-		$GLOBALS['mail']->Send();
+		SENDMAIL::get()->MsgHTML($l["TXT"]);
+		SENDMAIL::get()->Send();
 		//ATUALIZA ENVIO
 		$GLOBALS['conn']->Execute("
 			UPDATE LOG_MENSAGEM
@@ -66,7 +65,7 @@ $rs = $GLOBALS['conn']->Execute("
 	  ORDER BY 1
 ");
 foreach ($rs as $l):
-	sendOcorrenciaByID($l["ID"]);
+	SENDMAILOCORRENCIAS::sendOcorrenciaByID($l["ID"]);
 	$nrEnviados++;
 endforeach;
 $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('EMAILS','01.99-Ocorrencias enviados com sucesso ($nrEnviados)...')");

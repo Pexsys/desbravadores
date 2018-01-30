@@ -37,12 +37,12 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
 		$message = MESSAGE::instance( array( "np" => $a[0], "id" => $fA["IDADE_ANO"], "sx" => $fA["TP_SEXO"], "nd" => $nomeDiretor ) );
 		$bm = $message->getBirthday();
 
-		$GLOBALS['mail']->ClearAllRecipients();
-		$GLOBALS['mail']->AddAddress( $fA["EMAIL"] );
-		$GLOBALS['mail']->Subject = utf8_decode( $bm["sub"] );
-		$GLOBALS['mail']->MsgHTML( $bm["msg"] );
+		SENDMAIL::get()->ClearAllRecipients();
+		SENDMAIL::get()->AddAddress( $fA["EMAIL"] );
+		SENDMAIL::get()->Subject = utf8_decode( $bm["sub"] );
+		SENDMAIL::get()->MsgHTML( $bm["msg"] );
 
-		if ( $GLOBALS['mail']->Send() ):
+		if ( SENDMAIL::get()->Send() ):
 			echo "parabens enviado para ". $fA["EMAIL"]."<br/>";
 		else:
 			echo "parabens não enviado para ". $fA["EMAIL"]."<br/>";
@@ -107,12 +107,12 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
 					if (!empty($fA["EMAIL"]) && $fA["ID_CAD_PESSOA"] != $rDIR->fields["ID_DIRETOR"] ):
 						$message = new MESSAGE( array( "np" => $a[0], "nm" => $fg["DS_ITEM"], "sx" => $fA["SEXO"], "nd" => $nomeDiretor ) );
 
-            			$GLOBALS['mail']->ClearAllRecipients();
-        				$GLOBALS['mail']->AddAddress( $fA["EMAIL"] );
-        				$GLOBALS['mail']->Subject = utf8_decode(PATTERNS::getClubeDS( array("cl","nm") ) . " - Aviso de Conclusão");
-        				$GLOBALS['mail']->MsgHTML( MESSAGE::getConclusao() );
+            			SENDMAIL::get()->ClearAllRecipients();
+        				SENDMAIL::get()->AddAddress( $fA["EMAIL"] );
+        				SENDMAIL::get()->Subject = utf8_decode(PATTERNS::getClubeDS( array("cl","nm") ) . " - Aviso de Conclusão");
+        				SENDMAIL::get()->MsgHTML( MESSAGE::getConclusao() );
 
-        				if ( $GLOBALS['mail']->Send() ):
+        				if ( SENDMAIL::get()->Send() ):
         					$nrEnviados++;
         					//ATUALIZA ENVIO
         					$GLOBALS['conn']->Execute("
@@ -216,12 +216,12 @@ if ($md == "01-01"):
 		$message = MESSAGE::instance( array( "np" => $a[0], "id" => $fA["IDADE_ANO"], "sx" => $fA["TP_SEXO"], "nd" => $nomeDiretor ) );
 		$bm = $message->getNewYear();
 
-		$GLOBALS['mail']->ClearAllRecipients();
-		$GLOBALS['mail']->AddAddress( $fA["EMAIL"] );
-		$GLOBALS['mail']->Subject = utf8_decode( $bm["sub"] );
-		$GLOBALS['mail']->MsgHTML( $bm["msg"] );
+		SENDMAIL::get()->ClearAllRecipients();
+		SENDMAIL::get()->AddAddress( $fA["EMAIL"] );
+		SENDMAIL::get()->Subject = utf8_decode( $bm["sub"] );
+		SENDMAIL::get()->MsgHTML( $bm["msg"] );
 
-		if ( $GLOBALS['mail']->Send() ):
+		if ( SENDMAIL::get()->Send() ):
 			echo "feliz ano novo enviado para ". $fA["EMAIL"]."<br/>";
 		else:
 			echo "feliz ano novo não enviado para ". $fA["EMAIL"]."<br/>";
@@ -242,14 +242,14 @@ elseif ($md == "12-25"):
 		$a = explode(" ",titleCase($fA["NM"]));
 
 		$message = MESSAGE::instance( array( "np" => $a[0], "id" => $fA["IDADE_ANO"], "sx" => $fA["TP_SEXO"], "nd" => $nomeDiretor ) );
-		$bm = message->getXMas();
+		$bm = $message->getXMas();
 
-		$GLOBALS['mail']->ClearAllRecipients();
-		$GLOBALS['mail']->AddAddress( $fA["EMAIL"] );
-		$GLOBALS['mail']->Subject = utf8_decode( $bm["sub"] );
-		$GLOBALS['mail']->MsgHTML( $bm["msg"] );
+		SENDMAIL::get()->ClearAllRecipients();
+		SENDMAIL::get()->AddAddress( $fA["EMAIL"] );
+		SENDMAIL::get()->Subject = utf8_decode( $bm["sub"] );
+		SENDMAIL::get()->MsgHTML( $bm["msg"] );
 
-		if ( $GLOBALS['mail']->Send() ):
+		if ( SENDMAIL::get()->Send() ):
 			echo "feliz natal enviado para ". $fA["EMAIL"]."<br/>";
 		else:
 			echo "feliz natal não enviado para ". $fA["EMAIL"]."<br/>";

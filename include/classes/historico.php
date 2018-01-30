@@ -306,12 +306,12 @@ class HISTORICO {
 
 							$message = MESSAGE::instance( array( "np" => $a[0], "nm" => $fg["DS_ITEM"], "sx" => $rA->fields["SEXO"], "nd" => $nomeDiretor ) );
 
-							$GLOBALS['mail']->ClearAllRecipients();
-							$GLOBALS['mail']->AddAddress( $rA->fields["EMAIL"] );
-							$GLOBALS['mail']->Subject = utf8_decode(PATTERNS::getClubeDS( array("cl","nm") ) . " - Aviso de Conclusão");
-							$GLOBALS['mail']->MsgHTML( $message->getConclusao() );
+							SENDMAIL::get()->ClearAllRecipients();
+							SENDMAIL::get()->AddAddress( $rA->fields["EMAIL"] );
+							SENDMAIL::get()->Subject = utf8_decode(PATTERNS::getClubeDS( array("cl","nm") ) . " - Aviso de Conclusão");
+							SENDMAIL::get()->MsgHTML( $message->getConclusao() );
 
-							if ( $GLOBALS['mail']->Send() ):
+							if ( SENDMAIL::get()->Send() ):
 								$GLOBALS['conn']->Execute("UPDATE LOG_MENSAGEM SET DH_SEND = NOW() WHERE ID = ?", array( $logID ) );
 							endif;
 						endif;
