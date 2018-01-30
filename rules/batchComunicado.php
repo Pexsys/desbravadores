@@ -17,7 +17,7 @@ $rs = $GLOBALS['conn']->Execute("
 ");
 foreach($rs as $k => $l):
 
-	$GLOBALS['mail']->Subject = $GLOBALS['pattern']->getClubeDS( array("cl","nm") ) . " - Comunicado #".$l["CD"]." [".strftime("%d/%m/%Y",strtotime($l["DH"])) ."]";
+	$GLOBALS['mail']->Subject = PATTERNS::getClubeDS( array("cl","nm") ) . " - Comunicado #".$l["CD"]." [".strftime("%d/%m/%Y",strtotime($l["DH"])) ."]";
 
 	$rs1 = $GLOBALS['conn']->Execute("
 		SELECT *

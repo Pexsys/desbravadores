@@ -1,30 +1,24 @@
-<?php 
+<?php
 @require_once("include/functions.php");
-fConnDB();
-
 fHeaderPage(
-	array(  
-		$GLOBALS['pattern']->getVD()."include/_core/css/datatable/dataTables.bootstrap.min.css",
-		$GLOBALS['pattern']->getVD()."include/_core/css/datatable/jquery.dataTables.min.css"
+	array(
+		PATTERNS::getVD()."vendor/adminbsb/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.min.css"
 	),
-	array( 
-		$GLOBALS['pattern']->getVD()."include/_core/js/slimscroll/jquery.slimscroll.min.js",
-		$GLOBALS['pattern']->getVD()."include/_core/js/datatable/jquery.dataTables.min.js",
-		$GLOBALS['pattern']->getVD()."include/_core/js/datatable/ZeroClipboard.js",
-		$GLOBALS['pattern']->getVD()."include/_core/js/datatable/dataTables.tableTools.min.js",
-		$GLOBALS['pattern']->getVD()."include/_core/js/datatable/dataTables.bootstrap.min.js",
-		$GLOBALS['pattern']->getVD()."js/capas.js?".microtime()
+	array(
+		PATTERNS::getVD()."vendor/adminbsb/plugins/jquery-datatable/jquery.dataTables.js",
+		PATTERNS::getVD()."vendor/adminbsb/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.min.js",
+		PATTERNS::getVD()."js/capas.js?".microtime()
 	)
 );
 ?>
+<style>
+table .table-selected{
+	background-color: #D5D5D5;
+}
+</style>
 <body>
-    <!-- Navigation -->
-	<?php @include_once("include/navbar.php");?>
-	
-    <!-- Page Content -->
+	<?php @require_once("include/navbar.php");?>
     <div class="container">
-
-        <!-- Page Heading/Breadcrumbs -->
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <h1 class="page-header">Gerar Capas de Especialidades</h1>
@@ -33,50 +27,37 @@ fHeaderPage(
                     <li class="active">Gerar Capas</li>
                 </ol>
             </div>
-        </div>
-        <!-- /.row -->
-        
-		<div class="panel panel-default">
-			<div class="container-fluid">
-				<br/>
-				<style type="text/css">
-					#capas-form .inputGroupContainer .form-control-feedback,
-					#capas-form .selectContainer .form-control-feedback {
-						top: -3px;
-					}
-				</style>
-				<form class="form-horizontal" method="post" id="capas-form">
-					<div class="col-xs-12 col-md-12">
-						<div class="form-group form-group-sm">
-							<label class="col-xs-1 control-label" for="cdMembro">C&oacute;digo</label>
-							<div class="col-xs-4 inputGroupContainer">
-								<div class="input-group">
-									<div class="input-group-addon"><i class="fa fa-barcode form-group-sm"></i></div>
-									<input type="text" id="cdMembro" name="cdMembro" field="cd_membro" class="form-control" placeholder="Pasta/Caderno/Cart&atilde;o" style="text-transform: uppercase"
-										maxlength="<?php echo $GLOBALS['pattern']->getBars()->getLength();?>" 
-										pattern="<?php echo $GLOBALS['pattern']->getBars()->getPattern(".");?>"
+        </diV>
+		<br/>
+		<div class="card">
+			<div class="body">
+				<form method="post" id="capas-form" autocomplete="off">
+					<input type="hidden" id="id" name="id" field="id" class="form-control"/>
+					<div class="row clearfix">
+						<div class="col-xs-7 col-md-3 col-lg-3">
+							<div class="form-group form-float form-group-lg">
+								<div class="form-line">
+									<input type="text" id="cdMembro" name="cdMembro" field="cd_membro" class="form-control" style="text-transform: uppercase"
+										maxlength="<?php echo PATTERNS::getBars()->getLength();?>"
+										pattern="<?php echo PATTERNS::getBars()->getPattern(".");?>"
 										data-fv-regexp-message="C&oacute;digo inv&aacute;lido"
 									/>
+									<label class="form-label" for="cdMembro"><i class="fa fa-barcode"></i>&nbsp;C&oacute;digo de barras</label>
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-12 col-md-12 col-lg-12">
+							<div class="form-group form-float form-group-lg">
+								<div class="form-line">
+									<input type="text" id="nmMembro" name="nmMembro" field="nm_membro" class="form-control"/>
+									<label class="form-label" for="nmMembro"><i class="fa fa-user"></i>&nbsp;Nome Completo</label>
 								</div>
 							</div>
 						</div>
 					</div>
-					<div class="col-xs-12 col-md-12">
-						<div class="form-group form-group-sm">
-							<label class="col-xs-1 control-label" for="nmMembro">Nome</label>
-							<div class="col-xs-9 inputGroupContainer">
-								<div class="input-group">
-									<div class="input-group-addon"><i class="fa fa-user form-group-sm"></i></div>
-									<input type="hidden" id="id" name="id" field="id" class="form-control"/>
-									<input type="text" id="nmMembro" name="nmMembro" field="nm_membro" class="form-control" placeholder="Nome Completo"/>
-								</div>
-							</div>
-						</div>
-					</div>
-					<hr/>
-					<div class="col-xs-12 col-md-12">
+					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 						<div class="row form-group" style="margin-bottom:20px">
-							<table class="compact row-border hover stripe" style="cursor:pointer" cellspacing="0" width="100%" id="simpledatatable">
+							<table class="table table-condensed table-hover compact" style="cursor:pointer" cellspacing="0" width="100%" id="simpledatatable">
 								<thead>
 									<tr>
 										<th>C&oacute;d.</th>
@@ -95,14 +76,9 @@ fHeaderPage(
 						</div>
 					</div>
 				</form>
-				<br/>
 			</div>
-		</div>
-	
-    <!-- Footer -->
-	<?php @include_once("include/footer.php");?>
-
+		<div>
+		<br/>
+		<?php @require_once("include/footer.php");?>
     </div>
-    <!-- /.container -->
-
-<?php @include_once("include/bottom_page.php");?>
+<?php @require_once("include/bottom_page.php");?>

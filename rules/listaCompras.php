@@ -1,7 +1,5 @@
 <?php
 @require_once("../include/functions.php");
-@require_once("../include/compras.php");
-@require_once("../include/materiais.php");
 responseMethod();
 
 /****************************
@@ -116,7 +114,6 @@ function getQueryByFilter( $parameters ) {
 function getLista( $parameters ) {
 	$arr = array();
 
-	fConnDB();
 	$result = getQueryByFilter( $parameters );
 
 	foreach ($result as $k => $fields):
@@ -149,9 +146,6 @@ function getLista( $parameters ) {
 }
 
 function process(){
-	fConnDB();
-
-	$compras = new COMPRAS();
 
 	//SELECIONA PESSOAS POR ORDEM ALFABETICA
 	$result = $GLOBALS['conn']->Execute("
@@ -163,7 +157,7 @@ function process(){
 		  ORDER BY ca.NM
 	");
 	foreach ($result as $k => $ls):
-		$compras->processaListaMembroID( $ls['ID_CAD_MEMBRO'], "A" );
+		COMPRAS::processaListaMembroID( $ls['ID_CAD_MEMBRO'], "A" );
 	endforeach;
 
 	return array( "result" => true );
@@ -176,7 +170,6 @@ function gerarPDF(){
 function getData( $parameters ) {
 	$arr = array();
 
-	fConnDB();
 	foreach ($parameters["domains"] as $y => $f):
 		if ( $f == "tipos" ):
 			$arr["tipos"] = array();
@@ -293,10 +286,8 @@ function getData( $parameters ) {
 function delete( $parameters ) {
 	$ids = $parameters["ids"];
 
-	fConnDB();
-	$compras = new COMPRAS();
 	foreach ($ids as $k => $id):
-		$compras->deleteByID($id);
+		COMPRAS::deleteByID($id);
 	endforeach;
 	return array( "result" => true );
 }
@@ -309,20 +300,17 @@ function addCompras( $parameters ) {
 
 	//ADICIONA ITENS
 	if ( $act == "ADD" && isset($frm["id"]) ):
-		fConnDB();
-		$compras = new COMPRAS();
 
 		if ( isset($frm["id_cad_membro"]) ):
 			foreach ($frm["id_cad_membro"] as $k => $cadMembroID):
-				batchInsert($compras, $qtItens, $cmpl, $cadMembroID, $frm["id"]);
+				batchInsert($qtItens, $cmpl, $cadMembroID, $frm["id"]);
 			endforeach;
 		else:
-			batchInsert($compras, $qtItens, $cmpl, null, $frm["id"]);
+			batchInsert($qtItens, $cmpl, null, $frm["id"]);
 		endif;
 
 	//SETAR ITENS ENTREGUES POR PESSOA
 	elseif ( $act == "SET" && isset($frm["id_cad_membro"]) ):
-		fConnDB();
 		foreach ($frm["id_cad_membro"] as $k => $cadMembroID):
 			$result = $GLOBALS['conn']->Execute("
 				SELECT *
@@ -340,13 +328,13 @@ function addCompras( $parameters ) {
 	return array("result" => true);
 }
 
-function batchInsert($compras, $qtItens, $cmpl, $cadMembroID, $id){
+function batchInsert($qtItens, $cmpl, $cadMembroID, $id){
 	for ($qtd=1;$qtd<=$qtItens;$qtd++):
 		$cm = $cmpl;
 		if ($qtItens>1):
 			$cm = (is_null($cmpl) ? "" : $cmpl) ."$qtd/$qtItens";
 		endif;
-		$compras->forceInsert(
+		COMPRAS::forceInsert(
 			array(
 				fReturnNumberNull($cadMembroID),
 				$id,
@@ -362,7 +350,6 @@ function batchInsert($compras, $qtItens, $cmpl, $cadMembroID, $id){
 function getAttrPerm( $parameters ) {
 	$id = $parameters["id"];
 
-	fConnDB();
 	$result = $GLOBALS['conn']->Execute("
 		SELECT 1
 		FROM CON_COMPRAS
@@ -381,7 +368,6 @@ function getAttr( $parameters ) {
 		"fg_entregue" => "N"
 	);
 
-	fConnDB();
 	$result = $GLOBALS['conn']->Execute("
 		SELECT FG_COMPRA, FG_ENTREGUE, QT_EST
 		FROM CON_COMPRAS
@@ -402,7 +388,6 @@ function setAttr( $parameters ) {
 	$vl = $parameters["vl"];
 	$qt = array( "qt" => 0 );
 
-	fConnDB();
 	$result = $GLOBALS['conn']->Execute("
 		SELECT *
 		  FROM CON_COMPRAS
@@ -464,8 +449,7 @@ function updateEstoque( $ln, $fd, $vl ){
 
 			//INSERE LOG DE ENTREGA DE MATERIAIS
 			if ($ln["FG_LOG_MATERIAL"] == "S"):
-				$materiais = new MATERIAIS();
-				$materiais->forceInsert( array( $ln["ID_CAD_MEMBRO"], $ln["ID_TAB_MATERIAIS"], date("Y-m-d") ) );
+				MATERIAIS::forceInsert( array( $ln["ID_CAD_MEMBRO"], $ln["ID_TAB_MATERIAIS"], date("Y-m-d") ) );
 				$arr["close"] = "S";
 			endif;
 
@@ -485,7 +469,6 @@ function updateCADCompras($fd, $arr){
 }
 
 function distribuirEstoque(){
-	fConnDB();
 
 	//MOVIMENTAR ITENS COMPRADOS E NAO ENTREGUES PARA O ESTOQUE
 	$result = $GLOBALS['conn']->Execute("

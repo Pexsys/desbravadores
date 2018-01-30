@@ -4,12 +4,12 @@ responseMethod();
 
 function getQueryByFilter( $parameters ) {
 	session_start();
-	
-	$userID = $_SESSION['USER']['id_usuario'];
-	$membroID = $_SESSION['USER']['id_cad_pessoa'];
+
+	$userID = $_SESSION['USER']['ID_USUARIO'];
+	$membroID = $_SESSION['USER']['ID_CAD_PESSOA'];
 	$out = array();
 	$frm = null;
-	
+
 	$like = "";
 	$result = $GLOBALS['conn']->Execute("
 		SELECT CD_CARGO, CD_CARGO2
@@ -28,9 +28,9 @@ function getQueryByFilter( $parameters ) {
 	endif;
 
 	$str = "
-		SELECT cd.ID, cd.SQ, cd.DH, cd.FG_PEND, 
-			ta.DS_ITEM, 
-			taa.CD AS CD_AREA, taa.DS AS DS_AREA, 
+		SELECT cd.ID, cd.SQ, cd.DH, cd.FG_PEND,
+			ta.DS_ITEM,
+			taa.CD AS CD_AREA, taa.DS AS DS_AREA,
 			tap.CD_REQ_INTERNO, tap.DS,
 			(SELECT COUNT(*)
 				FROM CON_APR_PESSOA
@@ -38,7 +38,7 @@ function getQueryByFilter( $parameters ) {
 				  AND DT_CONCLUSAO IS NULL
 				". ($parameters["filter"] == "Y" ? " AND YEAR(DT_INICIO) = YEAR(NOW())" : "") .") AS QTD_TOTAL,
 			(SELECT COUNT(*)
-				FROM CON_APR_PESSOA 
+				FROM CON_APR_PESSOA
 				WHERE ID = tap.ID
 				  AND DT_CONCLUSAO IS NULL
 				  AND DT_ASSINATURA IS NOT NULL
@@ -58,13 +58,12 @@ function getQueryByFilter( $parameters ) {
 
 function fRegistro( $parameters ) {
 	session_start();
-	fConnDB();
-	
-	$userID = $_SESSION['USER']['id_usuario'];
-	$membroID = $_SESSION['USER']['id_cad_pessoa'];
+
+	$userID = $_SESSION['USER']['ID_USUARIO'];
+	$membroID = $_SESSION['USER']['ID_CAD_PESSOA'];
 	$out = array();
 	$frm = null;
-	
+
 	$like = "";
 	$result = $GLOBALS['conn']->Execute("
 		SELECT CD_CARGO, CD_CARGO2
@@ -90,7 +89,7 @@ function fRegistro( $parameters ) {
 	if ( $op == "UPDATE" ):
 		$fg_pend = $frm["fg_pend"];
 		$id = $frm["id"];
-		
+
 		$arr = array();
 		//INSERT DE NOVA OCORRENCIA
 		if ( !is_null($id) && is_numeric($id) ):
@@ -140,7 +139,7 @@ function fRegistro( $parameters ) {
 			",$arr);
 			$id = $GLOBALS['conn']->Insert_ID();
 		endif;
-		
+
 		$out["id"] = $id;
 		$out["so"] = $fg_pend;
 		$out["success"] = true;
@@ -178,7 +177,7 @@ function fRegistro( $parameters ) {
 				$out["req"] = fGetReq( $result->fields['ID_TAB_APREND'] );
 				$out["ref"] = fGetRefByID( $result->fields['ID_TAB_APR_ITEM'] );
 			endif;
-			
+
 		endif;
 
 		$rc = $GLOBALS['conn']->Execute("
@@ -201,11 +200,9 @@ function fRegistro( $parameters ) {
 }
 
 function fGetCompl( $parameters ){
-	fConnDB();
-
 	$result = $GLOBALS['conn']->Execute("
-		SELECT MAX(SQ)+1 AS SQ 
-		FROM CAD_DIARIO 
+		SELECT MAX(SQ)+1 AS SQ
+		FROM CAD_DIARIO
 		WHERE ID_TAB_APREND = ?
 		AND YEAR(DH) = YEAR(NOW())
 	", array($parameters["id_classe"]) );
@@ -218,15 +215,15 @@ function fGetReq( $classeID ){
 	$arr = array();
 	$result = $result = $GLOBALS['conn']->Execute("
 		   SELECT tap.ID, taa.SEQ, taa.CD AS CD_AREA, taa.DS AS DS_AREA, tap.CD_REQ_INTERNO, tap.DS, tap.QT_MIN
-			 FROM TAB_APR_ITEM tap 
+			 FROM TAB_APR_ITEM tap
 		LEFT JOIN TAB_APR_AREA taa ON (taa.ID = tap.ID_TAB_APR_AREA)
-			WHERE tap.ID_TAB_APREND = ? 
+			WHERE tap.ID_TAB_APREND = ?
 		 ORDER BY taa.SEQ, tap.CD_REQ_INTERNO
 	", array( $classeID ) );
 
 	foreach ($result as $k => $fields):
-		$dsReq = (!is_null($fields['CD_AREA']) ? $fields['CD_AREA']."-" : "") . 
-				substr($fields['CD_REQ_INTERNO'],-2) . 
+		$dsReq = (!is_null($fields['CD_AREA']) ? $fields['CD_AREA']."-" : "") .
+				substr($fields['CD_REQ_INTERNO'],-2) .
 				 (!is_null($fields['DS']) ? " ".$fields['DS'] : "");
 
 		$arr[] = array(
@@ -239,7 +236,6 @@ function fGetReq( $classeID ){
 }
 
 function fGetRef( $parameters ){
-	fConnDB();
 	return fGetRefByID( $parameters["id_req"] );
 }
 
@@ -251,10 +247,10 @@ function fGetRefByID( $refID ){
 	INNER JOIN TAB_APR_ITEM_SEL tais2 ON (tais2.ID = cd.ID_TAB_APR_ITEM_SEL)
 	WHERE YEAR(cd.DH) = YEAR(NOW())
 		AND tais2.ID_REF = tais.ID_REF
-	)		
+	)
 	";
 	//SE PERFIL DE DIRETORES / INSTRUTOR GERAL, PERMITE A MESMA ESPECIALIDADE PARA MAIS DE UMA CLASSE
-	$pessoaID = $_SESSION['USER']['id_cad_pessoa'];
+	$pessoaID = $_SESSION['USER']['ID_CAD_PESSOA'];
 	$result = $GLOBALS['conn']->Execute("
 		SELECT CD_CARGO, CD_CARGO2
 		  FROM CON_ATIVOS
@@ -275,7 +271,7 @@ function fGetRefByID( $refID ){
 	", array( $refID ) );
 
 	foreach ($result as $k => $fields):
-		$arr[] = array( 
+		$arr[] = array(
 			"id"	=> $fields['ID'],
 			"ds"	=> $fields['DS_ITEM'],
 			"sb"	=> $fields['CD_ITEM_INTERNO']
@@ -286,16 +282,14 @@ function fGetRefByID( $refID ){
 
 function getListaDiario( $parameters ){
 	$arr = array();
-	fConnDB();
-	
 	$result = getQueryByFilter( $parameters );
 
 	foreach ($result as $k => $fields):
-		$dsReq = (!is_null($fields['CD_AREA']) ? $fields['CD_AREA']."-" : "") . 
-				substr($fields['CD_REQ_INTERNO'],-2) . 
+		$dsReq = (!is_null($fields['CD_AREA']) ? $fields['CD_AREA']."-" : "") .
+				substr($fields['CD_REQ_INTERNO'],-2) .
 				 (!is_null($fields['DS']) ? " ".substr($fields['DS'],0,70) : "");
 
-		$perc = floor(($fields['QTD_COMPL'] / max(1,$fields['QTD_TOTAL']))*100);		
+		$perc = floor(($fields['QTD_COMPL'] / max(1,$fields['QTD_TOTAL']))*100);
 		$cl = 'success';
 		if ($perc < 75):
 			$cl = 'danger';
@@ -318,7 +312,6 @@ function getListaDiario( $parameters ){
 }
 
 function fDetalheItem( $parameters ){
-	fConnDB();
 	$str = "";
 
 	$pendentes = $GLOBALS['conn']->Execute("

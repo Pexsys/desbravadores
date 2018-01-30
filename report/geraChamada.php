@@ -1,9 +1,8 @@
 <?php
 @require_once('../include/functions.php');
-@require_once('../include/_core/lib/tcpdf/tcpdf.php');
 
 class CHAMADA extends TCPDF {
-	
+
 	//lines styles
 	private $stLine;
 	private $stLine2;
@@ -14,10 +13,10 @@ class CHAMADA extends TCPDF {
 	private $xq;
 	private $cdates;
 	private $leftMin;
-	
+
 	function __construct() {
 		parent::__construct(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-		
+
 		$this->stLine = array('width' => 1, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0));
 		$this->stLine2 = array('width' => 0.3, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0));
 		$this->stLine3 = array(
@@ -41,8 +40,8 @@ class CHAMADA extends TCPDF {
 		$this->SetCreator(PDF_CREATOR);
 		$this->SetAuthor('Ricardo J. Cesar');
 		$this->SetTitle('Geração das fichas de chamada');
-		$this->SetSubject($GLOBALS['pattern']->getClubeDS(array("cl","nm")));
-		$this->SetKeywords('Chamada, ' . str_replace(" ", ", ", $GLOBALS['pattern']->getClubeDS( array("db","nm","ibd") ) ));
+		$this->SetSubject(PATTERNS::getClubeDS(array("cl","nm")));
+		$this->SetKeywords('Chamada, ' . str_replace(" ", ", ", PATTERNS::getClubeDS( array("db","nm","ibd") ) ));
 		$this->setImageScale(PDF_IMAGE_SCALE_RATIO);
 	}
 
@@ -57,14 +56,14 @@ class CHAMADA extends TCPDF {
 		$this->SetX(172);
 		$this->Cell(40, 3, "Página ". $this->getAliasNumPage() ." de ". $this->getAliasNbPages(), 0, false, 'R');
 	}
-	
+
  	public function Header() {
 		$colorR = base_convert(substr($this->unidade["CD_COR_GENERO"],1,2),16,10);
 		$colorG = base_convert(substr($this->unidade["CD_COR_GENERO"],3,2),16,10);
 		$colorB = base_convert(substr($this->unidade["CD_COR_GENERO"],5,2),16,10);
 		$this->SetFillColor(255,255,255);
 		$this->SetTextColor($colorR,$colorG,$colorB);
-		
+
 		/*WATERMARK
 		// get the current page break margin
 		$bMargin = $this->getBreakMargin();
@@ -85,22 +84,22 @@ class CHAMADA extends TCPDF {
 		$this->Image("img/logo.jpg", 5, 5, 14, 16, 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
 		$this->Image("img/unidade/".$this->unidade["ID"]."_E.jpg", 189, 5, 16, 16, 'JPG', '', 'T', false, 90, '', false, false, 0, false, false, false);
 		//$this->ImageSVG("img/unidade/".$this->unidade["ID"]."_E.svg", 184, 1, 27, 27, $link='', $align='', $palign='', $border=0, $fitonpage=false);
-		
+
 		$this->setXY(20,5);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 25);
 		$this->Cell(170, 9, "Controle de Presença da Unidade", 0, false, 'C', false, false, false, false, 'T', 'M');
-		
+
 		$this->setXY(20,15);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 7);
-		$this->Cell(185, 5, $GLOBALS['pattern']->getCDS(), 0, false, 'C', false, false, false, false, false, false, 'T', 'M');
-		
+		$this->Cell(185, 5, PATTERNS::getCDS(), 0, false, 'C', false, false, false, false, false, false, 'T', 'M');
+
 		$this->cdates = $this->mesAno->RecordCount();
 		$this->leftMin = 205-max($this->cdates*$this->xq, 40);
 		$x = $this->leftMin;
-		
+
 		$this->setXY(5, 22);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 13);
-		
+
 		$colorR = base_convert(substr($this->unidade["CD_COR"],1,2),16,10);
 		$colorG = base_convert(substr($this->unidade["CD_COR"],3,2),16,10);
 		$colorB = base_convert(substr($this->unidade["CD_COR"],5,2),16,10);
@@ -112,7 +111,7 @@ class CHAMADA extends TCPDF {
 		$this->SetFillColor(235,235,235);
 		$this->SetTextColor($colorR,$colorG,$colorB);
 		$this->setCellPaddings(0,0,0,0);
-		$this->mesAtu = strftime("%m",strtotime($this->mesAno->fields["DTHORA_EVENTO_INI"])); 
+		$this->mesAtu = strftime("%m",strtotime($this->mesAno->fields["DTHORA_EVENTO_INI"]));
 		$this->Cell(205-$this->leftMin, 8, titleCase(utf8_encode(strftime("%B/%Y",strtotime($this->mesAno->fields["DTHORA_EVENTO_INI"])))), 0, false, 'C', true);
 		$this->SetTextColor(0,0,0);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 5);
@@ -124,7 +123,7 @@ class CHAMADA extends TCPDF {
 		endforeach;
 		$this->posY = 36;
 	}
-	
+
 	public function addChamada($rm,$uf) {
 		$this->mesAno = $rm;
 		$this->unidade = $uf;
@@ -133,13 +132,13 @@ class CHAMADA extends TCPDF {
 		$this->newPage();
 
 		$rsM = $GLOBALS['conn']->Execute("
-			SELECT * 
-			  FROM CON_ATIVOS 
-			 WHERE ID_UNIDADE = ? 
+			SELECT *
+			  FROM CON_ATIVOS
+			 WHERE ID_UNIDADE = ?
 			   AND FG_REU_SEM = ?
 			ORDER BY CD_CARGO, NM
 		", array( $uf["ID"], "S" ) );
-		
+
 		foreach ($rsM as $k => $f):
 			$this->startTransaction();
 			$start_page = $this->getPage();
@@ -149,11 +148,11 @@ class CHAMADA extends TCPDF {
 				$this->newPage();
 				$this->addLine($f);
 			}else{
-				$this->commitTransaction();     
+				$this->commitTransaction();
 			}
 		endforeach;
 	}
-	
+
 	private function addLine($f){
 		$x = $this->leftMin;
 		$h = 5;
@@ -175,7 +174,7 @@ class CHAMADA extends TCPDF {
 			$this->setXY($x-22,$this->posY);
 			$this->Cell(22, $h, strftime("%d/%m",strtotime($f["DT_NASC"]))." - ".$f["IDADE_HOJE"]." anos", 0, false, 'C', true);
 		endif;
-		
+
 		$this->setCellPaddings(0,0,0,0);
 		$this->SetFillColor(255,255,255);
 		for ($i=0;$i<$this->cdates;$i++):
@@ -196,12 +195,12 @@ class CHAMADA extends TCPDF {
 		$this->Cell($x-50.5, $h, $f["DS_CARGO"], 0, false, 'L', true);
 		$this->setXY($x-36,$this->posY);
 		$this->Cell(35, $h, trim($f["FONE_RES"]."   ".$f["FONE_CEL"]), 0, false, 'R', true);
-		
+
 		$this->posY+=($h+2);
 		$this->Line(5, $this->posY, 205, $this->posY, $this->stLine3);
 		$this->posY+=2;
 	}
-	
+
 	public function newPage() {
 		$this->AddPage();
 		$this->setCellPaddings(0,0,0,0);
@@ -232,7 +231,7 @@ foreach ( $result as $ru => $f ):
 	foreach( $aM as $m ):
 		$arr = explode("-",$m);
 		$arr[] = ($f["TP"] == "A" ? "I" : "D");
-	
+
 		$rm = $GLOBALS['conn']->Execute("
 			SELECT e.DTHORA_EVENTO_INI
 			  FROM CAD_EVENTOS e

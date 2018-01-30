@@ -9,21 +9,21 @@ Number.PAD_RIGHT = 1;
 Number.PAD_BOTH  = 2;
 
 /**
- * 
+ *
  */
 String.prototype.isEmpty = function() {
 	return ( this.lenght == 0 ) || ( this.trim().length == 0 );
 };
 
 /**
- * 
+ *
  */
 String.prototype.toInt = function() {
 	return this.isEmpty() ? 0 : parseInt( this.replaceAll( ".", "" ), 10 );
 };
 
 /**
- * 
+ *
  * @param oldVal
  * @param newVal
  * @return
@@ -55,48 +55,48 @@ Number.prototype.toPadString = function( size, pad, side ) {
 	if ( !pad ) {
 		pad = "0";
 	};
-	
+
 	if ( !side ) {
 		side = Number.PAD_LEFT;
 	};
-	
-  	var str    = "" + this, 
-  	    append = "", 
+
+  	var str    = "" + this,
+  	    append = "",
   	    size   = ( size - str.length );
  	var pad = ( ( pad != null ) ? pad : " " );
-	
+
   	if ( side == Number.PAD_BOTH ) {
     	str = str.pad((Math.floor(size / 2) + str.length), pad, String.PAD_LEFT);
-		
+
     	return str.pad((Math.ceil(size / 2) + str.length), pad, String.PAD_RIGHT);
   	};
-	
+
   	while ((size -= pad.length) > 0) {
     	append += pad;
   	};
-	
+
   	append += pad.substr(0, (size + pad.length));
-	
+
   	return ((side == Number.PAD_LEFT) ? append.concat(str) : str.concat(append));
 };
 
 /**
- * 
+ *
  */
 Date.prototype.toFormattedDate = function() {
 	var month = this.getMonth() + 1;
-	
-	return this.getDate().toPadString(2) + "/" + 
-		   month.toPadString(2) + "/" + 
+
+	return this.getDate().toPadString(2) + "/" +
+		   month.toPadString(2) + "/" +
 		   this.getFullYear();
 };
 
 /**
- * 
+ *
  */
 Date.prototype.toDateTime = function() {
 	var month = this.getMonth() + 1;
-	
+
 	return this.getFullYear() + "-" +
 	       month.toPadString(2) + "-" +
 		   this.getDate().toPadString(2) + " " +
@@ -150,32 +150,26 @@ $.fn.selectpicker.defaults = {
 var jsLIB = {
 	rootDir : "/",
 	parameters : {},
-	
-	watingDialog : new BootstrapDialog({
-		size: BootstrapDialog.SIZE_SMALL,
-		closable: false,
-		draggable: false,
-		message: function(dialogRef){
-			var $message = $('<div align="center"><i class="fa fa-spinner fa-spin" style="font-size:200px"></i></div>');
-			return $message;
-		}
-	}),
+
+	watingDialog : function(){
+
+	},
 
 	modalWaiting : function( show ) {
 		if ( !jsLIB.watingDialog.opened ) {
-			jsLIB.watingDialog.realize();
-			jsLIB.watingDialog.getModalHeader().hide();
-			jsLIB.watingDialog.getModalFooter().hide();
-			jsLIB.watingDialog.getModalBody().css('background-color', '#0088cc');
-			jsLIB.watingDialog.getModalBody().css('color', '#fff');
+			//jsLIB.watingDialog.realize();
+			//jsLIB.watingDialog.getModalHeader().hide();
+			//jsLIB.watingDialog.getModalFooter().hide();
+			//jsLIB.watingDialog.getModalBody().css('background-color', '#0088cc');
+			//jsLIB.watingDialog.getModalBody().css('color', '#fff');
 		}
 		if (show) {
-			jsLIB.watingDialog.open();
+			//jsLIB.watingDialog.open();
 		} else {
-			jsLIB.watingDialog.close();
+			//jsLIB.watingDialog.close();
 		}
 	},
-	
+
 	ajaxCall : function( objParam ) {
 		var retorno = undefined;
 		if (objParam.waiting === true){
@@ -204,11 +198,11 @@ var jsLIB = {
 				if ( typeof( objParam.error ) == 'function' ) {
 					objParam.error( jqxhr, message );
 				}
-			}               
+			}
 		});
 		return retorno;
 	},
-		
+
 	getJSONFields : function( frm ) {
 		var retorno = {};
 		frm.find( $('[field]') ).each( function() {
@@ -227,7 +221,7 @@ var jsLIB = {
 		});
 		return retorno;
 	},
-	
+
 	getValueFromField : function( inputField ) {
 		var value = "";
 		switch ( inputField.attr("type") ) {
@@ -247,7 +241,7 @@ var jsLIB = {
 		}
 		return value;
 	},
-	
+
 	resetForm : function( frm ) {
 		frm.find( $('[field]') ).each( function() {
 			$(this).parents('.form-group').removeClass('has-success');
@@ -280,7 +274,7 @@ var jsLIB = {
 			}
 		});
 	},
-	
+
 	populateForm : function( frm, data ) {
 		jsLIB.resetForm(frm);
 		$.each( data, function( key, value ) {
@@ -309,10 +303,10 @@ var jsLIB = {
 					} else {
 						ctrl.val(value).change();
 					}
-			}  
-		}); 
+			}
+		});
 	},
-	
+
 	populateOptions : function( objSelect, source ) {
 		var value = ( objSelect.hasAttr("opt-value") ? objSelect.attr("opt-value") : "id" );
 		var label = ( objSelect.hasAttr("opt-label") ? objSelect.attr("opt-label") : "ds" );
@@ -320,7 +314,7 @@ var jsLIB = {
 		var subtext = ( objSelect.hasAttr("opt-subtext") ? objSelect.attr("opt-subtext") : null );
 		var selected = ( objSelect.hasAttr("opt-selected") ? objSelect.attr("opt-selected") : null );
 		var links = ( objSelect.hasAttr("opt-links") ? objSelect.attr("opt-links").split(";") : null );
-		
+
 		var oLinkIcon = null;
 		if (objSelect.hasAttr("opt-link-icons")){
 			oLinkIcon = [];
@@ -328,7 +322,7 @@ var jsLIB = {
 				var lk = linkIcon.split('=');
 				oLinkIcon[lk[0]] = lk[1];
 			});
-		}		
+		}
 
 		var oLinkClass = null;
 		if (objSelect.hasAttr("opt-link-class")){
@@ -338,13 +332,13 @@ var jsLIB = {
 				oLinkClass[lk[0]] = lk[1];
 			});
 		}
-		
+
 		objSelect.children().remove();
 		if ( !objSelect.hasClass("selectpicker") || objSelect.attr("add-none") == "true" ) {
 			 objSelect.append( $("<option></option>")
 				.attr("value","").text("(NENHUM)"));
 		}
-		$.each(source, function(idx, option) {   
+		$.each(source, function(idx, option) {
 			obj = $("<option></option>")
 					.attr("value",option[value])
 					.text(option[label]);
@@ -417,7 +411,7 @@ var jsFilter = {
 		jsFilter.filtered = (retorno !== {});
 		return retorno;
 	},
-	
+
 	removeAll : function(){
 		$("[filter-value]").each(function(){
 			jsFilter.removeFilter(this);
@@ -430,13 +424,13 @@ var jsFilter = {
 		var label = obj.attr("filter-label");
 		var icon = obj.attr("filter-icon");
 
-		var obj = $("<option></option>") 
+		var obj = $("<option></option>")
 			.attr("value",value)
 			.text(label);
 		if (icon){
 			obj.attr('data-icon',icon);
 		}
-		
+
 		$("#addFilter").append(obj);
 		$("#addFilter").html($("#addFilter").children('option').sort(function(x, y) {
 			return $(x).text().toUpperCase() < $(y).text() ? - 1 : 1;

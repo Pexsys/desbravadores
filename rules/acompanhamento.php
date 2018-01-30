@@ -1,15 +1,13 @@
 <?php
 @require_once("../include/functions.php");
-@require_once("../include/acompanhamento.php");
-@require_once("../include/historico.php");
 responseMethod();
 
 /****************************
- * Methods defined for use. * 
+ * Methods defined for use. *
  ****************************/
 function getQueryByFilter( $parameters ) {
 	session_start();
-	$cadMembroID = $_SESSION['USER']['id_cad_membro'];
+	$cadMembroID = $_SESSION['USER']['ID_CAD_MEMBRO'];
 
 	$where = "";
 	$result = $GLOBALS['conn']->Execute("
@@ -24,8 +22,8 @@ function getQueryByFilter( $parameters ) {
 	if ($cargo != "2-04-00" && fStrStartWith($cargo,"2-04")):
 		$like = "01-".substr($cargo,-2);
 		$where .= " AND cai.CD_ITEM_INTERNO LIKE '$like%' AND ca.CD_CARGO NOT LIKE '2-%'";
-	endif;	
-	
+	endif;
+
 	$aWhere = array();
 	if ( isset($parameters["filters"]) ):
 		$keyAnt = "";
@@ -75,7 +73,7 @@ function getQueryByFilter( $parameters ) {
 					else:
 						$aWhere[] = $value;
 						$where .= (!$prim ? "," : "" )."?";
-					endif;				
+					endif;
 					$prim = false;
 				endforeach;
 			else:
@@ -84,32 +82,32 @@ function getQueryByFilter( $parameters ) {
 			endif;
 			$where .= ")";
 		endforeach;
-	endif;	
+	endif;
 
 //echo $where;
 //exit;
 
 	$query = "
-		SELECT 
+		SELECT
 			ca.NM,
 			ah.ID_CAD_PESSOA,
 			ah.ID_TAB_APREND,
 			cai.TP_ITEM,
-			cai.CD_ITEM_INTERNO,			
+			cai.CD_ITEM_INTERNO,
 			cai.DS_ITEM,
 			ah.DT_INICIO,
 			ah.DT_CONCLUSAO,
 			ah.DT_AVALIACAO,
 			cai.QTD AS QT_TOTAL,
-			(SELECT COUNT(*) 
-               FROM CON_APR_PESSOA 
-              WHERE ID_TAB_APREND = ah.ID_TAB_APREND 
+			(SELECT COUNT(*)
+               FROM CON_APR_PESSOA
+              WHERE ID_TAB_APREND = ah.ID_TAB_APREND
                 AND ID_CAD_PESSOA = ah.ID_CAD_PESSOA
                 AND DT_ASSINATURA IS NOT NULL) AS QTD
 		FROM APR_HISTORICO ah
 		INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = ah.ID_CAD_PESSOA)
 		INNER JOIN CON_APR_ITEM cai ON (cai.ID = ah.ID_TAB_APREND)
-		WHERE ah.DT_INVESTIDURA IS NULL 
+		WHERE ah.DT_INVESTIDURA IS NULL
 		  AND cai.TP_ITEM = 'CL' $where
 		ORDER BY ca.NM, ah.DT_INICIO, cai.CD_ITEM_INTERNO
 	";
@@ -119,13 +117,12 @@ function getQueryByFilter( $parameters ) {
 
 function getData( $parameters ) {
 	$arr = array();
-	
-	fConnDB();
+
 	$result = getQueryByFilter( $parameters );
 	foreach ($result as $k => $fields):
 
-		$perc = floor(($fields['QTD'] / max(1,$fields['QT_TOTAL']))*100);		
-		
+		$perc = floor(($fields['QTD'] / max(1,$fields['QT_TOTAL']))*100);
+
 		if ($perc < 51):
 			$cl = 'danger';
 		elseif ($perc < 85):
@@ -134,7 +131,7 @@ function getData( $parameters ) {
 			$cl = 'success';
 		endif;
 
-		$arr[] = array( 
+		$arr[] = array(
 			"ip" => $fields['ID_CAD_PESSOA'],
 			"ia" => $fields['ID_TAB_APREND'],
 			"di" => is_null($fields['DT_INICIO']) ? "" : strftime("%d/%m/%Y",strtotime($fields['DT_INICIO'])),
@@ -145,42 +142,40 @@ function getData( $parameters ) {
 			"pg" => array( "pc" => $perc, "cl" => $cl)
 		);
 	endforeach;
-	
+
 	return array( "result" => true, "acomp" => $arr );
 }
 
 function setRequisito( $parameters ) {
 	$frm = $parameters["frm"];
-	
+
 	$bc = $frm["cd_bar"];
 	$ip = $frm["id_cad_pessoa"];
-	
-	fConnDB();
-	
+
 	foreach ($frm as $f => $v):
 		if (fStrStartWith($f,"dt-req-")):
 			$reqID = substr($f, 7);
-			
+
 			$rs = $GLOBALS['conn']->Execute( "SELECT ID_TAB_APREND FROM TAB_APR_ITEM WHERE ID = ?", $reqID );
 			if (!$rs->EOF):
-				$uh = updateHistorico(
-					$ip, 
+				$uh = HISTORICO::update(
+					$ip,
 					$rs->fields["ID_TAB_APREND"],
 					array(
 						"dt_inicio" => "N",
 						"dt_conclusao" => "N",
 						"dt_avaliacao" => "N",
 						"dt_investidura" => "N"
-					), 
+					),
 					null
 				);
-				marcaRequisitoID( getDateNull($v), $uh["id"], $reqID );
+				HISTORICO::marcaRequisitoID( getDateNull($v), $uh["id"], $reqID );
 			endif;
 		endif;
 	endforeach;
-	
-	analiseHistoricoPessoa($ip);
-	
+
+	HISTORICO::analisePessoa($ip);
+
 	return array( "result" => true );
 }
 ?>

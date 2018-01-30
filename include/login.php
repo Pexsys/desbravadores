@@ -1,35 +1,40 @@
-<script type="text/javascript" src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/jquery.sha1.js"></script>
-<script type="text/javascript" src="<?php echo $GLOBALS['pattern']->getVD();?>js/login.js?<?php echo microtime();?>"></script>
-<!-- Modal -->
+<script type="text/javascript" src="<?php echo PATTERNS::getVD();?>js/jquery.sha1.js"></script>
+<script type="text/javascript" src="<?php echo PATTERNS::getVD();?>js/login.js?<?php echo microtime();?>"></script>
 <div class="modal fade" id="myLoginModal">
 	<div class="modal-dialog modal-sm">
-		<!-- Modal content-->
 		<div class="modal-content">
-			<div class="modal-header" style="padding:35px 50px;">
-				<button type="button" class="close" data-dismiss="modal">&times;</button>
-				<h4><span class="glyphicon glyphicon-lock"></span> Login</h4>
+			<div class="login-box">
+				<div class="card">
+					<div class="header bg-light-blue">
+                        <span class="glyphicon glyphicon-lock"></span> Login
+                    </div>
+					<div class="body">
+						<form id="login-form" method="POST" autocomplete="off">
+							<div class="form-group form-float">
+								<div class="form-line">
+									<input type="text" class="form-control" name="usr" id="usr" autofocus style="text-transform:uppercase"/>
+									<label class="form-label" for="usr"><i class="fa fa-barcode"></i>&nbsp;Usu&aacute;rio</label>
+								</div>
+							</div>
+							<div class="form-group form-float">
+								<div class="form-line">
+									<input type="password" class="form-control" name="psw" id="psw"/>
+									<label class="form-label" for="usr"><i class="fa fa-lock"></i>&nbsp;Senha</label>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-7 p-t-5"></div>
+								<div class="col-xs-5">
+									<button type="submit" class="btn btn-success waves-effect">
+	                                    <i class="material-icons">vpn_key</i>
+	                                    <span>Entrar</span>
+	                                </button>
+								</div>
+							</div>
+		                </form>
+		            </div>
+		        </div>
 			</div>
-			<form class="form-signin" method="post" id="login-form">
-				<input type="hidden" id="page" value=""/>
-				<div class="modal-body" style="padding:40px 50px;">
-					<div class="form-group">
-					  <label for="usr"><span class="glyphicon glyphicon-user"></span>&nbsp;Usu&aacute;rio</label>
-					  <input type="text" class="form-control" id="usr" name="usr" placeholder="Digite aqui seu c&oacute;digo">
-					</div>
-					<div class="form-group">
-					  <label for="psw"><span class="glyphicon glyphicon-eye-open"></span>&nbsp;Senha</label>
-					  <input type="password" class="form-control" id="psw" name="psw" placeholder="Digite aqui sua senha">
-					</div>
-					<?php //echo "<div class=\"checkbox\"><label><input type=\"checkbox\" value=\"\" checked>Lembrar</label></div>";?>
-					<button type="submit" class="btn btn-success btn-block"><span class="glyphicon glyphicon-off"></span>&nbsp;Entrar</button>
-				</div>
-				<?php
-				//<div class="modal-footer">
-					//echo "<p>Ainda n&atilde;o registrado? <a href=\"#\">Registre-se</a></p>";
-					//echo "<p>Esqueceu a <a href=\"#\">Senha?</a></p>";
-				//</div>
-				?>
-			</form>
 		</div>
 	</div>
 </div>

@@ -1,9 +1,10 @@
-<?php 
+<?php
 @require_once("include/functions.php");
-fHeaderPage();
+fHeaderPage( array( PATTERNS::getVD()."css/index.css?" )
+		   , array( PATTERNS::getVD()."js/index.js?") );
 ?>
 <body>
-	<?php @include_once("include/navbar.php");?>
+	<?php @require_once("include/navbar.php");?>
     <div class="container">
         <div class="row">
             <div class="col-md-12 col-lg-12">
@@ -80,7 +81,7 @@ fHeaderPage();
                 <p style="text-align:justify">Outra caracter&iacute;stica que nos marca &eacute; a presen&ccedil;a de membros que por este clube passaram, e que hoje est&atilde;o espalhados pelos mais variados locais do Brasil e do mundo.</p>
                 <p style="text-align:justify">Por ser o primeiro clube (não oficial) em atividade no Brasil, nossa bandeira também representa nossa missão como clube de levar <i>"A mensagem o evangelho a todo o mundo em minha geração"</i> retratada no <u>Alvo dos Desbravadores</u>, como também nas palavras do <u>Hino dos Desbravadores</u>, onde cantamos juntos que </i>"Devemos ao mundo anunciar, as novas da salvação: que Cristo virá em breve, dar o galardão."</i></p>
                 <p style="text-align:justify">Trabalhamos sempre de dentro para fora, a fim de treinar líderes para atua&ccedil;&atilde;o nas mais diversas &aacute;reas da Igreja Adventista do S&eacute;timo Dia.</p>
-                <p style="text-align:justify">Esse é o sentido da imagem representada na bandeira, de que temos uma missão e sendo assim, entendemos que o clube deve ter sempre essa visão, de ser justamente esse agente influenciador, marcando a vida de todos os que por aqui passaram, passam e passarão, para que se tornem melhores cidadão da Terra e do Céu.</p>            
+                <p style="text-align:justify">Esse é o sentido da imagem representada na bandeira, de que temos uma missão e sendo assim, entendemos que o clube deve ter sempre essa visão, de ser justamente esse agente influenciador, marcando a vida de todos os que por aqui passaram, passam e passarão, para que se tornem melhores cidadão da Terra e do Céu.</p>
             </div>
         </div>
         <br/>
@@ -207,9 +208,9 @@ fHeaderPage();
         </div>
 
         <!-- Footer -->
-		<?php @include_once("include/footer.php");?>
+		<?php @require_once("include/footer.php");?>
 
     </div>
     <!-- /.container -->
 
-<?php @include_once("include/bottom_page.php");?>
+<?php @require_once("include/bottom_page.php");?>

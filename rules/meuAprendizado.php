@@ -7,17 +7,15 @@ responseMethod();
  ****************************/
 function getGraphData() {
 	session_start();
-	$membroID = $_SESSION['USER']['id_cad_pessoa'];
+	$membroID = $_SESSION['USER']['ID_CAD_PESSOA'];
 
 	$arr = array();
-	fConnDB();
-
 	$dtInicio = null;
 
 	//OBJETIVO DO CLUBE
 	$result = $GLOBALS['conn']->Execute("
 		SELECT DISTINCT DTHORA_EVENTO_INI
-		  FROM CAD_EVENTOS 
+		  FROM CAD_EVENTOS
 		 WHERE FLAG_PUBLICACAO = 'S'
 		   AND FG_INSTRUCAO = 'S'
 		   AND YEAR(DTHORA_EVENTO_INI) = YEAR(NOW())
@@ -25,11 +23,11 @@ function getGraphData() {
 	");
 	if (!$result->EOF):
 		$qtTotal = $result->RecordCount();
-		
-		$arr["ob"] = array( 
-			"label"		=> "&nbsp;Cronograma do Clube", 
-			"data"		=> array(), 
-			"color"		=> "#F5F5F5", 
+
+		$arr["ob"] = array(
+			"label"		=> "&nbsp;Cronograma do Clube",
+			"data"		=> array(),
+			"color"		=> "#F5F5F5",
 			"lines"		=> array( "show" => true ),
 			"dashes"	=> array( "show" => true, "lineWidth" => 1, "dashLength" => array( 10, 30 ) )
 		);
@@ -42,7 +40,7 @@ function getGraphData() {
 		$high = false;
 		foreach($result as $k => $line):
 			$dateLine = strtotime($line["DTHORA_EVENTO_INI"]);
-			
+
 			$pctAnt = $pct;
 			$pct = floor((100/($qtTotal-1))*$qtDt++);
 			if (!$high):
@@ -56,8 +54,8 @@ function getGraphData() {
 					$high = true;
 				endif;
 			endif;
-			
-			
+
+
 			$arr["ob"]["data"][] = array( strtotime($line["DTHORA_EVENTO_INI"])."000", $pct );
 		endforeach;
 	endif;
@@ -65,7 +63,7 @@ function getGraphData() {
 	//MINHAS CLASSES ABERTAS NO ANO
 	$rsCls = $GLOBALS['conn']->Execute("
 		SELECT DISTINCT ID_TAB_APREND, DS_ITEM, CD_COR, CD_ITEM_INTERNO
-		  FROM CON_APR_PESSOA 
+		  FROM CON_APR_PESSOA
 		 WHERE ID_CAD_PESSOA = ?
 		   AND YEAR(DT_INICIO) = YEAR(NOW())
 		   AND DT_CONCLUSAO IS NULL
@@ -90,17 +88,17 @@ function getGraphData() {
 			if (!$result->EOF):
 				$qtDt = 0;
 
-				$arr["checkbox"][$lnc["ID_TAB_APREND"]] = array( 
-					"label"		=> "&nbsp;".titleCase($lnc["DS_ITEM"]), 
-					"data"		=> array(), 
-					"color"		=> $lnc["CD_COR"], 
+				$arr["checkbox"][$lnc["ID_TAB_APREND"]] = array(
+					"label"		=> "&nbsp;".titleCase($lnc["DS_ITEM"]),
+					"data"		=> array(),
+					"color"		=> $lnc["CD_COR"],
 					"lines"		=> array( "show" => true, "fill" => true )
 				);
 				$arr["checkbox"][$lnc["ID_TAB_APREND"]]["data"][] = array(strtotime($dtInicio)."000", $qtDt );
 
 				foreach($result as $k => $line):
 					$qtDt += $line["QT"];
-					$arr["checkbox"][$lnc["ID_TAB_APREND"]]["data"][] = array( 
+					$arr["checkbox"][$lnc["ID_TAB_APREND"]]["data"][] = array(
 						strtotime($line["DT_ASSINATURA"])."000",
 						floor((100/$line["QTD"])*$qtDt)
 					);
@@ -113,8 +111,7 @@ function getGraphData() {
 
 function getMestrados(){
 	session_start();
-	
-	fConnDB();
+
 	$arr = array();
 	$rg = $GLOBALS['conn']->Execute("
 	    SELECT DISTINCT car.ID
@@ -122,11 +119,11 @@ function getMestrados(){
    LEFT JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = car.ID AND ah.ID_CAD_PESSOA = ?)
 	     WHERE car.CD_AREA_INTERNO = 'ME'
 	  ORDER BY car.CD_ITEM_INTERNO
-	", array( $_SESSION['USER']['id_cad_pessoa']) );
+	", array( $_SESSION['USER']['ID_CAD_PESSOA']) );
 	foreach ($rg as $lg => $fg):
 		$arr[] = $fg["ID"];
 	endforeach;
-	return array( "id" => $_SESSION['USER']['id_cad_pessoa'], "rules" => $arr );
+	return array( "id" => $_SESSION['USER']['ID_CAD_PESSOA'], "rules" => $arr );
 }
 
 function getClassPainelMestrado( $pct ){
@@ -148,8 +145,6 @@ function getPainelMestrado( $parameters ){
 }
 
 function getPainelMestradoPessoa( $ruleID, $membroID ){
-	fConnDB();
-	
 	//LE REGRAS
 	$rg = $GLOBALS['conn']->Execute("
 	 	SELECT DISTINCT car.CD_ITEM_INTERNO, car.CD_AREA_INTERNO, car.DS_ITEM, car.TP_ITEM, car.MIN_AREA, ah.DT_CONCLUSAO
@@ -158,9 +153,9 @@ function getPainelMestradoPessoa( $ruleID, $membroID ){
 	 	WHERE car.ID = ?
 	 ", array( $membroID, $ruleID ) );
 	$fg = $rg->fields;
-	 
+
 	$min = $fg["MIN_AREA"];
-	
+
 	$feitas = 0;
 	//LE PARAMETRO MINIMO E HISTORICO PARA A REGRA
 	$rR = $GLOBALS['conn']->Execute("
@@ -174,11 +169,11 @@ function getPainelMestradoPessoa( $ruleID, $membroID ){
 	foreach($rR as $lR => $fR):
 	 	$feitas += min( $fR["QT_MIN"], $fR["QT_FEITAS"] );
 	endforeach;
-	
+
 	$icon = getIconAprendizado( $fg["TP_ITEM"], $fg["CD_AREA_INTERNO"], "fa-4x" );
 	$area = getMacroArea( $fg["TP_ITEM"], $fg["CD_AREA_INTERNO"] );
 	$pct = floor( ( $feitas / $min ) * 100 );
-	
+
 	$advise = null;
 	$class = array( "panel" => "panel-default", "title" => "type-default" );
 	if ( $pct < 100 && !is_null($fg["DT_CONCLUSAO"]) ):
@@ -188,14 +183,14 @@ function getPainelMestradoPessoa( $ruleID, $membroID ){
 	 	$class = getClassPainelMestrado( $pct );
 	endif;
 	$sizeClass = "col-md-6 col-xs-12 col-sm-6 col-lg-4 col-xl-3";
-	
+
 	$fields = array(
 		 "name" => "detail",
 		 "what" => "rules",
 		 "cl-bar" => $class["title"],
 	 	"id-rule" => $ruleID
 	);
-	
+
 	//VERIFICA REQUISITOS CUMPRIDOS, MAS AINDA NÃO FINALIZADO.
 	if ( $pct >= 100 ):
 		 $rI = $GLOBALS['conn']->Execute("
@@ -207,7 +202,7 @@ function getPainelMestradoPessoa( $ruleID, $membroID ){
 		 if ($rI->EOF || is_null($rI->fields["DT_CONCLUSAO"]) ):
 		 	$class = array( "panel" => "panel-green", "title" => "type-success" );
 		 	$sizeClass = "col-md-4 col-xs-12 col-sm-6 col-xl-3 col-lg-4 blink";
-		
+
 			 //INSERE NOTIFICAÇOES SE NÃO EXISTIR.
 			 $GLOBALS['conn']->Execute("
 				 INSERT INTO LOG_MENSAGEM ( ID_ORIGEM, TP, ID_USUARIO, EMAIL, DH_GERA )
@@ -217,7 +212,7 @@ function getPainelMestradoPessoa( $ruleID, $membroID ){
 				 WHERE ca.ID = ?
 				 AND NOT EXISTS (SELECT 1 FROM LOG_MENSAGEM WHERE ID_ORIGEM = ? AND TP = 'M' AND ID_USUARIO = cu.ID_USUARIO)
 			 ", array( $fg["ID"], $membroID, $ruleID ) );
-			
+
 			 $fields = array(
 				 "name" => "print",
 				 "what" => "capa",
@@ -226,7 +221,7 @@ function getPainelMestradoPessoa( $ruleID, $membroID ){
 			 );
 		endif;
 	endif;
-	 
+
 	return fItemAprendizado(array(
 	 	 "classPanel" 	=> $class["panel"],
 		 "leftIcon"		=> $icon,
@@ -241,13 +236,12 @@ function getPainelMestradoPessoa( $ruleID, $membroID ){
 
 function getMasterRules( $parameters ) {
 	session_start();
-	return getMasterRulesPessoa( $parameters["id"], $_SESSION['USER']['id_cad_membro'] );
+	return getMasterRulesPessoa( $parameters["id"], $_SESSION['USER']['ID_CAD_MEMBRO'] );
 }
-	
+
 function getMasterRulesPessoa( $ruleID, $cadMembroID ){
 	$title = "";
 	$message = "";
-	fConnDB();
 	
 	//LE PARAMETRO MINIMO E HISTORICO PARA A REGRA
 	$rR = $GLOBALS['conn']->Execute("
@@ -256,9 +250,9 @@ function getMasterRulesPessoa( $ruleID, $cadMembroID ){
 	INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = taq.ID_TAB_APREND)
 		 WHERE taq.ID_TAB_APREND = ?
     ", array( $ruleID ) );
-	
+
 	$title = "<b>".titleCase( $rR->fields["DS_ITEM"], array(" "), array("ADRA", "em", "e") )."</b>";
-	
+
 	foreach($rR as $lR => $fR):
 		$arr[ $fR["ID"] ] = array(
 			"min" => $fR["QT_MIN"],
@@ -277,14 +271,14 @@ function getMasterRulesPessoa( $ruleID, $cadMembroID ){
 			$arr[ $fR["ID"] ]["hist"][] = $fS;
 		endforeach;
 	endforeach;
-		
+
 	$message .= "";
 	$req = 0;
 	$seq = 0;
 	foreach ($arr as $k => $i):
 		++$req;
 		$plus = 0;
-		
+
 		$list = "";
 		//ADICIONA ITENS DO REQUISITO
 		foreach ($i["hist"] as $j => $z):
@@ -301,14 +295,14 @@ function getMasterRulesPessoa( $ruleID, $cadMembroID ){
 			endif;
 			$list .= "<div class=\"col-sm-6\">$seq) ".$dsItem."</div>";
 		endforeach;
-		
+
 		$message .= "<div class=\"row\"><div class=\"col-sm-8\"><b>". ($req > 1 ? "e ter ": "Ter "). $i["min"] ." das seguintes especialidades:</b></div><div class=\"col-sm-4\"><mark class=\"pull-right\">Completadas: <b>$plus</b></mark></div></div>";
 		$message .= "<div class=\"row\">";
 		$message .= $list;
 		$message .= "</div><br/><br/>";
 	endforeach;
 	$message .= "";
-	
+
 	return array( "return" => true, "title" => $title, "message" => $message );
 }
 ?>

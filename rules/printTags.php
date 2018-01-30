@@ -1,6 +1,5 @@
 <?php
 @require_once("../include/functions.php");
-@require_once("../include/tags.php");
 responseMethod();
 
 /****************************
@@ -9,20 +8,20 @@ responseMethod();
 function getQueryByFilter( $parameters ) {
 	$where = "";
 	$aWhere = array();
-	
+
 	$query = "
-		SELECT DISTINCT 
+		SELECT DISTINCT
 			ca.ID_CAD_MEMBRO,
 			ca.ID_MEMBRO,
 			ca.NM
-		FROM CON_ATIVOS ca 
+		FROM CON_ATIVOS ca
 		LEFT JOIN APR_HISTORICO ah ON (ah.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
 		LEFT JOIN TAB_APRENDIZADO ap ON (ap.ID = ah.ID_TAB_APREND)
 		LEFT JOIN TAB_TP_APRENDIZADO ta ON (ta.ID = ap.TP_ITEM)
 		LEFT JOIN CAD_COMPRAS ccp ON (ccp.ID_CAD_MEMBRO = ca.ID_CAD_MEMBRO)
 		WHERE 1=1
 	";
-	
+
 	if ( isset($parameters["filters"]) ):
 		$keyAnt = "";
 		foreach ($parameters["filters"] as $key => $v):
@@ -81,7 +80,7 @@ function getQueryByFilter( $parameters ) {
 					else:
 						$aWhere[] = $value;
 						$where .= (!$prim ? "," : "" )."?";
-					endif;				
+					endif;
 					$prim = false;
 				endforeach;
 			else:
@@ -93,17 +92,15 @@ function getQueryByFilter( $parameters ) {
 				$where .= ")";
 			endif;
 		endforeach;
-	endif;	
+	endif;
 	$query .= " $where ORDER BY ca.NM";
 
 	return $GLOBALS['conn']->Execute( $query, $aWhere );
 }
 
 function getTags( $parameters ) {
-	$tags = $GLOBALS['pattern']->getBars()->getTagsTipo("tg","S");
+	//$tags = PATTERNS::getBars()->getTagsTipo("tg","S");
 	$arr = array();
-	
-	fConnDB();
 	$result = $GLOBALS['conn']->Execute("
 		SELECT DISTINCT pt.ID,
 				pt.TP,
@@ -121,14 +118,14 @@ function getTags( $parameters ) {
 	 ORDER BY pt.BC, ap.CD_ITEM_INTERNO, ca.NM
 	");
 	foreach ($result as $k => $fields):
-		$option = $GLOBALS['pattern']->getBars()->getTagByID($fields['TP']);
+		$option = PATTERNS::getBars()->getTagByID($fields['TP']);
 		$ds = substr($option["ds"],2);
-		
+
 		if ($option["cl"] == "S" || !is_null($fields['DS_ITEM'])):
 			$ds .= "-".($fields['DS_ITEM']);
 		endif;
-		
-		$arr[] = array( 
+
+		$arr[] = array(
 			"id" => $fields['ID'],
 			"nm" => ($fields['NM']),
 			"tp" => $ds,
@@ -139,18 +136,17 @@ function getTags( $parameters ) {
 }
 
 function getData( $parameters ){
-	return array(	"result"	=> true, 
+	return array(	"result"	=> true,
 					"membros"	=> getMembros( $parameters ),
-					"tags"		=> $GLOBALS['pattern']->getBars()->getTagsTipo("tg","S"),
+					"tags"		=> PATTERNS::getBars()->getTagsTipo("tg","S"),
 					"forms"		=> getFormsTipo()
 	) ;
 }
 
 function getMembros( $parameters ) {
 	$arr = array();
-	fConnDB();
 	$qtdZeros = zeroSizeID();
-	
+
 	$result = getQueryByFilter( $parameters );
 	foreach ($result as $k => $fields):
 		$arr[] = array(
@@ -164,7 +160,6 @@ function getMembros( $parameters ) {
 
 function getMembrosFilter( $parameters ) {
 	$arr = array();
-	fConnDB();
 	$result = getQueryByFilter( $parameters );
 	foreach ($result as $k => $fields):
 		$arr[] = $fields['ID_CAD_MEMBRO'];
@@ -174,8 +169,6 @@ function getMembrosFilter( $parameters ) {
 
 function getClasse( $parameters ){
 	$arr = array();
-	fConnDB();
-	
 	$query = "";
 
 	$filtro = $parameters["filtro"];
@@ -183,22 +176,22 @@ function getClasse( $parameters ){
 		//PASTA DE AVALIACAO ou PASTA DE CLASSE
 		//if ($ft == "1" || $ft == "C"):
 		//	$query .= (!empty($query) ? " UNION " : "") ."SELECT ID, DS_ITEM, CD_ITEM_INTERNO
-		//			  FROM TAB_APRENDIZADO 
+		//			  FROM TAB_APRENDIZADO
 		//			 WHERE CD_ITEM_INTERNO LIKE '01%00'
 		//	";
-		//	
+		//
 		//CARTAO DE CLASSE ou CADERNO DE CLASSE
 		//else:
 			$query .= (!empty($query) ? " UNION " : "") ."SELECT ID, DS_ITEM, CD_ITEM_INTERNO
-					  FROM TAB_APRENDIZADO 
+					  FROM TAB_APRENDIZADO
 					 WHERE CD_ITEM_INTERNO LIKE '01%'
 			";
 		//endif;
 	endforeach;
-	
+
 	$result = $GLOBALS['conn']->Execute("$query ORDER BY CD_ITEM_INTERNO");
 	foreach ($result as $k => $line):
-		$arr[] = array( 
+		$arr[] = array(
 			"id"	=> $line['ID'],
 			"ds"	=> $line['DS_ITEM'],
 			"sb"	=> $line['CD_ITEM_INTERNO']
@@ -208,18 +201,15 @@ function getClasse( $parameters ){
 }
 
 function addTags( $parameters ){
-	fConnDB();
-	
 	session_start();
-	$tags = new TAGS();
-	
+
 	$frm = $parameters["frm"];
 	$aTp = $frm["tp"];
-	
+
 	if ( isset($frm["ip"]) ):
 		$aPessoa = $frm["ip"];
 		$aAprend = array( null );
-		
+
 		if ( is_array($frm["ia"]) ):
 			$aAprend = $frm["ia"];
 		endif;
@@ -227,29 +217,25 @@ function addTags( $parameters ){
 		foreach ($aTp as $t => $tp):
 			foreach ($aPessoa as $k => $id):
 				foreach ($aAprend as $j => $ia):
-					$tags->insertItemTag($tp, $id, $ia);
+					TAGS::insertItemTag($tp, $id, $ia);
 				endforeach;
 			endforeach;
 		endforeach;
 	endif;
-	
+
 	return array("result" => true);
 }
 
 function delete($parameters){
 	$action = $parameters["action"];
-	
-	fConnDB();
-	
-	$tags = new TAGS();
 
 	if ($action == "ALL"):
 		session_start();
-		$tags->deleteFila();
+		TAGS::deleteFila();
 	else:
-		$tags->deleteFilaIDS( implode(",", $parameters["ids"]) );
+		TAGS::deleteFilaIDS( implode(",", $parameters["ids"]) );
 	endif;
-	
+
 	return array("result" => true);
 }
 ?>

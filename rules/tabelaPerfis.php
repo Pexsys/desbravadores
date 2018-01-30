@@ -7,8 +7,7 @@ responseMethod();
  ****************************/
 function getPerfis(){
 	$arr = array();
-	fConnDB();
-	
+
 	$result = $GLOBALS['conn']->Execute("
 		SELECT ID, DS
 		  FROM TAB_PERFIL

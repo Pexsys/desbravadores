@@ -2,8 +2,7 @@ var list = [];
 var dataTable = undefined;
 
 $(document).ready(function(){
-	
-	//FORM
+
 	$("#capas-form")
 		.on('init.field.fv', function(e, data) {
 			// data.fv      --> The FormValidation instance
@@ -23,13 +22,19 @@ $(document).ready(function(){
 		})
 		.on('success.validator.fv', function(e, data) {
 		})
+
 		.formValidation({
 			framework: 'bootstrap',
-			icon: {
-				valid: 'glyphicon glyphicon-ok',
-				invalid: 'glyphicon glyphicon-remove',
-				validating: 'glyphicon glyphicon-refresh'
-			},
+	        excluded: ':disabled',
+	        row: {
+	            valid: 'success',
+	            invalid: 'error'
+	        },
+	        icon: {
+	            valid: null,
+	            invalid: null,
+	            validating: null
+	        },
 			fields: {
 				cdMembro: {
 					validators: {
@@ -61,8 +66,9 @@ $(document).ready(function(){
 			// Prevent form submission
 			e.preventDefault();
 			updateFields();
-		})	
-		.submit( function() {
+		})
+		.submit( function(e) {
+			e.preventDefault();
 			list.sort();
 			window.open(
 				jsLIB.rootDir+'report/geraCapa.php?nome='+$("#id").val()+'|'+$("#nmMembro").val()+'&list='+list,
@@ -71,7 +77,7 @@ $(document).ready(function(){
 				true
 			);
 		});
-		
+
 	$("#cdMembro").blur(function() {
 		updateFields();
 		if ( $(this).val() == "" ) {
@@ -97,13 +103,14 @@ $(document).ready(function(){
 			}
 		});
 	});
-	
+
 	$("#nmMembro").change(function() {
 		$("#id").val("");
 	});
-	
+
 	dataTable = $('#simpledatatable')
 		.DataTable({
+			responsive: true,
 			lengthChange: false,
 			ordering: true,
 			paging: false,
@@ -144,15 +151,47 @@ $(document).ready(function(){
 			]
 		})
 	;
-		
+
 	$('#simpledatatable tbody').on('click', 'tr', function () {
 		lineChecked( $(this) );
 	});
 
 	$('#clearSelection').on('click',function(){
-		dataTable.$('tr.selected').removeClass('selected');
+		dataTable.$('tr.table-selected').removeClass('table-selected');
 		list = [];
 	});
+
+	(function () {
+        //On focus event
+        $('.form-control').focus(function () {
+            $(this).parent().addClass('focused');
+        });
+
+        //On focusout event
+        $('.form-control').focusout(function () {
+            var $this = $(this);
+            if ($this.parents('.form-group').hasClass('form-float')) {
+                if ($this.val() == '') { $this.parents('.form-line').removeClass('focused'); }
+            }
+            else {
+                $this.parents('.form-line').removeClass('focused');
+            }
+        });
+
+        //On label click
+        $('body').on('click', '.form-float .form-line .form-label', function () {
+            $(this).parent().find('input').focus();
+        });
+
+        //Not blank form
+        $('.form-control').each(function () {
+            if ($(this).val() !== '') {
+                $(this).parents('.form-line').addClass('focused');
+            }
+        });
+    })();
+
+	setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 50);
 });
 
 function resetNome(){
@@ -167,17 +206,17 @@ function lineChecked( row ) {
 
 	if ( index === -1 ) {
 		list.push( value );
-		row.addClass('selected');
+		row.addClass('table-selected');
 	} else {
-		row.removeClass('selected');
+		row.removeClass('table-selected');
 		list.splice( index, 1 );
-	}	
+	}
 }
 
 function updateFields(){
 	$("#cdMembro").val($("#cdMembro").val().toUpperCase());
 	$("#nmMembro").val($("#nmMembro").val().toUpperCase());
-	
+
 	$("#capas-form")
 		.formValidation('revalidateField', "cdMembro")
 		.formValidation('revalidateField', "nmMembro");

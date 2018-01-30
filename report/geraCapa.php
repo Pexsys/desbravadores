@@ -1,6 +1,5 @@
 <?php
 @require_once('../include/functions.php');
-@require_once('../include/_core/lib/tcpdf/tcpdf.php');
 
 class ESPCR extends TCPDF {
 
@@ -35,8 +34,8 @@ class ESPCR extends TCPDF {
 		$this->SetCreator(PDF_CREATOR);
 		$this->SetAuthor('Ricardo J. Cesar');
 		$this->SetTitle('Geração automática de capas de especialidades');
-		$this->SetSubject($GLOBALS['pattern']->getClubeDS(array("cl","nm")));
-		$this->SetKeywords('Especialidades, ' . str_replace(" ", ", ", $GLOBALS['pattern']->getClubeDS( array("db","nm","ibd") ) ));
+		$this->SetSubject(PATTERNS::getClubeDS(array("cl","nm")));
+		$this->SetKeywords('Especialidades, ' . str_replace(" ", ", ", PATTERNS::getClubeDS( array("db","nm","ibd") ) ));
 		$this->setImageScale(PDF_IMAGE_SCALE_RATIO);
 	}
 
@@ -47,7 +46,7 @@ class ESPCR extends TCPDF {
 		if (!empty($this->params[0])):
 			$this->SetY(-20);
 			$this->SetFont(PDF_FONT_NAME_MAIN, 'I', 8);
-			$this->Cell(0, 10, $GLOBALS['pattern']->getCDS(), 0, false, 'C');
+			$this->Cell(0, 10, PATTERNS::getCDS(), 0, false, 'C');
 		endif;
 	}
 
@@ -118,7 +117,7 @@ class ESPCR extends TCPDF {
 		$this->writeHTMLCell(0, 0, '', '', "<span>$codEsp - #$pgAss</span>", 0, 0, 0, true, 'C', true); //<span style=\"color:#888888\">&nbsp;[".$result->fields["ID"]."]</span>
 
 		if (!empty($membroID)):
-			$barCODE = $GLOBALS['pattern']->getBars()->encode(array(
+			$barCODE = PATTERNS::getBars()->encode(array(
 				"id" => "E",
 				"fi" => $result->fields["ID"],
 				"ni" => $membroID
@@ -353,7 +352,7 @@ class ESPCR extends TCPDF {
 }
 
 $nome = fRequest("nome");
-if ( !isset($nome) || empty($nome) || $nome == "null" && $nome == "|" ):
+if ( !isset($nome) || empty($nome) || $nome == "null" || $nome == "|" ):
 	exit("NOME INVÁLIDO!");
 endif;
 $list = fRequest("list");

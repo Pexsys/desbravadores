@@ -12,8 +12,7 @@ function getCamisetas(){
 
 function getTamanhos( $tp ){
 	$arr = array();
-	fConnDB();
-	
+
 	$result = $GLOBALS['conn']->Execute("
 		SELECT CD
 		  FROM TAB_TAMANHOS
@@ -29,8 +28,7 @@ function getTamanhos( $tp ){
 
 function getCargos(){
 	$arr = array();
-	fConnDB();
-	
+
 	$result = $GLOBALS['conn']->Execute("
 		SELECT CD, DSM, DSF
 		  FROM TAB_CARGO
@@ -47,8 +45,7 @@ function getCargos(){
 
 function getUnidades(){
 	$arr = array();
-	fConnDB();
-	
+
 	$result = $GLOBALS['conn']->Execute("
 		SELECT *
 		  FROM TAB_UNIDADE
@@ -69,8 +66,7 @@ function getUnidades(){
 
 function getUFs(){
 	$arr = array();
-	fConnDB();
-	
+
 	$result = $GLOBALS['conn']->Execute("
 		SELECT ID
 		  FROM TAB_UF

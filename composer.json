@@ -1,0 +1,10 @@
+{
+	"name": "pexsys/desbravadores",
+    "description": "Automatização de Rotinas para Desbravadores",
+    "require": {
+        "php": "^5.3.3 || ^7.0",
+		"adodb/adodb-php" : "^5.20",
+		"tecnickcom/tcpdf" : "^6.2",
+		"phpmailer/phpmailer" : "^6.0"
+	}
+}

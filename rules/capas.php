@@ -6,13 +6,12 @@ responseMethod();
  * Methods defined for use. *
  ****************************/
 function getName( $parameters ) {
-	$barDecode	= $GLOBALS['pattern']->getBars()->decode($parameters["codigo"]);
+	$barDecode	= PATTERNS::getBars()->decode($parameters["codigo"]);
 	$arr = array();
 	$arr['ok'] = false;
 
 	//Verificacao de Usuario/Senha
 	if ( isset($barDecode["ni"]) && !empty($barDecode["ni"]) ):
-		fConnDB();
 		$result = $GLOBALS['conn']->Execute("
 			SELECT cm.ID, cp.NM
 			  FROM CAD_MEMBRO cm
@@ -30,12 +29,10 @@ function getName( $parameters ) {
 }
 
 function getNames(){
-	$arr = array();	
-
-	fConnDB();
+	$arr = array();
 
 	session_start();
-	$usuarioID = $_SESSION['USER']['id_usuario'];
+	$usuarioID = $_SESSION['USER']['ID_USUARIO'];
 	$qtdZeros = zeroSizeID();
 
 	$unidadeID	= null;
@@ -64,18 +61,18 @@ function getNames(){
 	endif;
 
 	$aQuery = array( "query" => "", "binds" => array() );
-	
+
 	//TRATAMENTO MEMBROS DA MINHA UNIDADE
 	$aQuery = getUnionByUnidade( $aQuery, $unidadeID, $cadMembroID );
 
 	//TRATAMENTO MEMBROS QUE ESTAO FAZENDO AS MESMAS CLASSES QUE EU
 	$aQuery = getUnionByClasses( $aQuery, $pessoaID, $cadMembroID );
-	
+
 	//TRATAMENTO PARA INSTRUTOR DE CLASSE
 	if ($cargo != "2-04-00" && fStrStartWith($cargo,"2-04")):
 		$classe = "01-".substr($cargo,-2);
 
-		$aQuery["query"] .= " UNION 
+		$aQuery["query"] .= " UNION
 			SELECT DISTINCT at.ID_CAD_MEMBRO, at.ID_MEMBRO, at.NM
 			  FROM CON_APR_PESSOA cap
 		    INNER JOIN CON_ATIVOS at ON (at.ID_CAD_PESSOA = cap.ID_CAD_PESSOA)
@@ -84,7 +81,7 @@ function getNames(){
 			   AND at.ID_CAD_MEMBRO <> ?";
 		$aQuery["binds"][] = $cadMembroID;
 	endif;
-	
+
 	//TRATAMENTO PARA ADMINISTRACAO/INSTRUTORES NAO ESPECIFICOS
 	if ($cargo == "2-04-00" || $cargo == "2-04-99" || fStrStartWith($cargo,"2-01") || fStrStartWith($cargo,"2-02")):
 		$aQuery["query"] .= " UNION SELECT ID_CAD_MEMBRO, ID_MEMBRO, NM FROM CON_ATIVOS WHERE ID_CAD_MEMBRO <> ?";
@@ -102,7 +99,7 @@ function getNames(){
 		$aQuery = getUnionByUnidade( $aQuery, $l["ID_UNIDADE"], $cadMembroID );
 		$aQuery = getUnionByClasses( $aQuery, $l["ID_CAD_PESSOA"], $cadMembroID );
 	endforeach;
-	
+
 	if (!empty($aQuery["query"])):
 		$rs = $GLOBALS['conn']->Execute( substr($aQuery["query"], 7)." ORDER BY 3", $aQuery["binds"] );
 		foreach ($rs as $k => $line):
@@ -111,7 +108,7 @@ function getNames(){
 			$arr[] = array( "id" => "$id|$nm", "ds" => $nm, "sb" => fStrZero($line["ID_MEMBRO"], $qtdZeros) );
 		endforeach;
 	endif;
-	
+
 	return array( "result" => true, "names" => $arr );
 }
 
@@ -133,7 +130,7 @@ function getUnionByClasses($aQuery, $pessoaID, $cadMembroID){
 				 WHERE cap.CD_ITEM_INTERNO IN (SELECT DISTINCT CD_ITEM_INTERNO FROM CON_APR_PESSOA WHERE ID_CAD_PESSOA = ? AND TP_ITEM = 'CL' AND DT_CONCLUSAO IS NULL)
 				   AND cap.DT_CONCLUSAO IS NULL
 				   AND at.ID_CAD_MEMBRO <> ?";
-		$aQuery["binds"][] = $pessoaID;		
+		$aQuery["binds"][] = $pessoaID;
 		$aQuery["binds"][] = $cadMembroID;
 	endif;
 	return $aQuery;
@@ -141,8 +138,6 @@ function getUnionByClasses($aQuery, $pessoaID, $cadMembroID){
 
 function getEspecialidades() {
 	$arr = array();
-
-	fConnDB();
 	$result = $GLOBALS['conn']->Execute("
 	SELECT
 		A.DS_ITEM AS DS_AREA,
@@ -154,7 +149,7 @@ function getEspecialidades() {
 	  AND E.CD_ITEM_INTERNO IS NOT NULL
 	ORDER BY A.DS_ITEM, E.DS_ITEM");
 	foreach ($result as $k => $line):
-		$arr[] = array( 
+		$arr[] = array(
 			"cd_item" => $line['CD_ITEM'],
 			"ds_item" => $line['DS_ITEM'],
 			"ds_area" => $line['DS_AREA']

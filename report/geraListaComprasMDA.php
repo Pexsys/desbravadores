@@ -1,9 +1,8 @@
 <?php
 @require_once('../include/functions.php');
-@require_once('../include/_core/lib/tcpdf/tcpdf.php');
 
 class LISTAINVESTIDURAMDA extends TCPDF {
-	
+
 	//lines styles
 	public $finalHTML;
 
@@ -16,10 +15,10 @@ class LISTAINVESTIDURAMDA extends TCPDF {
 	private $titleColor;
 	private $widthColumn;
 	private $heightHeader;
-	
+
 	function __construct() {
 		parent::__construct(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-		
+
 		$this->stLine = array('width' => 1, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0));
 		$this->stLine2 = array('width' => 0.3, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0));
 		$this->stLine3 = array(
@@ -42,14 +41,14 @@ class LISTAINVESTIDURAMDA extends TCPDF {
 		$this->SetCreator(PDF_CREATOR);
 		$this->SetAuthor('Ricardo J. Cesar');
 		$this->SetTitle('Listagem de Investidura - MDA');
-		$this->SetSubject($GLOBALS['pattern']->getClubeDS(array("cl","nm")));
-		$this->SetKeywords('Compras, ' . str_replace(" ", ", ", $GLOBALS['pattern']->getClubeDS( array("db","nm","ibd") ) ));
+		$this->SetSubject(PATTERNS::getClubeDS(array("cl","nm")));
+		$this->SetKeywords('Compras, ' . str_replace(" ", ", ", PATTERNS::getClubeDS( array("db","nm","ibd") ) ));
 		$this->setImageScale(PDF_IMAGE_SCALE_RATIO);
 		$this->heightHeader = 25;
 		$this->SetMargins(5, $this->heightHeader, 5);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 6);
 		$this->SetAutoPageBreak(true, 10);
-		
+
         $this->titleColor = "#9900FF";
         $this->dsNomeAnt = null;
         $this->finalHTML = "";
@@ -67,24 +66,24 @@ class LISTAINVESTIDURAMDA extends TCPDF {
 		$this->SetX(172);
 		$this->Cell(40, 3, "Página ". $this->getAliasNumPage() ." de ". $this->getAliasNbPages(), 0, false, 'R');
 	}
-	
+
  	public function Header() {
 		$this->setXY(0,0);
 		$this->Image("img/logo.jpg", 5, 5, 14, 16, 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
-		
+
 		$this->setXY(20,5);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 20);
 		$this->Cell(185, 9, "Listagem de Itens por Pessoa - MDA", 0, false, 'C', false, false, true, false, 'T', 'M');
 		$this->setXY(20,15);
 		$this->SetTextColor(80,80,80);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 9);
-		$this->Cell(185, 5, $GLOBALS['pattern']->getCDS(), 0, false, 'C', false, false, false, false, false, false, 'T', 'M');
+		$this->Cell(185, 5, PATTERNS::getCDS(), 0, false, 'C', false, false, false, false, false, false, 'T', 'M');
 	}
-	
+
 	public function add($str){
 	    $this->finalHTML .= $str;
 	}
-	
+
 	public function writeGroupFooter(){
 	    if (!empty($this->finalHTML)):
             $this->add("
@@ -97,41 +96,41 @@ class LISTAINVESTIDURAMDA extends TCPDF {
             ");
         endif;
 	}
-	
+
 	public function writeGroupTable(){
 	    $this->writeGroupFooter();
-	    
+
 	    $this->startTransaction();
     	$start_page = $this->getPage();
     	$start_col  = $this->getColumn();
     	$YInicial   = $this->getY();
     	$this->writeHTML($this->finalHTML, false, false, false, true);
-    	
+
     	if  ( (($start_col % 2) == 1) && $this->getNumPages() != $start_page ):
     		$this->rollbackTransaction(true);
     		$this->newPage();
     		$this->selectColumn();
     		$this->writeHTML($this->finalHTML, false, false, false, true);
-    		
+
    	    elseif ( $YInicial > $this->heightHeader && $this->getNumPages() != $start_page ):
     		$this->rollbackTransaction(true);
     	    $this->selectColumn($start_col+1);
     		$this->writeHTML($this->finalHTML, false, false, false, true);
-    		
+
     	elseif ( $YInicial > $this->heightHeader && $start_col != $this->getColumn() ):
     		$this->rollbackTransaction(true);
     	    $this->selectColumn($start_col+1);
     		$this->writeHTML($this->finalHTML, false, false, false, true);
-    		
+
     	else:
     		$this->commitTransaction();
-    		
+
     	endif;
 
         $this->lineAlt = false;
         $this->finalHTML = "";
 	}
-	
+
 	public function addGroupHeader(){
         if ($this->dsNomeAtu !== $this->dsNomeAnt):
             if (!is_null($this->dsNomeAnt)):
@@ -149,11 +148,11 @@ class LISTAINVESTIDURAMDA extends TCPDF {
                         <td width=\"86%\" style=\"border-left:1px solid black;border-bottom:1px solid black;border-right:1px solid black;color:#000000;font-weight:bold;background-color:#C2C2C2\">Nome</td>
                     </tr>
             ");
-            
+
             $this->dsNomeAnt = $this->dsNomeAtu;
-        endif;	    
+        endif;
 	}
-	
+
 	public function addTableDetail($f){
         $color = "#ffffff";
 		if ($this->lineAlt):
@@ -164,9 +163,9 @@ class LISTAINVESTIDURAMDA extends TCPDF {
                 <td style=\"border-left:1px solid black;text-align:center;color:#000000;background-color:$color\">".(++$this->seq)."</td>
                 <td style=\"border-left:1px solid black;text-align:center;color:#000000;background-color:$color\">".$f["NR_PG_ASS"]."</td>
                 <td style=\"border-left:1px solid black;border-right:1px solid black;color:#000000;background-color:$color\">".$f["DS_ITEM"]."</td>
-            </tr>	        
+            </tr>
 	    ");
-	    $this->lineAlt = !$this->lineAlt;	    
+	    $this->lineAlt = !$this->lineAlt;
 	}
 
 	public function addLine($f){
@@ -174,13 +173,13 @@ class LISTAINVESTIDURAMDA extends TCPDF {
         $this->addGroupHeader();
         $this->addTableDetail($f);
 	}
-	
+
 	public function newPage() {
 		$this->AddPage();
 		$this->setCellPaddings(0,0,0,0);
 		$this->SetTextColor(0,0,0);
 		$this->setXY(5,25);
-		
+
 		$this->resetColumns();
 		$this->widthColumn = 98;
 		$this->setEqualColumns(2, $this->widthColumn);

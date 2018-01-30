@@ -1,18 +1,17 @@
 <?php
 @require_once('../include/functions.php');
-@require_once('../include/_core/lib/tcpdf/tcpdf.php');
 
 class LISTADISPENSAESCOLAR extends TCPDF {
-	
+
 	//lines styles
 	private $stLine;
 	private $stLine2;
 	public $lineAlt;
 	public $posY;
-	
+
 	function __construct() {
 		parent::__construct(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-		
+
 		$this->stLine = array('width' => 1, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0));
 		$this->stLine2 = array('width' => 0.3, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0));
 		$this->stLine3 = array(
@@ -35,8 +34,8 @@ class LISTADISPENSAESCOLAR extends TCPDF {
 		$this->SetCreator(PDF_CREATOR);
 		$this->SetAuthor('Ricardo J. Cesar');
 		$this->SetTitle('Listagem de Dispensa Escolar');
-		$this->SetSubject($GLOBALS['pattern']->getClubeDS(array("cl","nm")));
-		$this->SetKeywords('Dispensa, ' . str_replace(" ", ", ", $GLOBALS['pattern']->getClubeDS( array("db","nm","ibd") ) ));
+		$this->SetSubject(PATTERNS::getClubeDS(array("cl","nm")));
+		$this->SetKeywords('Dispensa, ' . str_replace(" ", ", ", PATTERNS::getClubeDS( array("db","nm","ibd") ) ));
 		$this->setImageScale(PDF_IMAGE_SCALE_RATIO);
 	}
 
@@ -45,38 +44,38 @@ class LISTADISPENSAESCOLAR extends TCPDF {
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 6);
 		$this->SetY(-9);
 		$this->Cell(40, 3, "Página ". $this->getAliasNumPage() ." de ". $this->getAliasNbPages(), 0, false, 'L');
-		
+
 		$this->Image("img/logod1.jpg", 160, 264, 22, 22, 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
 		$this->Image("img/logo.jpg", 183, 263, 20, 25, 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
 	}
-	
+
  	public function Header() {
  		$this->setXY(0,0);
  		$this->Image("img/iasd-full.jpg", 10, 7, 32, 30, 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
- 		
+
  		$this->Line(161, 7, 161, 42, $this->stLine2);
 
  		$this->setXY(163,7);
  		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 8);
- 		$this->Cell(44, 5, "Distrito de ".$GLOBALS['pattern']->getClubeDS( array("dst") ), 0, false, 'L', false, false, false, false, 'T', 'M');
+ 		$this->Cell(44, 5, "Distrito de ".PATTERNS::getClubeDS( array("dst") ), 0, false, 'L', false, false, false, false, 'T', 'M');
  		$this->setXY(163,12);
- 		$this->Cell(44, 5, $GLOBALS['pattern']->getClubeDS( array("add") ), 0, false, 'L', false, false, false, false, 'T', 'M');
+ 		$this->Cell(44, 5, PATTERNS::getClubeDS( array("add") ), 0, false, 'L', false, false, false, false, 'T', 'M');
  		$this->setXY(163,17);
- 		$this->Cell(44, 5, $GLOBALS['pattern']->getClubeDS( array("dst") ), 0, false, 'L', false, false, false, false, 'T', 'M');
+ 		$this->Cell(44, 5, PATTERNS::getClubeDS( array("dst") ), 0, false, 'L', false, false, false, false, 'T', 'M');
  		$this->setXY(163,22);
- 		$this->Cell(44, 5, $GLOBALS['pattern']->getClubeDS( array("cid") ), 0, false, 'L', false, false, false, false, 'T', 'M');
+ 		$this->Cell(44, 5, PATTERNS::getClubeDS( array("cid") ), 0, false, 'L', false, false, false, false, 'T', 'M');
  		$this->setXY(163,27);
- 		$this->Cell(44, 5, $GLOBALS['pattern']->getClubeDS( array("cep") ), 0, false, 'L', false, false, false, false, 'T', 'M');
+ 		$this->Cell(44, 5, PATTERNS::getClubeDS( array("cep") ), 0, false, 'L', false, false, false, false, 'T', 'M');
  		$this->setXY(163,32);
- 		$this->Cell(44, 5, $GLOBALS['pattern']->getClubeDS( array("cnpj") ), 0, false, 'L', false, false, false, false, 'T', 'M');
+ 		$this->Cell(44, 5, PATTERNS::getClubeDS( array("cnpj") ), 0, false, 'L', false, false, false, false, 'T', 'M');
  		$this->setXY(163,37);
  		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 10);
  		$this->SetTextColor(0,128,128);
- 		$this->Cell(44, 5, $GLOBALS['pattern']->getClubeDS( array("as") ), 0, false, 'L', false, false, false, false, 'T', 'M');
+ 		$this->Cell(44, 5, PATTERNS::getClubeDS( array("as") ), 0, false, 'L', false, false, false, false, 'T', 'M');
  		$this->SetTextColor(0,0,0);
  		$this->posY = 48;
  	}
- 	
+
  	public function addLine($f){
  	    if ($this->lineAlt):
 			$this->SetFillColor(245,245,245);
@@ -86,9 +85,9 @@ class LISTADISPENSAESCOLAR extends TCPDF {
 		$this->lineAlt = !$this->lineAlt;
         $this->setXY(20, $this->posY);
         $this->Cell(175, 5, $f["NM"], 0, false, 'L', true);
-        $this->posY += 5; 	    
+        $this->posY += 5;
  	}
- 	
+
  	public function finishSchool($nmDiretor){
         $this->startTransaction();
 		$start_page = $this->getPage();
@@ -98,16 +97,16 @@ class LISTADISPENSAESCOLAR extends TCPDF {
 			$this->newPage();
 			$this->ends($nmDiretor);
 		else:
-			$this->commitTransaction();     
-		endif;	    
+			$this->commitTransaction();
+		endif;
  	}
- 	
+
  	public function ends($nmDiretor){
  	    $this->setCellPaddings(0,0,0,0);
     	$this->posY += 3;
     	$this->SetFillColor(255,255,255);
     	$this->setXY(10, $this->posY);
-    	
+
         $html = "
             <p align=\"justify\">Certos de poder contar com seu apoio ao nosso trabalho subscrevemo-nos.<br/>
                 Atenciosamente,
@@ -162,45 +161,45 @@ $result = $GLOBALS['conn']->Execute("
 ", array($eveID) );
 if (!$result->EOF):
     $pdf = new LISTADISPENSAESCOLAR();
-    
+
     foreach ($result as $k => $f):
-        
+
         if ( $escolaAnt != trim($f["NM_ESCOLA"]) ):
             if ($escolaAnt != ""):
                 $pdf->finishSchool($nmDiretor);
             endif;
             $escolaAnt = trim($f["NM_ESCOLA"]);
-            
+
             $pdf->newPage();
-    
+
             $pdf->setXY(10,$pdf->posY);
             $pdf->SetFont(PDF_FONT_NAME_MAIN, 'N', 9);
             $pdf->Cell(100, 5, "São Paulo, ".strftime("%d de %B de %Y",strtotime($dh)), 0, false, 'L', false, false, false, false, 'T', 'M');
             $pdf->posY += 10;
-        
+
             $pdf->setXY(10,$pdf->posY);
             $pdf->Cell(100, 5, "A(o)", 0, false, 'L', false, false, false, false, 'T', 'M');
             $pdf->posY += 5;
-        
+
             $pdf->setXY(10,$pdf->posY);
             $pdf->SetFont(PDF_FONT_NAME_MAIN, 'B', 9);
             $pdf->Cell(100, 5, $escolaAnt, 0, false, 'L', false, false, false, false, 'T', 'M');
             $pdf->posY += 10;
-            
+
             $dhs = strtotime($f["DH_S"]);
             $dhr = strtotime($f["DH_R"]);
-            
+
             if ( strftime("%B",$dhs) != strftime("%B",$dhr) ):
                 $datas = strftime("%d",$dhs). " de " .strftime("%B",$dhs). " a ". strftime("%d",$dhr) ." de ". strftime("%B",$dhr);
             else:
                 $datas = strftime("%d",$dhs) ." a ". strftime("%d",$dhr) ." de ". strftime("%B",$dhr);
             endif;
-        
+
             $pdf->SetFont(PDF_FONT_NAME_MAIN, 'N', 8);
             $html = "
                 <p align=\"justify\">Prezados Senhores,<br/>
                     <br/>
-                    Pertencemos ao ".$GLOBALS['pattern']->getClubeDS(array("cl","cj","db")).", órgão pertencente à Igreja Adventista do 7º Dia, que tem por finalidade auxiliar os pais na formação do caráter de seus filhos, na faixa etária de 10 a 15 anos. O trabalho que realizamos compreende atividades, tais como:
+                    Pertencemos ao ".PATTERNS::getClubeDS(array("cl","cj","db")).", órgão pertencente à Igreja Adventista do 7º Dia, que tem por finalidade auxiliar os pais na formação do caráter de seus filhos, na faixa etária de 10 a 15 anos. O trabalho que realizamos compreende atividades, tais como:
                     Projetos Comunitários: limpeza de praças, plantio de árvores, pintura de meio fio, desfiles anti-fumo e álcool, desfiles cívicos, visitas a asilos e orfanatos, auxílio em campanhas de vacinação, entre outros, que promovem a conscientização de preservação do meio onde vivemos, respeitando a vida e os semelhantes, além de orientá-los para um viver mais saudável;&nbsp;
                     Aulas teóricas e práticas de especializações nas mais diversas áreas: dando-os a oportunidade de identificarem-se com áreas para futura profissão;&nbsp;
                     Desenvolvimento de atividades físicas: condicionamento físico e modalidades esportivas;&nbsp;
@@ -211,7 +210,7 @@ if (!$result->EOF):
             ";
             $pdf->setCellHeightRatio(2);
             $pdf->writeHTMLCell(0,0,10,$pdf->posY,$html,0,0,false,true,"",false);
-            
+
         	$pdf->posY += $pdf->getLastH()+4;
         	$pdf->setCellHeightRatio(0);
         	$pdf->SetTextColor(255,255,255);
@@ -223,7 +222,7 @@ if (!$result->EOF):
         	$pdf->SetTextColor(0,0,0);
         	$pdf->lineAlt = false;
         endif;
-        
+
         $pdf->startTransaction();
 		$start_page = $pdf->getPage();
 		$pdf->addLine($f);
@@ -232,7 +231,7 @@ if (!$result->EOF):
 			$pdf->newPage();
 			$pdf->addLine($f);
 		else:
-			$pdf->commitTransaction();     
+			$pdf->commitTransaction();
 		endif;
 
     endforeach;

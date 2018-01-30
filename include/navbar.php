@@ -1,20 +1,36 @@
-<?php 
+<?php
 $showLogin = true;
 $activeLogin = ($showLogin && !$temPerfil);
-?><nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+?>
+<div class="page-loader-wrapper">
+	<div class="loader">
+		<div class="preloader">
+			<div class="spinner-layer pl-black">
+				<div class="circle-clipper left">
+					<div class="circle"></div>
+				</div>
+				<div class="circle-clipper right">
+					<div class="circle"></div>
+				</div>
+			</div>
+		</div>
+		<p>Aguarde...</p>
+	</div>
+</div>
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 	<div class="container">
 		<!-- Brand and toggle get grouped for better mobile display -->
 		<div class="row">
 			<div class="col-md-4 col-sm-5">
 				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-					<span class="sr-only"><?php echo $GLOBALS['pattern']->getClubeDS(array("nm"));?></span>
+					<span class="sr-only"><?php echo PATTERNS::getClubeDS(array("nm"));?></span>
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
 				<a class="active" href="index.php">
 					<!-- Logo area -->
-					<div class="logo"><img class="img-responsive" src="<?php echo $GLOBALS['pattern']->getVD();?>img/logos.png" alt="<?php echo $GLOBALS['pattern']->getClubeDS(array("cl","db","nm"));?>"></div>
+					<div class="logo"><img class="img-responsive" src="<?php echo PATTERNS::getVD();?>img/logos.png" alt="<?php echo PATTERNS::getClubeDS(array("cl","db","nm"));?>"></div>
 				</a>
 			</div>
 			<div class="col-md-8 col-sm-7">
@@ -101,9 +117,9 @@ $activeLogin = ($showLogin && !$temPerfil);
 						<?php
 						if ( $showLogin ):
 							if ( $activeLogin ):
-								echo "<li><button type=\"button\" id=\"myBtnLogin\" class=\"btn btn-success btn-sm navbar-btn\"><span class=\"glyphicon glyphicon-log-in\"></span>&nbsp;Acesso Restrito</button></li>";
+								echo "<li><button type=\"button\" id=\"myBtnLogin\" class=\"btn btn-success waves-effect btn-sm navbar-btn\"><i class=\"material-icons\">input</i><span>Acesso Restrito</span></button></li>";
 							else:
-								echo "<li><button type=\"button\" id=\"myBtnLogout\" class=\"btn btn-danger btn-sm navbar-btn\"><span class=\"glyphicon glyphicon-log-out\"></span>&nbsp;Sair</button></li>";
+								echo "<li><button type=\"button\" id=\"myBtnLogout\" class=\"btn btn-danger waves-effect\"><i class=\"material-icons\">exit_to_app</i><span>Sair</span></button></li>";
 							endif;
 						endif;
 						?>
@@ -111,12 +127,10 @@ $activeLogin = ($showLogin && !$temPerfil);
 				</div>
 			</div>
 		</div>
-		<!-- /.navbar-collapse -->
 	</div>
-	<!-- /.container -->
 </nav>
 <?php
 if ( $showLogin ):
-	@include_once("login.php");
+	@require_once("login.php");
 endif;
 ?>

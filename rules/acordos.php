@@ -63,7 +63,6 @@ function getQueryByFilter( $parameters ) {
 function getAcordos( $parameters ) {
 	$arr = array();
 
-	fConnDB();
 	$result = getQueryByFilter( $parameters );
 	foreach ($result as $k => $f):
 		$arr[] = array(

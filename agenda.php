@@ -1,11 +1,12 @@
-<?php 
+<?php
 @require_once("include/functions.php");
-fHeaderPage();
+fHeaderPage( array( PATTERNS::getVD()."css/index.css?" )
+		   , array( PATTERNS::getVD()."js/index.js?") );
 fConnDB();
 ?><body>
 
     <!-- Navigation -->
-	<?php @include_once("include/navbar.php");?>
+	<?php @require_once("include/navbar.php");?>
 
     <!-- Page Content -->
     <div class="container">
@@ -24,7 +25,7 @@ fConnDB();
             </div>
         </div>
         <!-- /.row -->
-        
+
 	<?php
 	$DATA_NOW = date('Y-m-d H:i:s');
 
@@ -55,12 +56,12 @@ fConnDB();
 				<span class="fa-stack fa-2x">
 					  <i class="fa fa-circle fa-stack-2x text-primary"></i>
 					  <i class="fa <?php echo fGetClassTipoEvento($result->fields['TIPO_EVENTO']);?> fa-stack-1x fa-inverse"></i>
-				</span> 
+				</span>
 			</div>
 			<div class="media-body">
 				<h4 class="media-heading"><?php echo "<b>".fDtHoraEvento($result->fields['DTHORA_EVENTO_INI'],$result->fields['DTHORA_EVENTO_FIM'],"%d/%m")."</b>";?></h4>
 				<p>
-				<?php 
+				<?php
 				$info = "";
 				if (trim($result->fields['INFO_ADIC']) != ""):
 					$info .= "<i class=\"fa fa-question-circle\"></i>&nbsp;" .trim($result->fields['INFO_ADIC']);
@@ -71,7 +72,7 @@ fConnDB();
 				if ($info != ""):
 					echo "$info<br/>";
 				endif;
-				
+
 				$endereco = trim($result->fields['DESC_LOGRADOURO']);
 				if (trim($result->fields['NUM_LOGRADOURO']) != ""):
 					$endereco .= ", ".trim($result->fields['NUM_LOGRADOURO']);
@@ -82,7 +83,7 @@ fConnDB();
 				if ($endereco != ""):
 					echo "$endereco<br/>";
 				endif;
-				
+
 				$cidade = "";
 				if (trim($result->fields['DESC_BAIRRO']) != ""):
 					$cidade .= trim($result->fields['DESC_BAIRRO']);
@@ -102,11 +103,11 @@ fConnDB();
 				if ($cidade != ""):
 					echo ($cidade)."<br/>";
 				endif;
-				
+
 				if (trim($result->fields['tp_grupo']) != ""):
 					echo "<i class=\"fa fa-users\"></i>&nbsp;".fTipoAlvo($result->fields['tp_grupo'])."<br/>";
 				endif;
-				
+
 				if (trim($result->fields['ds']) != ""):
 					echo "<i class=\"fa fa-user-secret\"></i>&nbsp;".$result->fields['ds']."<br/>";
 				endif;
@@ -121,9 +122,9 @@ fConnDB();
 	?>
 
         <!-- Footer -->
-	<?php @include_once("include/footer.php");?>
+	<?php @require_once("include/footer.php");?>
 
     </div>
     <!-- /.container -->
 
-<?php @include_once("include/bottom_page.php");?>
+<?php @require_once("include/bottom_page.php");?>

@@ -1,24 +1,23 @@
 <?php
 @require_once('../include/functions.php');
-@require_once('../include/_core/lib/tcpdf/tcpdf.php');
 
 class OCORRENCIAS extends TCPDF {
-	
+
 	//lines styles
 	private $stLine;
 	private $hPoint;
-	
+
 	function __construct() {
 		parent::__construct(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
 		$this->stLine = array('width' => 0.3, 'cap' => 'round', 'join' => 'round', 'dash' => '2,4', 'color' => array(110, 110, 110));
 		$this->hPoint = 0;
-		
+
 		$this->SetCreator(PDF_CREATOR);
 		$this->SetAuthor('Ricardo J. Cesar');
 		$this->SetTitle('Geração automática de Ocorrências');
-		$this->SetSubject($GLOBALS['pattern']->getClubeDS(array("cl","nm")));
-		$this->SetKeywords('Ocorrências, ' . str_replace(" ", ", ", $GLOBALS['pattern']->getClubeDS( array("db","nm","ibd") ) ));
+		$this->SetSubject(PATTERNS::getClubeDS(array("cl","nm")));
+		$this->SetKeywords('Ocorrências, ' . str_replace(" ", ", ", PATTERNS::getClubeDS( array("db","nm","ibd") ) ));
 		$this->setImageScale(PDF_IMAGE_SCALE_RATIO);
 		$this->setPrintHeader(false);
 		$this->setPrintFooter(false);
@@ -29,10 +28,10 @@ class OCORRENCIAS extends TCPDF {
 		$this->SetHeaderMargin(0);
 		$this->SetFooterMargin(0);
 		$this->setHtmlVSpace(
-			array('p' => array(0 => array('h' => 0, 'n' => 0), 
+			array('p' => array(0 => array('h' => 0, 'n' => 0),
 							   1 => array('h' => 0, 'n' => 0)
 						),
-				 'br' => array(0 => array('h' => 0, 'n' => 0), 
+				 'br' => array(0 => array('h' => 0, 'n' => 0),
 							   1 => array('h' => 0, 'n' => 0)
 				 		)
 			)
@@ -41,7 +40,7 @@ class OCORRENCIAS extends TCPDF {
 
  	public function Header() {
 	}
-	
+
 	public function Footer() {
 	}
 
@@ -50,7 +49,7 @@ class OCORRENCIAS extends TCPDF {
 		$this->setXY(0,0);
 		$this->hPoint = 0;
 	}
-	
+
 	public function addOcorrencia( $line ) {
 		$this->startTransaction();
 		$start_page = $this->getPage();
@@ -60,11 +59,11 @@ class OCORRENCIAS extends TCPDF {
 			$this->newPage();
 			$this->modelOcorrencia( $line );
 		}else{
-			$this->commitTransaction();     
-		}	
+			$this->commitTransaction();
+		}
 		$this->aP++;
 	}
-	
+
 	public function modelOcorrencia( $line ){
 		$this->hPoint += 6;
 
@@ -77,7 +76,7 @@ class OCORRENCIAS extends TCPDF {
 		$this->SetTextColor(0,0,0);
 		$this->Cell(0, 0, "Ocorrência ".($line["TP"] == "P"?"POSITIVA":"NEGATIVA")." #".$line["CD"]." [".strftime("%d/%m/%Y",strtotime($line["DH"]))."]", 0, 0, 'L', false, false, 0, false, 'C', 'C');
 		$this->Image("img/logo.jpg", 197, $this->hPoint-4, 7, 8, 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
-		
+
 		//writeHTMLCell($w, $h, $x, $y, $html='', $border=0, $ln=0, $fill=0, $reseth=true, $align='', $autopadding=true)
 		$this->hPoint += 10;
 		$this->SetXY(5,$this->hPoint);
@@ -88,12 +87,12 @@ class OCORRENCIAS extends TCPDF {
 		$this->Cell(0, 5, $line["NM"], 0, 0, 'L', false, false, 0, false, 'C', 'C');
 		$this->hPoint += 5;
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 12);
-		$this->writeHTMLCell(200, 0, 5, $this->hPoint, ($line["TXT"]."<p style=\"font-size:12px\"><i>Ocorr&ecirc;ncia inserida por ".$line["DS_USUARIO"]."</i></p>"), 
-			array('LTRB' => array('width' => 0.3, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0))), 
+		$this->writeHTMLCell(200, 0, 5, $this->hPoint, ($line["TXT"]."<p style=\"font-size:12px\"><i>Ocorr&ecirc;ncia inserida por ".$line["DS_USUARIO"]."</i></p>"),
+			array('LTRB' => array('width' => 0.3, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0))),
 			0, 0, true, 'J', true);
-		
+
 		$this->hPoint += $this->getLastH()+4;
-		$this->Line(0, $this->hPoint, 220, $this->hPoint, $this->stLine);	
+		$this->Line(0, $this->hPoint, 220, $this->hPoint, $this->stLine);
 	}
 
 	public function download() {

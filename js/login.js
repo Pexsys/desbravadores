@@ -1,28 +1,18 @@
 $(document).ready(function(){
-	//FORM
+
 	$("#login-form")
-        .on('init.field.fv', function(e, data) {
-            // data.fv      --> The FormValidation instance
-            // data.field   --> The field name
-            // data.element --> The field element
-            var $parent = data.element.parents('.form-group'),
-                $icon   = $parent.find('.form-control-feedback[data-fv-icon-for="' + data.field + '"]');
-            // You can retrieve the icon element by
-            // $icon = data.element.data('fv.icon');
-            $icon.on('click.clearing', function() {
-                if ( $icon.hasClass('glyphicon-remove') ) {
-                    data.fv.resetField(data.element);
-                }
-            });
-        })
-		
 		.formValidation({
 			framework: 'bootstrap',
-			icon: {
-				valid: 'glyphicon glyphicon-ok',
-				invalid: 'glyphicon glyphicon-remove',
-				validating: 'glyphicon glyphicon-refresh'
-			},
+	        excluded: ':disabled',
+	        row: {
+	            valid: 'success',
+	            invalid: 'error'
+	        },
+	        icon: {
+	            valid: null,
+	            invalid: null,
+	            validating: null
+	        },
 			fields: {
 				usr: {
 					validators: {
@@ -58,37 +48,47 @@ $(document).ready(function(){
 				}
 			}
 		})
-		
+
 		.on('success.form.fv', function(e) {
             // Prevent form submission
             e.preventDefault();
-        })	
-	
+        })
+
 		.submit( function() {
+			var $loading = $('.login-box').waitMe({
+				effect: 'rotation',
+				text: 'Verificando dados...',
+				bg: 'rgba(255,255,255,0.90)',
+				color: '#03A9F4'
+			});
 			var parameter = {
-				page: jQuery('#page').val(),
-				username: jQuery('#usr').val(),
-				password: $.sha1(jQuery('#psw').val().toLowerCase())
+				page: $('#page').val(),
+				username: $("#usr").val(),
+				password: $.sha1($("#psw").val().toLowerCase())
 			};
 			jsLIB.ajaxCall({
 				waiting : true,
 				url: jsLIB.rootDir+'rules/login.php',
 				data: { MethodName : 'login', data : parameter },
-				success: function(data){
+				success: data => {
 					if ( data.login == true ) {
 						window.location.replace(data.page);
 					} else {
 						loginError();
+						$loading.waitMe('hide');
 					}
 				},
-				error: loginError 
+				error: () => {
+					loginError();
+					$loading.waitMe('hide');
+				}
 			});
 		});
-	
+
 	$("#myBtnLogin").click(function(){
 		$("#myLoginModal").modal();
 	});
-	
+
 	$("#myBtnLogout").click(function(){
 		jsLIB.ajaxCall({
 			waiting : true,
@@ -99,24 +99,15 @@ $(document).ready(function(){
 			}
 		});
 	});
-});
 
-function loginError( jqxhr, errorMessage ){
-	BootstrapDialog.show({
-		title: 'Erro',
-		message: 'Acesso negado!',
-		type: BootstrapDialog.TYPE_DANGER,
-		size: BootstrapDialog.SIZE_SMALL,
-		draggable: true,
-		closable: true,
-		closeByBackdrop: false,
-		closeByKeyboard: false,
-		buttons: [{
-			label: 'Fechar',
-			cssClass: 'btn-danger',
-			action: function(dialogRef){
-				dialogRef.close();
-			}
-		}]	
-	});	
+});
+function loginError( jqxhr, errorMessage ) {
+	swal({
+        title: "Alerta!",
+		text: "<span style=\"color: #CC0000\">ACESSO NEGADO!<span>",
+		confirmButtonColor: "#DD6B55",
+        html: true,
+        timer: 5000,
+        showConfirmButton: true
+    });
 }

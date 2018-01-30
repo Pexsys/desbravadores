@@ -5,8 +5,8 @@ responseMethod();
 
 function getQueryByFilter( $parameters ) {
 	session_start();
-	$usuarioID = $_SESSION['USER']['id_usuario'];
-	
+	$usuarioID = $_SESSION['USER']['ID_USUARIO'];
+
 	if ($parameters["filter"] == "N"):
 		return $GLOBALS['conn']->Execute("
 				SELECT o.ID, a.NM, o.TP, o.CD, o.DH, o.FG_PEND, l.DH_READ
@@ -18,7 +18,7 @@ function getQueryByFilter( $parameters ) {
 				   AND l.ID_USUARIO = ?
 			  ORDER BY o.ID DESC
 		", array( $usuarioID ) );
-	
+
 	else:
 		$aWhere = array( date("Y") );
 		$where = "";
@@ -39,7 +39,7 @@ function getQueryByFilter( $parameters ) {
 				else:
 					$where .= " AND";
 				endif;
-				
+
 				$prim = true;
 				$where .= " (";
 				if ( is_array( $parameters["filters"][$key]["vl"] ) ):
@@ -55,12 +55,12 @@ function getQueryByFilter( $parameters ) {
 				$where .= ")";
 			endforeach;
 		endif;
-		
+
 		return $GLOBALS['conn']->Execute("
 				SELECT o.ID, a.NM, o.TP, o.CD, o.DH, o.FG_PEND
 				  FROM CAD_OCORRENCIA o
 			INNER JOIN CON_ATIVOS a ON (a.ID_CAD_PESSOA = o.ID_CAD_PESSOA)
-				 WHERE YEAR(o.DH) = ? $where 
+				 WHERE YEAR(o.DH) = ? $where
 			  ORDER BY o.ID DESC
 		",$aWhere);
 	endif;
@@ -68,13 +68,12 @@ function getQueryByFilter( $parameters ) {
 
 function fGetMembros(){
 	$arr = array();
-	fConnDB();
 	$qtdZeros = zeroSizeID();
 	$result = $GLOBALS['conn']->Execute("
 		SELECT o.ID_CAD_PESSOA, a.NM
 		  FROM CAD_OCORRENCIA o
 	INNER JOIN CON_ATIVOS a ON (a.ID_CAD_PESSOA = o.ID_CAD_PESSOA)
-		 WHERE YEAR(o.DH) = YEAR(NOW()) 
+		 WHERE YEAR(o.DH) = YEAR(NOW())
 		   AND o.FG_PEND = ?
 	  ORDER BY a.NM
 	", array("N") );
@@ -91,13 +90,11 @@ function fGetMembros(){
 
 function fOcorrencia( $parameters ) {
 	session_start();
-	fConnDB();
-	
-	$userID = $_SESSION['USER']['id_usuario'];
-	$membroID = $_SESSION['USER']['id_cad_pessoa'];
+	$userID = $_SESSION['USER']['ID_USUARIO'];
+	$membroID = $_SESSION['USER']['ID_CAD_PESSOA'];
 	$out = array();
 	$frm = null;
-	
+
 	$like = "";
 	$result = $GLOBALS['conn']->Execute("
 		SELECT CD_CARGO, CD_CARGO2
@@ -123,7 +120,7 @@ function fOcorrencia( $parameters ) {
 	if ( $op == "UPDATE" ):
 		$fg_pend = $frm["fg_pend"];
 		$id = $frm["id"];
-		
+
 		$arr = array();
 		//INSERT DE NOVA OCORRENCIA
 		if ( !is_null($id) && is_numeric($id) ):
@@ -152,7 +149,7 @@ function fOcorrencia( $parameters ) {
 				fReturnStringNull(trim($frm["txt"])),
 				fReturnStringNull(trim($frm["cd"])),
 				fReturnStringNull(trim($frm["tp"])),
-				$frm["id_pessoa"],		
+				$frm["id_pessoa"],
 				fReturnStringNull($fg_pend),
 				$userID
 			);
@@ -169,29 +166,29 @@ function fOcorrencia( $parameters ) {
 			",$arr);
 			$id = $GLOBALS['conn']->Insert_ID();
 		endif;
-		
+
 		//GRAVACAO DEFINITIVA PARA O RESPONSAVEL, ENVIO POR EMAIL
 		if ($fg_pend == "N"):
 			$GLOBALS['conn']->Execute("
 				INSERT INTO LOG_MENSAGEM (ID_ORIGEM, TP, ID_USUARIO, EMAIL, DH_GERA)
-				SELECT $id, 'O', cu.ID_USUARIO, ca.EMAIL, NOW() 
+				SELECT $id, 'O', cu.ID_USUARIO, ca.EMAIL, NOW()
 				  FROM CON_ATIVOS ca
-		    INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA) 
- 				 WHERE ca.ID_CAD_PESSOA = ? 
-				
+		    INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
+ 				 WHERE ca.ID_CAD_PESSOA = ?
+
 				UNION
-				
-				SELECT $id, 'O', cu.ID_USUARIO, cr.EMAIL, NOW() 
-				FROM CON_RESP_LEGAL cr 
-				INNER JOIN CON_ATIVOS ca ON (ca.ID_PESSOA_RESP = cr.ID) 
-				INNER JOIN CAD_USUARIOS cu ON (cu.CD_USUARIO = cr.NR_CPF) 
+
+				SELECT $id, 'O', cu.ID_USUARIO, cr.EMAIL, NOW()
+				FROM CON_RESP_LEGAL cr
+				INNER JOIN CON_ATIVOS ca ON (ca.ID_PESSOA_RESP = cr.ID)
+				INNER JOIN CAD_USUARIOS cu ON (cu.CD_USUARIO = cr.NR_CPF)
 				WHERE NOT EXISTS (SELECT 1 FROM CON_ATIVOS WHERE NR_CPF = cr.NR_CPF)
-				WHERE ca.ID_CAD_PESSOA = ? 
+				WHERE ca.ID_CAD_PESSOA = ?
 			", array( $frm["id_pessoa"], $frm["id_pessoa"] ) );
-		
-			sendOcorrenciaByID($id);	
+
+			sendOcorrenciaByID($id);
 		endif;
-		
+
 		$out["id"] = $id;
 		$out["so"] = $fg_pend;
 		$out["success"] = true;
@@ -232,11 +229,11 @@ function fOcorrencia( $parameters ) {
 					"owner"		=> (trim($result->fields['DS_USUARIO'])),
 					"fg_pend"	=> $result->fields['FG_PEND']
 				);
-				
+
 			endif;
-			
+
 		endif;
-		
+
 		if ( !isset($parameters["nomes"]) ):
 			$out["nomes"][] = array(
 					"id_pessoa" => "",
@@ -249,7 +246,7 @@ function fOcorrencia( $parameters ) {
 			  INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = ah.ID_CAD_PESSOA)
 			  INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
 				   WHERE ca.IDADE_HOJE < 18
-					 AND ah.DT_CONCLUSAO IS NULL 
+					 AND ah.DT_CONCLUSAO IS NULL
 				     AND ta.CD_ITEM_INTERNO LIKE '$like%'
 				ORDER BY ca.NM
 			");
@@ -262,15 +259,13 @@ function fOcorrencia( $parameters ) {
 				);
 			endforeach;
 		endif;
-		
+
 	endif;
 	return $out;
 }
 
 function getOcorrencias( $parameters ){
 	$arr = array();
-	fConnDB();
-	
 	$result = getQueryByFilter( $parameters );
 
 	foreach ($result as $k => $fields):
@@ -301,11 +296,9 @@ function getOcorrencias( $parameters ){
 function fSetRead( $parameters ){
 	session_start();
 	$comunicadoID = $parameters["id"];
-	$usuarioID = $_SESSION['USER']['id_usuario'];
-	$usuarioCD = $_SESSION['USER']['cd_usuario'];
-	
-	fConnDB();
-	
+	$usuarioID = $_SESSION['USER']['ID_USUARIO'];
+	$usuarioCD = $_SESSION['USER']['CD_USUARIO'];
+
 	//ATUALIZA USUARIO ATUAL
 	$GLOBALS['conn']->Execute("
 		UPDATE LOG_MENSAGEM SET
@@ -314,7 +307,7 @@ function fSetRead( $parameters ){
 		  AND ID_ORIGEM = ?
 		  AND TP = ?
 	", array($usuarioID,$comunicadoID,"O"));
-	
+
 	//VERIFICA SE USUARIO ATUAL EH RESPONSAVEL POR OUTRO.
 	$result = $GLOBALS['conn']->Execute("
 		UPDATE LOG_MENSAGEM SET
@@ -324,13 +317,13 @@ function fSetRead( $parameters ){
 							FROM CON_RESP_LEGAL cr
 							INNER JOIN CON_ATIVOS ca ON (ca.ID_PESSOA_RESP = cr.ID)
 							INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
-							WHERE cr.NR_CPF = ?		
+							WHERE cr.NR_CPF = ?
 							)
 		  AND DH_READ IS NULL
 		  AND ID_ORIGEM = ?
 		  AND TP = ?
 	", array($usuarioCD,$comunicadoID,"O"));
-	
+
 	return array( "result" => true );
 }
 ?>

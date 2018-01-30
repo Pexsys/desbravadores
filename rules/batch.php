@@ -1,9 +1,6 @@
 <?php
 @require_once("../include/functions.php");
 @require_once("../include/sendmail.php");
-@require_once("../include/_message.php");
-
-use MESSAGE;
 
 $md = date("m-d");
 
@@ -37,7 +34,7 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
 	foreach ($rA as $lA => $fA):
 		$a = explode(" ",titleCase($fA["NM"]));
 
-		$message = new MESSAGE( array( "np" => $a[0], "id" => $fA["IDADE_ANO"], "sx" => $fA["TP_SEXO"], "nd" => $nomeDiretor ) );
+		$message = MESSAGE::instance( array( "np" => $a[0], "id" => $fA["IDADE_ANO"], "sx" => $fA["TP_SEXO"], "nd" => $nomeDiretor ) );
 		$bm = $message->getBirthday();
 
 		$GLOBALS['mail']->ClearAllRecipients();
@@ -112,8 +109,8 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
 
             			$GLOBALS['mail']->ClearAllRecipients();
         				$GLOBALS['mail']->AddAddress( $fA["EMAIL"] );
-        				$GLOBALS['mail']->Subject = utf8_decode($GLOBALS['pattern']->getClubeDS( array("cl","nm") ) . " - Aviso de Conclusão");
-        				$GLOBALS['mail']->MsgHTML( $message->getConclusao() );
+        				$GLOBALS['mail']->Subject = utf8_decode(PATTERNS::getClubeDS( array("cl","nm") ) . " - Aviso de Conclusão");
+        				$GLOBALS['mail']->MsgHTML( MESSAGE::getConclusao() );
 
         				if ( $GLOBALS['mail']->Send() ):
         					$nrEnviados++;
@@ -216,7 +213,7 @@ if ($md == "01-01"):
 	foreach ($rA as $lA => $fA):
 		$a = explode(" ",titleCase($fA["NM"]));
 
-		$message = new MESSAGE( array( "np" => $a[0], "id" => $fA["IDADE_ANO"], "sx" => $fA["TP_SEXO"], "nd" => $nomeDiretor ) );
+		$message = MESSAGE::instance( array( "np" => $a[0], "id" => $fA["IDADE_ANO"], "sx" => $fA["TP_SEXO"], "nd" => $nomeDiretor ) );
 		$bm = $message->getNewYear();
 
 		$GLOBALS['mail']->ClearAllRecipients();
@@ -244,8 +241,8 @@ elseif ($md == "12-25"):
 	foreach ($rA as $lA => $fA):
 		$a = explode(" ",titleCase($fA["NM"]));
 
-		$message = new MESSAGE( array( "np" => $a[0], "id" => $fA["IDADE_ANO"], "sx" => $fA["TP_SEXO"], "nd" => $nomeDiretor ) );
-		$bm = $message->getXMas();
+		$message = MESSAGE::instance( array( "np" => $a[0], "id" => $fA["IDADE_ANO"], "sx" => $fA["TP_SEXO"], "nd" => $nomeDiretor ) );
+		$bm = message->getXMas();
 
 		$GLOBALS['mail']->ClearAllRecipients();
 		$GLOBALS['mail']->AddAddress( $fA["EMAIL"] );

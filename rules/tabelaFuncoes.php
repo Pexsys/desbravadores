@@ -7,8 +7,7 @@ responseMethod();
  ****************************/
 function getFuncoes(){
 	$arr = array();
-	fConnDB();
-	
+
 	$result = $GLOBALS['conn']->Execute("
 		SELECT ID, DS_URL
 		  FROM TAB_FUNCTION

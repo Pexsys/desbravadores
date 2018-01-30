@@ -1,18 +1,17 @@
 <?php
 @require_once('../include/functions.php');
-@require_once('../include/_core/lib/tcpdf/tcpdf.php');
 
 class LISTAESTRELAS extends TCPDF {
-	
+
 	//lines styles
 	private $stLine;
 	private $stLine2;
 	public $lineAlt;
 	public $posY;
-	
+
 	function __construct() {
 		parent::__construct(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-		
+
 		$this->stLine = array('width' => 1, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0));
 		$this->stLine2 = array('width' => 0.3, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0));
 		$this->stLine3 = array(
@@ -35,8 +34,8 @@ class LISTAESTRELAS extends TCPDF {
 		$this->SetCreator(PDF_CREATOR);
 		$this->SetAuthor('Ricardo J. Cesar');
 		$this->SetTitle('Listagem de Requisição de Estrelas');
-		$this->SetSubject($GLOBALS['pattern']->getClubeDS(array("cl","nm")));
-		$this->SetKeywords('Estrelas, ' . str_replace(" ", ", ", $GLOBALS['pattern']->getClubeDS( array("db","nm","ibd") ) ) );
+		$this->SetSubject(PATTERNS::getClubeDS(array("cl","nm")));
+		$this->SetKeywords('Estrelas, ' . str_replace(" ", ", ", PATTERNS::getClubeDS( array("db","nm","ibd") ) ) );
 		$this->setImageScale(PDF_IMAGE_SCALE_RATIO);
 	}
 
@@ -45,34 +44,34 @@ class LISTAESTRELAS extends TCPDF {
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 6);
 		$this->SetY(-9);
 		$this->Cell(40, 3, "Página ". $this->getAliasNumPage() ." de ". $this->getAliasNbPages(), 0, false, 'L');
-		
+
 		$this->Image("img/logod1.jpg", 160, 264, 22, 22, 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
 		$this->Image("img/logo.jpg", 183, 263, 20, 25, 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
 	}
-	
+
  	public function Header() {
  		$this->setXY(0,0);
  		$this->Image("img/iasd-full.jpg", 10, 7, 32, 30, 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
- 		
+
  		$this->Line(161, 7, 161, 42, $this->stLine2);
 
  		$this->setXY(163,7);
  		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 9);
- 		$this->Cell(44, 5, "Distrito de ".$GLOBALS['pattern']->getClubeDS( array("dst") ), 0, false, 'L', false, false, false, false, 'T', 'M');
+ 		$this->Cell(44, 5, "Distrito de ".PATTERNS::getClubeDS( array("dst") ), 0, false, 'L', false, false, false, false, 'T', 'M');
  		$this->setXY(163,12);
- 		$this->Cell(44, 5, $GLOBALS['pattern']->getClubeDS( array("add") ), 0, false, 'L', false, false, false, false, 'T', 'M');
+ 		$this->Cell(44, 5, PATTERNS::getClubeDS( array("add") ), 0, false, 'L', false, false, false, false, 'T', 'M');
  		$this->setXY(163,17);
- 		$this->Cell(44, 5, $GLOBALS['pattern']->getClubeDS( array("dst") ), 0, false, 'L', false, false, false, false, 'T', 'M');
+ 		$this->Cell(44, 5, PATTERNS::getClubeDS( array("dst") ), 0, false, 'L', false, false, false, false, 'T', 'M');
  		$this->setXY(163,22);
- 		$this->Cell(44, 5, $GLOBALS['pattern']->getClubeDS( array("cid") ), 0, false, 'L', false, false, false, false, 'T', 'M');
+ 		$this->Cell(44, 5, PATTERNS::getClubeDS( array("cid") ), 0, false, 'L', false, false, false, false, 'T', 'M');
  		$this->setXY(163,27);
- 		$this->Cell(44, 5, $GLOBALS['pattern']->getClubeDS( array("cep") ), 0, false, 'L', false, false, false, false, 'T', 'M');
+ 		$this->Cell(44, 5, PATTERNS::getClubeDS( array("cep") ), 0, false, 'L', false, false, false, false, 'T', 'M');
  		$this->setXY(163,32);
- 		$this->Cell(44, 5, $GLOBALS['pattern']->getClubeDS( array("cnpj") ), 0, false, 'L', false, false, false, false, 'T', 'M');
+ 		$this->Cell(44, 5, PATTERNS::getClubeDS( array("cnpj") ), 0, false, 'L', false, false, false, false, 'T', 'M');
  		$this->setXY(163,37);
  		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 10);
  		$this->SetTextColor(0,128,128);
- 		$this->Cell(44, 5, $GLOBALS['pattern']->getClubeDS( array("as") ), 0, false, 'L', false, false, false, false, 'T', 'M');
+ 		$this->Cell(44, 5, PATTERNS::getClubeDS( array("as") ), 0, false, 'L', false, false, false, false, 'T', 'M');
  		$this->SetTextColor(0,0,0);
  		$this->posY = 43;
  	}
@@ -109,10 +108,10 @@ $pdf->SetTextColor(0,0,0);
 $pdf->SetFont(PDF_FONT_NAME_MAIN, '', 13);
 
 $html = "<p align=\"justify\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			Eu, $nmPastor, pastor do Distrito de ".$GLOBALS['pattern']->getClubeDS(array("ibd")).",
-			venho através desta, recomendar a <b>Estrela de Tempo de Serviço</b> aos 
-			membros da direção do ".$GLOBALS['pattern']->getClubeDS(array("cl","nm"))." listados abaixo, em reconhecimento 
-			de sua dedicação no trabalho de liderar o clube para Salvação e Serviço.		
+			Eu, $nmPastor, pastor do Distrito de ".PATTERNS::getClubeDS(array("ibd")).",
+			venho através desta, recomendar a <b>Estrela de Tempo de Serviço</b> aos
+			membros da direção do ".PATTERNS::getClubeDS(array("cl","nm"))." listados abaixo, em reconhecimento
+			de sua dedicação no trabalho de liderar o clube para Salvação e Serviço.
 		</p>";
 $pdf->setCellHeightRatio(2);
 $pdf->writeHTMLCell(0,0,20,$pdf->posY,$html,0,0,false,true,"",false);
@@ -140,7 +139,7 @@ if (!$result->EOF):
 	$pdf->Cell(30, 7, "Quantidade", 0, false, 'C', true);
 	$pdf->posY += 7;
 	$pdf->SetTextColor(0,0,0);
-	
+
 	foreach($result as $k => $f):
 		if ($pdf->lineAlt):
 			$pdf->SetFillColor(245,245,245);
@@ -156,7 +155,7 @@ if (!$result->EOF):
 		$pdf->posY += 5;
 		$pdf->lineAlt = !$pdf->lineAlt;
 	endforeach;
-	
+
 	$pdf->setCellPaddings(0,0,0,0);
 	$pdf->posY += 10;
 	$pdf->SetFillColor(255,255,255);

@@ -4,16 +4,15 @@ responseMethod();
 
 function getNotifications(){
 	session_start();
-	fConnDB();
-	
+
 	$arr = array();
-	$arr = getItemNotify( $arr, "C", "fa-bullhorn", "Comunicados", $GLOBALS['pattern']->getVD()."dashboard/index.php?id=41" );
-	$arr = getItemNotify( $arr, "O", "fa-exclamation-triangle", "Ocorr&ecirc;ncias", $GLOBALS['pattern']->getVD()."dashboard/index.php?id=51" );
-	$arr = getItemNotify( $arr, "M", "fa-check-circle", "Mestrado Conclu&iacute;do", $GLOBALS['pattern']->getVD()."dashboard/index.php?id=16#mestrados" );
-	
+	$arr = getItemNotify( $arr, "C", "fa-bullhorn", "Comunicados", PATTERNS::getVD()."dashboard/index.php?id=41" );
+	$arr = getItemNotify( $arr, "O", "fa-exclamation-triangle", "Ocorr&ecirc;ncias", PATTERNS::getVD()."dashboard/index.php?id=51" );
+	$arr = getItemNotify( $arr, "M", "fa-check-circle", "Mestrado Conclu&iacute;do", PATTERNS::getVD()."dashboard/index.php?id=16#mestrados" );
+
 	$html = "";
 	$qt = 0;
-	
+
 	foreach ($arr as $k => $item):
 		if ($k > 0):
 			$html .= "<li class=\"divider\"></li>";
@@ -33,8 +32,8 @@ function getItemNotify( $arr, $tp, $icon, $title, $url ){
 		   AND DH_READ IS NULL
 		   AND ID_USUARIO = ?
 		   AND TP = ?
-	", array($_SESSION['USER']['id_usuario'], $tp));
-	
+	", array($_SESSION['USER']['ID_USUARIO'], $tp));
+
 	if (!$result->EOF):
 		$qt = $result->fields["QT"];
 		if ( $qt > 0 ):
@@ -52,7 +51,7 @@ function getItemNotify( $arr, $tp, $icon, $title, $url ){
 			);
 		endif;
 	endif;
-	
+
 
 	/* TAREFAS
 	 *

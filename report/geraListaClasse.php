@@ -1,18 +1,17 @@
 <?php
 @require_once('../include/functions.php');
-@require_once('../include/_core/lib/tcpdf/tcpdf.php');
 
 class LISTACLASSE extends TCPDF {
-	
+
 	//lines styles
 	private $stLine;
 	private $stLine2;
 	private $posY;
 	private $lineAlt;
-	
+
 	function __construct() {
 		parent::__construct(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-		
+
 		$this->stLine = array('width' => 1, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0));
 		$this->stLine2 = array('width' => 0.3, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0));
 		$this->stLine3 = array(
@@ -35,8 +34,8 @@ class LISTACLASSE extends TCPDF {
 		$this->SetCreator(PDF_CREATOR);
 		$this->SetAuthor('Ricardo J. Cesar');
 		$this->SetTitle('Listagem de Membros por Classe');
-		$this->SetSubject($GLOBALS['pattern']->getClubeDS(array("cl","nm")));
-		$this->SetKeywords('Classes, ' . str_replace(" ", ", ", $GLOBALS['pattern']->getClubeDS( array("db","nm","ibd") ) ));
+		$this->SetSubject(PATTERNS::getClubeDS(array("cl","nm")));
+		$this->SetKeywords('Classes, ' . str_replace(" ", ", ", PATTERNS::getClubeDS( array("db","nm","ibd") ) ));
 		$this->setImageScale(PDF_IMAGE_SCALE_RATIO);
 	}
 
@@ -51,18 +50,18 @@ class LISTACLASSE extends TCPDF {
 		$this->SetX(172);
 		$this->Cell(40, 3, "Página ". $this->getAliasNumPage() ." de ". $this->getAliasNbPages(), 0, false, 'R');
 	}
-	
+
  	public function Header() {
 		$this->setXY(0,0);
 		$this->Image("img/logo.jpg", 5, 5, 14, 16, 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
-		
+
 		$this->setXY(20,5);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 25);
 		$this->Cell(185, 9, "Listagem de Membros por Classe", 0, false, 'C', false, false, false, false, 'T', 'M');
 		$this->setXY(20,15);
 		$this->SetTextColor(80,80,80);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 7);
-		$this->Cell(185, 5, $GLOBALS['pattern']->getCDS(), 0, false, 'C', false, false, false, false, false, false, 'T', 'M');
+		$this->Cell(185, 5, PATTERNS::getCDS(), 0, false, 'C', false, false, false, false, false, false, 'T', 'M');
 
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 8);
 		$this->SetTextColor(255,255,255);
@@ -78,7 +77,7 @@ class LISTACLASSE extends TCPDF {
 		$this->Cell(35, 6, "Telefones", 0, false, 'L', true);
 		$this->posY = 28;
 	}
-	
+
 	private function addGrupoAprendTitle($af) {
 		$rsM = $GLOBALS['conn']->Execute("
 			SELECT ca.ID_CAD_PESSOA, ca.NM, ca.CD_CARGO, ca.DS_CARGO, ca.DT_NASC, ca.FONE_RES, ca.FONE_CEL
@@ -93,7 +92,7 @@ class LISTACLASSE extends TCPDF {
 			$colorR = base_convert(substr($af["CD_COR"],1,2),16,10);
 			$colorG = base_convert(substr($af["CD_COR"],3,2),16,10);
 			$colorB = base_convert(substr($af["CD_COR"],5,2),16,10);
-			
+
 			$this->SetFillColor($colorR, $colorG, $colorB);
 			if ($af["ID"] > 10):
 				$this->SetTextColor(0,0,0);
@@ -133,7 +132,7 @@ class LISTACLASSE extends TCPDF {
 		$this->posY+=5;
 		$this->lineAlt = !$this->lineAlt;
 	}
-	
+
 	public function addGrupoAprendizado($af) {
 		$this->startTransaction();
 		$start_page = $this->getPage();
@@ -156,12 +155,12 @@ class LISTACLASSE extends TCPDF {
 					$this->newPage();
 					$this->addLine($f);
 				else:
-					$this->commitTransaction();     
+					$this->commitTransaction();
 				endif;
 			endforeach;
 		endif;
 	}
-	
+
 	public function newPage() {
 		$this->AddPage();
 		$this->setCellPaddings(0,0,0,0);

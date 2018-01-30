@@ -1,14 +1,10 @@
 <?php
-@require_once("../include/functions.php");
-@require_once("../include/domains.php");
 responseMethod();
 
 /****************************
  * Methods defined for use. *
  ****************************/
 function getDomains(){
-	fConnDB();
-	
 	$ma = array();
 	$result = $GLOBALS['conn']->Execute("
 		SELECT DISTINCT DATE_FORMAT(ce.DTHORA_EVENTO_INI,'%Y-%m') AS ANO_MES
@@ -22,8 +18,8 @@ function getDomains(){
 		$desc = mb_strtoupper(fDescMes(substr($l["ANO_MES"],5,2)));
 		$ma[] = array( "id" => $l["ANO_MES"], "ds" => $desc, "sb" => substr($l["ANO_MES"],0,4) );
 	endforeach;
-	
-	$un = getDomainUnidades(true);
+
+	$un = DOMAINS::getUnidades(true);
 
 	return array( "result" => true, "meses" => $ma, "unidade" => $un );
 }

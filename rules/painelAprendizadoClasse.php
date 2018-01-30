@@ -7,11 +7,9 @@ responseMethod();
  ****************************/
 function getGraphData() {
 	session_start();
-	$cadMembroID = $_SESSION['USER']['id_cad_membro'];
+	$cadMembroID = $_SESSION['USER']['ID_CAD_MEMBRO'];
 
 	$arr = array();
-	fConnDB();
-
 	$arr["cls"] = array();
 
 	$like = "";
@@ -33,7 +31,7 @@ function getGraphData() {
 	$result = $GLOBALS['conn']->Execute("
 		SELECT a.CD_ITEM_INTERNO, a.CD_COR, a.DS_ITEM, cai.QTD, AVG(a.QTD) AS QT_MD
 		FROM (
-			SELECT cap.ID_CAD_PESSOA, cap.CD_COR, cap.DS_ITEM, cap.ID_TAB_APREND, cap.CD_ITEM_INTERNO, COUNT(*) AS QTD 
+			SELECT cap.ID_CAD_PESSOA, cap.CD_COR, cap.DS_ITEM, cap.ID_TAB_APREND, cap.CD_ITEM_INTERNO, COUNT(*) AS QTD
 			FROM CON_APR_PESSOA cap
 		  INNER JOIN CON_ATIVOS at ON (at.ID_CAD_PESSOA = cap.ID_CAD_PESSOA)
 			WHERE cap.CD_ITEM_INTERNO LIKE '$like%'

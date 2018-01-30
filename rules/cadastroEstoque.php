@@ -1,6 +1,5 @@
 <?php
 @require_once("../include/functions.php");
-@require_once("../include/materiais.php");
 responseMethod();
 
 /****************************
@@ -33,7 +32,7 @@ function getQueryByFilter( $parameters ) {
 					else:
 						$aWhere[] = $value;
 						$where .= (!$prim ? "," : "" )."?";
-					endif;				
+					endif;
 					$prim = false;
 				endforeach;
 			else:
@@ -42,7 +41,7 @@ function getQueryByFilter( $parameters ) {
 			endif;
 			$where .= ")";
 		endforeach;
-	endif;	
+	endif;
 
 //echo $where;
 //exit;
@@ -67,8 +66,7 @@ function getQueryByFilter( $parameters ) {
 
 function getEstoque( $parameters ) {
 	$arr = array();
-	
-	fConnDB();
+
 	$result = getQueryByFilter($parameters);
 	if (!is_null($result)):
 		foreach ($result as $k => $fields):
@@ -77,8 +75,8 @@ function getEstoque( $parameters ) {
     		if ( !empty($fields['FUNDO']) ):
     			$ds .= " - FUNDO ". ($fields['FUNDO'] == "BR" ?  "BRANCO" : "CAQUI");
     		endif;
-    		
-			$arr[] = array( 
+
+			$arr[] = array(
 				"id" => $fields['ID'],
 				"tp" => ($fields['TP']),
 				"ds" => ($ds),
@@ -86,23 +84,20 @@ function getEstoque( $parameters ) {
 			);
 		endforeach;
 	endif;
-	
+
 	return array( "result" => true, "est" => $arr );
 }
 
 function setEstoque( $parameters ){
 	$frm = $parameters["frm"];
 	$qtItens = max( $frm["qt_itens"], 0 );
-	
-	fConnDB();
-	$materiais = new MATERIAIS();
-	
+
 	if ($parameters["tp"] == "edit"):
-		$materiais->setQtdEstoque( $frm["id"], $qtItens );
+		MATERIAIS::setQtdEstoque( $frm["id"], $qtItens );
 	else:
-		$materiais->addItemEstoque( $frm["id"], $qtItens );
+		MATERIAIS::addItemEstoque( $frm["id"], $qtItens );
 	endif;
-	
+
 	return array( "result" => true );
 }
 
@@ -110,8 +105,7 @@ function getItem( $parameters ){
 	$arr = array();
 	$id = $parameters["id"];
 	$arr["id"] = $id;
-
-	fConnDB();
+	
 	$result = $GLOBALS['conn']->Execute("
 		SELECT TP, QT_EST
 		FROM TAB_MATERIAIS
@@ -121,7 +115,7 @@ function getItem( $parameters ){
 		$arr["tp"] = $result->fields["TP"];
 		$arr["qt_est"] = $result->fields["QT_EST"];
 	endif;
-	
+
 	return $arr;
 }
 ?>

@@ -1,6 +1,5 @@
 <?php
 @require_once("../include/functions.php");
-@require_once("../include/responsavel.php");
 responseMethod();
 
 /****************************
@@ -8,31 +7,30 @@ responseMethod();
  ****************************/
 function login( $parameters ) {
 	unset($_SESSION);
-	
+
 	$arr = array();
 	$arr['page'] = "";
 	$arr['login'] = false;
-	
+
 	$pag = mb_strtoupper($parameters["page"]);
 	$usr = mb_strtoupper($parameters["username"]);
 	$psw = strtolower($parameters["password"]);
 
 	//Verificacao de Usuario/Senha
 	if ( isset($usr) && !empty($usr) ):
-		$barDecode	= $GLOBALS['pattern']->getBars()->decode($usr);
-		$usrClube	= ($barDecode["lg"] == $GLOBALS['pattern']->getBars()->getLength() && 
-					   $barDecode["cp"] == $GLOBALS['pattern']->getBars()->getClubePrefix() && 
-					   $GLOBALS['pattern']->getBars()->has("id",$barDecode["split"]["id"])
+		$barDecode	= PATTERNS::getBars()->decode($usr);
+		$usrClube	= ($barDecode["lg"] == PATTERNS::getBars()->getLength() &&
+					   $barDecode["cp"] == PATTERNS::getBars()->getClubePrefix() &&
+					   PATTERNS::getBars()->has("id",$barDecode["split"]["id"])
 					);
 
-		fConnDB();
 		$result = checkUser($usr, $pag);
 
 		//SE NAO ENCONTROU E O CODIGO TEM OS CARACTERES MINIMOS PARA USUARIO DO CLUBE
 		if ($result->EOF && $usrClube):
 			$usrClube = (sha1(strtolower($usr)) == $psw);
-		
-			$usr = $GLOBALS['pattern']->getBars()->encode(array(
+
+			$usr = PATTERNS::getBars()->encode(array(
 				"ni" => $barDecode["ni"]
 			));
 			if ($usrClube):
@@ -50,10 +48,10 @@ function login( $parameters ) {
 				$usr = $result->fields["CD_USUARIO"];
 				$psw = $result->fields["DS_SENHA"];
 
-				if (is_null($usuarioID) && 
+				if (is_null($usuarioID) &&
 				   (!is_null($result->fields["CD_CARGO"]) || !is_null($result->fields["CD_CARGO2"])) ):
 
-					$usr = $GLOBALS['pattern']->getBars()->encode(array(
+					$usr = PATTERNS::getBars()->encode(array(
 						"ni" => $result->fields["ID_MEMBRO"]
 					));
 					$psw = sha1(strtolower($usr));
@@ -61,8 +59,8 @@ function login( $parameters ) {
 					fInsertUser( $usr, $result->fields['NM'], $psw, $result->fields['ID_CAD_PESSOA'] );
 
 					PROFILE::applyCargos(
-						$result->fields['ID_CAD_PESSOA'], 
-						$result->fields["CD_CARGO"], 
+						$result->fields['ID_CAD_PESSOA'],
+						$result->fields["CD_CARGO"],
 						$result->fields["CD_CARGO2"]
 					);
 				endif;
@@ -74,12 +72,12 @@ function login( $parameters ) {
 
 			//VERIFICA SE RESPONSAVEL TEM ALGUM DEPENDENTE ATIVO e SE CPF CONSTA COMO RESPONSAVEL
 			else:
-		
-				$resp = verificaRespByCPF($usr);			
+
+				$resp = RESPONSAVEL::verificaRespByCPF($usr);
 				if ( !is_null($resp) && existeMenorByRespID($resp["ID_CAD_PESSOA"]) ):
 					$psw = sha1(str_replace("-","",str_replace(".","",$usr)));
 					fInsertUserProfile( fInsertUser( $usr, $resp["NM"], $psw, null ), 10 );
-					
+
 					return login( array(
 						"page"		=> $pag,
 						"username"	=> $usr,
@@ -89,7 +87,7 @@ function login( $parameters ) {
 			endif;
 
 		endif;
-	
+
 		//SE NAO ENCONTROU USUARIO E SENHA E EH MEMBRO DO CLUBE COM APRENDIZADO OU HISTORICO.
 		if ($usrClube && $result->EOF):
 
@@ -97,16 +95,16 @@ function login( $parameters ) {
 			$rsHA = $GLOBALS['conn']->Execute("SELECT NM FROM CON_ATIVOS WHERE ID_CLUBE = ? AND ID_MEMBRO = ?", array( $barDecode["ci"], $barDecode["ni"] ) );
 			if (!$rsHA->EOF):
 				fInsertUserProfile( fInsertUser( $usr, $rsHA->fields['NM'], $psw, $rsHA->fields['ID_CAD_PESSOA'] ), 0 );
-			
-				return login( array( 
-					"page" =>		$pag, 
-					"username" =>	$usr, 
+
+				return login( array(
+					"page" =>		$pag,
+					"username" =>	$usr,
 					"password" =>	$psw ) );
 			endif;
 
 		//SE EXISTE O USUARIO DIGITADO.
 		elseif (!$result->EOF):
-		
+
 			if ($usrClube):
 				//VERIFICA SE ESTÁ ATIVO
 				$rsHA = $GLOBALS['conn']->Execute("SELECT 1 FROM CON_ATIVOS WHERE ID_CLUBE = ? AND ID_MEMBRO = ?", array( $barDecode["ci"], $barDecode["ni"] ) );
@@ -115,7 +113,7 @@ function login( $parameters ) {
 				endif;
 				fInsertUserProfile($result->fields["ID_USUARIO"], 10 );
 			else:
-				$resp = verificaRespByCPF($usr);
+				$resp = RESPONSAVEL::verificaRespByCPF($usr);
 				if (!is_null($resp) && !existeMenorByRespID($resp["ID_CAD_PESSOA"])):
 					fDeleteUserAndProfile( $result->fields["ID_USUARIO"], 10 );
 					return $arr;
@@ -131,14 +129,17 @@ function login( $parameters ) {
 					array( $result->fields['ID_USUARIO'] ) );
 
 				if ( $pag == "READDATA" ):
-					$arr['page'] = $GLOBALS['pattern']->getVD()."readdata.php";
+					$arr['page'] = PATTERNS::getVD()."readdata.php";
 				else:
-					$arr['page'] = $GLOBALS['pattern']->getVD()."dashboard/index.php";
+					$arr['page'] = PATTERNS::getVD()."admin/index.php";
 				endif;
 				$arr['login'] = true;
 			endif;
 		endif;
+	endif;
 
+	if (!$arr['login']):
+		sleep(rand(5,15));
 	endif;
 
 	return $arr;
@@ -158,7 +159,7 @@ function fInsertUser( $usr, $nm, $psw, $pessoaID ){
 
 function fInsertUserProfile( $userID, $profileID ){
 	$rs = $GLOBALS['conn']->Execute("
-		SELECT 1 
+		SELECT 1
 		  FROM CAD_USU_PERFIL
 		 WHERE ID_CAD_USUARIOS = ?
 		   AND ID_PERFIL = ?
@@ -179,7 +180,7 @@ function fDeleteUserAndProfile( $userID, $profileID ){
 		 WHERE ID_CAD_USUARIOS = ?
 		   AND ID_PERFIL = ?
 	", array( $userID, $profileID ) );
-	
+
 	$GLOBALS['conn']->Execute("
 		DELETE FROM CAD_USUARIOS
 		 WHERE ID_USUARIO = ?
@@ -188,7 +189,8 @@ function fDeleteUserAndProfile( $userID, $profileID ){
 
 function checkMemberByCPF($cpf){
 	return $GLOBALS['conn']->Execute("
-		SELECT cu.ID_USUARIO, cu.CD_USUARIO, cu.DS_USUARIO, cu.DS_SENHA, ca.ID_CAD_PESSOA, ca.TP_SEXO, ca.CD_CARGO, ca.CD_CARGO2, ca.NM, ca.ID_MEMBRO
+		SELECT cu.ID_USUARIO, cu.CD_USUARIO, cu.DS_USUARIO, cu.DS_SENHA, cu.CLASS,
+			   ca.ID_CAD_PESSOA, ca.TP_SEXO, ca.CD_CARGO, ca.CD_CARGO2, ca.NM, ca.ID_MEMBRO, ca.EMAIL
 		  FROM CON_ATIVOS ca
 	 LEFT JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
 		 WHERE ca.NR_CPF = ?
@@ -202,7 +204,7 @@ function checkUser($cdUser, $pag){
 		SELECT cu.ID_USUARIO, cp.ID
 		FROM CAD_USUARIOS cu
 		INNER JOIN CAD_PESSOA cp ON (cp.NR_CPF = cu.CD_USUARIO)
-		WHERE cu.CD_USUARIO = ? 
+		WHERE cu.CD_USUARIO = ?
 		  AND cu.ID_CAD_PESSOA IS NULL
 	", array($cdUser) );
 	if (!$rs->EOF):
@@ -212,7 +214,9 @@ function checkUser($cdUser, $pag){
 	endif;
 
 	return $GLOBALS['conn']->Execute("
-		SELECT cu.ID_USUARIO, cu.CD_USUARIO, cu.DS_USUARIO, cu.DS_SENHA, cm.ID_CAD_PESSOA, cp.TP_SEXO, cm.ID AS ID_CAD_MEMBRO, cm.ID_CLUBE, cm.ID_MEMBRO
+		SELECT cu.ID_USUARIO, cu.CD_USUARIO, cu.DS_USUARIO, cu.DS_SENHA, cu.CLASS,
+			   cm.ID_CAD_PESSOA, cm.ID AS ID_CAD_MEMBRO, cm.ID_CLUBE, cm.ID_MEMBRO,
+			   cp.TP_SEXO, cp.EMAIL
 		  FROM CAD_USUARIOS cu
 		LEFT JOIN CAD_PESSOA cp ON (cp.ID = cu.ID_CAD_PESSOA OR cp.NR_CPF = ?)
 		LEFT JOIN CAD_MEMBRO cm ON (cm.ID_CAD_PESSOA = cp.ID)
@@ -220,6 +224,19 @@ function checkUser($cdUser, $pag){
 		 WHERE cu.CD_USUARIO = ?
 	", array( $cdUser, $cdUser ) );
 }
+
+function setTheme( $parameters ) {
+	session_start();
+	$GLOBALS['conn']->Execute("
+		UPDATE CAD_USUARIOS SET CLASS = ? WHERE ID_USUARIO = ?
+	", array( $parameters["theme"], $_SESSION['USER']["ID_USUARIO"] ) );
+}
+
+function getMenu() {
+	session_start();
+	return PROFILE::montaMenu();
+}
+
 //28550424889
 function logout() {
 	session_start();

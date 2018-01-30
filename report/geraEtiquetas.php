@@ -1,9 +1,8 @@
 <?php
 @require_once('../include/functions.php');
-@require_once('../include/_core/lib/tcpdf/tcpdf.php');
 
 class ETIQUETAS extends TCPDF {
-	
+
 	private $stLine;
 	private $stLine2;
 	private $pag;
@@ -15,14 +14,14 @@ class ETIQUETAS extends TCPDF {
 	private $uW;
 	private $wH;
 	private $fmtCurr;
-	
+
 	//
 	function __construct() {
 		parent::__construct(PDF_PAGE_ORIENTATION, 'mm', array(221, 279.4), true, 'UTF-8', false);
-		
+
 		$this->pag = 0;
 		$this->seq = 0;
-		
+
 		$this->stLine = array(
 		    'position' => '',
 		    'align' => 'C',
@@ -59,8 +58,8 @@ class ETIQUETAS extends TCPDF {
 		$this->SetCreator(PDF_CREATOR);
 		$this->SetAuthor('Ricardo J. Cesar');
 		$this->SetTitle('Geração automática de identificação');
-		$this->SetSubject($GLOBALS['pattern']->getClubeDS(array("cl","nm")));
-		$this->SetKeywords('Etiquetas, ' . str_replace(" ", ", ", $GLOBALS['pattern']->getClubeDS( array("db","nm","ibd") ) ));
+		$this->SetSubject(PATTERNS::getClubeDS(array("cl","nm")));
+		$this->SetKeywords('Etiquetas, ' . str_replace(" ", ", ", PATTERNS::getClubeDS( array("db","nm","ibd") ) ));
 		$this->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
 		$this->SetMargins(0, 0, 0);
@@ -71,10 +70,10 @@ class ETIQUETAS extends TCPDF {
 
  	public function Header() {
 	}
-	
+
 	public function Footer() {
 	}
-	
+
 	public function download() {
 		$this->lastPage();
 		$this->Output("Etiquetas_".date('Y-m-d_H:i:s').".pdf", 'I');
@@ -109,7 +108,7 @@ class ETIQUETAS extends TCPDF {
 			$this->mLeft = 6;
 			$this->uW = 107;
 			$this->uH = 25.3;
-			
+
 		elseif ($nTp == 2):
 			$this->maxFolha = 4;
 			$this->colFolha = 2;
@@ -117,7 +116,7 @@ class ETIQUETAS extends TCPDF {
 			$this->mLeft = 0;
 			$this->uW = 140;
 			$this->uH = 105;
-			
+
 		elseif ($nTp == 3):
 			$this->maxFolha = 1;
 			$this->colFolha = 1;
@@ -126,7 +125,7 @@ class ETIQUETAS extends TCPDF {
 			$this->uW = 150;
 			$this->uH = 150;
 		endif;
-		
+
 		if ( $this->fmtCurr != $nTp) {
 			$this->seq = $this->maxFolha + 1;
 			$this->fmtCurr = $nTp;
@@ -135,7 +134,7 @@ class ETIQUETAS extends TCPDF {
 
 	public function getNext($aPage){
 		$this->seq++;
-		
+
 		//SE ULTRAPASSOU A QUANTIDADE POR FOLHA
 		if ($this->seq > $this->maxFolha):
 			$this->seq = 1;
@@ -153,7 +152,7 @@ class ETIQUETAS extends TCPDF {
 				$this->AddPage("P", array(221, 279.4) );
 			endif;
 		endif;
-		
+
 		if ($this->fmtCurr == 1 && $this->pag > 0):
 			$this->mTop = 19;
 		endif;
@@ -175,29 +174,29 @@ class ETIQUETAS extends TCPDF {
 
 		$yBase = ceil( $this->seq / $this->colFolha );
 		$xBase = floor( $this->seq / $yBase );
-		
+
 		$x = (($xBase-1)*$this->uW) + $this->mLeft;
 		$y = (($yBase-1)*$this->uH) + $this->mTop;
-		
+
 		//TIPO 1 - PASTA DE AVALIACAO
 		if ($ln["TP"] == "1"):
-		
+
 			$this->SetLineStyle(
-				array(	'width' => 0.1, 
+				array(	'width' => 0.1,
 						'cap' => 'square', // butt, round, square
 						'join' => 'bevel', //miter, round, bevel
-						'dash' => 0, 
+						'dash' => 0,
 						'color' => array($colorR, $colorG, $colorB)
 				)
 			);
-			
+
 			$this->setXY($x+30,$y+50);
 			$this->SetFillColor(255,255,255);
 			$this->Cell(160, 120, "", 1, false, 'C', false, false, false, false, 'T', 'M');
-			
+
 			$s = "img/aprendizado/PA/logotipo_".fStrZero($ln["ID_TAB_APREND"],2).".jpg";
 			$this->Image($s, $x+35, $y+55, 150, 110, 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
-		
+
 			$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 16);
 			$this->SetFillColor(255,255,255);
 			$this->SetTextColor($colorR, $colorG, $colorB);
@@ -206,30 +205,30 @@ class ETIQUETAS extends TCPDF {
 
 		//TIPO 2 - CAPA DA LEITURA BIBLICA
 		elseif ($ln["TP"] == "2"):
-		
+
 			$this->SetLineStyle(
-				array(	'width' => 0.1, 
+				array(	'width' => 0.1,
 						'cap' => 'square', // butt, round, square
 						'join' => 'bevel', //miter, round, bevel
-						'dash' => 0, 
+						'dash' => 0,
 						'color' => array($colorR, $colorG, $colorB)
 				)
 			);
-			
+
 			$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 16);
 			$this->SetFillColor(255,255,255);
 			$this->SetTextColor($colorR, $colorG, $colorB);
-			
+
 			$s = "img/aprendizado/PA/logotipo_".fStrZero($ln["ID_TAB_APREND"],2).".jpg";
 			$this->Image($s, $x+30, $y+20, 40, 30, 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
-			
+
 			$this->setXY($x+72,$y+20);
-			$this->Cell(118, 30, "RELATÓRIO DE LEITURA BÍBLICA", 1, false, 'C', false, false, false, false, 'T', 'M');	
-			
+			$this->Cell(118, 30, "RELATÓRIO DE LEITURA BÍBLICA", 1, false, 'C', false, false, false, false, 'T', 'M');
+
 			$this->setXY($x+30,$y+52);
 			$this->SetFillColor(255,255,255);
 			$this->Cell(160, 120, "", 1, false, 'C', false, false, false, false, 'T', 'M');
-			
+
 			$s = "img/aprendizado/LB/image1.jpg";
 			$this->Image($s, $x+35, $y+57, 150, 110, 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
 
@@ -240,14 +239,14 @@ class ETIQUETAS extends TCPDF {
 		elseif ($ln["TP"] == "0"):
 			$this->setXY($x,$y);
 			$this->Image("img/logo.jpg", $x+2, $y-5, 15, 16, 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
-			
+
 			//Cell($w, $h=0, $txt='', $border=0, $ln=0, $align='', $fill=0, $link='', $stretch=0, $ignore_min_height=false, $calign='T', $valign='M')
 			$this->SetFillColor(255,255,255);
 			$this->SetTextColor(0,0,0);
 			$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 9);
 			$this->setXY($x+18,$y-4);
 			$this->MultiCell(82, 8, $ln["NM"], false, 'C', false, 2, "", "", true, 0, false, true, 0, "M", false );
-			
+
 			//CASO TENHA ITEM DE CLASSE PARA IMPRIMIR
 			if (!is_null($ln["ID_TAB_APREND"])):
 				$this->setXY($x+34,$y+8);
@@ -260,22 +259,22 @@ class ETIQUETAS extends TCPDF {
 				$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 6);
 				$this->MultiCell(50, 3, $ln["DS_ITEM"], false, 'C', true, 0, "", "", true, 0, false, true, 0, "M", false );
 			endif;
-			
+
 		//TIPO C - PASTA DE CLASSE
 		elseif ($ln["TP"] == "C"):
 			$this->Image("img/logo.jpg", $x+8, $y-5, 20, 22, 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
-			
+
 			$this->setXY($x+34,$y);
 			$this->write1DBarcode($ln["BC"], 'C39', '', '', '', 20, 0.45, $this->stLine2, 'N');
-			
+
 			$this->Image("img/regiao.jpg", $x+112, $y-6, 20, 23, 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
-			
+
 			//Cell($w, $h=0, $txt='', $border=0, $ln=0, $align='', $fill=0, $link='', $stretch=0, $ignore_min_height=false, $calign='T', $valign='M')
 			$this->setXY($x+2,$y+32);
 			$this->SetTextColor($colorR, $colorG, $colorB);
 			$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 21);
 			$this->MultiCell(126, 25, $ln["DS_ITEM"], false, 'C', false, 2, "", "", true, 0, false, true, 0, "M", false );
-			
+
 			$this->setXY($x+2,$y+75);
 			$this->SetTextColor(0,0,0);
 			$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 17);
@@ -284,38 +283,38 @@ class ETIQUETAS extends TCPDF {
 			$this->setXY($x+2,$y+83);
 			$this->SetTextColor(180,180,180);
 			$this->SetFont(PDF_FONT_NAME_MAIN, 'I', 7);
-			$this->MultiCell(126, 6, 
-				$GLOBALS['pattern']->getClubeDS( array("cl","nm") ) ." - desde ".
-				$GLOBALS['pattern']->getClubeDS( array("af") )."\n".
-				$GLOBALS['pattern']->getClubeDS( array("ibd","rg","ab","un","dv","sp") ), false, 'C', false, 2, "", "", true, 0, false, true, 0, "M", false );
-			
+			$this->MultiCell(126, 6,
+				PATTERNS::getClubeDS( array("cl","nm") ) ." - desde ".
+				PATTERNS::getClubeDS( array("af") )."\n".
+				PATTERNS::getClubeDS( array("ibd","rg","ab","un","dv","sp") ), false, 'C', false, 2, "", "", true, 0, false, true, 0, "M", false );
+
 		//TIPO E - CARTAO DE ESPECIALIDADE
 		elseif ($ln["TP"] == "E"):
 			$this->setXY($x,$y);
 			$this->Image("img/logo.jpg", $x+2, $y-5, 15, 16, 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
-			
+
 			//Cell($w, $h=0, $txt='', $border=0, $ln=0, $align='', $fill=0, $link='', $stretch=0, $ignore_min_height=false, $calign='T', $valign='M')
 			$this->SetFillColor(255,255,255);
 			$this->SetTextColor(0,0,0);
 			$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 8);
 			$this->setXY($x+18,$y+1);
 			$this->Cell(78, 7, $ln["NM"], false, false, 'C', false, false, true, false, 'B', 'M');
-			
+
 			$this->setXY($x+28,$y+1);
 			$this->write1DBarcode($ln["BC"], 'C39', '', '', '', 15, 0.35, $this->stLine, 'N');
-				
+
 		//OUTROS TIPOS
 		else:
 			$this->setXY($x,$y);
 			$this->Image("img/logo.jpg", $x+2, $y-5, 15, 16, 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
-			
+
 			//Cell($w, $h=0, $txt='', $border=0, $ln=0, $align='', $fill=0, $link='', $stretch=0, $ignore_min_height=false, $calign='T', $valign='M')
 			$this->SetFillColor(255,255,255);
 			$this->SetTextColor(0,0,0);
 			$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 9);
 			$this->setXY($x+18,$y+1);
 			$this->Cell(78, 8, $ln["NM"], false, false, 'C', false, false, true, false, 'B', 'M');
-			
+
 			if (strpos("AB", $ln["TP"]) !== FALSE ):
 				$this->setXY($x+40,$y+3.5);
 				$this->write1DBarcode($ln["BC"], 'C39', '', '', '', 15, 0.35, $this->stLine, 'N');
@@ -347,7 +346,7 @@ if (isset($ip) && !empty($ip)):
 endif;
 
 $query = "
-	SELECT DISTINCT pt.MD 
+	SELECT DISTINCT pt.MD
 	  FROM TMP_PRINT_TAGS pt
 	 WHERE pt.MD = ?
 	   $where
@@ -376,9 +375,9 @@ foreach ($result as $k => $l):
 	if ($l["MD"] != 3):
 		$aPage = $aPageParam;
 	endif;
-	
+
 	$rs = $GLOBALS['conn']->Execute("
-		SELECT DISTINCT 
+		SELECT DISTINCT
 				pt.TP,
 				pt.BC,
 				pt.ID_TAB_APREND,
@@ -396,7 +395,7 @@ foreach ($result as $k => $l):
 		$pdf->getNext($aPage);
 		$pdf->addEtiqueta($ls);
 	endforeach;
-	
+
 endforeach;
 
 $pdf->download();

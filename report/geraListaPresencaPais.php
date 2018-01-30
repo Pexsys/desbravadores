@@ -1,18 +1,17 @@
 <?php
 @require_once('../include/functions.php');
-@require_once('../include/_core/lib/tcpdf/tcpdf.php');
 
 class LISTAPRESENCA extends TCPDF {
-	
+
 	//lines styles
 	private $stLine;
 	private $posY;
 	private $lineAlt;
 	public $tipoUniforme;
-	
+
 	function __construct() {
 		parent::__construct(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-		
+
 		$this->stLine = array('width' => 0.7, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0));
 		$this->stLine3 = array(
 		    'position' => '',
@@ -34,11 +33,11 @@ class LISTAPRESENCA extends TCPDF {
 		$this->SetCreator(PDF_CREATOR);
 		$this->SetAuthor('Ricardo J. Cesar');
 		$this->SetTitle('Listagem Alfabética de Presença na Reunião de Pais');
-		$this->SetSubject($GLOBALS['pattern']->getClubeDS(array("cl","nm")));
-		$this->SetKeywords('Presença, ' . str_replace(" ", ", ", $GLOBALS['pattern']->getClubeDS( array("db","nm","ibd") ) ));
+		$this->SetSubject(PATTERNS::getClubeDS(array("cl","nm")));
+		$this->SetKeywords('Presença, ' . str_replace(" ", ", ", PATTERNS::getClubeDS( array("db","nm","ibd") ) ));
 		$this->setImageScale(PDF_IMAGE_SCALE_RATIO);
 	}
-	
+
 	public function setTipoUniforme($tipoUniforme){
 	    $this->tipoUniforme = $tipoUniforme;
 	}
@@ -54,18 +53,18 @@ class LISTAPRESENCA extends TCPDF {
 		$this->SetX(172);
 		$this->Cell(40, 3, "Página ". $this->getAliasNumPage() ." de ". $this->getAliasNbPages(), 0, false, 'R');
 	}
-	
+
  	public function Header() {
 		$this->setXY(0,0);
 		$this->Image("img/logo.jpg", 5, 5, 14, 16, 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
-		
+
 		$this->setXY(20,5);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 15.5);
 		$this->Cell(185, 9, "Listagem de Presença - Reunião de Pais: _____/_____/________", 0, false, 'C', false, false, false, false, 'T', 'M');
 		$this->setXY(20,15);
 		$this->SetTextColor(80,80,80);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 7);
-		$this->Cell(185, 5, $GLOBALS['pattern']->getCDS(), 0, false, 'C', false, false, false, false, false, false, 'T', 'M');
+		$this->Cell(185, 5, PATTERNS::getCDS(), 0, false, 'C', false, false, false, false, false, false, 'T', 'M');
 
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 8);
 		$this->SetTextColor(255,255,255);
@@ -88,7 +87,7 @@ class LISTAPRESENCA extends TCPDF {
 		endif;
 		$this->setXY(5, $this->posY);
 		$this->Cell(200, 10, $f["NM"], 0, false, 'L', true, false, 1);
-		
+
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 5);
 		$this->Line(140, $this->posY+8, 205, $this->posY+8, $this->stLine3);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'I', 5);
@@ -98,7 +97,7 @@ class LISTAPRESENCA extends TCPDF {
 		$this->posY+=12;
 		$this->lineAlt = !$this->lineAlt;
 	}
-	
+
 	public function addLineCount($result){
 		$this->posY+=2;
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 9);
@@ -109,7 +108,7 @@ class LISTAPRESENCA extends TCPDF {
 		$this->Cell(200, 6, "Total de Menores Ativos: ".$result->RecordCount(), 0, false, 'C', true);
 		$this->posY+=9;
 	}
-	
+
 	public function newPage() {
 		$this->AddPage();
 		$this->setCellPaddings(0,0,0,0);
@@ -143,7 +142,7 @@ foreach ( $result as $ra => $f ):
 		$pdf->newPage();
 		$pdf->addLine($f);
 	else:
-		$pdf->commitTransaction();     
+		$pdf->commitTransaction();
 	endif;
 endforeach;
 
@@ -155,7 +154,7 @@ if  ($pdf->getNumPages() != $start_page):
 	$pdf->newPage();
 	$pdf->addLineCount($result);
 else:
-	$pdf->commitTransaction();     
+	$pdf->commitTransaction();
 endif;
 
 $pdf->download();

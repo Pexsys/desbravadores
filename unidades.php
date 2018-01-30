@@ -1,12 +1,13 @@
-<?php 
+<?php
 @require_once("include/functions.php");
-fHeaderPage();
+fHeaderPage( array( PATTERNS::getVD()."css/index.css?" )
+		   , array( PATTERNS::getVD()."js/index.js?") );
 fConnDB();
 ?>
 <body>
 
     <!-- Navigation -->
-	<?php @include_once("include/navbar.php");?>
+	<?php @require_once("include/navbar.php");?>
 
     <!-- Page Content -->
     <div class="container">
@@ -25,20 +26,20 @@ fConnDB();
             </div>
         </div>
         <!-- /.row -->
-        
+
         <?php
         $result = $GLOBALS['conn']->Execute( "
         	  SELECT *
-        	    FROM TAB_UNIDADE 
+        	    FROM TAB_UNIDADE
         	   WHERE FG_ATIVA = 'S'
         	     AND TP IN ('F','M')
 		");
-        
+
         $a = array();
         foreach ($result as $ln):
             $a[] = array( $ln["ID"], !is_null($ln["DESCRIPTION"]) );
         endforeach;
-        
+
         $arr = array();
         $ca = min(12,count($a));
         while (count($arr) < $ca):
@@ -46,7 +47,7 @@ fConnDB();
             $arr[] = $a[$pos];
             array_splice($a, $pos, 1);
         endwhile;
-        
+
         $qtd = 0;
         foreach( $arr as $k => $i ):
             if (++$qtd == 1):
@@ -67,9 +68,9 @@ fConnDB();
         ?>
 
         <!-- Footer -->
-		<?php @include_once("include/footer.php");?>
+		<?php @require_once("include/footer.php");?>
 
     </div>
     <!-- /.container -->
 
-<?php @include_once("include/bottom_page.php");?>
+<?php @require_once("include/bottom_page.php");?>

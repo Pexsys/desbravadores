@@ -11,14 +11,12 @@ function fComunicado( $parameters ) {
 	endif;
 	$op = isset($parameters["op"]) ? $parameters["op"] : "";
 
-	fConnDB();
-
 	//LEITURA DE SAIDA.
 	//ATUALIZACAO DE SAIDA
 	if ( $op == "UPDATE" ):
 		$fg_pend = $frm["fg_pend"];
 		$id = $frm["id"];
-		
+
 		$arr = array();
 		//INSERT DE NOVO COMUNICADO
 		if ( !is_null($id) && is_numeric($id) ):
@@ -54,25 +52,25 @@ function fComunicado( $parameters ) {
 			",$arr);
 			$id = $GLOBALS['conn']->Insert_ID();
 		endif;
-		
+
 		//GRAVACAO DEFINITIVA, ENVIO POR EMAIL
 		if ($fg_pend == "N"):
 			$GLOBALS['conn']->Execute("
 				INSERT INTO LOG_MENSAGEM (ID_ORIGEM, TP, ID_USUARIO, EMAIL, DH_GERA)
-				SELECT $id, 'C',  cu.ID_USUARIO, ca.EMAIL, NOW() 
+				SELECT $id, 'C',  cu.ID_USUARIO, ca.EMAIL, NOW()
 				  FROM CON_ATIVOS ca
-		    INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA) 
-				
+		    INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
+
 				UNION
-				
-				SELECT $id, 'C', cu.ID_USUARIO, cr.EMAIL, NOW() 
-				FROM CON_RESP_LEGAL cr 
-				INNER JOIN CON_ATIVOS ca ON (ca.ID_PESSOA_RESP = cr.ID) 
-				INNER JOIN CAD_USUARIOS cu ON (cu.CD_USUARIO = cr.NR_CPF) 
-				WHERE NOT EXISTS (SELECT 1 FROM CON_ATIVOS WHERE NR_CPF = cr.NR_CPF) 
+
+				SELECT $id, 'C', cu.ID_USUARIO, cr.EMAIL, NOW()
+				FROM CON_RESP_LEGAL cr
+				INNER JOIN CON_ATIVOS ca ON (ca.ID_PESSOA_RESP = cr.ID)
+				INNER JOIN CAD_USUARIOS cu ON (cu.CD_USUARIO = cr.NR_CPF)
+				WHERE NOT EXISTS (SELECT 1 FROM CON_ATIVOS WHERE NR_CPF = cr.NR_CPF)
 			");
 		endif;
-		
+
 		$out["id"] = $id;
 		$out["so"] = $fg_pend;
 		$out["success"] = true;
@@ -93,7 +91,7 @@ function fComunicado( $parameters ) {
 				"fg_pend" => "S",
 				"cd" => $result->fields['ANO']."-".fStrZero($result->fields['CD'], 2)
 			);
-			
+
 		else:
 			$result = $GLOBALS['conn']->Execute("SELECT * FROM CAD_COMUNICADO WHERE ID = ?", array( $parameters["id"] ) );
 			if (!$result->EOF):
@@ -113,11 +111,10 @@ function fComunicado( $parameters ) {
 
 function getComunicados( $parameters ){
 	session_start();
-	$usuarioID = $_SESSION['USER']['id_usuario'];
-	
+	$usuarioID = $_SESSION['USER']['ID_USUARIO'];
+
 	$arr = array();
-	fConnDB();
-	
+
 	if ($parameters["filter"] == "N"):
 		$result = $GLOBALS['conn']->Execute("
 			SELECT cc.ID, cc.CD, cc.DH, cc.FG_PEND, lc.DH_READ
@@ -130,7 +127,7 @@ function getComunicados( $parameters ){
 		", array( $usuarioID ) );
 	else:
 		$result = $GLOBALS['conn']->Execute("SELECT ID, CD, DH, FG_PEND
-				   FROM CAD_COMUNICADO 
+				   FROM CAD_COMUNICADO
 				  WHERE YEAR(DH) = YEAR(NOW())
 			   ORDER BY ID DESC");
 	endif;
@@ -159,11 +156,9 @@ function getComunicados( $parameters ){
 function fSetRead( $parameters ){
 	session_start();
 	$comunicadoID = $parameters["id"];
-	$usuarioID = $_SESSION['USER']['id_usuario'];
-	$usuarioCD = $_SESSION['USER']['cd_usuario'];
-	
-	fConnDB();
-	
+	$usuarioID = $_SESSION['USER']['ID_USUARIO'];
+	$usuarioCD = $_SESSION['USER']['CD_USUARIO'];
+
 	//ATUALIZA USUARIO ATUAL
 	$GLOBALS['conn']->Execute("
 		UPDATE LOG_MENSAGEM SET
@@ -172,7 +167,7 @@ function fSetRead( $parameters ){
 		  AND ID_ORIGEM = ?
 		  AND TP = ?
 	", array($usuarioID,$comunicadoID,"C"));
-	
+
 	//VERIFICA SE USUARIO ATUAL EH RESPONSAVEL POR OUTRO.
 	$result = $GLOBALS['conn']->Execute("
 		UPDATE LOG_MENSAGEM SET
@@ -182,13 +177,13 @@ function fSetRead( $parameters ){
 							FROM CON_RESP_LEGAL cr
 							INNER JOIN CON_ATIVOS ca ON (ca.ID_PESSOA_RESP = cr.ID)
 							INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
-							WHERE cr.NR_CPF = ?		
+							WHERE cr.NR_CPF = ?
 							)
 		  AND DH_READ IS NULL
 		  AND ID_ORIGEM = ?
 		  AND TP = ?
 	", array($usuarioCD,$comunicadoID,"C"));
-	
+
 	return array( "result" => true );
 }
 ?>

@@ -1,6 +1,5 @@
 <?php
 @require_once("../include/functions.php");
-@require_once("../include/acompanhamento.php");
 fConnDB();
 
 //ANALISE/IMPORTACAO DE HISTORICO DSA/UCB
@@ -18,30 +17,30 @@ foreach ($result as $k => $ls):
 	$pessoaID = $ls['ID_CAD_PESSOA'];
 	$internoCD = $ls['CD_ITEM_INTERNO'];
 
-	$uh = updateHistorico( 
-		$pessoaID, 
-		$aprendID, 
-		array( 
-			"dt_inicio" => $ls['DT_INICIO'], 
-			"dt_conclusao" => $ls['DT_CONCLUSAO'], 
-			"dt_avaliacao" => $ls['DT_AVALIACAO'], 
-			"dt_investidura" => $ls['DT_INVESTIDURA'] 
+	$uh = HISTORICO::update(
+		$pessoaID,
+		$aprendID,
+		array(
+			"dt_inicio" => $ls['DT_INICIO'],
+			"dt_conclusao" => $ls['DT_CONCLUSAO'],
+			"dt_avaliacao" => $ls['DT_AVALIACAO'],
+			"dt_investidura" => $ls['DT_INVESTIDURA']
 		),
-		null 
+		null
 	);
-	
+
 	echo "ITEM[$internoCD],PESSOA[$pessoaID]";
 	if ($uh["op"] == "INSERT"):
 		++$i;
 		echo ",INSERTED";
-		
+
 	//SE EXISTE, ATUALIZA DATAS.
 	else:
 		++$u;
 		echo ",UPDATED";
 	endif;
 	$GLOBALS['conn']->Execute("COMMIT");
-	
+
 	$GLOBALS['conn']->Execute("UPDATE TMP_HIST_DSA SET FG_INTEGRADO = 'S' WHERE ID = ?", array($ls["ID"]) );
 	echo ",INTEGRATED<br/>";
 endforeach;
@@ -60,20 +59,20 @@ while (!$result->EOF):
 	$req			= str_replace("--","-",$result->fields['REQ']);
 	$dtAssinat		= $result->fields['DT_ASSINAT'];
 
-	$barDecode	= $GLOBALS['pattern']->getBars()->decode($result->fields['BAR']);
-	
-	$mr = marcaRequisito( $barDecode["ni"], $barDecode["fi"], $req, $dtAssinat );
+	$barDecode	= PATTERNS::getBars()->decode($result->fields['BAR']);
+
+	$mr = ACOMPANHAMENTO::marcaRequisito( $barDecode["ni"], $barDecode["fi"], $req, $dtAssinat );
 	if (!is_null($mr["idreq"])):
 		//ATUALIZADA TEMPORARIO COM PESSOA RECUPERADA + APRENDIZADO.
 		$GLOBALS['conn']->Execute("
-			UPDATE TMP SET 
-				ID_CAD_PESSOA = ?, 
-				ID_TAB_APREND = ? 
+			UPDATE TMP SET
+				ID_CAD_PESSOA = ?,
+				ID_TAB_APREND = ?
 			WHERE ID = ?
 		", array( $pessoaID, $mr["idreq"], $result->fields['ID']) );
 		$GLOBALS['conn']->Execute("COMMIT");
 	endif;
-	
+
 	//ANALISAR ESPECIALIDADES E INSERIR NO HISTORICO
 	$aEspec = explode("/", $result->fields['ESPEC']);
 	if ( count($aEspec) > 0 ):
@@ -81,18 +80,18 @@ while (!$result->EOF):
 			if (!empty($value)):
 				$rs = $GLOBALS['conn']->Execute("SELECT ID_TAB_APREND FROM TAB_APRENDIZADO WHERE CD_ITEM_INTERNO = ?", array( $value ) );
 				echo "ESPEC[$value],PESSOA[".$barDecode["ni"]."],ASSINAT[$dtAssinat]";
-				
+
 				if (!$rs->EOF):
-					$uh = updateHistorico( 
-						$pessoaID, 
-						$rs->fields["ID_TAB_APREND"], 
-						array( 
-							"dt_inicio" => $dtAssinat, 
-							"dt_conclusao" => $dtAssinat, 
+					$uh = HISTORICO::update(
+						$pessoaID,
+						$rs->fields["ID_TAB_APREND"],
+						array(
+							"dt_inicio" => $dtAssinat,
+							"dt_conclusao" => $dtAssinat,
 							"dt_avaliacao" => null,
 							"dt_investidura" => null
 						),
-						null 
+						null
 					);
 
 					if ($uh["op"]== "INSERT"):
@@ -106,7 +105,7 @@ while (!$result->EOF):
 				endif;
 				echo "<br/>";
 			endif;
-			
+
 		endforeach;
 	endif;
 
@@ -143,7 +142,7 @@ if (!$rs->EOF):
 
 	foreach ($rs as $ks => $ls):
 		$analisados++;
-		$ah = analiseHistoricoPessoa( $ls['ID'] );
+		$ah = HISTORICO::analisePessoa( $ls['ID'] );
 		foreach ($ah["op"] as $st):
 			echo "$st<br/>";
 		endforeach;

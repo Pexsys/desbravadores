@@ -13,7 +13,7 @@
 				<!-- FINAL FORMULARIO BOTAO PAGSEGURO -->
 			</center>
 			<hr>
-			<p class="text-center">Copyright &copy; <?php echo date("Y");?> - <?php echo $GLOBALS['pattern']->getClubeDS(array("cl","cj","db","nm","sp","af")) ."<br/>". $GLOBALS['pattern']->getClubeDS(array("rg","sp","ibd","ab","un","dv"));?></p>
+			<p class="text-center">Copyright &copy; <?php echo date("Y");?> - <?php echo PATTERNS::getClubeDS(array("cl","cj","db","nm","sp","af")) ."<br/>". PATTERNS::getClubeDS(array("rg","sp","ibd","ab","un","dv"));?></p>
 		</div>
 	</div>
 </footer>

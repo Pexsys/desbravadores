@@ -1,19 +1,18 @@
 <?php
 @require_once('../include/functions.php');
-@require_once('../include/_core/lib/tcpdf/tcpdf.php');
 
 class LISTAFANFARRA extends TCPDF {
-	
+
 	//lines styles
 	private $stLine;
 	private $stLine2;
 	private $posY;
 	private $lineAlt;
 	public $filter;
-	
+
 	function __construct() {
 		parent::__construct(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-		
+
 		$this->stLine = array('width' => 1, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0));
 		$this->stLine2 = array('width' => 0.3, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0));
 		$this->stLine3 = array(
@@ -36,11 +35,11 @@ class LISTAFANFARRA extends TCPDF {
 		$this->SetCreator(PDF_CREATOR);
 		$this->SetAuthor('Ricardo J. Cesar');
 		$this->SetTitle('Listagem de Membros da Fanfarra');
-		$this->SetSubject($GLOBALS['pattern']->getClubeDS(array("cl","nm")));
-		$this->SetKeywords('Fanfarra, ' . str_replace(" ", ", ", $GLOBALS['pattern']->getClubeDS( array("db","nm","ibd") ) ));
+		$this->SetSubject(PATTERNS::getClubeDS(array("cl","nm")));
+		$this->SetKeywords('Fanfarra, ' . str_replace(" ", ", ", PATTERNS::getClubeDS( array("db","nm","ibd") ) ));
 		$this->setImageScale(PDF_IMAGE_SCALE_RATIO);
 	}
-	
+
 	public function fSetFilter($filter){
 	    $this->filter = $filter;
 	}
@@ -56,25 +55,25 @@ class LISTAFANFARRA extends TCPDF {
 		$this->SetX(172);
 		$this->Cell(40, 3, "Página ". $this->getAliasNumPage() ." de ". $this->getAliasNbPages(), 0, false, 'R');
 	}
-	
+
  	public function Header() {
 		$this->setXY(0,0);
 		$this->Image("img/logo.jpg", 5, 5, 14, 16, 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
-		
+
 		$this->setXY(20,5);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 25);
 		$this->Cell(185, 9, "Listagem de Membros da Fanfarra", 0, false, 'C', false, false, false, false, 'T', 'M');
 		$this->setXY(20,15);
 		$this->SetTextColor(80,80,80);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 7);
-		$this->Cell(185, 5, $GLOBALS['pattern']->getCDS(), 0, false, 'C', false, false, false, false, false, false, 'T', 'M');
+		$this->Cell(185, 5, PATTERNS::getCDS(), 0, false, 'C', false, false, false, false, false, false, 'T', 'M');
 
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 10);
 		$this->SetTextColor(255,255,255);
 		$this->SetFillColor(255,102,51);
 		$this->setCellPaddings(1,0,1,0);
 		$this->setXY(5, 22);
-		
+
 		if ($this->filter == "A"):
     		$this->Cell(125, 7, "Nome Completo", 0, false, 'L', true);
     		$this->setXY(130, 22);
@@ -86,7 +85,7 @@ class LISTAFANFARRA extends TCPDF {
     	endif;
 		$this->posY = 29;
 	}
-	
+
 	private function addGrupoInstrumentoTitle($af) {
 		$this->setCellPaddings(2,1,1,1);
 		$rsM = $GLOBALS['conn']->Execute("
@@ -106,7 +105,7 @@ class LISTAFANFARRA extends TCPDF {
     		$this->posY += 12;
     		$this->lineAlt = false;
     	endif;
-		
+
 		return $rsM;
 	}
 
@@ -131,7 +130,7 @@ class LISTAFANFARRA extends TCPDF {
 
 		$this->lineAlt = !$this->lineAlt;
 	}
-	
+
 	public function addGroupDetail($rsM){
         $this->SetFont(PDF_FONT_NAME_MAIN, 'N', 12);
     	$this->SetTextColor(0,0,0);
@@ -144,11 +143,11 @@ class LISTAFANFARRA extends TCPDF {
 				$this->newPage();
 				$this->addLine($f);
 			else:
-				$this->commitTransaction();     
+				$this->commitTransaction();
 			endif;
-		endforeach;	    
+		endforeach;
 	}
-	
+
 	public function addGrupoInstrumento($af) {
 		$this->startTransaction();
 		$start_page = $this->getPage();
@@ -160,10 +159,10 @@ class LISTAFANFARRA extends TCPDF {
 		else:
 			$this->commitTransaction();
 		endif;
-		
+
         $this->addGroupDetail($rsM);
 	}
-	
+
 	public function newPage() {
 		$this->AddPage();
 		$this->setCellPaddings(0,0,0,0);
@@ -193,7 +192,7 @@ if ($pdf->filter == "I"):
     foreach ( $result as $ra => $f ):
     	$pdf->addGrupoInstrumento($f);
     endforeach;
-    
+
 //AGRUPAMENTO ALFABETICO
 else:
     $result = $GLOBALS['conn']->Execute("

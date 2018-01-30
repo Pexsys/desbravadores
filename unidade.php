@@ -1,25 +1,25 @@
-<?php 
+<?php
 @require_once("include/functions.php");
 fConnDB();
 
 $result = $GLOBALS['conn']->Execute( "
   SELECT *
-    FROM TAB_UNIDADE 
-   WHERE FG_ATIVA = ?
+    FROM TAB_UNIDADE
+   WHERE FG_ATIVA = 'S'
      AND ID = ?
      AND DESCRIPTION IS NOT NULL
-ORDER BY IDADE, TP", Array( 'S', fRequest("id") ) );
-	
+ORDER BY IDADE, TP", Array( fRequest("id") ) );
 if ($result->EOF):
-    header('location: unidades.php');    
+    header('location: unidades.php');
 endif;
-fHeaderPage();
+fHeaderPage( array( PATTERNS::getVD()."css/index.css?" )
+		   , array( PATTERNS::getVD()."js/index.js?") );
 
 $strmembros = "";
 $membros = $GLOBALS['conn']->Execute( "
-	SELECT * 
-	  FROM CON_ATIVOS 
-	 WHERE ID_UNIDADE = ? 
+	SELECT *
+	  FROM CON_ATIVOS
+	 WHERE ID_UNIDADE = ?
 	ORDER BY CD_CARGO, NM
 ", Array( fRequest("id") ) );
 foreach ($membros as $k => $f):
@@ -31,7 +31,7 @@ endforeach;
 <body>
 
     <!-- Navigation -->
-	<?php @include_once("include/navbar.php");?>
+	<?php @require_once("include/navbar.php");?>
 
     <!-- Page Content -->
     <div class="container">
@@ -65,7 +65,7 @@ endforeach;
                     <li><b>Cor do g&ecirc;nero</b>:&nbsp;<i class="fa fa-stop" aria-hidden="true" style="color:<?php echo $result->fields["CD_COR_GENERO"];?>"></i></li>
                     <li><b>Cor da unidade</b>:&nbsp;<i class="fa fa-stop" aria-hidden="true" style="color:<?php echo $result->fields["CD_COR"];?>"></i></li>
                     <li><b>Grito de Guerra</b>:<br/><i><?php echo ($result->fields["GRITO"]);?></i></li>
-                    <?php 
+                    <?php
                     if (strlen($strmembros)):
                         echo "<li><b>{$membros->RecordCount()}&nbsp;Membros</b>:&nbsp;$strmembros</li>";
                     endif;
@@ -89,22 +89,22 @@ endforeach;
             <div class="col-lg-12">
                 <h3 class="page-header">Outras unidades</h3>
             </div>
-            
+
             <?php
             $result = $GLOBALS['conn']->Execute( "
         	  SELECT *
-        	    FROM TAB_UNIDADE 
+        	    FROM TAB_UNIDADE
         	   WHERE FG_ATIVA = ?
         	     AND TP IN ('F','M')
         	     AND ID <> ?
         	  ORDER BY ID
             ", Array( 'S', $result->fields["ID"] ) );
-            
+
             $a = array();
             foreach ($result as $ln):
                 $a[] = $ln["ID"];
             endforeach;
-            
+
             $arr = array();
             $ca = min(12,count($a));
             while (count($arr) < $ca):
@@ -112,7 +112,7 @@ endforeach;
                 $arr[] = $a[$pos];
                 array_splice($a, $pos, 1);
             endwhile;
-            
+
             foreach( $arr as $i ):
                 ?>
                 <div class="col-md-1 col-xs-4">
@@ -128,9 +128,9 @@ endforeach;
         <!-- /.row -->
 
         <!-- Footer -->
-		<?php @include_once("include/footer.php");?>
+		<?php @require_once("include/footer.php");?>
 
     </div>
     <!-- /.container -->
 
-<?php @include_once("include/bottom_page.php");?>
+<?php @require_once("include/bottom_page.php");?>

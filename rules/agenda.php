@@ -7,12 +7,11 @@ responseMethod();
  ****************************/
 function events( $parameters ) {
 	$DATA_NOW = date('Y-m-d H:i:s');
-	
+
 	$out = array();
-	fConnDB();
 	$aBind = array();
 
-	$query = "SELECT e.*, 
+	$query = "SELECT e.*,
 					 c.TP_GRUPO, c.ID_TAB_RGR_CHAMADA, c.ID_TAB_TP_UNIFORME,
 					 r.DS as DS_RGR_CHAMADA,
 					 u.DS as DS_TP_UNIFORME
@@ -31,16 +30,16 @@ function events( $parameters ) {
 		$aBind = array( $parameters["from"], $parameters["to"] );
 	endif;
 	$result = $GLOBALS['conn']->Execute( $query, $aBind );
-	
+
 	while (!$result->EOF):
-	
+
 		$dh_ini = $result->fields['DTHORA_EVENTO_INI'];
 		$dh_fim = $result->fields['DTHORA_EVENTO_FIM'];
-	
+
 		$dt_hora_eve = fDtHoraEvento( $dh_ini, $dh_fim, "%d/%m" );
-		
+
 		$ds_info_add = trim($result->fields['INFO_ADIC']);
-		
+
 		$title = $dt_hora_eve;
 		$title = fConcatNoEmpty($title, " - ", $ds_info_add);
 		if (!is_null($result->fields['TP_GRUPO'])):
@@ -55,7 +54,7 @@ function events( $parameters ) {
 		if (!is_null($result->fields['FG_INSTRUCAO'])):
 			$title .= " - I:".$result->fields['FG_INSTRUCAO'];
 		endif;
-		
+
 		$tipo_evento = trim($result->fields['TIPO_EVENTO']);
 
 		$out[] = array(
@@ -63,7 +62,7 @@ function events( $parameters ) {
 			'title' => ($title),
 			'url' => '',
 			'class' => ( $dh_fim < $DATA_NOW ? '' : fGetClass($tipo_evento) ),
-			'info' => 
+			'info' =>
 				 array(
 					"id"		=> $result->fields['ID_EVENTO'],
 					"dh_ini"	=> strtotime($dh_ini) .'000',
@@ -81,7 +80,7 @@ function events( $parameters ) {
 					"tp_grupo"	=> $result->fields['TP_GRUPO'],
 					"id_regra"	=> $result->fields['ID_TAB_RGR_CHAMADA'],
 					"id_uniforme"	=> $result->fields['ID_TAB_TP_UNIFORME'],
-					"fg_instrucao"	=> $result->fields['FG_INSTRUCAO']	
+					"fg_instrucao"	=> $result->fields['FG_INSTRUCAO']
 				),
 			'start' => strtotime($dh_ini) .'000',
 			'end' => strtotime($dh_fim) .'000'
@@ -95,8 +94,6 @@ function fEvent( $parameters ) {
 	$out = array();
 	$out["success"] = false;
 
-	fConnDB();
-
 	$frm = $parameters["frm"];
 	$op = $parameters["op"];
 	$id = 0;
@@ -104,7 +101,7 @@ function fEvent( $parameters ) {
 	//LEITURA DE EVENTO.
 	//ATUALIZACAO DE EVENTO
 	if ( $op == "UPDATE" ):
-		
+
 		$arr = array();
 		//INSERT DE NOVO EVENTO
 		if ( !is_null($frm["id"]) && is_numeric($frm["id"]) ):
@@ -113,7 +110,7 @@ function fEvent( $parameters ) {
 			UPDATE CAD_EVENTOS SET
 				DTHORA_EVENTO_INI = ?,
 				DTHORA_EVENTO_FIM = ?,
-				DESC_LOCAL = ?,	
+				DESC_LOCAL = ?,
 				DESC_LOGRADOURO = ?,
 				NUM_LOGRADOURO = ?,
 				DESC_COMPLEMENTO = ?,
@@ -142,13 +139,13 @@ function fEvent( $parameters ) {
 				$id
 			);
 			$GLOBALS['conn']->Execute($query,$arr);
-			
+
 		else:
 			$query = "
 			INSERT INTO CAD_EVENTOS (
 				DTHORA_EVENTO_INI,
 				DTHORA_EVENTO_FIM,
-				DESC_LOCAL,	
+				DESC_LOCAL,
 				DESC_LOGRADOURO,
 				NUM_LOGRADOURO,
 				DESC_COMPLEMENTO,
@@ -177,33 +174,33 @@ function fEvent( $parameters ) {
 				fReturnStringNull($frm["fg_publ"])
 			);
 			$out["arr"] = $arr;
-			
+
 			$GLOBALS['conn']->Execute($query,$arr);
 			$id = $GLOBALS['conn']->Insert_ID();
 		endif;
 
 		//VERIFICA REGRA CHAMADA.
 		$rgr = $GLOBALS['conn']->Execute("SELECT * FROM RGR_CHAMADA WHERE ID_EVENTO = ?", Array( $id ) );
-		
+
 		//SE NAO EXISTE NO BANCO E TELA PREENCHIDA.
 		if ( $rgr->EOF && ( is_numeric($frm["id_regra"]) || !empty($frm["tp_grupo"]) || is_numeric($frm["id_uniforme"]) ) ):
 			$GLOBALS['conn']->Execute("
-			INSERT INTO RGR_CHAMADA ( 
-				TP_GRUPO, 
-				ID_TAB_RGR_CHAMADA, 
-				ID_TAB_TP_UNIFORME, 
-				ID_EVENTO 
-			) VALUES ( ?, ?, ?, ? )", 
+			INSERT INTO RGR_CHAMADA (
+				TP_GRUPO,
+				ID_TAB_RGR_CHAMADA,
+				ID_TAB_TP_UNIFORME,
+				ID_EVENTO
+			) VALUES ( ?, ?, ?, ? )",
 				Array( fReturnStringNull($frm["tp_grupo"]),  fReturnNumberNull($frm["id_regra"]), fReturnNumberNull($frm["id_uniforme"]), $id ) );
-			
+
 		//SE EXISTE NO BANCO E TELA PREENCHIDA
 		elseif ( !$rgr->EOF && ( is_numeric($frm["id_regra"]) || !empty($frm["tp_grupo"]) || is_numeric($frm["id_uniforme"]) ) ):
 			$GLOBALS['conn']->Execute("
-			UPDATE RGR_CHAMADA SET 
-				TP_GRUPO = ?, 
-				ID_TAB_RGR_CHAMADA = ?, 
+			UPDATE RGR_CHAMADA SET
+				TP_GRUPO = ?,
+				ID_TAB_RGR_CHAMADA = ?,
 				ID_TAB_TP_UNIFORME = ?
-			WHERE ID_EVENTO = ?", 
+			WHERE ID_EVENTO = ?",
 				Array( fReturnStringNull($frm["tp_grupo"]), fReturnNumberNull($frm["id_regra"]), fReturnNumberNull($frm["id_uniforme"]), $id ) );
 
 		//SE EXISTE NO BANCO E TELA NAO PREENCHIDA
@@ -217,7 +214,7 @@ function fEvent( $parameters ) {
 		fDeleteRegraChamada($parameters["id"]);
 		$GLOBALS['conn']->Execute("DELETE FROM CAD_EVENTOS WHERE ID_EVENTO = ?", Array( $parameters["id"] ) );
 		$out["success"] = true;
-	
+
 	endif;
 
 	return $out;
@@ -245,15 +242,14 @@ function fGetClass($strTipoEvento){
 
 function agendaConsulta( $parameters ) {
 	session_start();
-	$cadMembroID = $_SESSION['USER']['id_cad_membro'];
+	$cadMembroID = $_SESSION['USER']['ID_CAD_MEMBRO'];
 
 	$out = array();
-	fConnDB();
 
 	$ano = $parameters["ano"];
 	if ( empty($ano) || is_null($ano) ):
 		$out["years"] = array();
-		$query = "SELECT DISTINCT NR_ANO 
+		$query = "SELECT DISTINCT NR_ANO
 			  FROM CAD_ATIVOS ". ( is_null($cadMembroID) ? "" : "WHERE ID_CAD_MEMBRO = $cadMembroID" ) ." ORDER BY NR_ANO DESC";
 		$result = $GLOBALS['conn']->Execute($query);
 		$ano = $result->fields["NR_ANO"];
@@ -265,14 +261,14 @@ function agendaConsulta( $parameters ) {
 		$mesHoje = date("m");
 		$str = "";
 		$result = $GLOBALS['conn']->Execute("
-		 	SELECT * 
-		 	  FROM CAD_EVENTOS 
-		 	 WHERE YEAR(DTHORA_EVENTO_INI) = ? 
+		 	SELECT *
+		 	  FROM CAD_EVENTOS
+		 	 WHERE YEAR(DTHORA_EVENTO_INI) = ?
 		 	    OR YEAR(DTHORA_EVENTO_FIM) = ?
 		      ORDER BY DTHORA_EVENTO_INI DESC
 		", array($ano,$ano) );
 		$mesAnt = "<div class=\"row\">";
-		
+
 		foreach ($result as $k => $line):
 			$data = strtotime($line['DTHORA_EVENTO_INI']);
 			$nomeMesAtu = utf8_encode(ucfirst(strftime("%B",$data)));
@@ -283,7 +279,7 @@ function agendaConsulta( $parameters ) {
 					$str .= "</div>";
 				endif;
 				$mesAnt = $nomeMesAtu;
-				  
+
 				$nrMesAtu = strftime("%m",$data);
 				$class = "panel-default";
 				if (strftime("%Y",$data) == date("Y")):
@@ -344,7 +340,7 @@ function agendaConsulta( $parameters ) {
 			if ($cidade != ""):
 				$str .= "$cidade<br/>";
 			endif;
-			
+
 			$str .= "</p>";
 			$str .= "</div>";
 			$str .= "</div>";

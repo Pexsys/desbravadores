@@ -6,17 +6,29 @@ date_default_timezone_set('America/Sao_Paulo');
 mb_internal_encoding('UTF-8');
 mb_http_output('UTF-8');
 mb_http_input('UTF-8');
+@require_once(__DIR__ ."/../vendor/autoload.php");
 
-global $pattern, $conn, $DBType, $DBServerHost, $DBUser, $DBPassWord, $DBDataBase;
-@require_once("_patterns.php");
-@require_once("_core/lib/adodb5/adodb.inc.php");
-@require_once("_core/lib/dbconnect/_base.php");
-@require_once("profile.php");
+@require_once("classes/entity.php");
+@require_once("classes/patterns.php");
+@require_once("classes/compras.php");
+@require_once("classes/materiais.php");
+@require_once("classes/message.php");
+@require_once("classes/profile.php");
+@require_once("classes/tags.php");
+@require_once("classes/responsavel.php");
+@require_once("classes/historico.php");
+@require_once("classes/filters.php");
+@require_once("classes/domains.php");
+@require_once("classes/acompanhamento.php");
+
+use classes\database\CONNECTION_FACTORY;
+
+global $conn;
 
 function zeroSizeID(){
 	if (!isset($_SESSION['USER']['sizeID'])):
 		session_start();
-		$rs = $GLOBALS['conn']->Execute("SELECT COUNT(*) AS qtd FROM CAD_MEMBRO WHERE ID_CLUBE = ?", array( $GLOBALS['pattern']->getBars()->getClubeID() ) );
+		$rs = $GLOBALS['conn']->Execute("SELECT COUNT(*) AS qtd FROM CAD_MEMBRO WHERE ID_CLUBE = ?", array( PATTERNS::getBars()->getClubeID() ) );
 		if (!$rs->EOF):
 			$_SESSION['USER']['sizeID'] = strlen($rs->fields['qtd']);
 		endif;
@@ -39,6 +51,7 @@ function responseMethod(){
 	elseif ( empty( $json_data->{'MethodName'} ) ):
 		$response = json_encode( array( "status" => 0, "message" => "Invalid function name!" ) );
 	else:
+		fConnDB();
 		$methodName = $json_data->MethodName;
 		if ( isset( $json_data->{'data'} ) ):
 			$response = $methodName( objectToArray( $json_data->{'data'} ) );
@@ -73,15 +86,20 @@ function fHeaderPage( $aCssFiles = NULL, $aJsFiles = NULL ){
 <!DOCTYPE html>
 <html>
 <head>
-<title><?php echo $GLOBALS['pattern']->getClubeDS(array("cl","nm","sp","ibd"));?></title>
+<title><?php echo PATTERNS::getClubeDS(array("cl","nm","sp","ibd"));?></title>
 <?php @require_once("_metaheader.php");?>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
-<link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css"/>
-<link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/css/bootstrap-select.min.css" rel="stylesheet" type="text/css"/>
-<link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/css/modern-business.css" rel="stylesheet" type="text/css"/>
-<link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+<link href="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css"/>
+<link href="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/node-waves/waves.min.css" rel="stylesheet" />
+<link href="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/animate-css/animate.min.css" rel="stylesheet" />
+<link href="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+<link href="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" type="text/css"/>
+<link href="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/material-icons/css/material-icons.css" rel="stylesheet" type="text/css" />
+<link href="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+<link href="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/waitme/waitMe.min.css" rel="stylesheet">
+<link href="<?php echo PATTERNS::getVD();?>vendor/adminbsb/css/style.min.css" rel="stylesheet">
+<link href="<?php echo PATTERNS::getVD();?>vendor/adminbsb/css/themes/all-themes.css" rel="stylesheet" />
 <?php
 if (isset($aCssFiles)):
 	foreach ($aCssFiles as &$file):
@@ -89,14 +107,20 @@ if (isset($aCssFiles)):
 	endforeach;
 endif;
 ?>
-<script type="text/javascript" src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/jquery.min.js"></script>
-<script type="text/javascript" src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/bootstrap-select.min.js"></script>
-<script type="text/javascript" src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/formValidation/formValidation.min.js"></script>
-<script type="text/javascript" src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/formValidation/bootstrap.min.js"></script>
-<script type="text/javascript" src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/bootstrap-dialog.min.js"></script>
-<script type="text/javascript" src="<?php echo $GLOBALS['pattern']->getVD();?>js/functions.lib.js<?php echo "?".microtime();?>"></script>
-<script>jsLIB.rootDir = '<?php echo $GLOBALS['pattern']->getVD();?>';</script>
+<script type="text/javascript" src="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/bootstrap-select/js/bootstrap-select.min.js"></script>
+<script type="text/javascript" src="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+<script type="text/javascript" src="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/bootstrap-notify/bootstrap-notify.js"></script>
+<script type="text/javascript" src="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/sweetalert/sweetalert.min.js"></script>
+<script type="text/javascript" src="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/jquery-steps/jquery.steps.js"></script>
+<script type="text/javascript" src="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/node-waves/waves.js"></script>
+<script type="text/javascript" src="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/waitme/waitMe.min.js"></script>
+<script type="text/javascript" src="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/autosize/autosize.js"></script>
+<script type="text/javascript" src="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/formValidation.io/formValidation.min.js"></script>
+<script type="text/javascript" src="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/formValidation.io/bootstrap.min.js"></script>
+<script type="text/javascript" src="<?php echo PATTERNS::getVD();?>js/functions.lib.js<?php echo "?".microtime();?>"></script>
+<script>jsLIB.rootDir = '<?php echo PATTERNS::getVD();?>';</script>
 <?php
 if (isset($aJsFiles)):
 	foreach ($aJsFiles as &$file):
@@ -110,10 +134,7 @@ endif;
 
 function fConnDB(){
 	try{
-		$GLOBALS['conn'] = ADONewConnection($GLOBALS['DBType']);
-		$GLOBALS['conn']->SetCharSet('utf8');
-		$GLOBALS['conn']->Connect($GLOBALS['DBServerHost'],$GLOBALS['DBUser'],$GLOBALS['DBPassWord'],$GLOBALS['DBDataBase']);
-		$GLOBALS['conn']->SetFetchMode(ADODB_FETCH_ASSOC);
+		$GLOBALS['conn'] = CONNECTION_FACTORY::instance()->getConnection();
 		return true;
 	}catch (Exception $e){
 		return false;
@@ -160,9 +181,7 @@ function getDateNull($vl){
 }
 
 function fMontaCarrousel($relativePath,$extentions){
-	$capa = $GLOBALS['pattern']->getVD() . $relativePath;
-
-	$document_root = $_SERVER['DOCUMENT_ROOT'];
+	$capa = PATTERNS::getVD() . $relativePath;
 	$fisico_capas = $aDocumentos[$nLocais][0];
 
 	$capaFiles = array();
@@ -240,15 +259,15 @@ function fMontaCarrousel($relativePath,$extentions){
 }
 
 function insDocs(){
-	$retorno = fListDocumentos("docs/inscricoes/".date('Y')."/","<h4><i class=\"fa fa-fw fa-pencil\"></i>&nbsp;Inscri&ccedil;&otilde;es ".date('Y')."</h4>",".pdf", ( date("m") < 4 ? "panel-danger" : "panel-warning" ) ,"h4");
+	$retorno = fListDocumentos("docs/inscricoes/".date('Y')."/","<h4><i class=\"fa fa-fw fa-pencil\"></i>&nbsp;Inscri&ccedil;&otilde;es ".date('Y')."</h4>",".pdf", ( date("m") < 4 ? "bg-red" : "bg-amber" ) ,"h4");
 	if (!empty($retorno)):
 		echo "<div class=\"col-md-6 col-sm-9 col-lg-4\">$retorno</div>";
 	endif;
 }
 
 function fListDocumentos($relativePath,$title,$extentions,$classPanel,$tagItem){
-	$capa = $GLOBALS['pattern']->getVD() . $relativePath;
-	$capa_img = $GLOBALS['pattern']->getVD() ."img/";
+	$capa = PATTERNS::getVD() . $relativePath;
+	$capa_img = PATTERNS::getVD() ."img/";
 
 	$strRetorno = "";
 
@@ -271,9 +290,9 @@ function fListDocumentos($relativePath,$title,$extentions,$classPanel,$tagItem){
 
 			if (count($capaFiles) > 0):
 				sort($capaFiles);
-				$strRetorno .= "<div class=\"panel $classPanel\">";
-				$strRetorno .= "<div class=\"panel-heading\">$title</div>";
-				$strRetorno .= "<div class=\"panel-body\">";
+				$strRetorno .= "<div class=\"card\">";
+				$strRetorno .= "<div class=\"header $classPanel\">$title</div>";
+				$strRetorno .= "<div class=\"body\">";
 				//$pos = rand(0, count($capaFiles)-1);
 
 				$qtdCol = 7;
@@ -336,10 +355,8 @@ function fListDocumentos($relativePath,$title,$extentions,$classPanel,$tagItem){
 }
 
 function fListFanfarra($relativePath,$title,$extentions){
-	$capa = $GLOBALS['pattern']->getVD() . $relativePath;
-	$capa_img = $GLOBALS['pattern']->getVD() . "img/";
-
-	$document_root = $_SERVER['DOCUMENT_ROOT'];
+	$capa = PATTERNS::getVD() . $relativePath;
+	$capa_img = PATTERNS::getVD() . "img/";
 	$fisico_repertorio = $relativePath;
 
 	$dirRepertorio = array();
@@ -355,9 +372,9 @@ function fListFanfarra($relativePath,$title,$extentions){
 			if ($qtdLin > 0):
 				sort($dirRepertorio);
 				?>
-				<div class="panel panel-primary">
-				<div class="panel-heading"><h4><i class="fa fa-fw fa-music"></i><?php echo $title;?></h4></div>
-				<div class="panel-body">
+				<div class="card">
+				<div class="header bg-teal"><h4><i class="fa fa-fw fa-music"></i><?php echo $title;?></h4></div>
+				<div class="body">
 				<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 				<?php
 				for ($i=0;$i<$qtdLin;$i++):
@@ -377,7 +394,7 @@ function fListFanfarra($relativePath,$title,$extentions){
 						if ($qtdFiles > 0):
 							sort($capaFiles);
 							?>
-							<div class="panel panel-warning">
+							<div class="panel panel-default">
 								<div class="panel-heading" role="tab" id="heading<?php echo $i?>">
 								  <h4 class="panel-title">
 									<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse<?php echo $i?>" aria-expanded="false" aria-controls="collapse<?php echo $i?>">

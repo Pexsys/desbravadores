@@ -44,7 +44,7 @@ function getQueryByFilter( $parameters ) {
 					else:
 						$aWhere[] = $value;
 						$where .= (!$prim ? "," : "" )."?";
-					endif;				
+					endif;
 					$prim = false;
 				endforeach;
 			else:
@@ -53,7 +53,7 @@ function getQueryByFilter( $parameters ) {
 			endif;
 			$where .= ")";
 		endforeach;
-	endif;	
+	endif;
 
 //echo $where;
 //exit;
@@ -80,14 +80,12 @@ function getQueryByFilter( $parameters ) {
 
 function getHistorico( $parameters ) {
 	$arr = array();
-	
-	fConnDB();
 	$qtdZeros = zeroSizeID();
 
 	$result = getQueryByFilter($parameters);
 	if (!is_null($result)):
 		foreach ($result as $k => $fields):
-			$arr[] = array( 
+			$arr[] = array(
 				"id" => $fields['ID'],
 				"tp" => $fields['TP'],
 				"ds" => $fields['DS']. ( !is_null($fields['COMPL']) ? " [".$fields['COMPL']."]" : ""),
@@ -96,7 +94,7 @@ function getHistorico( $parameters ) {
 			);
 		endforeach;
 	endif;
-	
+
 	return array( "result" => true, "hist" => $arr );
 }
 ?>

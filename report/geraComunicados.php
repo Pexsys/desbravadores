@@ -1,24 +1,23 @@
 <?php
 @require_once('../include/functions.php');
-@require_once('../include/_core/lib/tcpdf/tcpdf.php');
 
 class COMUNICADO extends TCPDF {
-	
+
 	//lines styles
 	private $stLine;
 	private $hPoint;
-	
+
 	function __construct() {
 		parent::__construct(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
 		$this->stLine = array('width' => 0.3, 'cap' => 'round', 'join' => 'round', 'dash' => '2,4', 'color' => array(110, 110, 110));
 		$this->hPoint = 0;
-		
+
 		$this->SetCreator(PDF_CREATOR);
 		$this->SetAuthor('Ricardo J. Cesar');
 		$this->SetTitle('Geração automática de Comunicados');
-		$this->SetSubject($GLOBALS['pattern']->getClubeDS(array("cl","nm")));
-		$this->SetKeywords('Comunicados, ' . str_replace(" ", ", ", $GLOBALS['pattern']->getClubeDS( array("db","nm","ibd") ) ));
+		$this->SetSubject(PATTERNS::getClubeDS(array("cl","nm")));
+		$this->SetKeywords('Comunicados, ' . str_replace(" ", ", ", PATTERNS::getClubeDS( array("db","nm","ibd") ) ));
 		$this->setImageScale(PDF_IMAGE_SCALE_RATIO);
 		$this->setPrintHeader(false);
 		$this->setPrintFooter(false);
@@ -29,10 +28,10 @@ class COMUNICADO extends TCPDF {
 		$this->SetHeaderMargin(0);
 		$this->SetFooterMargin(0);
 		$this->setHtmlVSpace(
-			array('p' => array(0 => array('h' => 0, 'n' => 0), 
+			array('p' => array(0 => array('h' => 0, 'n' => 0),
 							   1 => array('h' => 0, 'n' => 0)
 						),
-				 'br' => array(0 => array('h' => 0, 'n' => 0), 
+				 'br' => array(0 => array('h' => 0, 'n' => 0),
 							   1 => array('h' => 0, 'n' => 0)
 				 		)
 			)
@@ -41,7 +40,7 @@ class COMUNICADO extends TCPDF {
 
  	public function Header() {
 	}
-	
+
 	public function Footer() {
 	}
 
@@ -50,7 +49,7 @@ class COMUNICADO extends TCPDF {
 		$this->setXY(0,0);
 		$this->hPoint = 0;
 	}
-	
+
 	public function addComunicado( $line ) {
 		$this->startTransaction();
 		$start_page = $this->getPage();
@@ -60,11 +59,11 @@ class COMUNICADO extends TCPDF {
 			$this->newPage();
 			$this->modelComunicado( $line );
 		}else{
-			$this->commitTransaction();     
-		}	
+			$this->commitTransaction();
+		}
 		$this->aP++;
 	}
-	
+
 	public function modelComunicado( $line ){
 		$this->hPoint += 6;
 
@@ -77,16 +76,16 @@ class COMUNICADO extends TCPDF {
 		$this->SetTextColor(0,0,0);
 		$this->Cell(0, 0, "Comunicado Anual #".$line["CD"]." [".strftime("%d/%m/%Y",strtotime($line["DH"]))."]", 0, 0, 'L', false, false, 0, false, 'C', 'C');
 		$this->Image("img/logo.jpg", 197, $this->hPoint-4, 7, 8, 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
-		
+
 		//writeHTMLCell($w, $h, $x, $y, $html='', $border=0, $ln=0, $fill=0, $reseth=true, $align='', $autopadding=true)
 		$this->SetFont(PDF_FONT_NAME_MAIN);
 		$this->hPoint += 5;
-		$this->writeHTMLCell(200, 0, 5, $this->hPoint, $line["TXT"], 
-			array('LTRB' => array('width' => 0.3, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0))), 
+		$this->writeHTMLCell(200, 0, 5, $this->hPoint, $line["TXT"],
+			array('LTRB' => array('width' => 0.3, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0))),
 			0, 0, true, 'J', true);
-		
+
 		$this->hPoint += $this->getLastH()+4;
-		$this->Line(0, $this->hPoint, 220, $this->hPoint, $this->stLine);	
+		$this->Line(0, $this->hPoint, 220, $this->hPoint, $this->stLine);
 	}
 
 	public function download() {
@@ -106,7 +105,7 @@ fConnDB();
 
 $pdf = new COMUNICADO();
 $result = $GLOBALS['conn']->Execute("
-	SELECT * 
+	SELECT *
 	  FROM CAD_COMUNICADO
 	 WHERE ID = ?
 ", array($comunicadoID) );

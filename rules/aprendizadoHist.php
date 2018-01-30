@@ -68,7 +68,7 @@ function getQueryByFilter( $parameters ) {
 					else:
 						$aWhere[] = $value;
 						$where .= (!$prim ? "," : "" )."?";
-					endif;				
+					endif;
 					$prim = false;
 				endforeach;
 			else:
@@ -77,7 +77,7 @@ function getQueryByFilter( $parameters ) {
 			endif;
 			$where .= ")";
 		endforeach;
-	endif;	
+	endif;
 
 //echo $where;
 //exit;
@@ -112,15 +112,14 @@ function getQueryByFilter( $parameters ) {
 
 function getAprHist( $parameters ) {
 	$arr = array();
-	
-	fConnDB();
+
 	$qtdZeros = zeroSizeID();
 
 	$result = getQueryByFilter($parameters);
 	if (!is_null($result)):
 		foreach ($result as $k => $fields):
 			$ds = ($fields['DS_ITEM']) . ($fields['TP_ITEM'] == "ES" ? " - ".$fields['CD_ITEM_INTERNO'] : "");
-			$arr[] = array( 
+			$arr[] = array(
 				"id" => $fields['ID'],
 				"nm" => $fields['NM'],
 				"dstpi" => $fields['DS'],
@@ -130,7 +129,7 @@ function getAprHist( $parameters ) {
 			);
 		endforeach;
 	endif;
-	
+
 	return array( "result" => true, "aprhist" => $arr );
 }
 ?>
