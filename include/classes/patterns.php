@@ -223,7 +223,7 @@ class PATTERNS {
 
     //RETORNA VIRTUAL DIR
     public static function getVD(){
-        return "/desbravadores-v4/";
+        return "/desbravadores/";
 	}
 
 	public static function toConvert($n){
