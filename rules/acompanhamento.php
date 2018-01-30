@@ -16,14 +16,14 @@ function getQueryByFilter( $parameters ) {
 		SELECT CD_CARGO, CD_CARGO2
 		  FROM CON_ATIVOS
 		 WHERE ID_CAD_MEMBRO = ?
-	", array($membroID) );
+	", array($cadMembroID) );
 	$cargo = $result->fields['CD_CARGO'];
 	if (fStrStartWith($cargo,"2-07")):
 		$cargo = $result->fields['CD_CARGO2'];
 	endif;
 	if ($cargo != "2-04-00" && fStrStartWith($cargo,"2-04")):
 		$like = "01-".substr($cargo,-2);
-		$where .= " AND cai.CD_ITEM_INTERNO LIKE '$like%' AND ca.CD_CARGO NOT LIKE '2-%'";
+		$where .= " AND cai.CD_ITEM_INTERNO LIKE '$like%'";
 	endif;	
 	
 	$aWhere = array();
