@@ -94,7 +94,7 @@ function login( $parameters ) {
 		if ($usrClube && $result->EOF):
 
 			//VERIFICA SE ESTÁ ATIVO
-			$rsHA = $GLOBALS['conn']->Execute("SELECT NM FROM CON_ATIVOS WHERE ID_CLUBE = ? AND ID_MEMBRO = ?", array( $barDecode["ci"], $barDecode["ni"] ) );
+			$rsHA = $GLOBALS['conn']->Execute("SELECT ID_CAD_PESSOA, NM FROM CON_ATIVOS WHERE ID_CLUBE = ? AND ID_MEMBRO = ?", array( $barDecode["ci"], $barDecode["ni"] ) );
 			if (!$rsHA->EOF):
 				fInsertUserProfile( fInsertUser( $usr, $rsHA->fields['NM'], $psw, $rsHA->fields['ID_CAD_PESSOA'] ), 0 );
 			
@@ -106,14 +106,17 @@ function login( $parameters ) {
 
 		//SE EXISTE O USUARIO DIGITADO.
 		elseif (!$result->EOF):
-		
 			if ($usrClube):
 				//VERIFICA SE ESTÁ ATIVO
-				$rsHA = $GLOBALS['conn']->Execute("SELECT 1 FROM CON_ATIVOS WHERE ID_CLUBE = ? AND ID_MEMBRO = ?", array( $barDecode["ci"], $barDecode["ni"] ) );
+				$rsHA = $GLOBALS['conn']->Execute("SELECT CD_CARGO, CD_CARGO2 FROM CON_ATIVOS WHERE ID_CLUBE = ? AND ID_MEMBRO = ?", array( $barDecode["ci"], $barDecode["ni"] ) );
 				if ($rsHA->EOF):
 					$psw = null;
 				endif;
-				fInsertUserProfile($result->fields["ID_USUARIO"], 10 );
+				PROFILE::applyCargos(
+					$result->fields['ID_CAD_PESSOA'], 
+					$rsHA->fields["CD_CARGO"], 
+					$rsHA->fields["CD_CARGO2"]
+				);
 			else:
 				$resp = verificaRespByCPF($usr);
 				if (!is_null($resp) && !existeMenorByRespID($resp["ID_CAD_PESSOA"])):
@@ -127,8 +130,11 @@ function login( $parameters ) {
 			if ($password == $psw):
 				PROFILE::fSetSessionLogin($result);
 
-				$GLOBALS['conn']->Execute("UPDATE CAD_USUARIOS SET DH_ATUALIZACAO = NOW() WHERE ID_USUARIO = ?",
-					array( $result->fields['ID_USUARIO'] ) );
+				$GLOBALS['conn']->Execute("
+					UPDATE CAD_USUARIOS SET 
+						DH_ATUALIZACAO = NOW()
+					WHERE ID_USUARIO = ?
+				", array( $result->fields['ID_USUARIO'] ) );
 
 				if ( $pag == "READDATA" ):
 					$arr['page'] = $GLOBALS['pattern']->getVD()."readdata.php";
@@ -188,7 +194,8 @@ function fDeleteUserAndProfile( $userID, $profileID ){
 
 function checkMemberByCPF($cpf){
 	return $GLOBALS['conn']->Execute("
-		SELECT cu.ID_USUARIO, cu.CD_USUARIO, cu.DS_USUARIO, cu.DS_SENHA, ca.ID_CAD_PESSOA, ca.TP_SEXO, ca.CD_CARGO, ca.CD_CARGO2, ca.NM, ca.ID_MEMBRO
+		SELECT cu.ID_USUARIO, cu.CD_USUARIO, cu.DS_USUARIO, cu.DS_SENHA, 
+			   ca.ID_CAD_PESSOA, ca.TP_SEXO, ca.CD_CARGO, ca.CD_CARGO2, ca.NM, ca.ID_MEMBRO
 		  FROM CON_ATIVOS ca
 	 LEFT JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
 		 WHERE ca.NR_CPF = ?
@@ -212,7 +219,8 @@ function checkUser($cdUser, $pag){
 	endif;
 
 	return $GLOBALS['conn']->Execute("
-		SELECT cu.ID_USUARIO, cu.CD_USUARIO, cu.DS_USUARIO, cu.DS_SENHA, cm.ID_CAD_PESSOA, cp.TP_SEXO, cm.ID AS ID_CAD_MEMBRO, cm.ID_CLUBE, cm.ID_MEMBRO
+		SELECT cu.ID_USUARIO, cu.CD_USUARIO, cu.DS_USUARIO, cu.DS_SENHA, 
+			   cm.ID_CAD_PESSOA, cp.TP_SEXO, cm.ID AS ID_CAD_MEMBRO, cm.ID_CLUBE, cm.ID_MEMBRO
 		  FROM CAD_USUARIOS cu
 		LEFT JOIN CAD_PESSOA cp ON (cp.ID = cu.ID_CAD_PESSOA OR cp.NR_CPF = ?)
 		LEFT JOIN CAD_MEMBRO cm ON (cm.ID_CAD_PESSOA = cp.ID)
