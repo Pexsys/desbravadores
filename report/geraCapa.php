@@ -68,7 +68,7 @@ class ESPCR extends TCPDF {
 		$this->top += 5;
 	}
 	
-	public function addEspecialidade($codEsp,$params) {
+	public function addEspecialidade(,$params) {
 		$this->params = $params;
 		$cadMembroID = $this->params[0];
 		$nmPessoa = $this->params[1];
@@ -92,8 +92,9 @@ class ESPCR extends TCPDF {
 			SELECT ta.ID, ta.DS_ITEM, ta.CD_AREA_INTERNO, tm.NR_PG_ASS
 			  FROM TAB_APRENDIZADO ta
 		INNER JOIN TAB_MATERIAIS tm ON (tm.ID_TAB_APREND = ta.ID)
-			 WHERE ta.CD_ITEM_INTERNO = 'ES'
-			   AND ta.TP_ITEM = ?");
+			 WHERE ta.CD_ITEM_INTERNO = ?
+			   AND ta.TP_ITEM = 'ES'
+		", array($codEsp));
  
 		if ($result->EOF):
 			return;
