@@ -33,6 +33,14 @@ function getQueryByFilter( $parameters ) {
 			$aWhere[] = null;
 		else:
 			$aWhere[] = $parameters["id"];
+			$where .= " AND NOT EXISTS (SELECT  1
+										FROM EVE_SAIDA es
+									INNER JOIN CAD_ATIVOS a ON (a.NR_ANO = YEAR(es.DH_S))
+									INNER JOIN CAD_MEMBRO m ON (m.ID = a.ID_CAD_MEMBRO)
+									INNER JOIN CON_PESSOA p ON (p.ID_CAD_PESSOA = m.ID_CAD_PESSOA)
+									LEFT JOIN EVE_SAIDA_MEMBRO esm ON (esm.ID_CAD_MEMBRO = a.ID_CAD_MEMBRO AND esm.ID_EVE_SAIDA = es.ID)
+									WHERE es.ID = ?)";
+			$aWhere[] = $parameters["id"];
 		endif;
 	endif;
 
