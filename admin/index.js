@@ -142,7 +142,7 @@ $(function () {
                 $activeAnchors.addClass('toggled');
                 $activeAnchors.next().show();
             });
-            $('.menu-toggle').on('click', function (e) {
+            $('.menu-toggle').unbind('click').on('click', function (e) {
                 var $this = $(this);
                 var $content = $this.next();
                 if ($($this.parents('ul')[0]).hasClass('list')) {
@@ -458,6 +458,10 @@ $(function () {
 
                 $("[attr-menu]").on('click', function() {
                     getContent($(this).attr("attr-menu"));
+                    $('div.menu .list li.active').removeClass("active");
+
+                    $(this).parents().filter("li").addClass("active");
+                    $.AdminBSB.leftSideBar.activate();
                 });
 
                 setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 50);

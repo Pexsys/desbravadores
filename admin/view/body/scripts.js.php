@@ -16,4 +16,4 @@
 <script src="<?php echo PATTERNS::getVD();?>js/functions.lib.js?<?php echo microtime();?>"></script>
 <script>jsLIB.rootDir = '<?php echo PATTERNS::getVD();?>';</script>
 <script src="<?php echo PATTERNS::getVD();?>js/notifications.lib.js?<?php echo microtime();?>"></script>
-<script src="./index.js?<?php //echo microtime();?>"></script>
+<script src="./index.js?<?php echo microtime();?>"></script>

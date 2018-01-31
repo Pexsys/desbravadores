@@ -70,15 +70,15 @@ function fDashBoard( $panelClass, $iconLeft, $query, $showZero, $titulo, $urlDet
 			"SELECT COUNT(*) AS qtd FROM CON_ATIVOS",
 			true, "Ativos", PATTERNS::getVD()."dashboard/index.php?id=5" );
 
-		fDashBoard( "bg-yellow", "fa fa-check-circle fa-4x",
+		fDashBoard( "bg-pink", "fa fa-check-circle fa-4x",
 			"SELECT COUNT(*) AS qtd FROM CON_ATIVOS WHERE dt_bat IS NULL",
 			false, "N&atilde;o Batizados", PATTERNS::getVD()."dashboard/index.php?id=5&flt=B&op=N" );
 
-		fDashBoard( "bg-blue", "fa fa-bath fa-4x",
+		fDashBoard( "bg-cyan", "fa fa-bath fa-4x",
 			"SELECT COUNT(*) AS qtd FROM CON_ATIVOS WHERE dt_bat IS NOT NULL",
 			false, "Batizados", PATTERNS::getVD()."dashboard/index.php?id=5&flt=B&op=S" );
 
-		fDashBoard( "bg-amber", "fa fa-info-circle fa-4x",
+		fDashBoard( "bg-blue", "fa fa-info-circle fa-4x",
 			"SELECT COUNT(*) AS qtd FROM CAD_MEMBRO",
 			true, "Cadastrados", PATTERNS::getVD()."dashboard/index.php?id=5&flt=ALL" );
 	?>

@@ -4,7 +4,7 @@ class PROFILE {
 	public static function getURLAccess($id) {
 		session_start();
 		$result = $GLOBALS['conn']->Execute("
-			SELECT DISTINCT tf.DS_URL
+			SELECT DISTINCT tf.DS_NEW AS DS_URL
 				FROM CAD_USU_PERFIL cpp
 			  INNER JOIN TAB_PERFIL_ITEM tpi ON ( tpi.ID_TAB_PERFIL = cpp.ID_PERFIL AND tpi.DH_INI_VALID <= NOW() )
 			  INNER JOIN TAB_DASHBOARD td ON ( td.ID = tpi.ID_TAB_DASHBOARD )
@@ -18,21 +18,21 @@ class PROFILE {
 	private static function fMenu( $menu, $active = null ){
 		$ret = "";
 		foreach ( $menu as $key => $value ):
-			$opt = $value["opt"];
-			$ico = $value["ico"];
+			$opt = $value["OPT"];
+			$ico = $value["ICO"];
 
 			$cls = "";
-			if (is_null($active) && !empty($value["url"]) ):
+			if (is_null($active) && !empty($value["URL"]) ):
 				$cls = " class=\"active\"";
 				$active = $key;
 			endif;
 
 			$ret .= "<li$cls>";
 			$ret .= "<a";
-			if ( !empty($value["url"]) ):
+			if ( !empty($value["URL"]) ):
 				$ret .= " attr-menu=\"$key\"";
 			endif;
-			if ( count($value["child"]) > 0 ):
+			if ( count($value["CHILD"]) > 0 ):
 				$ret .= " class=\"menu-toggle\"";
 			endif;
 			$ret .= ">";
@@ -41,49 +41,49 @@ class PROFILE {
 			endif;
 			$ret .= "<span>$opt</span>";
 			$ret .= "</a>";
-			if ( count($value["child"]) > 0 ):
+			if ( count($value["CHILD"]) > 0 ):
 				$ret .= "<ul class=\"ml-menu\">";
-				$arr = PROFILE::fMenu( $value["child"], $active );
-				$active = $arr["active"];
-				$ret .= $arr["menu"];
+				$arr = PROFILE::fMenu( $value["CHILD"], $active );
+				$active = $arr["ACTIVE"];
+				$ret .= $arr["MENU"];
 				$ret .= "</ul>";
 			endif;
 			$ret .= "</li>";
 		endforeach;
-		return array( "menu" => $ret, "active" => $active );
+		return array( "MENU" => $ret, "ACTIVE" => $active );
 	}
 
 	public static function montaMenu(){
 		$arr = PROFILE::fMenu( PROFILE::fGetProfiles() );
-		return array( "menu" => "<ul class=\"list\"><li class=\"header\">MENU PRINCIPAL</li>{$arr["menu"]}</ul>", "active" => $arr["active"] );
+		return array( "menu" => "<ul class=\"list\"><li class=\"header\">MENU PRINCIPAL</li>{$arr["MENU"]}</ul>", "active" => $arr["ACTIVE"] );
 	}
 
 	public static function fGetProfiles( $cd = NULL ) {
 		$arr = array();
-		$query = "SELECT DISTINCT td.id, td.cd, td.iconm, td.iconf, td.ds_menu, tf.ds_url
+		$query = "SELECT DISTINCT td.ID, td.CD, td.ICONM, td.ICONF, td.DS_MENU, tf.DS_NEW as DS_URL
 		    FROM CAD_USU_PERFIL cpp
-	      INNER JOIN TAB_PERFIL_ITEM tpi ON ( tpi.id_tab_perfil = cpp.id_perfil AND tpi.dh_ini_valid <= NOW() )
-	      INNER JOIN TAB_DASHBOARD td ON ( td.id = tpi.id_tab_dashboard )
-	       LEFT JOIN TAB_FUNCTION tf ON ( tf.id = td.id_tab_function )
-		   WHERE cpp.id_cad_usuarios = ?";
+	      INNER JOIN TAB_PERFIL_ITEM tpi ON ( tpi.ID_TAB_PERFIL = cpp.ID_PERFIL AND tpi.DH_INI_VALID <= NOW() )
+	      INNER JOIN TAB_DASHBOARD td ON ( td.ID = tpi.ID_TAB_DASHBOARD )
+	       LEFT JOIN TAB_FUNCTION tf ON ( tf.ID = td.ID_TAB_FUNCTION )
+		   WHERE cpp.ID_CAD_USUARIOS = ?";
 		if ( isset($cd) && !empty($cd) ):
-			$query .= " AND td.cd LIKE '$cd.%' AND LENGTH(td.cd) = LENGTH('$cd')+3";
+			$query .= " AND td.CD LIKE '$cd.%' AND LENGTH(td.CD) = LENGTH('$cd')+3";
 		else:
-			$query .= " AND LENGTH(td.cd) = 2";
+			$query .= " AND LENGTH(td.CD) = 2";
 		endif;
-		$query .= " ORDER BY td.cd";
+		$query .= " ORDER BY td.CD";
 		$result = $GLOBALS['conn']->Execute($query, array($_SESSION['USER']['ID_USUARIO']) );
 		while (!$result->EOF):
-			$child = PROFILE::fGetProfiles( $result->fields['cd'] );
-			$arr[ $result->fields['id'] ] = array(
-					"opt"	 => ($result->fields['ds_menu']),
-					"ico"	 => ( $_SESSION['USER']['TP_SEXO'] == "F" && isset($result->fields['iconf']) ? $result->fields['iconf'] :  $result->fields['iconm'] ),
-					"active" => false
+			$child = PROFILE::fGetProfiles( $result->fields['CD'] );
+			$arr[ $result->fields['ID'] ] = array(
+					"OPT"	 => ($result->fields['DS_MENU']),
+					"ICO"	 => ( $_SESSION['USER']['TP_SEXO'] == "F" && isset($result->fields['ICONF']) ? $result->fields['ICONF'] : $result->fields['ICONM'] ),
+					"ACTIVE" => false
 			);
 			if ( count( $child ) > 0 ):
-				$arr[ $result->fields['id'] ]["child"] = $child;
+				$arr[ $result->fields['ID'] ]["CHILD"] = $child;
 			else:
-				$arr[ $result->fields['id'] ]["url"] = $result->fields['ds_url'];
+				$arr[ $result->fields['ID'] ]["URL"] = $result->fields['DS_URL'];
 			endif;
 			$result->MoveNext();
 		endwhile;

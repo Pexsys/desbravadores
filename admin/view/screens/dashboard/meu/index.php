@@ -363,4 +363,4 @@ if (!$matAnteriores->EOF || !$matAno->EOF):
 endif;
 ?>
 <script src="<?php echo PATTERNS::getVD();?>js/aprendizadoFunctions.js<?php echo "?".microtime();?>"></script>
-<script src="<?php echo PATTERNS::getVD();?>admin/view/screens/meupainel/index.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo PATTERNS::getVD();?>admin/view/screens/dashboard/meu/index.js<?php echo "?".microtime();?>"></script>

@@ -13,5 +13,5 @@
     <link href="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/animate-css/animate.css" rel="stylesheet" />
     <link href="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/morrisjs/morris.css" rel="stylesheet" />
     <link href="<?php echo PATTERNS::getVD();?>vendor/adminbsb/css/style.min.css" rel="stylesheet">
-    <link href="<?php echo PATTERNS::getVD();?>vendor/adminbsb/css/themes/all-themes.css" rel="stylesheet" />
+    <link href="<?php echo PATTERNS::getVD();?>vendor/adminbsb/css/themes/all-themes.css?" rel="stylesheet" />
 </head>
