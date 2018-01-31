@@ -12,19 +12,20 @@ function getQueryByFilter( $parameters ) {
 	$strQuery = "";
 	if ( !isset($parameters["filters"]) ):
 		$strQuery .= "
-			SELECT  p.NM,
+			SELECT  p.NM, 
 					p.ID_CAD_PESSOA,
 					esm.ID_CAD_MEMBRO,
-					esm.ID AS ID_EVE_MEMBRO,
-					esm.ID_EVE_SAIDA,
-					p.IDADE_HOJE,
+					esm.ID AS ID_EVE_MEMBRO, 
+					esm.ID_EVE_SAIDA, 
+					p.IDADE_HOJE, 
 					YEAR(es.DH_R)-YEAR(p.DT_NASC) - IF(DATE_FORMAT(p.DT_NASC,'%m%d')>DATE_FORMAT(es.DH_R,'%m%d'),1,0) AS IDADE_EVENTO_FIM,
-					esm.FG_AUTORIZ
-				FROM EVE_SAIDA_MEMBRO esm
-				INNER JOIN EVE_SAIDA es ON (es.ID = esm.ID_EVE_SAIDA)
-				INNER JOIN CAD_MEMBRO m ON (m.ID = esm.ID_CAD_MEMBRO)
-				INNER JOIN CON_PESSOA p ON (p.ID_CAD_PESSOA = m.ID_CAD_PESSOA)
-				WHERE esm.ID_EVE_SAIDA = ?
+					esm.FG_AUTORIZ 
+				FROM EVE_SAIDA es
+			INNER JOIN CAD_ATIVOS a ON (a.NR_ANO = YEAR(es.DH_S))
+			INNER JOIN CAD_MEMBRO m ON (m.ID = a.ID_CAD_MEMBRO)
+			INNER JOIN CON_PESSOA p ON (p.ID_CAD_PESSOA = m.ID_CAD_PESSOA)
+			LEFT JOIN EVE_SAIDA_MEMBRO esm ON (esm.ID_CAD_MEMBRO = a.ID_CAD_MEMBRO AND esm.ID_EVE_SAIDA = es.ID)
+			WHERE es.ID = ?
 
 			UNION
 		";
