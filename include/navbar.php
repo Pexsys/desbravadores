@@ -14,7 +14,7 @@ $activeLogin = ($showLogin && !$temPerfil);
 				</button>
 				<a class="active" href="index.php">
 					<!-- Logo area -->
-					<div class="logo"><img class="img-responsive" src="<?php echo $GLOBALS['pattern']->getVD();?>img/logos.png" alt="<?php echo $GLOBALS['pattern']->getClubeDS(array("cl","db","nm"));?>"></div>
+					<div class="logo"><img class="img-responsive" width="110" src="<?php echo $GLOBALS['pattern']->getVD();?>img/d1-lg-tr-fb.svg" alt="<?php echo $GLOBALS['pattern']->getClubeDS(array("cl","db","nm"));?>"></div>
 				</a>
 			</div>
 			<div class="col-md-8 col-sm-7">
