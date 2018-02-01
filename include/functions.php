@@ -87,7 +87,7 @@ function fHeaderPage( $aCssFiles = NULL, $aJsFiles = NULL ){
 <?php @require_once("_metaheader.php");?>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link href="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css"/>
+<link href="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
 <link href="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/node-waves/waves.min.css" rel="stylesheet" />
 <link href="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/animate-css/animate.min.css" rel="stylesheet" />
 <link href="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/sweetalert/sweetalert.css" rel="stylesheet" />
@@ -96,7 +96,7 @@ function fHeaderPage( $aCssFiles = NULL, $aJsFiles = NULL ){
 <link href="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
 <link href="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/waitme/waitMe.min.css" rel="stylesheet">
 <link href="<?php echo PATTERNS::getVD();?>vendor/adminbsb/css/style.min.css" rel="stylesheet">
-<link href="<?php echo PATTERNS::getVD();?>vendor/adminbsb/css/themes/all-themes.css" rel="stylesheet" />
+<link href="<?php echo PATTERNS::getVD();?>vendor/adminbsb/css/themes/all-themes.min.css" rel="stylesheet" />
 <?php
 if (isset($aCssFiles)):
 	foreach ($aCssFiles as &$file):
@@ -108,12 +108,12 @@ endif;
 <script type="text/javascript" src="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/bootstrap-select/js/bootstrap-select.min.js"></script>
 <script type="text/javascript" src="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
-<script type="text/javascript" src="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/bootstrap-notify/bootstrap-notify.js"></script>
+<script type="text/javascript" src="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/bootstrap-notify/bootstrap-notify.min.js"></script>
 <script type="text/javascript" src="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/sweetalert/sweetalert.min.js"></script>
-<script type="text/javascript" src="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/jquery-steps/jquery.steps.js"></script>
-<script type="text/javascript" src="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/node-waves/waves.js"></script>
+<script type="text/javascript" src="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/jquery-steps/jquery.steps.min.js"></script>
+<script type="text/javascript" src="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/node-waves/waves.min.js"></script>
 <script type="text/javascript" src="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/waitme/waitMe.min.js"></script>
-<script type="text/javascript" src="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/autosize/autosize.js"></script>
+<script type="text/javascript" src="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/autosize/autosize.min.js"></script>
 <script type="text/javascript" src="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/formValidation.io/formValidation.min.js"></script>
 <script type="text/javascript" src="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/formValidation.io/bootstrap.min.js"></script>
 <script type="text/javascript" src="<?php echo PATTERNS::getVD();?>js/functions.lib.js<?php echo "?".time();?>"></script>
