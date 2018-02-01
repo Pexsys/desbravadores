@@ -127,16 +127,30 @@ function getMestrados(){
 }
 
 function getClassPainelMestrado( $pct ){
-	if ($pct < 25):
-		return array( "panel" => "panel-default", "title" => "type-default" );
-	elseif ($pct < 50):
-		return array( "panel" => "panel-info", "title" => "type-info" );
-	elseif ($pct < 75):
-		return array( "panel" => "panel-yellow", "title" => "type-warning" );
-	elseif ($pct < 100):
-		return array( "panel" => "panel-red", "title" => "type-danger" );
+	//0
+	if ($pct < 1):
+		return array( "panel" => "", "title" => "type-default" );
+	//1
+	elseif ($pct < 15):
+		return array( "panel" => "bg-grey", "title" => "type-default" );
+	//2
+	elseif ($pct < 30):
+		return array( "panel" => "bg-blue", "title" => "type-info" );
+	//3
+	elseif ($pct < 45):
+		return array( "panel" => "bg-cyan", "title" => "type-warning" );
+	//4
+	elseif ($pct < 60):
+		return array( "panel" => "bg-orange", "title" => "type-danger" );
+	//5
+	elseif ($pct < 72):
+		return array( "panel" => "bg-purple", "title" => "type-danger" );
+	//6
+	elseif ($pct < 86):
+		return array( "panel" => "bg-red", "title" => "type-danger" );
+
 	else:
-		return array( "panel" => "panel-success", "title" => "type-success" );
+		return array( "panel" => "bg-green", "title" => "type-success" );
 	endif;
 }
 
@@ -185,9 +199,9 @@ function getPainelMestradoPessoa( $ruleID, $membroID ){
 	$sizeClass = "col-md-6 col-xs-12 col-sm-6 col-lg-4 col-xl-3";
 
 	$fields = array(
-		 "name" => "detail",
-		 "what" => "rules",
-		 "cl-bar" => $class["title"],
+		"name" => "detail",
+		"what" => "rules",
+		"cl-bar" => $class["title"],
 	 	"id-rule" => $ruleID
 	);
 
@@ -225,11 +239,11 @@ function getPainelMestradoPessoa( $ruleID, $membroID ){
 	return fItemAprendizado(array(
 	 	 "classPanel" 	=> $class["panel"],
 		 "leftIcon"		=> $icon,
-		 "value"			=> $fg["CD_ITEM_INTERNO"],
-		 "title"			=> titleCase( substr($fg["DS_ITEM"],12), array(" "), array("ADRA", "em", "e") ) . "<br/>$feitas / $min",
-		 "strBL"			=> $advise,
-		 "fields"			=> $fields,
-		 "classSize"		=> $sizeClass
+		 "value"		=> $fg["CD_ITEM_INTERNO"],
+		 "title"		=> titleCase( substr($fg["DS_ITEM"],12), array(" "), array("ADRA", "em", "e") ) . " - $feitas / $min",
+		 "strBL"		=> $advise,
+		 "fields"		=> $fields,
+		 "classSize"	=> $sizeClass
 	));
 }
 
