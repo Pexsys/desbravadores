@@ -1,5 +1,5 @@
 <?php
-@require_once("../include/functions.php");
+@require_once("../../include/functions.php");
 responseMethod();
 
 /****************************
@@ -12,14 +12,14 @@ function getQueryByFilter( $parameters ) {
 	$strQuery = "";
 	if ( !isset($parameters["filters"]) ):
 		$strQuery .= "
-			SELECT  p.NM, 
+			SELECT  p.NM,
 					p.ID_CAD_PESSOA,
 					esm.ID_CAD_MEMBRO,
-					esm.ID AS ID_EVE_MEMBRO, 
-					esm.ID_EVE_SAIDA, 
-					p.IDADE_HOJE, 
+					esm.ID AS ID_EVE_MEMBRO,
+					esm.ID_EVE_SAIDA,
+					p.IDADE_HOJE,
 					YEAR(es.DH_R)-YEAR(p.DT_NASC) - IF(DATE_FORMAT(p.DT_NASC,'%m%d')>DATE_FORMAT(es.DH_R,'%m%d'),1,0) AS IDADE_EVENTO_FIM,
-					esm.FG_AUTORIZ 
+					esm.FG_AUTORIZ
 				FROM EVE_SAIDA es
 			INNER JOIN CAD_ATIVOS a ON (a.NR_ANO = YEAR(es.DH_S))
 			INNER JOIN CAD_MEMBRO m ON (m.ID = a.ID_CAD_MEMBRO)
@@ -145,7 +145,7 @@ function getQueryByFilter( $parameters ) {
 	//print_r($aWhere);
 	//echo "<br/><br/>";
 
-	return $GLOBALS['conn']->Execute($strQuery, $aWhere);
+	return CONN::get()->Execute($strQuery, $aWhere);
 }
 
 function getNames(){
@@ -161,7 +161,7 @@ function getNames(){
 	$pessoaRespID = null;
 
 	//MEMBRO LOGADO
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT cu.ID_CAD_PESSOA, ca.ID_MEMBRO, ca.ID_CAD_MEMBRO, ca.ID_UNIDADE, ca.CD_CARGO, ca.CD_CARGO2, ca.NM, ca.IDADE_HOJE, ca.ID_PESSOA_RESP
 		  FROM CON_ATIVOS ca
 	INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
@@ -175,7 +175,7 @@ function getNames(){
 		$membroNM = $result->fields["NM"];
 		$pessoaRespID = $result->fields["ID_PESSOA_RESP"];
 
-		$rs = $GLOBALS['conn']->Execute("
+		$rs = CONN::get()->Execute("
 			SELECT 1
 			FROM EVE_SAIDA_MEMBRO esm
 	  INNER JOIN EVE_SAIDA es ON (es.ID = esm.ID_EVE_SAIDA AND es.DH_R > NOW() AND es.FG_IMPRIMIR = 'S')
@@ -255,7 +255,7 @@ function getNames(){
 	endif;
 
 	//TRATAMENTO MEUS DEPENDENTES, SUAS UNIDADES OU SUAS CLASSES
-	$rd = $GLOBALS['conn']->Execute("
+	$rd = CONN::get()->Execute("
 		SELECT ca.ID_CAD_PESSOA, ca.ID_UNIDADE
 		FROM CAD_USUARIOS cu
 		INNER JOIN CON_ATIVOS ca ON (ca.ID_PESSOA_RESP = cu.ID_CAD_PESSOA)
@@ -271,7 +271,7 @@ function getNames(){
 
 	if (!empty($aQuery["query"])):
 		//print_r($aQuery);
-		$rs = $GLOBALS['conn']->Execute( substr($aQuery["query"], 7)." ORDER BY 1", $aQuery["binds"] );
+		$rs = CONN::get()->Execute( substr($aQuery["query"], 7)." ORDER BY 1", $aQuery["binds"] );
 		if (!$rs->EOF):
 			foreach ($rs as $k => $line):
 				$arr[] = array( "id" => $line["ID_CAD_MEMBRO"], "ds" => $line["NM"], "sb" => fStrZero($line["ID_MEMBRO"], $qtdZeros) );
@@ -349,7 +349,7 @@ function fSaida( $parameters ) {
 				fReturnStringNull(trim($frm["fg_imprimir"])),
 				$frm["id"]
 			);
-			$GLOBALS['conn']->Execute("
+			CONN::get()->Execute("
 				UPDATE EVE_SAIDA SET
 					DH_S = ?,
 					DH_R = ?,
@@ -379,7 +379,7 @@ function fSaida( $parameters ) {
 				fReturnStringNull(trim($frm["tp_autoriz"])),
 				fReturnStringNull(trim($frm["fg_imprimir"]))
 			);
-			$GLOBALS['conn']->Execute("
+			CONN::get()->Execute("
 				INSERT INTO EVE_SAIDA(
 					DH_S,
 					DH_R,
@@ -392,7 +392,7 @@ function fSaida( $parameters ) {
 					TP_AUTORIZ,
 					FG_IMPRIMIR
 				) VALUES (?,?,?,?,?,?,?,?,?,?)",$arr);
-			$id = $GLOBALS['conn']->Insert_ID();
+			$id = CONN::get()->Insert_ID();
 			fSaidaMembro( $id, $particip );
 			$out["id"] = $id;
 		endif;
@@ -401,7 +401,7 @@ function fSaida( $parameters ) {
 	//EXCLUSAO DE SAIDA
 	elseif ( $op == "DELETE" ):
 		fSaidaMembro( $parameters["id"], array() );
-		$GLOBALS['conn']->Execute("DELETE FROM EVE_SAIDA WHERE ID = ?", Array( $parameters["id"] ) );
+		CONN::get()->Execute("DELETE FROM EVE_SAIDA WHERE ID = ?", Array( $parameters["id"] ) );
 		$out["success"] = true;
 
 	//GET SAIDA
@@ -409,7 +409,7 @@ function fSaida( $parameters ) {
 		$out["saida"] = array( "id" => $parameters["id"] );
 		$out["membros"] = getMembros( $parameters );
 		if ( $parameters["id"] <> "Novo" ):
-			$result = $GLOBALS['conn']->Execute("SELECT * FROM EVE_SAIDA WHERE ID = ?", array( $parameters["id"] ) );
+			$result = CONN::get()->Execute("SELECT * FROM EVE_SAIDA WHERE ID = ?", array( $parameters["id"] ) );
 			if (!$result->EOF):
 				$out["success"] = true;
 				$out["saida"] = array(
@@ -433,7 +433,7 @@ function fSaida( $parameters ) {
 
 function fSaidaMembro( $saidaID, $arrayParticip ) {
 
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT ID_CAD_MEMBRO, BUS, TENT, KITCHEN
 		FROM EVE_SAIDA_MEMBRO
 		WHERE ID_EVE_SAIDA = ?
@@ -442,15 +442,15 @@ function fSaidaMembro( $saidaID, $arrayParticip ) {
 		$esp[] = $f;
 	endforeach;
 
-	$GLOBALS['conn']->Execute("DELETE FROM EVE_SAIDA_MEMBRO WHERE ID_EVE_SAIDA = ?", Array( $saidaID ) );
+	CONN::get()->Execute("DELETE FROM EVE_SAIDA_MEMBRO WHERE ID_EVE_SAIDA = ?", Array( $saidaID ) );
 	if ( count($arrayParticip) > 0 ):
-		$GLOBALS['conn']->Execute("
+		CONN::get()->Execute("
 			INSERT INTO EVE_SAIDA_MEMBRO (ID_EVE_SAIDA, ID_CAD_MEMBRO)
 			SELECT ?, ID_CAD_MEMBRO FROM CON_ATIVOS WHERE ID_CAD_MEMBRO IN (". implode(',',$arrayParticip) .") ORDER BY NM
 		", array($saidaID) );
 
 		foreach ($esp as $k => $f):
-			$GLOBALS['conn']->Execute("
+			CONN::get()->Execute("
 				UPDATE EVE_SAIDA_MEMBRO SET
 					BUS = ?,
 					TENT = ?,
@@ -461,7 +461,7 @@ function fSaidaMembro( $saidaID, $arrayParticip ) {
 		endforeach;
 
 		$aAutoriz = array();
-		$result = $GLOBALS['conn']->Execute("
+		$result = CONN::get()->Execute("
 			SELECT ca.ID_CAD_MEMBRO
 			FROM CON_ATIVOS ca
 			INNER JOIN EVE_SAIDA_MEMBRO e ON (e.ID_CAD_MEMBRO = ca.ID_CAD_MEMBRO)
@@ -474,7 +474,7 @@ function fSaidaMembro( $saidaID, $arrayParticip ) {
 		endforeach;
 
 		if (count($aAutoriz) > 0):
-			$GLOBALS['conn']->Execute("
+			CONN::get()->Execute("
 				UPDATE EVE_SAIDA_MEMBRO SET FG_AUTORIZ = 'S'
 				WHERE ID_CAD_MEMBRO IN (".implode(",",$aAutoriz) .")
 				  AND ID_EVE_SAIDA = ?
@@ -529,7 +529,7 @@ function getSaidas( $parameters ) {
 		$query .= " WHERE es.DH_R > NOW() AND es.FG_IMPRIMIR = 'S' AND EXISTS (SELECT 1 FROM EVE_SAIDA_MEMBRO WHERE ID_EVE_SAIDA = es.ID AND FG_AUTORIZ = 'S' ";
 
     	//MEMBRO LOGADO
-    	$result = $GLOBALS['conn']->Execute("
+    	$result = CONN::get()->Execute("
     		SELECT cu.ID_CAD_MEMBRO, ca.ID_UNIDADE, ca.CD_CARGO, ca.CD_CARGO2, ca.NM, ca.IDADE_HOJE
     		  FROM CON_ATIVOS ca
     	INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
@@ -543,7 +543,7 @@ function getSaidas( $parameters ) {
 	endif;
 	$query .= " ORDER BY es.DH_S DESC";
 
-	$result = $GLOBALS['conn']->Execute($query);
+	$result = CONN::get()->Execute($query);
 	foreach ($result as $k => $fields):
 		$arr[] = array(
 			"id" => fStrZero($fields['ID'], 3),
@@ -560,7 +560,7 @@ function getAttrib( $parameters ) {
 	$arr = array();
 	$filter = strtoupper($parameters["filter"]);
 	if (!empty($filter)):
-		$result = $GLOBALS['conn']->Execute("
+		$result = CONN::get()->Execute("
 			SELECT esp.ID, ca.NM, ca.DS_UNIDADE, esp.$filter
 			FROM EVE_SAIDA es
 			INNER JOIN EVE_SAIDA_MEMBRO esp ON (esp.ID_EVE_SAIDA = es.ID)
@@ -584,7 +584,7 @@ function setAttrib( $parameters ) {
 	$fl = $parameters["fl"];
 	$vl = fReturnStringNull( $parameters["vl"] );
 
-	$GLOBALS['conn']->Execute("
+	CONN::get()->Execute("
 		UPDATE EVE_SAIDA_MEMBRO SET
 			$fl = ?
 		WHERE ID = ?

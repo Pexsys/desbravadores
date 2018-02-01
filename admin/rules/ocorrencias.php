@@ -1,6 +1,5 @@
 <?php
-@require_once("../include/functions.php");
-@require_once("sendmailOcorrencias.php");
+@require_once("../../include/functions.php");
 responseMethod();
 
 function getQueryByFilter( $parameters ) {
@@ -8,7 +7,7 @@ function getQueryByFilter( $parameters ) {
 	$usuarioID = $_SESSION['USER']['ID_USUARIO'];
 
 	if ($parameters["filter"] == "N"):
-		return $GLOBALS['conn']->Execute("
+		return CONN::get()->Execute("
 				SELECT o.ID, a.NM, o.TP, o.CD, o.DH, o.FG_PEND, l.DH_READ
 				  FROM CAD_OCORRENCIA o
 			INNER JOIN CON_ATIVOS a ON (a.ID_CAD_PESSOA = o.ID_CAD_PESSOA)
@@ -56,7 +55,7 @@ function getQueryByFilter( $parameters ) {
 			endforeach;
 		endif;
 
-		return $GLOBALS['conn']->Execute("
+		return CONN::get()->Execute("
 				SELECT o.ID, a.NM, o.TP, o.CD, o.DH, o.FG_PEND
 				  FROM CAD_OCORRENCIA o
 			INNER JOIN CON_ATIVOS a ON (a.ID_CAD_PESSOA = o.ID_CAD_PESSOA)
@@ -69,7 +68,7 @@ function getQueryByFilter( $parameters ) {
 function fGetMembros(){
 	$arr = array();
 	$qtdZeros = zeroSizeID();
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT o.ID_CAD_PESSOA, a.NM
 		  FROM CAD_OCORRENCIA o
 	INNER JOIN CON_ATIVOS a ON (a.ID_CAD_PESSOA = o.ID_CAD_PESSOA)
@@ -96,7 +95,7 @@ function fOcorrencia( $parameters ) {
 	$frm = null;
 
 	$like = "";
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT CD_CARGO, CD_CARGO2
 		  FROM CON_ATIVOS
 		 WHERE ID_CAD_PESSOA = ?
@@ -133,7 +132,7 @@ function fOcorrencia( $parameters ) {
 				fReturnStringNull($fg_pend),
 				$id
 			);
-			$GLOBALS['conn']->Execute("
+			CONN::get()->Execute("
 				UPDATE CAD_OCORRENCIA SET
 					DH = ?,
 					TXT = ?,
@@ -153,7 +152,7 @@ function fOcorrencia( $parameters ) {
 				fReturnStringNull($fg_pend),
 				$userID
 			);
-			$GLOBALS['conn']->Execute("
+			CONN::get()->Execute("
 				INSERT INTO CAD_OCORRENCIA(
 					DH,
 					TXT,
@@ -164,12 +163,12 @@ function fOcorrencia( $parameters ) {
 					ID_USUARIO_INS
 				) VALUES (?,?,?,?,?,?,?)
 			",$arr);
-			$id = $GLOBALS['conn']->Insert_ID();
+			$id = CONN::get()->Insert_ID();
 		endif;
 
 		//GRAVACAO DEFINITIVA PARA O RESPONSAVEL, ENVIO POR EMAIL
 		if ($fg_pend == "N"):
-			$GLOBALS['conn']->Execute("
+			CONN::get()->Execute("
 				INSERT INTO LOG_MENSAGEM (ID_ORIGEM, TP, ID_USUARIO, EMAIL, DH_GERA)
 				SELECT $id, 'O', cu.ID_USUARIO, ca.EMAIL, NOW()
 				  FROM CON_ATIVOS ca
@@ -195,14 +194,14 @@ function fOcorrencia( $parameters ) {
 
 	//EXCLUSAO DE SAIDA
 	elseif ( $op == "DELETE" ):
-		$GLOBALS['conn']->Execute("DELETE FROM LOG_MENSAGEM WHERE ID_ORIGEM = ? AND TP = ?", Array( $parameters["id"], "O" ) );
-		$GLOBALS['conn']->Execute("DELETE FROM CAD_OCORRENCIA WHERE ID = ?", Array( $parameters["id"] ) );
+		CONN::get()->Execute("DELETE FROM LOG_MENSAGEM WHERE ID_ORIGEM = ? AND TP = ?", Array( $parameters["id"], "O" ) );
+		CONN::get()->Execute("DELETE FROM CAD_OCORRENCIA WHERE ID = ?", Array( $parameters["id"] ) );
 		$out["success"] = true;
 
 	//GET SAIDA
 	else:
 		if ( $parameters["id"] == "Novo" ):
-			$result = $GLOBALS['conn']->Execute("SELECT YEAR(NOW()) AS ANO, COUNT(*)+1 AS CD FROM CAD_OCORRENCIA WHERE YEAR(DH) = YEAR(NOW())" );
+			$result = CONN::get()->Execute("SELECT YEAR(NOW()) AS ANO, COUNT(*)+1 AS CD FROM CAD_OCORRENCIA WHERE YEAR(DH) = YEAR(NOW())" );
 			$out["success"] = true;
 			$out["ocorrencia"] = array(
 				"id" => $parameters["id"],
@@ -210,7 +209,7 @@ function fOcorrencia( $parameters ) {
 				"cd" => $result->fields['ANO']."-".fStrZero($result->fields['CD'], 2)
 			);
 		else:
-			$result = $GLOBALS['conn']->Execute("
+			$result = CONN::get()->Execute("
 				SELECT co.*, ca.NM, cu.DS_USUARIO
 				  FROM CAD_OCORRENCIA co
 			INNER JOIN CON_ATIVOS ca ON (ca.id_cad_pessoa = co.id_cad_pessoa)
@@ -240,7 +239,7 @@ function fOcorrencia( $parameters ) {
 					"nm" => "(NENHUM)"
 			);
 			$qtdZeros = zeroSizeID();
-			$result = $GLOBALS['conn']->Execute("
+			$result = CONN::get()->Execute("
 				  SELECT DISTINCT ca.NM, ca.ID
 					FROM APR_HISTORICO ah
 			  INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = ah.ID_CAD_PESSOA)
@@ -300,7 +299,7 @@ function fSetRead( $parameters ){
 	$usuarioCD = $_SESSION['USER']['CD_USUARIO'];
 
 	//ATUALIZA USUARIO ATUAL
-	$GLOBALS['conn']->Execute("
+	CONN::get()->Execute("
 		UPDATE LOG_MENSAGEM SET
 			DH_READ = NOW()
 		WHERE ID_USUARIO = ?
@@ -309,7 +308,7 @@ function fSetRead( $parameters ){
 	", array($usuarioID,$comunicadoID,"O"));
 
 	//VERIFICA SE USUARIO ATUAL EH RESPONSAVEL POR OUTRO.
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		UPDATE LOG_MENSAGEM SET
 			  DH_READ = NOW()
 		WHERE ID_USUARIO IN (

@@ -20,7 +20,7 @@ $(document).ready(function(){
 		},
 		ajax: {
 			type	: "GET",
-			url	: jsLIB.rootDir+"rules/printTags.php",
+			url	: jsLIB.rootDir+"admin/rules/printTags.php",
 			data	: function (d) {
 				d.MethodName = "getTags",
 				d.data = {
@@ -110,7 +110,7 @@ $(document).ready(function(){
 				}	
 				jsLIB.ajaxCall({
 					type: "GET",
-					url: jsLIB.rootDir+"rules/printTags.php",
+					url: jsLIB.rootDir+"admin/rules/printTags.php",
 					data: { MethodName : 'getClasse', data : parameters },
 					success: function(data){
 						jsLIB.populateOptions( $("#cbAprend"), data );
@@ -307,7 +307,7 @@ function modalDelete(sAct,sMsg){
 						ids: tmp
 					};
 					jsLIB.ajaxCall({
-						url: jsLIB.rootDir+"rules/printTags.php",
+						url: jsLIB.rootDir+"admin/rules/printTags.php",
 						data: { MethodName : 'delete', data : parameter },
 						success: function(data){
 							dialogRef.close();
@@ -342,7 +342,7 @@ function populateFilters(){
 	}	
 	jsLIB.ajaxCall({
 		type: "GET",
-		url: jsLIB.rootDir+"rules/printTags.php",
+		url: jsLIB.rootDir+"admin/rules/printTags.php",
 		data: { MethodName : 'getMembrosFilter', data : parameters },
 		success: function(data){
 			if ( data.filter && data.filter.length > 0 ) {
@@ -361,7 +361,7 @@ function populateMembers( tpDialog ) {
 	}	
 	jsLIB.ajaxCall({
 		type: "GET",
-		url: jsLIB.rootDir+"rules/printTags.php",
+		url: jsLIB.rootDir+"admin/rules/printTags.php",
 		data: { MethodName : 'getData', data : parameters },
 		success: function(data){
 			if (tpDialog == 'A') {
@@ -382,7 +382,7 @@ function update(){
 		frm: jsLIB.getJSONFields( $('#addTagsForm') )
 	};
 	jsLIB.ajaxCall({
-		url: jsLIB.rootDir+"rules/printTags.php",
+		url: jsLIB.rootDir+"admin/rules/printTags.php",
 		data: { MethodName : 'addTags', data : parameter },
 		success: function(data){
 			refreshAndButtons();

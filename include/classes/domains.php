@@ -5,7 +5,7 @@ class DOMAINS {
 		$arr = array();
 
 		$qtdZeros = zeroSizeID();
-		$result = $GLOBALS['conn']->Execute("
+		$result = CONN::get()->Execute("
 			SELECT ID_CAD_MEMBRO, ID_MEMBRO, NM, IDADE_HOJE
 			FROM CON_ATIVOS
 			ORDER BY NM
@@ -29,7 +29,7 @@ class DOMAINS {
 		$arr = array();
 
 		$qtdZeros = zeroSizeID();
-		$result = $GLOBALS['conn']->Execute("
+		$result = CONN::get()->Execute("
 			SELECT cm.ID, cm.ID_MEMBRO, cp.NM, cp.IDADE_HOJE
 			FROM CAD_MEMBRO cm
 			INNER JOIN CON_PESSOA cp ON (cp.ID_CAD_PESSOA = cm.ID_CAD_PESSOA)
@@ -54,7 +54,7 @@ class DOMAINS {
 	public static function getEventos(){
 		$arr = array();
 
-		$result = $GLOBALS['conn']->Execute("
+		$result = CONN::get()->Execute("
 			SELECT ID, DS, DH_S
 			FROM EVE_SAIDA
 			ORDER BY DH_S DESC
@@ -86,7 +86,7 @@ class DOMAINS {
 				ORDER BY ca.DS_UNIDADE";
 		endif;
 
-		$result = $GLOBALS['conn']->Execute($query);
+		$result = CONN::get()->Execute($query);
 		foreach ($result as $k => $f):
 			$arr[] = array(
 				"id"	=> $f['ID'],
@@ -101,7 +101,7 @@ class DOMAINS {
 	public static function getTipoAprendizado(){
 		$arr = array();
 
-		$result = $GLOBALS['conn']->Execute("
+		$result = CONN::get()->Execute("
 			SELECT ID, DS, ICON
 			  FROM TAB_TP_APRENDIZADO
 			  ORDER BY ID");
@@ -118,7 +118,7 @@ class DOMAINS {
 	public static function getTipoMateriais(){
 		$arr = array();
 
-		$result = $GLOBALS['conn']->Execute("
+		$result = CONN::get()->Execute("
 			SELECT DISTINCT TP
 			  FROM TAB_MATERIAIS
 			  ORDER BY TP");
@@ -134,7 +134,7 @@ class DOMAINS {
 	public static function getClasses(){
 		$arr = array();
 
-		$result = $GLOBALS['conn']->Execute("
+		$result = CONN::get()->Execute("
 			SELECT ID, DS_ITEM, CD_AREA_INTERNO
 			  FROM TAB_APRENDIZADO
 			WHERE TP_ITEM = 'CL'
@@ -153,7 +153,7 @@ class DOMAINS {
 	public static function getMestrados(){
 		$arr = array();
 
-		$result = $GLOBALS['conn']->Execute("
+		$result = CONN::get()->Execute("
 			SELECT ID, DS_ITEM, CD_ITEM_INTERNO
 			  FROM TAB_APRENDIZADO
 			WHERE TP_ITEM = 'ES'
@@ -174,7 +174,7 @@ class DOMAINS {
 	public static function getEspecialidades(){
 		$arr = array();
 
-		$result = $GLOBALS['conn']->Execute("
+		$result = CONN::get()->Execute("
 			SELECT ID, DS_ITEM, CD_ITEM_INTERNO
 			  FROM TAB_APRENDIZADO
 			WHERE TP_ITEM = 'ES'
@@ -195,7 +195,7 @@ class DOMAINS {
 	public static function getAreasEspecialidades(){
 		$arr = array();
 
-		$result = $GLOBALS['conn']->Execute("
+		$result = CONN::get()->Execute("
 			SELECT CD_AREA_INTERNO, DS_ITEM, CD_ITEM_INTERNO
 			  FROM TAB_APRENDIZADO
 			WHERE TP_ITEM = 'ES'
@@ -213,7 +213,7 @@ class DOMAINS {
 	}
 
 	public static function getMesAniversario(){
-		$result = $GLOBALS['conn']->Execute("
+		$result = CONN::get()->Execute("
 			SELECT DISTINCT DATE_FORMAT(DT_NASC,'%m') AS MES
 			  FROM CON_ATIVOS
 		  ORDER BY 1

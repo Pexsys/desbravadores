@@ -1,8 +1,7 @@
 <?php
 @require_once("include/functions.php");
-fConnDB();
 
-$result = $GLOBALS['conn']->Execute( "
+$result = CONN::get()->Execute( "
   SELECT *
     FROM TAB_UNIDADE
    WHERE FG_ATIVA = 'S'
@@ -16,7 +15,7 @@ fHeaderPage( array( PATTERNS::getVD()."css/index.css?" )
 		   , array( PATTERNS::getVD()."js/index.js?") );
 
 $strmembros = "";
-$membros = $GLOBALS['conn']->Execute( "
+$membros = CONN::get()->Execute( "
 	SELECT *
 	  FROM CON_ATIVOS
 	 WHERE ID_UNIDADE = ?
@@ -91,7 +90,7 @@ endforeach;
             </div>
 
             <?php
-            $result = $GLOBALS['conn']->Execute( "
+            $result = CONN::get()->Execute( "
         	  SELECT *
         	    FROM TAB_UNIDADE
         	   WHERE FG_ATIVA = ?

@@ -74,7 +74,7 @@ $(document).ready(function(){
 	jsLIB.ajaxCall({
 		waiting : true,
 		type: "GET",
-		url: jsLIB.rootDir+"rules/saidas.php",
+		url: jsLIB.rootDir+"admin/rules/saidas.php",
 		data: { MethodName : 'getNames' },
 		success: function(saidas){
 			if (saidas.names && saidas.names.length){

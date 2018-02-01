@@ -20,7 +20,7 @@ $(document).ready(function(){
 			},
 			ajax: {
 				type	: "GET",
-				url	: jsLIB.rootDir+"rules/tabelaPerfis.php",
+				url	: jsLIB.rootDir+"admin/rules/tabelaPerfis.php",
 				data	: function (d) {
 					d.MethodName = "getPerfis"
 				},
@@ -74,7 +74,7 @@ $(document).ready(function(){
 			jsLIB.ajaxCall({
 				waiting : true,
 				async: false,
-				url: jsLIB.rootDir+"rules/tabelaPerfis.php",
+				url: jsLIB.rootDir+"admin/rules/tabelaPerfis.php",
 				data: { MethodName : 'addPerfil', data : parameter },
 				success: function(data){
 					dataTable.ajax.reload( function(){

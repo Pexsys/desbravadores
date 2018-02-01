@@ -12,7 +12,7 @@ $(document).ready(function(){
 	jsLIB.ajaxCall({
 		waiting : true,
 		type: "GET",
-		url: jsLIB.rootDir+"rules/printChamada.php",
+		url: jsLIB.rootDir+"admin/rules/printChamada.php",
 		data: { MethodName : 'getDomains' },
 		success: function(mb){
 			if (mb){

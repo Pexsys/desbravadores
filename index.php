@@ -2,7 +2,6 @@
 @require_once("include/functions.php");
 fHeaderPage( array( PATTERNS::getVD()."css/index.css?" )
 		   , array( PATTERNS::getVD()."js/index.js?") );
-fConnDB();
 
 function nextEvents(){
 ?>
@@ -23,7 +22,7 @@ function nextEvents(){
 						( e.DTHORA_EVENTO_INI >= ? OR ( e.DTHORA_EVENTO_FIM IS NOT NULL AND e.DTHORA_EVENTO_FIM >= ? ) )
 					ORDER BY e.DTHORA_EVENTO_INI
 					   LIMIT 0, 3 ";
-				$result = $GLOBALS['conn']->Execute( $query, Array( $DATA_NOW, $DATA_NOW ) );
+				$result = CONN::get()->Execute( $query, Array( $DATA_NOW, $DATA_NOW ) );
 
 				$MES_ANT = "";
 				while (!$result->EOF):
@@ -104,7 +103,7 @@ function myUnit(){
     		<div class="header bg-green"><h4><i class="fa fa-fw fa-bullhorn"></i>&nbsp;Conheça a Unidade</h4></div>
     		<div class="body">
 	    		<?php
-	                $result = $GLOBALS['conn']->Execute( "
+	                $result = CONN::get()->Execute( "
 	            	  SELECT ID
 	            	    FROM TAB_UNIDADE
 	            	   WHERE FG_ATIVA = 'S'

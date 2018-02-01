@@ -1,5 +1,5 @@
 <?php
-@require_once("../include/functions.php");
+@require_once("../../include/functions.php");
 responseMethod();
 
 /****************************
@@ -8,7 +8,7 @@ responseMethod();
 function getPerfis(){
 	$arr = array();
 
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT ID, DS
 		  FROM TAB_PERFIL
 	  ORDER BY DS");

@@ -24,10 +24,10 @@ $(document).ready(function(){
 		},
 		ajax: {
 			type	: "GET",
-			url	: jsLIB.rootDir+"rules/comunicados.php",
+			url	: jsLIB.rootDir+"admin/rules/comunicados.php",
 			data	: function (d) {
 					d.MethodName = "getComunicados",
-					d.data = { 
+					d.data = {
 						filter: 'A'
 					}
 				},
@@ -69,21 +69,23 @@ $(document).ready(function(){
 			}
         }
 	});
-	
-	$('#datetimepicker').datetimepicker({
-		locale: 'pt-br',
-		language: 'pt-BR',
-		format: 'DD/MM/YYYY',
-		maskInput: true,
-		pickDate: true,
-		pickTime: false,
-		pickSeconds: false,
-		useCurrent: false
-	}).on('dp.change',function(){
+
+	$('#datetimepicker')
+		//.datetimepicker({
+		//	locale: 'pt-br',
+		//	language: 'pt-BR',
+		//	format: 'DD/MM/YYYY',
+		//	maskInput: true,
+		//	pickDate: true,
+		//	pickTime: false,
+		//	pickSeconds: false,
+		//	useCurrent: false
+	//})
+	.on('dp.change',function(){
 		$("#cadComForm").formValidation('revalidateField', 'comDH');
 		buttons();
 	});
-	
+
 	tinymce.init({
 		selector: '[type=wysiwyg]',
 		height: 230,
@@ -106,11 +108,11 @@ $(document).ready(function(){
 		statusbar: false
 	});
 
-	$("#nrCopias").TouchSpin({
-		verticalbuttons: true,
-		verticalupclass: 'glyphicon glyphicon-plus',
-		verticaldownclass: 'glyphicon glyphicon-minus'
-	});
+	//$("#nrCopias").TouchSpin({
+	//	verticalbuttons: true,
+	//	verticalupclass: 'glyphicon glyphicon-plus',
+	//	verticaldownclass: 'glyphicon glyphicon-minus'
+	//});
 
 	$('#btnPrint').click(function(){
 		window.open(
@@ -127,7 +129,7 @@ $(document).ready(function(){
 		populateComunicado( comDataTable.row( rowSelected ).data().id );
 		$("#comModal").modal();
 	});
-	
+
 	$("#cadComForm")
 		.on('err.field.fv', function(e, data) {
 			$('#btnGravar').visible(false);
@@ -154,7 +156,7 @@ $(document).ready(function(){
 			e.stopPropagation();
 		})
 	;
-	
+
 	$('#btnDel').click(function(){
 		BootstrapDialog.show({
 			title: 'Alerta',
@@ -185,7 +187,7 @@ $(document).ready(function(){
 						};
 						jsLIB.ajaxCall({
 							waiting : true,
-							url: jsLIB.rootDir+"rules/comunicados.php",
+							url: jsLIB.rootDir+"admin/rules/comunicados.php",
 							data: { MethodName : 'fComunicado', data : parameter },
 							success: function(){
 								comDataTable.ajax.reload();
@@ -197,8 +199,8 @@ $(document).ready(function(){
 				}
 			]
 		});
-	});	
-	
+	});
+
 	$('#btnGravar').click(function(){
 		if (valuePendOrig !== valuePend) {
 			BootstrapDialog.show({
@@ -232,23 +234,23 @@ $(document).ready(function(){
 						}
 					}
 					]
-			});		
+			});
 		} else {
 			updateComunicado();
 		}
 	});
-	
+
 	$("#comModal").on('show.bs.modal', function(event){
 		buttons();
 	});
-	
+
 	$('#btnNovo').click(function(){
 		jsLIB.resetForm( $('#cadComForm') );
 		populateComunicado( $("#comID").val("Novo").val() );
 		buttons();
 		$("#comModal").modal();
 	});
-	
+
 	$("#fgPend").change(function(){
 		valuePend = jsLIB.getValueFromField( $("#fgPend") );
 		buttons();
@@ -271,7 +273,7 @@ function populateComunicado( comunicadoID ) {
 	jsLIB.ajaxCall({
 		waiting : true,
 		type: "GET",
-		url: jsLIB.rootDir+"rules/comunicados.php",
+		url: jsLIB.rootDir+"admin/rules/comunicados.php",
 		data: { MethodName : 'fComunicado', data : { id : comunicadoID } },
 		success: function(cm){
 			jsLIB.populateForm( $("#cadComForm"), cm.comunicado );
@@ -290,7 +292,7 @@ function updateComunicado(){
 	};
 	jsLIB.ajaxCall({
 		waiting : true,
-		url: jsLIB.rootDir+"rules/comunicados.php",
+		url: jsLIB.rootDir+"admin/rules/comunicados.php",
 		data: { MethodName : 'fComunicado', data : parameter },
 		success: function(cm){
 			$("#comID").val(cm.id);

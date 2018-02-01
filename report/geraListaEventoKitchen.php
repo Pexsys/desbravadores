@@ -122,8 +122,7 @@ class LISTAEVENTOKITCHEN extends TCPDF {
 $eveID = fRequest("eve");
 $pdf = new LISTAEVENTOKITCHEN();
 
-fConnDB();
-$result = $GLOBALS['conn']->Execute("
+$result = CONN::get()->Execute("
 		SELECT es.DS, es.DS_TEMA, es.DS_ORG, es.DS_DEST, ca.NM, esp.KITCHEN
 	      FROM EVE_SAIDA es
 		  INNER JOIN EVE_SAIDA_MEMBRO esp on (esp.ID_EVE_SAIDA = es.ID AND esp.KITCHEN IS NOT NULL)

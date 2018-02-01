@@ -20,10 +20,10 @@ $(document).ready(function(){
 		},
 		ajax: {
 			type	: "GET",
-			url	: jsLIB.rootDir+"rules/aprendizado.php",
+			url	: jsLIB.rootDir+"admin/rules/aprendizado.php",
 			data	: function (d) {
 					d.MethodName = "getAprendizado",
-					d.data = { 
+					d.data = {
 							 filtro: 'T',
 							 filters: jsFilter.jSON()
 						}
@@ -61,7 +61,7 @@ $(document).ready(function(){
 			selector: 'td:first-child'
 		}
 	});
-	
+
 	$("#cadAprendForm")
 		.on('init.field.fv', function(e, data) {
 			var $parent = data.element.parents('.form-group'),
@@ -74,7 +74,7 @@ $(document).ready(function(){
 		})
 		.on('success.form.fv', function(e) {
 			e.preventDefault();
-		})	
+		})
 		.formValidation({
 			framework: 'bootstrap',
 			icon: {
@@ -88,7 +88,7 @@ $(document).ready(function(){
 			closeAndRefresh();
 		})
 	;
-	
+
 	$("#cadAprendBarForm")
 		.on('init.field.fv', function(e, data) {
 			var $parent = data.element.parents('.form-group'),
@@ -131,7 +131,7 @@ $(document).ready(function(){
 			e.preventDefault();
 		})
 	;
-	
+
 	$('#aprendBarModal')
 		.on('hidden.bs.modal', function(e){
 			dataTable.ajax.reload( function(){
@@ -150,15 +150,15 @@ $(document).ready(function(){
 		if ( objOrigem.attr("tab-function") == "radio" ) {
 			$('[tab-function=radio]').each(function(){
 				$( '#'+$(this).attr('for') ).visible(false);
-			});			
+			});
 		}
 		$( '#'+objOrigem.attr('for') ).visible( !objOrigem.hasClass("active") );
 	});
-	
+
 	$('#btnManual').click(function(){
 		fPrepareForm();
 	});
-	
+
 	$('#btnDigital').click(function(){
 		jsLIB.resetForm( $('#cadAprendBarForm') );
 		$("#barOp").val('APRENDIZADO');
@@ -171,7 +171,7 @@ $(document).ready(function(){
 		$(this).toggleClass('selected');
 		ruleBtnDelete();
 	});
-	
+
 	$('#btnDelAprend').click(function(){
 		BootstrapDialog.show({
 			title: 'Alerta',
@@ -196,7 +196,7 @@ $(document).ready(function(){
 					action: function(dialogRef){
 						dialogRef.enableButtons(false);
 						dialogRef.setClosable(false);
-						
+
 						var selected = dataTable.rows('.selected').data();
 						var tmp = [];
 						for (var i=0;i<selected.length;i++){
@@ -207,7 +207,7 @@ $(document).ready(function(){
 						};
 						jsLIB.ajaxCall({
 							waiting : true,
-							url: jsLIB.rootDir+"rules/aprendizado.php",
+							url: jsLIB.rootDir+"admin/rules/aprendizado.php",
 							data: { MethodName : 'delete', data : parameter },
 							success: function(){
 								dialogRef.close();
@@ -219,23 +219,23 @@ $(document).ready(function(){
 			]
 	    });
 	});
-	
+
 	$("#cmClasse").change(function(){
 		$("#divIdent").visible( $(this).val() != null );
 	});
-	
-	$('#dtInicio, #dtConclusao, #dtAvaliacao, #dtInvestidura, #dtBarInicio, #dtBarConclusao, #dtBarAvaliacao, #dtBarInvestidura').datetimepicker({
-		locale: 'pt-br',
-		language: 'pt-BR',
-		format: 'DD/MM/YYYY',
-		maskInput: true,
-		pickDate: true,
-		pickTime: false,
-		pickSeconds: false,
-		useCurrent: false
-	});
 
-	$(".date").mask('00/00/0000');
+	//$('#dtInicio, #dtConclusao, #dtAvaliacao, #dtInvestidura, #dtBarInicio, #dtBarConclusao, #dtBarAvaliacao, #dtBarInvestidura').datetimepicker({
+	//	locale: 'pt-br',
+	//	language: 'pt-BR',
+	//	format: 'DD/MM/YYYY',
+	//	maskInput: true,
+	//	pickDate: true,
+	//	pickTime: false,
+	//	pickSeconds: false,
+	//	useCurrent: false
+	//});
+
+	//$(".date").mask('00/00/0000');
 	ruleBtnDelete(false);
 });
 
@@ -247,7 +247,7 @@ function onscan( bardata ) {
 	sendBarCode( parameter,
 		function(data,fx){
 			$("#strResultado").html(data.result);
-			$("#divResultado").show();			
+			$("#divResultado").show();
 			$("#cdBar").val('').change().focus();
 		},
 		function(data,fx){
@@ -268,7 +268,7 @@ function updateAprendizado(){
 	getFunctions( parameter, "quem" );
 	jsLIB.ajaxCall({
 		waiting : true,
-		url: jsLIB.rootDir+"rules/aprendizado.php",
+		url: jsLIB.rootDir+"admin/rules/aprendizado.php",
 		data: { MethodName : 'setAprendizado', data : parameter }
 	});
 }
@@ -299,14 +299,14 @@ function getFunctions(parameter,fn){
 function fPrepareForm(){
 	$("[name=oque]").removeClass('active');
 	$("[name=quem]").removeClass('active');
-	
+
 	$('[tab-function]').each(function(event){
 		$( '#'+$(this).attr('for') ).visible( false );
 	});
-	
+
 	populateData();
 	jsLIB.resetForm( $('#cadAprendForm') );
-	$("#aprendModal").modal();	
+	$("#aprendModal").modal();
 }
 
 function closeAndRefresh(){
@@ -321,7 +321,7 @@ function populateData(){
 	jsLIB.ajaxCall({
 		waiting : true,
 		type: "GET",
-		url: jsLIB.rootDir+"rules/aprendizado.php",
+		url: jsLIB.rootDir+"admin/rules/aprendizado.php",
 		data: { MethodName : 'getData' },
 		success: function(cg){
 			jsLIB.populateOptions( $("#cmNome"), cg.nomes );

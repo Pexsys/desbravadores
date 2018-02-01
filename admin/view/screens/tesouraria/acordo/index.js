@@ -21,7 +21,7 @@ $(document).ready(function(){
 		},
 		ajax: {
 			type	: "GET",
-			url	: jsLIB.rootDir+"rules/acordos.php",
+			url	: jsLIB.rootDir+"admin/rules/acordos.php",
 			data	: function (d) {
 				d.MethodName = "getAcordos",
                 d.data = {

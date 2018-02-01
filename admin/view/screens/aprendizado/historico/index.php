@@ -45,4 +45,4 @@
 		</div>
 	</div>
 </row>
-<script src="<?php echo PATTERNS::getVD();?>dashboard/js/cadastroAprendizadoHist.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo PATTERNS::getVD();?>admin/view/screens/aprendizado/historico/index.js<?php echo "?".time();?>"></script>

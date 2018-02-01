@@ -139,15 +139,14 @@ class LISTADISPENSAESCOLAR extends TCPDF {
 }
 
 $eveID = fRequest("eve");
-fConnDB();
 
-$result = $GLOBALS['conn']->Execute("SELECT NOME_DIRETOR, NOW() AS DH FROM CON_DIRETOR");
+$result = CONN::get()->Execute("SELECT NOME_DIRETOR, NOW() AS DH FROM CON_DIRETOR");
 $nmDiretor = titleCase($result->fields["NOME_DIRETOR"]);
 $dh = $result->fields["DH"];
 
 $escolaAnt = "";
 
-$result = $GLOBALS['conn']->Execute("
+$result = CONN::get()->Execute("
 	SELECT ca.NM_ESCOLA, ca.NM, es.DH_S, es.DH_R
 	FROM EVE_SAIDA es
 	INNER JOIN EVE_SAIDA_MEMBRO esp on (esp.ID_EVE_SAIDA = es.ID AND esp.FG_AUTORIZ = 'S')

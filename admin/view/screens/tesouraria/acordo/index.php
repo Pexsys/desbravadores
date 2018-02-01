@@ -1,4 +1,3 @@
-<link href="<?php echo PATTERNS::getVD();?>include/_core/css/acc-wizard.min.css" rel="stylesheet"/>
 <div class="row">
 	<div class="col-lg-12">
 		<h3 class="page-header">Cadastro de Acordo Financeiro</h3>
@@ -292,5 +291,4 @@
 	    </script>
 
 </div>
-<script src="<?php echo PATTERNS::getVD();?>include/_core/js/acc-wizard.min.js"></script>
-<script src="<?php echo PATTERNS::getVD();?>dashboard/js/cadastroAcordo.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo PATTERNS::getVD();?>admin/view/screens/tesouraria/acordo/index.js<?php echo "?".time();?>"></script>

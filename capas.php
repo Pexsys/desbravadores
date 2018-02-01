@@ -7,7 +7,7 @@ fHeaderPage(
 	array(
 		PATTERNS::getVD()."vendor/adminbsb/plugins/jquery-datatable/jquery.dataTables.js",
 		PATTERNS::getVD()."vendor/adminbsb/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.min.js",
-		PATTERNS::getVD()."js/capas.js?".microtime()
+		PATTERNS::getVD()."js/capas.js?".time()
 	)
 );
 ?>

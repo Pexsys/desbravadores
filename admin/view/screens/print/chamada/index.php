@@ -22,4 +22,4 @@
 		<button id="btnGerar" class="btn btn-success pull-right"><i class="fa fa-print"></i>&nbsp;Gerar</button>
 	</div>
 </div>
-<script src="<?php echo PATTERNS::getVD();?>dashboard/js/printChamada.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo PATTERNS::getVD();?>admin/view/screens/print/chamada/index.js<?php echo "?".time();?>"></script>

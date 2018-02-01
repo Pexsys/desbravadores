@@ -1,5 +1,5 @@
 <?php
-@require_once("../include/functions.php");
+@require_once("../../include/functions.php");
 responseMethod();
 
 function getQueryByFilter( $parameters ) {
@@ -11,7 +11,7 @@ function getQueryByFilter( $parameters ) {
 	$frm = null;
 
 	$like = "";
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT CD_CARGO, CD_CARGO2
 		  FROM CON_ATIVOS
 		 WHERE ID_CAD_PESSOA = ?
@@ -53,7 +53,7 @@ function getQueryByFilter( $parameters ) {
 	";
 	//exit($str);
 
-	return $GLOBALS['conn']->Execute($str);
+	return CONN::get()->Execute($str);
 }
 
 function fRegistro( $parameters ) {
@@ -65,7 +65,7 @@ function fRegistro( $parameters ) {
 	$frm = null;
 
 	$like = "";
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT CD_CARGO, CD_CARGO2
 		  FROM CON_ATIVOS
 		 WHERE ID_CAD_PESSOA = ?
@@ -103,7 +103,7 @@ function fRegistro( $parameters ) {
 				fReturnStringNull(trim($frm["txt"])),
 				$id
 			);
-			$GLOBALS['conn']->Execute("
+			CONN::get()->Execute("
 				UPDATE CAD_DIARIO SET
 					DH = ?,
 					FG_PEND = ?,
@@ -125,7 +125,7 @@ function fRegistro( $parameters ) {
 				$frm["sq"],
 				fReturnStringNull(trim($frm["txt"]))
 			);
-			$GLOBALS['conn']->Execute("
+			CONN::get()->Execute("
 				INSERT INTO CAD_DIARIO(
 					DH,
 					FG_PEND,
@@ -137,7 +137,7 @@ function fRegistro( $parameters ) {
 					TXT
 				) VALUES (?,?,?,?,?,?,?,?)
 			",$arr);
-			$id = $GLOBALS['conn']->Insert_ID();
+			$id = CONN::get()->Insert_ID();
 		endif;
 
 		$out["id"] = $id;
@@ -146,7 +146,7 @@ function fRegistro( $parameters ) {
 
 	//EXCLUSAO DE SAIDA
 	elseif ( $op == "DELETE" ):
-		$GLOBALS['conn']->Execute("DELETE FROM CAD_DIARIO WHERE ID = ?", Array( $parameters["id"] ) );
+		CONN::get()->Execute("DELETE FROM CAD_DIARIO WHERE ID = ?", Array( $parameters["id"] ) );
 		$out["success"] = true;
 
 	//GET SAIDA
@@ -156,7 +156,7 @@ function fRegistro( $parameters ) {
 			$out["success"] = true;
 			$out["diario"] = array( "fg_pend" => "S" );
 		else:
-			$result = $GLOBALS['conn']->Execute("
+			$result = CONN::get()->Execute("
 				SELECT *
 				  FROM CAD_DIARIO cd
 			INNER JOIN CAD_USUARIOS cu ON (cu.ID_USUARIO = cd.ID_USUARIO_INS)
@@ -180,7 +180,7 @@ function fRegistro( $parameters ) {
 
 		endif;
 
-		$rc = $GLOBALS['conn']->Execute("
+		$rc = CONN::get()->Execute("
 			SELECT ID, DS_ITEM
 				FROM TAB_APRENDIZADO
 				WHERE CD_ITEM_INTERNO LIKE '$like%'
@@ -200,7 +200,7 @@ function fRegistro( $parameters ) {
 }
 
 function fGetCompl( $parameters ){
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT MAX(SQ)+1 AS SQ
 		FROM CAD_DIARIO
 		WHERE ID_TAB_APREND = ?
@@ -213,7 +213,7 @@ function fGetCompl( $parameters ){
 
 function fGetReq( $classeID ){
 	$arr = array();
-	$result = $result = $GLOBALS['conn']->Execute("
+	$result = $result = CONN::get()->Execute("
 		   SELECT tap.ID, taa.SEQ, taa.CD AS CD_AREA, taa.DS AS DS_AREA, tap.CD_REQ_INTERNO, tap.DS, tap.QT_MIN
 			 FROM TAB_APR_ITEM tap
 		LEFT JOIN TAB_APR_AREA taa ON (taa.ID = tap.ID_TAB_APR_AREA)
@@ -251,7 +251,7 @@ function fGetRefByID( $refID ){
 	";
 	//SE PERFIL DE DIRETORES / INSTRUTOR GERAL, PERMITE A MESMA ESPECIALIDADE PARA MAIS DE UMA CLASSE
 	$pessoaID = $_SESSION['USER']['ID_CAD_PESSOA'];
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT CD_CARGO, CD_CARGO2
 		  FROM CON_ATIVOS
 		 WHERE ID_CAD_PESSOA = ?
@@ -261,7 +261,7 @@ function fGetRefByID( $refID ){
 	endif;
 
 	$arr = array();
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT tais.ID, ta.CD_AREA_INTERNO, ta.CD_ITEM_INTERNO, ta.DS_ITEM
 		FROM TAB_APR_ITEM_SEL tais
 		INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = tais.ID_REF)
@@ -314,7 +314,7 @@ function getListaDiario( $parameters ){
 function fDetalheItem( $parameters ){
 	$str = "";
 
-	$pendentes = $GLOBALS['conn']->Execute("
+	$pendentes = CONN::get()->Execute("
 		SELECT cap.DS, ca.NM
 		FROM CAD_DIARIO cd
 		INNER JOIN CON_APR_PESSOA cap ON (cap.ID = cd.ID_TAB_APR_ITEM)
@@ -327,7 +327,7 @@ function fDetalheItem( $parameters ){
 		ORDER BY ca.NM
 	", array( $parameters["id"] ) );
 
-	$completados = $GLOBALS['conn']->Execute("
+	$completados = CONN::get()->Execute("
 		SELECT cap.DS, ca.NM, cap.DT_ASSINATURA
 		FROM CAD_DIARIO cd
 		INNER JOIN CON_APR_PESSOA cap ON (cap.ID = cd.ID_TAB_APR_ITEM)

@@ -178,4 +178,4 @@
     	</form>
     </div>
 </div>
-<script src="<?php echo PATTERNS::getVD();?>dashboard/js/printTags.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo PATTERNS::getVD();?>admin/view/screens/print/tags/index.js<?php echo "?".time();?>"></script>

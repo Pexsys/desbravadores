@@ -1,5 +1,5 @@
 <?php
-@require_once("../include/functions.php");
+@require_once("../../include/functions.php");
 responseMethod();
 
 /****************************
@@ -105,7 +105,7 @@ function getQueryByFilter( $parameters ) {
 		";
 		//echo $query;
 		//print_r($aWhere);
-		return $GLOBALS['conn']->Execute( $query, $aWhere );
+		return CONN::get()->Execute( $query, $aWhere );
 	endif;
 	return null;
 }

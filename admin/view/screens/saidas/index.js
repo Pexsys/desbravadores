@@ -6,7 +6,7 @@ var tpFiltroAttr = '';
 
 $(document).ready(function(){
 	$.fn.dataTable.moment( 'DD/MM/YYYY HH:mm' );
-	
+
 	attrDataTable = $('#attrDatatable').DataTable({
 		lengthChange: false,
 		ordering: true,
@@ -25,10 +25,10 @@ $(document).ready(function(){
 		},
 		ajax: {
 			type	: "GET",
-			url	: jsLIB.rootDir+"rules/saidas.php",
+			url	: jsLIB.rootDir+"admin/rules/saidas.php",
 			data	: function (d) {
 					d.MethodName = "getAttrib",
-					d.data = { 
+					d.data = {
 						filter: tpFiltroAttr,
 						id: $("#saidaID").val()
 					}
@@ -57,11 +57,11 @@ $(document).ready(function(){
 				render: function(data, type, full, meta){
 					return "<input type=\"text\" name=\"editCD\" class=\"form-control input-xs\" attr-id=\""+full.id+"\" value=\""+ data +"\">";
 				}
-				
+
 			}
 		]
 	});
-	
+
 
 	saidaDataTable = $('#saidasDatatable').DataTable({
 		lengthChange: false,
@@ -81,10 +81,10 @@ $(document).ready(function(){
 		},
 		ajax: {
 			type	: "GET",
-			url	: jsLIB.rootDir+"rules/saidas.php",
+			url	: jsLIB.rootDir+"admin/rules/saidas.php",
 			data	: function (d) {
 					d.MethodName = "getSaidas",
-					d.data = { 
+					d.data = {
 						filter: tpFiltro
 					}
 				},
@@ -122,25 +122,25 @@ $(document).ready(function(){
 		fnRowCallback: function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
             if ( aData.dh_r < moment().unix() ) {
                 $('td', nRow).css('color', '#d0d0d0');
-            } 
+            }
         }
 	});
-	
-	$('#datetimepickerini, #datetimepickerfim').datetimepicker({
-		locale: 'pt-br',
-		language: 'pt-BR',
-		format: 'DD/MM/YYYY HH:mm',
-		maskInput: true,
-		pickDate: true,
-		pickTime: true,
-		pickSeconds: false,
-		useCurrent: false
-	});
-	
+
+	//$('#datetimepickerini, #datetimepickerfim').datetimepicker({
+	//	locale: 'pt-br',
+	//	language: 'pt-BR',
+	//	format: 'DD/MM/YYYY HH:mm',
+	//	maskInput: true,
+	//	pickDate: true,
+	//	pickTime: true,
+	//	pickSeconds: false,
+	//	useCurrent: false
+	//});
+
 	$('#btnAtivos, #btnTodos').click(function(){
 		 switchSelecion( $(this).attr('tp-filtro') );
 	});
-	
+
 	$('#datetimepickerini')
 		.on("dp.change", function (e) {
 			$('#cadSaidasForm').formValidation('revalidateField', 'dh_s');
@@ -151,7 +151,7 @@ $(document).ready(function(){
 		.click(function(e){
 			$('#datetimepickerfim').data("DateTimePicker").hide();
 		});
-	
+
 	$('#datetimepickerfim')
 		.on("dp.change", function(e){
 			$('#cadSaidasForm').formValidation('revalidateField', 'dh_r');
@@ -162,13 +162,13 @@ $(document).ready(function(){
 		.click(function(e){
 			$('#datetimepickerini').data("DateTimePicker").hide();
 		});
-		
+
 	$('#saidasDatatable tbody').on('click', 'tr', function () {
 		rowSelected = this;
 		populateSaida( saidaDataTable.row( rowSelected ).data().id );
 		$("#saidasModal").modal();
 	});
-	
+
 	$("#cadSaidasForm")
 		.on('init.field.fv', function(e, data) {
 			var $parent = data.element.parents('.form-group'),
@@ -181,7 +181,7 @@ $(document).ready(function(){
 		})
 		.on('success.form.fv', function(e) {
 			e.preventDefault();
-		})	
+		})
 		.formValidation({
 			framework: 'bootstrap',
 			icon: {
@@ -195,7 +195,7 @@ $(document).ready(function(){
 			buttons();
 		})
 	;
-	
+
 	$("#printForm")
 		.on('init.field.fv', function(e, data) {
 			var $parent = data.element.parents('.form-group'),
@@ -208,7 +208,7 @@ $(document).ready(function(){
 		})
 		.on('success.form.fv', function(e) {
 			e.preventDefault();
-		})	
+		})
 		.formValidation({
 			framework: 'bootstrap',
 			icon: {
@@ -226,28 +226,28 @@ $(document).ready(function(){
 			}
 		})
 	;
-	
+
 	$("[name=cmLista]").change(function(){
 		rulesGeracao( $(this), true );
-	});	
+	});
 
 	$("[name=cmSubLista]").change(function(){
 		rulesGeracao( $(this), false );
-	});	
-	
+	});
+
 	$('#btnPrint').click(function(){
 		jsLIB.resetForm( $('#printForm') );
 		$("#printModal").modal();
 		$("[name=cmLista]").triggerHandler('change');
 	});
-	
+
 	$('#btnUse').click(function(){
 	});
 
 	$("#saidasModal").on('show.bs.modal', function(event){
 		buttons();
 	});
-	
+
 	$('#btnNovo').click(function(){
 		jsLIB.resetForm( $('#cadSaidasForm') );
 		populateSaida( $("#saidaID").val("Novo").val() );
@@ -284,7 +284,7 @@ $(document).ready(function(){
 						};
 						jsLIB.ajaxCall({
 							waiting : true,
-							url: jsLIB.rootDir+"rules/saidas.php",
+							url: jsLIB.rootDir+"admin/rules/saidas.php",
 							data: { MethodName : 'fSaida', data : parameter },
 							success: function(data){
 								saidaDataTable.ajax.reload( function(){
@@ -302,7 +302,7 @@ $(document).ready(function(){
 	$("#cbParticip").on("reload.options.bs.select", function(event){
 		populateMembers();
 	});
-	
+
 	$("[name=btnShowAttr]").click(function(){
 		var attrRule = $(this).attr("attr-rule");
 		$("#lblTitle").html(this.innerHTML);
@@ -321,14 +321,14 @@ $(document).ready(function(){
 					vl: $(this).val()
 				};
 				jsLIB.ajaxCall({
-					url: jsLIB.rootDir+"rules/saidas.php",
+					url: jsLIB.rootDir+"admin/rules/saidas.php",
 					data: { MethodName : 'setAttrib', data : parameter }
-				});				
+				});
 			});
-			
+
 		});
 	});
-	
+
 });
 
 function rulesGeracao( obj, filter ){
@@ -336,7 +336,7 @@ function rulesGeracao( obj, filter ){
 		$("#divFilterPrint").visible(false);
 		$("[name=rowFilter]").visible(false);
 	}
-	var show = obj.find(":selected").attr('show'); 
+	var show = obj.find(":selected").attr('show');
 	if (show !== undefined) {
 		if (filter){
 			$("#divFilterPrint").visible(true);
@@ -371,16 +371,16 @@ function buttons(){
 }
 
 function populateMembers(){
-	var parameters = { 
+	var parameters = {
 		filtro: 'Y',
 		dhr: $('#dhRetorno').val(),
 		id:  $("#saidaID").val(),
 		filters: jsFilter.jSON()
-	}	
+	}
 	jsLIB.ajaxCall({
 		waiting : true,
 		type: "GET",
-		url: jsLIB.rootDir+"rules/saidas.php",
+		url: jsLIB.rootDir+"admin/rules/saidas.php",
 		data: { MethodName : 'getMembrosFilter', data : parameters },
 		success: function(mb){
 			jsLIB.populateOptions( $("#cbParticip"), mb.membros );
@@ -397,7 +397,7 @@ function populateMembers(){
 function populateSaida( saidaID ) {
 	jsLIB.ajaxCall({
 		type: "GET",
-		url: jsLIB.rootDir+"rules/saidas.php",
+		url: jsLIB.rootDir+"admin/rules/saidas.php",
 		data: { MethodName : 'fSaida', data : { id : saidaID } },
 		success: function(sd){
 			jsLIB.populateForm( $("#cadSaidasForm"), sd.saida );
@@ -417,12 +417,12 @@ function updateSaida(){
 	};
 	jsLIB.ajaxCall({
 		waiting : true,
-		url: jsLIB.rootDir+"rules/saidas.php",
+		url: jsLIB.rootDir+"admin/rules/saidas.php",
 		data: { MethodName : 'fSaida', data : parameter },
 		success: function(sd){
 			$("#saidaID").val(sd.id);
 			buttons();
-			saidaDataTable.ajax.reload();	
+			saidaDataTable.ajax.reload();
 		}
 	});
 }

@@ -1,5 +1,5 @@
 <?php
-@require_once("../include/functions.php");
+@require_once("../../include/functions.php");
 responseMethod();
 
 /****************************
@@ -57,7 +57,7 @@ function getQueryByFilter( $parameters ) {
 		WHERE fa.NR_ANO = YEAR(NOW()) $where
 	 ORDER BY fa.TP
 	";
-	return $GLOBALS['conn']->Execute( $query, $aWhere );
+	return CONN::get()->Execute( $query, $aWhere );
 }
 
 function getAcordos( $parameters ) {

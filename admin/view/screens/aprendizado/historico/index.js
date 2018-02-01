@@ -23,10 +23,10 @@ $(document).ready(function(){
 			},
 			ajax: {
 				type	: "GET",
-				url	: jsLIB.rootDir+"rules/aprendizadoHist.php",
+				url	: jsLIB.rootDir+"admin/rules/aprendizadoHist.php",
 				data	: function (d) {
 						d.MethodName = "getAprHist",
-						d.data = { 
+						d.data = {
 								 filtro: 'T',
 								 filters: jsFilter.jSON()
 							}
@@ -103,7 +103,7 @@ $(document).ready(function(){
 						ruleBtnDelete(false);
 						dialogRef.enableButtons(false);
 						dialogRef.setClosable(false);
-						
+
 						var selected = dataTable.rows('.selected').data();
 						var tmp = [];
 						for (var i=0;i<selected.length;i++){
@@ -113,7 +113,7 @@ $(document).ready(function(){
 							ids: tmp
 						};
 						jsLIB.ajaxCall({
-							url: jsLIB.rootDir+"rules/aprendizado.php",
+							url: jsLIB.rootDir+"admin/rules/aprendizado.php",
 							data: { MethodName : 'delete', data : parameter },
 							success: function(){
 								dialogRef.close();
@@ -125,13 +125,13 @@ $(document).ready(function(){
 			]
 	    });
 	});
-	
+
 	$('#aprHstTable tbody').on('click', 'tr', function () {
 		$(this).toggleClass('selected');
 		ruleBtnDelete();
 	});
-		
-	$(".date").mask('00/00/0000');
+
+	//$(".date").mask('00/00/0000');
 	ruleBtnDelete(false);
 });
 

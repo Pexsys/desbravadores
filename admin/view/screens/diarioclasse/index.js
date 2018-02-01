@@ -26,10 +26,10 @@ $(document).ready(function(){
 		},
 		ajax: {
 			type	: "GET",
-			url	: jsLIB.rootDir+"rules/diarioClasse.php",
+			url	: jsLIB.rootDir+"admin/rules/diarioClasse.php",
 			data	: function (d) {
 					d.MethodName = "getListaDiario",
-					d.data = { 
+					d.data = {
 						filter: tpFiltro
 					}
 				},
@@ -81,27 +81,29 @@ $(document).ready(function(){
 		],
 		fnInitComplete: function(oSettings, json) {
 		  buttonsPrimary();
-		},		
+		},
 		fnRowCallback: function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
 			if ( aData.st == 'S' ) {
 				$(nRow.cells[4]).css('color', '#cc0000').css('font-weight', 'bold');
 			}
         }
 	});
-	
-	$('#datetimepicker').datetimepicker({
-		locale: 'pt-br',
-		language: 'pt-BR',
-		format: 'DD/MM/YYYY',
-		maskInput: true,
-		pickDate: true,
-		pickTime: false,
-		pickSeconds: false,
-		useCurrent: false
-	}).on('dp.change',function(){
-		$("#cadRegForm").formValidation('revalidateField', 'regDH');
-		buttons();
-	});
+
+	$('#datetimepicker')
+		//.datetimepicker({
+		//	locale: 'pt-br',
+		//	language: 'pt-BR',
+		//	format: 'DD/MM/YYYY',
+		//	maskInput: true,
+		//	pickDate: true,
+		//	pickTime: false,
+		//	pickSeconds: false,
+		//	useCurrent: false
+		//})
+		.on('dp.change',function(){
+			$("#cadRegForm").formValidation('revalidateField', 'regDH');
+			buttons();
+		});
 
 	$('#btnAtivos, #btnTodos').click(function(){
 		switchSelecion( $(this).attr('tp-filtro') );
@@ -129,11 +131,11 @@ $(document).ready(function(){
 		statusbar: false
 	});
 
-	$("#nrCopias").TouchSpin({
-		verticalbuttons: true,
-		verticalupclass: 'glyphicon glyphicon-plus',
-		verticaldownclass: 'glyphicon glyphicon-minus'
-	});
+	//$("#nrCopias").TouchSpin({
+	//	verticalbuttons: true,
+	//	verticalupclass: 'glyphicon glyphicon-plus',
+	//	verticaldownclass: 'glyphicon glyphicon-minus'
+	//});
 
 	$('#diaDataTable tbody')
 		.on('click', 'tr', function (e) {
@@ -155,7 +157,7 @@ $(document).ready(function(){
 			} else {
 				jsLIB.ajaxCall({
 					type: "GET",
-					url: jsLIB.rootDir+"rules/diarioClasse.php",
+					url: jsLIB.rootDir+"admin/rules/diarioClasse.php",
 					data: { MethodName : 'fDetalheItem', data : { filter: tpFiltro, id: row.data().id, cl: row.data().in.cl } },
 					success: function(oc){
 						row.child( oc ).show();
@@ -164,7 +166,7 @@ $(document).ready(function(){
 
 			}
 		});
-	
+
 	$("#cadRegForm")
 		.on("change", "[field]", function(e) {
 			$("#cadRegForm")
@@ -216,7 +218,7 @@ $(document).ready(function(){
 			e.stopPropagation();
 		})
 	;
-	
+
 	$('#btnDel').click(function(){
 		BootstrapDialog.show({
 			title: 'Alerta',
@@ -247,7 +249,7 @@ $(document).ready(function(){
 						};
 						jsLIB.ajaxCall({
 							waiting : true,
-							url: jsLIB.rootDir+"rules/diarioClasse.php",
+							url: jsLIB.rootDir+"admin/rules/diarioClasse.php",
 							data: { MethodName : 'fRegistro', data : parameter },
 							success: function(){
 								refreshAndButtons();
@@ -259,8 +261,8 @@ $(document).ready(function(){
 				}
 			]
 		});
-	});	
-	
+	});
+
 	$('#btnGravar').click(function(){
 		if (valuePendOrig !== valuePend) {
 			BootstrapDialog.show({
@@ -294,17 +296,17 @@ $(document).ready(function(){
 						}
 					}
 					]
-			});		
+			});
 		} else {
 			updateRegistro();
 			refreshAndButtons();
 		}
 	});
-	
+
 	$("#diaModal").on('show.bs.modal', function(event){
 		buttons();
 	});
-	
+
 	$('#btnNovo').click(function(){
 		jsLIB.resetForm( $('#cadRegForm') );
 		$('#divReferencia').visible( false );
@@ -312,7 +314,7 @@ $(document).ready(function(){
 		buttons();
 		$("#diaModal").modal();
 	});
-	
+
 	$("#fgPend").change(function(){
 		valuePend = jsLIB.getValueFromField( $("#fgPend") );
 		buttons();
@@ -334,14 +336,14 @@ $(document).ready(function(){
 	$("#cmRef").change(function(){
 		buttons();
 	});
-	
+
 	$('#btnPrepare').click(function(){
 		jsLIB.resetForm( $('#cadPrepareForm') );
 		populateMembers();
 		$("#prepareModal").modal();
 		ruleBotaoGerar();
 	});
-	
+
 	$('#cadPrepareForm')
 		.submit( function(e) {
 			e.preventDefault();
@@ -354,7 +356,7 @@ $(document).ready(function(){
 		if ( objOrigem.attr("tab-function") == "radio" ) {
 			$('[tab-function=radio]').each(function(){
 				$( '#'+$(this).attr('for') ).visible(false);
-			});			
+			});
 		}
 		$( '#'+objOrigem.attr('for') ).visible( !objOrigem.hasClass("active") );
 		ruleBotaoGerar( true );
@@ -365,7 +367,7 @@ $(document).ready(function(){
 			frm: jsLIB.getJSONFields( $('#cadPrepareForm') )
 		};
 		getFunctions( parameter );
-		
+
 		var url = jsLIB.rootDir+'report/geraDiarioClasse.php';
 		if ( parameter.frm.id ) {
 			url += '?id='+ parameter.frm.id.toString();
@@ -373,7 +375,7 @@ $(document).ready(function(){
 			url += '?ip='+ parameter.frm.ip.toString();
 		}
 		window.open(url,'_blank','top=50,left=50,height=750,width=550,menubar=no,status=no,titlebar=no',true);
-		
+
 		$("#prepareModal").modal('hide');
 	});
 });
@@ -426,9 +428,9 @@ function buttons(){
 	$('#btnDel').visible( $("#regID").val() != "" && valuePend == 'S' && valuePendOrig == 'S' );
 	var ref = ( ($('#divReferencia:visible').is(":visible") && $("#cmRef").val() != '') || !$('#divReferencia:visible').is(":visible") ) ;
 	$("#btnGravar").visible(
-		valuePendOrig !== 'N' && 
-		$("#regDH").val() != '' && 
-		$("#cmClasse").val() != '' && 
+		valuePendOrig !== 'N' &&
+		$("#regDH").val() != '' &&
+		$("#cmClasse").val() != '' &&
 		$("#cmReq").val() != '' &&
 		ref
 	);
@@ -445,7 +447,7 @@ function populateRegistro( diarioID ) {
 	formPopulated = false;
 	jsLIB.ajaxCall({
 		type: "GET",
-		url: jsLIB.rootDir+"rules/diarioClasse.php",
+		url: jsLIB.rootDir+"admin/rules/diarioClasse.php",
 		data: { MethodName : 'fRegistro', data : { id : diarioID } },
 		success: function(oc){
 			if (oc){
@@ -453,7 +455,7 @@ function populateRegistro( diarioID ) {
 				jsLIB.populateOptions( $("#cmReq"), oc.req );
 				rulesRefs(oc.ref);
 				jsLIB.populateForm( $("#cadRegForm"), oc.diario );
-				valuePendOrig = oc.diario.fg_pend;				
+				valuePendOrig = oc.diario.fg_pend;
 			}
 			valuePend = jsLIB.getValueFromField( $("#fgPend") );
 			rulefields();
@@ -472,7 +474,7 @@ function refreshAndButtons(){
 function populateMembers(){
 	jsLIB.ajaxCall({
 		type: "GET",
-		url: jsLIB.rootDir+"rules/diarioClasse.php",
+		url: jsLIB.rootDir+"admin/rules/diarioClasse.php",
 		data: { MethodName : 'fGetMembros' },
 		success: function(oc){
 			jsLIB.populateOptions( $("#cmName"), oc.nomes );
@@ -485,9 +487,9 @@ function populateReqs(){
 	if (formPopulated && classeID){
 		jsLIB.ajaxCall({
 			type: "GET",
-			url: jsLIB.rootDir+"rules/diarioClasse.php",
-			data: { 
-				MethodName : 'fGetCompl', 
+			url: jsLIB.rootDir+"admin/rules/diarioClasse.php",
+			data: {
+				MethodName : 'fGetCompl',
 				data : {
 					id_classe: classeID
 				}
@@ -508,7 +510,7 @@ function populateRefs(){
 		};
 		jsLIB.ajaxCall({
 			type: "GET",
-			url: jsLIB.rootDir+"rules/diarioClasse.php",
+			url: jsLIB.rootDir+"admin/rules/diarioClasse.php",
 			data: { MethodName : 'fGetRef', data : parameter },
 			success: function(cm){
 				rulesRefs(cm);
@@ -536,7 +538,7 @@ function updateRegistro(){
 	};
 	jsLIB.ajaxCall({
 		waiting: true,
-		url: jsLIB.rootDir+"rules/diarioClasse.php",
+		url: jsLIB.rootDir+"admin/rules/diarioClasse.php",
 		data: { MethodName : 'fRegistro', data : parameter },
 		success: function(oc){
 			$("#regID").val(oc.id);

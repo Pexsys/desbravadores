@@ -2,7 +2,6 @@
 @require_once("include/functions.php");
 fHeaderPage( array( PATTERNS::getVD()."css/index.css?" )
 		   , array( PATTERNS::getVD()."js/index.js?") );
-fConnDB();
 ?>
 <body>
 
@@ -28,7 +27,7 @@ fConnDB();
         <!-- /.row -->
 
         <?php
-        $result = $GLOBALS['conn']->Execute( "
+        $result = CONN::get()->Execute( "
         	  SELECT *
         	    FROM TAB_UNIDADE
         	   WHERE FG_ATIVA = 'S'

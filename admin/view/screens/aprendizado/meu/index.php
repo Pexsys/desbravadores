@@ -29,7 +29,7 @@ $pessoaID = $_SESSION['USER']['ID_CAD_PESSOA'];
 </div>
 <div class="row">
 <?php
-$result = $GLOBALS['conn']->Execute("
+$result = CONN::get()->Execute("
 	SELECT TP_ITEM, DS_ITEM, CD_AREA_INTERNO, DT_INICIO, MAX(DT_ASSINATURA) AS DT_ASSINATURA
 	FROM CON_APR_PESSOA
 	WHERE ID_CAD_PESSOA = ?
@@ -74,7 +74,7 @@ if (!$result->EOF):
 <?php
 endif;
 
-$result = $GLOBALS['conn']->Execute("
+$result = CONN::get()->Execute("
 	SELECT TP_ITEM, DS_ITEM, CD_AREA_INTERNO, DT_INICIO, MAX(DT_ASSINATURA) AS DT_ASSINATURA
 	FROM CON_APR_PESSOA
 	WHERE ID_CAD_PESSOA = ?
@@ -126,12 +126,12 @@ endif;
 </div>
 
 <?php
-$result = $GLOBALS['conn']->Execute("
+$result = CONN::get()->Execute("
    SELECT ta.TP_ITEM, ta.CD_ITEM_INTERNO, ta.CD_AREA_INTERNO, ta.DS_ITEM, ah.DT_INICIO, ah.DT_CONCLUSAO, ah.DT_AVALIACAO, ah.DT_INVESTIDURA
 	 FROM APR_HISTORICO ah
 INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
 	WHERE ah.ID_CAD_PESSOA = ?
-	  AND ah.DT_INVESTIDURA IS NOT NULL 
+	  AND ah.DT_INVESTIDURA IS NOT NULL
 	  AND YEAR(ah.DT_INVESTIDURA) < YEAR(NOW())
 	ORDER BY ah.DT_CONCLUSAO DESC, ta.TP_ITEM, ta.CD_ITEM_INTERNO DESC
 ", array($pessoaID) );
@@ -179,9 +179,4 @@ if (!$result->EOF):
 endif;
 ?>
 </div>
-<script src="<?php echo PATTERNS::getVD();?>include/_core/js/flot/jquery.flot.min.js"></script>
-<script src="<?php echo PATTERNS::getVD();?>include/_core/js/flot/jquery.flot.time.min.js"></script>    
-<script src="<?php echo PATTERNS::getVD();?>include/_core/js/flot/jquery.flot.symbol.min.js"></script>
-<script src="<?php echo PATTERNS::getVD();?>include/_core/js/flot/jquery.flot.resize.min.js"></script>
-<script src="<?php echo PATTERNS::getVD();?>include/_core/js/flot/jquery.flot.dashes.js"></script>
-<script src="<?php echo PATTERNS::getVD();?>dashboard/js/meuAprendizado.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo PATTERNS::getVD();?>admin/view/screens/aprendizado/meu/index.js<?php echo "?".time();?>"></script>

@@ -11,7 +11,7 @@ function agendaConsulta() {
 	jsLIB.ajaxCall({
 		waiting : true,
 		type: "GET",
-		url: jsLIB.rootDir+"rules/agenda.php",
+		url: jsLIB.rootDir+"admin/rules/agenda.php",
 		data: { MethodName : 'agendaConsulta', data : { ano: $("#cmANO").val() } },
 		success: function(dts){
 			if (dts.years){

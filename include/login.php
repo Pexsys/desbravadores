@@ -1,5 +1,5 @@
 <script type="text/javascript" src="<?php echo PATTERNS::getVD();?>js/jquery.sha1.js"></script>
-<script type="text/javascript" src="<?php echo PATTERNS::getVD();?>js/login.js?<?php echo microtime();?>"></script>
+<script type="text/javascript" src="<?php echo PATTERNS::getVD();?>js/login.js<?php echo "?".time();?>"></script>
 <div class="modal fade" id="myLoginModal">
 	<div class="modal-dialog modal-sm">
 		<div class="modal-content">

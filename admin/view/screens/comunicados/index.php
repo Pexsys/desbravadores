@@ -94,6 +94,6 @@
 		</div>
 	</div>
 </div>
-<script src="<?php echo PATTERNS::getVD();?>include/_core/js/tinymce/tinymce.min.js"></script>
-<script src="<?php echo PATTERNS::getVD();?>include/_core/js/tinymce/jquery.tinymce.min.js"></script>
-<script src="<?php echo PATTERNS::getVD();?>dashboard/js/cadastroComunicados.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/tinymce/tinymce.min.js"></script>
+<script src="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/tinymce/jquery.tinymce.min.js"></script>
+<script src="<?php echo PATTERNS::getVD();?>admin/view/screens/comunicados/index.js<?php echo "?".time();?>"></script>

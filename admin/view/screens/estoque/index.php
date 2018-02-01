@@ -78,4 +78,4 @@
 		</form>
 	</div>
 </div>
-<script src="<?php echo PATTERNS::getVD();?>dashboard/js/cadastroEstoque.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo PATTERNS::getVD();?>admin/view/screens/estoque/index.js<?php echo "?".time();?>"></script>

@@ -269,4 +269,4 @@ $autorizIcon = "fa fa-circle text-danger";
 		</form>
 	</div>
 </div>
-<script src="<?php echo PATTERNS::getVD();?>dashboard/js/cadastroSaidas.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo PATTERNS::getVD();?>admin/view/screens/saidas/index.js<?php echo "?".time();?>"></script>

@@ -31,7 +31,7 @@ function drawBoxesArea($title,$result,$boxClass){
 }
 
 //MEMBRO LOGADO
-$result = $GLOBALS['conn']->Execute("
+$result = CONN::get()->Execute("
 	SELECT es.ID, es.DS, esp.ID_CAD_MEMBRO, es.DH_S
 	  FROM EVE_SAIDA_MEMBRO esp
 INNER JOIN EVE_SAIDA es ON (es.ID = esp.ID_EVE_SAIDA AND es.DH_R > NOW() AND es.FG_IMPRIMIR = ?)
@@ -95,4 +95,4 @@ endif;
 		</div>
 	</div>
 </div>
-<script src="<?php echo PATTERNS::getVD();?>dashboard/js/printAutoriz.js<?php //echo "?".microtime();?>"></script>
+<script src="<?php echo PATTERNS::getVD();?>admin/view/screens/print/autoriz/index.js<?php //echo "?".time();?>"></script>

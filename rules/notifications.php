@@ -25,7 +25,7 @@ function getNotifications(){
 
 function getItemNotify( $arr, $tp, $icon, $title, $url ){
 	//VERIFICA COMUNICADOS PENDENTES
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT MIN(DH_GERA) AS DT, COUNT(*) AS QT
 		  FROM LOG_MENSAGEM
 		 WHERE YEAR(DH_GERA) = YEAR(NOW())

@@ -21,7 +21,7 @@ $(document).ready(function(){
 		},
 		ajax: {
 			type	: "GET",
-			url	: jsLIB.rootDir+"rules/tabelas.php",
+			url	: jsLIB.rootDir+"admin/rules/tabelas.php",
 			data	: function (d) {
 				d.MethodName = "getCargos"
 			},

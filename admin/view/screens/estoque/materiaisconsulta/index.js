@@ -22,10 +22,10 @@ $(document).ready(function(){
 			},
 			ajax: {
 				type	: "GET",
-				url	: jsLIB.rootDir+"rules/materiaisHist.php",
+				url	: jsLIB.rootDir+"admin/rules/materiaisHist.php",
 				data	: function (d) {
 						d.MethodName = "getHistorico",
-						d.data = { 
+						d.data = {
 								 filtro: 'T',
 								 filters: jsFilter.jSON()
 							}
@@ -76,6 +76,6 @@ $(document).ready(function(){
 	$('#matHstTable tbody').on('click', 'tr', function () {
 		$(this).toggleClass('selected');
 	});
-		
-	$(".date").mask('00/00/0000');
+
+	//$(".date").mask('00/00/0000');
 });

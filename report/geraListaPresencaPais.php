@@ -125,9 +125,8 @@ class LISTAPRESENCA extends TCPDF {
 $pdf = new LISTAPRESENCA();
 $pdf->setTipoUniforme(fRequest("filter"));
 
-fConnDB();
 $pdf->newPage();
-$result = $GLOBALS['conn']->Execute("
+$result = CONN::get()->Execute("
 	SELECT *
 	FROM CON_ATIVOS
 	WHERE IDADE_HOJE < 18

@@ -1,24 +1,23 @@
 <?php
 @require_once("../include/functions.php");
-fConnDB();
 
 //SECRETARIA - COMUNICADOS - EMAILS NAO ENVIADOS
 $nrEnviados = 0;
-$GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('EMAILS','01.00-Analisando comunicados não enviados...')");
-$rs = $GLOBALS['conn']->Execute("
+CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('EMAILS','01.00-Analisando comunicados não enviados...')");
+$rs = CONN::get()->Execute("
 		SELECT DISTINCT cc.ID, cc.CD, cc.DH, cc.TXT
 		  FROM LOG_MENSAGEM lc
 	INNER JOIN CAD_COMUNICADO cc ON (cc.ID = lc.ID_ORIGEM AND lc.TP = 'C')
 		 WHERE cc.FG_PEND = 'N'
 		   AND (lc.DH_SEND IS NULL AND lc.DH_READ IS NULL)
-		   AND lc.EMAIL IS NOT NULL 
+		   AND lc.EMAIL IS NOT NULL
 	  ORDER BY 1
 ");
 foreach($rs as $k => $l):
 
 	SENDMAIL::get()->Subject = PATTERNS::getClubeDS( array("cl","nm") ) . " - Comunicado #".$l["CD"]." [".strftime("%d/%m/%Y",strtotime($l["DH"])) ."]";
 
-	$rs1 = $GLOBALS['conn']->Execute("
+	$rs1 = CONN::get()->Execute("
 		SELECT *
 		  FROM LOG_MENSAGEM
 		 WHERE DH_SEND IS NULL
@@ -38,7 +37,7 @@ foreach($rs as $k => $l):
 		SENDMAIL::get()->MsgHTML($l["TXT"]);
 		SENDMAIL::get()->Send();
 		//ATUALIZA ENVIO
-		$GLOBALS['conn']->Execute("
+		CONN::get()->Execute("
 			UPDATE LOG_MENSAGEM
 				SET DH_SEND = NOW()
 				WHERE DH_SEND IS NULL
@@ -47,15 +46,15 @@ foreach($rs as $k => $l):
 				AND TP = ?
 		", array( $l["ID"], "C") );
 	endif;
-	
+
 endforeach;
-$GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('EMAILS','01.99-Comunicados enviados com sucesso ($nrEnviados)...')");
+CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('EMAILS','01.99-Comunicados enviados com sucesso ($nrEnviados)...')");
 
 
 //SECRETARIA - OCORRENCIAS - EMAILS NAO ENVIADOS
 $nrEnviados = 0;
-$GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('EMAILS','01.00-Analisando ocorrencias não enviados...')");
-$rs = $GLOBALS['conn']->Execute("
+CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('EMAILS','01.00-Analisando ocorrencias não enviados...')");
+$rs = CONN::get()->Execute("
 		SELECT DISTINCT co.ID, co.CD, co.DH, co.TXT
 		  FROM LOG_MENSAGEM lc
 	INNER JOIN CAD_OCORRENCIA co ON (co.ID = lc.ID_ORIGEM AND lc.TP = 'O')
@@ -68,7 +67,7 @@ foreach ($rs as $l):
 	SENDMAILOCORRENCIAS::sendOcorrenciaByID($l["ID"]);
 	$nrEnviados++;
 endforeach;
-$GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('EMAILS','01.99-Ocorrencias enviados com sucesso ($nrEnviados)...')");
+CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('EMAILS','01.99-Ocorrencias enviados com sucesso ($nrEnviados)...')");
 
 exit;
 ?>

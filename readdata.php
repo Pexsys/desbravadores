@@ -26,7 +26,7 @@ session_start();
 <script src="<?php echo PATTERNS::getVD();?>include/_core/js/formValidation/bootstrap.min.js"></script>
 <script src="<?php echo PATTERNS::getVD();?>js/functions.lib.js"></script>
 <script src="<?php echo PATTERNS::getVD();?>js/readdata.lib.js"></script>
-<script src="<?php echo PATTERNS::getVD();?>js/readdata.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo PATTERNS::getVD();?>js/readdata.js<?php echo "?".time();?>"></script>
 </head>
 <body>
 <?php

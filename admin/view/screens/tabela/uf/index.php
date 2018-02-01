@@ -60,4 +60,4 @@
 		</div>
 	</div>
 </div>
-<script src="<?php echo PATTERNS::getVD();?>dashboard/js/tabelaUF.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo PATTERNS::getVD();?>admin/view/screens/tabela/uf/index.js<?php echo "?".time();?>"></script>

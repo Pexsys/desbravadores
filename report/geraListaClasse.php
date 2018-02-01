@@ -79,7 +79,7 @@ class LISTACLASSE extends TCPDF {
 	}
 
 	private function addGrupoAprendTitle($af) {
-		$rsM = $GLOBALS['conn']->Execute("
+		$rsM = CONN::get()->Execute("
 			SELECT ca.ID_CAD_PESSOA, ca.NM, ca.CD_CARGO, ca.DS_CARGO, ca.DT_NASC, ca.FONE_RES, ca.FONE_CEL
 			FROM CON_ATIVOS ca
 			INNER JOIN APR_HISTORICO ah ON (ah.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
@@ -177,9 +177,8 @@ class LISTACLASSE extends TCPDF {
 $filter = fRequest("filter");
 $pdf = new LISTACLASSE();
 
-fConnDB();
 $pdf->newPage();
-$result = $GLOBALS['conn']->Execute("
+$result = CONN::get()->Execute("
 	SELECT DISTINCT ta.CD_ITEM_INTERNO, ta.NR_IDADE_MINIMA, ta.DS_ITEM, ta.CD_COR, ta.ID
 	FROM APR_HISTORICO ah
 	INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)

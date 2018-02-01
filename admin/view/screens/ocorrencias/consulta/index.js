@@ -22,7 +22,7 @@ $(document).ready(function(){
 			},
 			ajax: {
 				type	: "GET",
-				url	: jsLIB.rootDir+"rules/ocorrencias.php",
+				url	: jsLIB.rootDir+"admin/rules/ocorrencias.php",
 				data	: function (d) {
 						d.MethodName = "getOcorrencias",
 						d.data = { 
@@ -74,7 +74,7 @@ $(document).ready(function(){
 	$('#btnCiente').on('click', function(){
 		jsLIB.ajaxCall({
 			waiting : true,
-			url: jsLIB.rootDir+"rules/ocorrencias.php",
+			url: jsLIB.rootDir+"admin/rules/ocorrencias.php",
 			data: { MethodName : 'fSetRead', data : { id : $(this).attr("ocorr-id") } },
 			success: function(data){
 				ocoDataTable.ajax.reload( function(){
@@ -91,7 +91,7 @@ function populateOcorrencias( data ) {
 	jsLIB.ajaxCall({
 		waiting : true,
 		type: "GET",
-		url: jsLIB.rootDir+"rules/ocorrencias.php",
+		url: jsLIB.rootDir+"admin/rules/ocorrencias.php",
 		data: { MethodName : 'fOcorrencia', data : { id : data.id, nomes : 'N' } },
 		success: function(cm){
 			if (cm.ocorrencia){

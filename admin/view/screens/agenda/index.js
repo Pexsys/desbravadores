@@ -65,18 +65,18 @@ $(document).ready(function(){
 	})
 	.on('success.form.fv', function(e) {
             e.preventDefault();
-        })	
+        })
 	.submit( function(event) {
 		updateEventDB();
 		$('#btnX').triggerHandler('click');
 		calendar.view();
 	});
-		
+
 	options = {
 		view					: 'month',
 		language				: 'pt-BR',
-		modal					: "#events-modal", 
-		modal_type				: 'ajax', 
+		modal					: "#events-modal",
+		modal_type				: 'ajax',
 		modal_title				: function(e) {
 			if (!addEvent) {
 				closeCollapseAll();
@@ -84,7 +84,7 @@ $(document).ready(function(){
 				jsLIB.ajaxCall({
 					type: "GET",
 					async: false,
-					url: jsLIB.rootDir+"rules/agenda.php",
+					url: jsLIB.rootDir+"admin/rules/agenda.php",
 					data: { MethodName : 'events', data : { id : e.id } },
 					success: function(ev){
 						jsLIB.populateForm( $('#myCalendarForm'), ev.result[0].info );
@@ -102,7 +102,7 @@ $(document).ready(function(){
 			var retorno = jsLIB.ajaxCall({
 				type: "GET",
 				async: false,
-				url: jsLIB.rootDir+"rules/agenda.php",
+				url: jsLIB.rootDir+"admin/rules/agenda.php",
 				data: { MethodName : 'events', data : parameter }
 			});
 			return retorno.result;
@@ -113,7 +113,7 @@ $(document).ready(function(){
 		weekbox					: true,
 		format12				: false,
 		first_day				: 2,
-		
+
 		onAfterEventsLoad: function(events) {
 			if (!events) {
 				return;
@@ -138,7 +138,7 @@ $(document).ready(function(){
 			}
 		}
 	};
-	
+
 	calendar = $('#calendar').calendar(options);
 
 	$('.btn-group button[data-calendar-nav]').each(function() {
@@ -159,7 +159,7 @@ $(document).ready(function(){
 		e.preventDefault();
 		e.stopPropagation();
 	});
-	
+
 	$('.panel')
 		.on('show.bs.collapse', function (e) {
 			$(this).find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
@@ -169,17 +169,17 @@ $(document).ready(function(){
 		})
 	;
 
-	$('#datetimepickerini, #datetimepickerfim').datetimepicker({
-		locale: 'pt-br',
-		language: 'pt-BR',
-		format: 'DD/MM/YYYY HH:mm',
-		maskInput: true,
-		pickDate: true,
-		pickTime: true,
-		pickSeconds: false,
-		useCurrent: false
-	});
-	
+	//$('#datetimepickerini, #datetimepickerfim').datetimepicker({
+	//	locale: 'pt-br',
+	//	language: 'pt-BR',
+	//	format: 'DD/MM/YYYY HH:mm',
+	//	maskInput: true,
+	//	pickDate: true,
+	//	pickTime: true,
+	//	pickSeconds: false,
+	//	useCurrent: false
+	//});
+
 	$('#datetimepickerini')
 		.on("dp.change", function (e) {
 			$('#myCalendarForm').formValidation('revalidateField', 'dh_ini');
@@ -190,7 +190,7 @@ $(document).ready(function(){
 		.click(function(e){
 			$('#datetimepickerfim').data("DateTimePicker").hide();
 		});
-	
+
 	$('#datetimepickerfim')
 		.on("dp.change", function(e){
 			$('#myCalendarForm').formValidation('revalidateField', 'dh_fim');
@@ -201,7 +201,7 @@ $(document).ready(function(){
 		.click(function(e){
 			$('#datetimepickerini').data("DateTimePicker").hide();
 		});
-	
+
 	$('#btnX').click(function(){
 		$("#events-modal").modal('hide');
 	});
@@ -214,7 +214,7 @@ $(document).ready(function(){
 		closeCollapseAll();
 		$("#events-modal").modal();
 	});
-	
+
 	$('#btnDelete').click(function(){
 		BootstrapDialog.show({
             title: 'Alerta',
@@ -245,7 +245,7 @@ $(document).ready(function(){
 						};
 						jsLIB.ajaxCall({
 							waiting : true,
-							url: jsLIB.rootDir+"rules/agenda.php",
+							url: jsLIB.rootDir+"admin/rules/agenda.php",
 							data: { MethodName : 'fEvent', data : parameter },
 							success: function(){
 								dialogRef.close();
@@ -266,7 +266,7 @@ function updateEventDB(){
 	};
 	jsLIB.ajaxCall({
 		waiting : true,
-		url: jsLIB.rootDir+"rules/agenda.php",
+		url: jsLIB.rootDir+"admin/rules/agenda.php",
 		data: { MethodName : 'fEvent', data : parameter },
 		success: function(){
 			dialogRef.close();

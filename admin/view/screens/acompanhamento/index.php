@@ -88,5 +88,5 @@
     	</div>
     </div>
 </div>
-<script src="<?php echo PATTERNS::getVD();?>js/readdata.lib.js<?php echo "?".microtime();?>"></script>
-<script src="<?php echo PATTERNS::getVD();?>dashboard/js/cadastroAcompanhamento.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo PATTERNS::getVD();?>js/readdata.lib.js<?php echo "?".time();?>"></script>
+<script src="<?php echo PATTERNS::getVD();?>admin/view/screens/acompanhamento/index.js<?php echo "?".time();?>"></script>

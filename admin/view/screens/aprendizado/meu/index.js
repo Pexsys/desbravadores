@@ -2,65 +2,16 @@ var datasets = undefined;
 var choiceContainer = undefined;
 var previousPoint = null, previousLabel = null;
 
-$(document).ready(function(){
-    
-    $("[name=detail]").on('click',mapDetail);
-    
-	jsLIB.ajaxCall({
-		type: "GET",
-		url: jsLIB.rootDir+"rules/meuAprendizado.php",
-		data: { MethodName : 'getGraphData' },
-		success: function(data){
-			datasets = data;
-			if (data.checkbox){
-				$("#divGraph").show(true);
-				choiceContainer = $("#choices");
-				$.each(data.checkbox, function(key, val) {
-					choiceContainer.append('<label><input type="checkbox" name="'+ key +
-						'" checked="checked" id="op'+ key +'"/>'+ val.label +'</label>&nbsp;');
-				});
-				choiceContainer.find("input").click(plotAccordingToChoices);
-				plotAccordingToChoices();
-			}
-		}
-	});
-	
-	jsLIB.ajaxCall({
-		type: "GET",
-		url: jsLIB.rootDir+"rules/meuAprendizado.php",
-		data: { MethodName : 'getMestrados' },
-		success: function(data){
-			var pessoaID = 
-			$.each(data.rules, (k,v) => {
-				var parameter = { id : data.id, ruleID : v };
-				$("#painelMestrados").append("<div id-rule=\""+v+"\"></div>");
-				
-				jsLIB.ajaxCall({
-					type: "GET",
-					url: jsLIB.rootDir+"rules/meuAprendizado.php",
-					data: { MethodName : 'getPainelMestrado', data : parameter },
-					success: function(data){
-						var obj = $(data);
-						obj.find("[name=detail]").on('click',mapDetail);
-						$("div[id-rule=\""+v+"\"]").replaceWith(obj);
-					}
-				})
-			});
-		}
-	});
-	
-});
-
 const mapDetail = function(){
     var what = $(this).attr('what');
     if (what == 'rules'){
 		var parameter = {
 			id : $(this).attr('id-rule')
 		};
-		
+
 		jsLIB.ajaxCall({
 			type: "GET",
-			url: jsLIB.rootDir+"rules/meuAprendizado.php",
+			url: jsLIB.rootDir+"admin/rules/meuAprendizado.php",
 			data: { MethodName : 'getMasterRules', data : parameter },
 			success: (data) => {
 				BootstrapDialog.show({
@@ -93,6 +44,55 @@ const mapDetail = function(){
     }
 }
 
+$(document).ready(function(){
+
+    $("[name=detail]").on('click',mapDetail);
+
+	jsLIB.ajaxCall({
+		type: "GET",
+		url: jsLIB.rootDir+"admin/rules/meuAprendizado.php",
+		data: { MethodName : 'getGraphData' },
+		success: function(data){
+			datasets = data;
+			if (data.checkbox){
+				$("#divGraph").show(true);
+				choiceContainer = $("#choices");
+				$.each(data.checkbox, function(key, val) {
+					choiceContainer.append('<label><input type="checkbox" name="'+ key +
+						'" checked="checked" id="op'+ key +'"/>'+ val.label +'</label>&nbsp;');
+				});
+				choiceContainer.find("input").click(plotAccordingToChoices);
+				plotAccordingToChoices();
+			}
+		}
+	});
+
+	jsLIB.ajaxCall({
+		type: "GET",
+		url: jsLIB.rootDir+"admin/rules/meuAprendizado.php",
+		data: { MethodName : 'getMestrados' },
+		success: function(data){
+			var pessoaID =
+			$.each(data.rules, (k,v) => {
+				var parameter = { id : data.id, ruleID : v };
+				$("#painelMestrados").append("<div id-rule=\""+v+"\"></div>");
+
+				jsLIB.ajaxCall({
+					type: "GET",
+					url: jsLIB.rootDir+"admin/rules/meuAprendizado.php",
+					data: { MethodName : 'getPainelMestrado', data : parameter },
+					success: function(data){
+						var obj = $(data);
+						obj.find("[name=detail]").on('click',mapDetail);
+						$("div[id-rule=\""+v+"\"]").replaceWith(obj);
+					}
+				})
+			});
+		}
+	});
+
+});
+
 function mapPrint(){
 	$("[name=print]").unbind('click').on('click',function(){
 		printClick( $(this).attr('what'), $(this).attr('id-membro'), $(this).attr('cd-item') );
@@ -109,7 +109,7 @@ function printClick( what, id, cditem ){
 		'_blank',
 		'top=50,left=50,height=750,width=550,menubar=no,status=no,titlebar=no',
 		true
-	);	
+	);
 }
 
 $.fn.UseTooltip = function () {
@@ -204,10 +204,10 @@ function plotAccordingToChoices() {
 		};
 		var plot = $.plot( "#placeholder", data, options );
 		$("#placeholder").UseTooltip();
-		
+
 		if (datasets.ob && datasets.ob.idx) {
 			plot.highlight( 0, datasets.ob.idx );
 		}
-		
+
 	}
 }

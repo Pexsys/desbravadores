@@ -101,10 +101,8 @@ if ( !isset($comunicadoID) || empty($comunicadoID) || stristr($comunicadoID, "in
 endif;
 $qtd = fRequest("q");
 
-fConnDB();
-
 $pdf = new COMUNICADO();
-$result = $GLOBALS['conn']->Execute("
+$result = CONN::get()->Execute("
 	SELECT *
 	  FROM CAD_COMUNICADO
 	 WHERE ID = ?

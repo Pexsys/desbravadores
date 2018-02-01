@@ -20,7 +20,7 @@ $(document).ready(function(){
 			},
 			ajax: {
 				type	: "GET",
-				url	: jsLIB.rootDir+"rules/tabelaFuncoes.php",
+				url	: jsLIB.rootDir+"admin/rules/tabelaFuncoes.php",
 				data	: function (d) {
 					d.MethodName = "getFuncoes"
 				},
@@ -74,7 +74,7 @@ $(document).ready(function(){
 			jsLIB.ajaxCall({
 				waiting : true,
 				async: false,
-				url: jsLIB.rootDir+"rules/tabelaFuncoes.php",
+				url: jsLIB.rootDir+"admin/rules/tabelaFuncoes.php",
 				data: { MethodName : 'addFuncao', data : parameter },
 				success: function(data){
 					dataTable.ajax.reload( function(){

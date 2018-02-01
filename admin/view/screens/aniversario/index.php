@@ -36,4 +36,4 @@
 		</div>
 	</div>
 </div>
-<script src="<?php echo PATTERNS::getVD();?>dashboard/js/consultaAniversarios.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo PATTERNS::getVD();?>admin/view/screens/aniversario/index.js<?php echo "?".time();?>"></script>

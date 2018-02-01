@@ -92,7 +92,7 @@ function login( $parameters ) {
 		if ($usrClube && $result->EOF):
 
 			//VERIFICA SE ESTÁ ATIVO
-			$rsHA = $GLOBALS['conn']->Execute("SELECT ID_CAD_PESSOA, NM FROM CON_ATIVOS WHERE ID_CLUBE = ? AND ID_MEMBRO = ?", array( $barDecode["ci"], $barDecode["ni"] ) );
+			$rsHA = CONN::get()->Execute("SELECT ID_CAD_PESSOA, NM FROM CON_ATIVOS WHERE ID_CLUBE = ? AND ID_MEMBRO = ?", array( $barDecode["ci"], $barDecode["ni"] ) );
 			if (!$rsHA->EOF):
 				fInsertUserProfile( fInsertUser( $usr, $rsHA->fields['NM'], $psw, $rsHA->fields['ID_CAD_PESSOA'] ), 0 );
 
@@ -107,7 +107,7 @@ function login( $parameters ) {
 
 			if ($usrClube):
 				//VERIFICA SE ESTÁ ATIVO
-				$rsHA = $GLOBALS['conn']->Execute("SELECT CD_CARGO, CD_CARGO2 FROM CON_ATIVOS WHERE ID_CLUBE = ? AND ID_MEMBRO = ?", array( $barDecode["ci"], $barDecode["ni"] ) );
+				$rsHA = CONN::get()->Execute("SELECT CD_CARGO, CD_CARGO2 FROM CON_ATIVOS WHERE ID_CLUBE = ? AND ID_MEMBRO = ?", array( $barDecode["ci"], $barDecode["ni"] ) );
 				if ($rsHA->EOF):
 					$psw = null;
 				endif;
@@ -129,7 +129,7 @@ function login( $parameters ) {
 			if ($password == $psw):
 				PROFILE::fSetSessionLogin($result);
 
-				$GLOBALS['conn']->Execute("
+				CONN::get()->Execute("
 					UPDATE CAD_USUARIOS SET 
 						DH_ATUALIZACAO = NOW()
 					WHERE ID_USUARIO = ?
@@ -153,7 +153,7 @@ function login( $parameters ) {
 }
 
 function fInsertUser( $usr, $nm, $psw, $pessoaID ){
-	$GLOBALS['conn']->Execute("
+	CONN::get()->Execute("
 			INSERT INTO CAD_USUARIOS(
 				CD_USUARIO,
 				DS_USUARIO,
@@ -161,18 +161,18 @@ function fInsertUser( $usr, $nm, $psw, $pessoaID ){
 				ID_CAD_PESSOA
 			) VALUES( ?, ?, ?, ? )",
 	array( $usr, $nm, $psw, $pessoaID ) );
-	return $GLOBALS['conn']->Insert_ID();
+	return CONN::get()->Insert_ID();
 }
 
 function fInsertUserProfile( $userID, $profileID ){
-	$rs = $GLOBALS['conn']->Execute("
+	$rs = CONN::get()->Execute("
 		SELECT 1
 		  FROM CAD_USU_PERFIL
 		 WHERE ID_CAD_USUARIOS = ?
 		   AND ID_PERFIL = ?
 	", array( $userID, $profileID ) );
 	if ($rs->EOF):
-		$GLOBALS['conn']->Execute("
+		CONN::get()->Execute("
 			INSERT INTO CAD_USU_PERFIL(
 				ID_CAD_USUARIOS,
 				ID_PERFIL
@@ -182,20 +182,20 @@ function fInsertUserProfile( $userID, $profileID ){
 }
 
 function fDeleteUserAndProfile( $userID, $profileID ){
-	$GLOBALS['conn']->Execute("
+	CONN::get()->Execute("
 		DELETE FROM CAD_USU_PERFIL
 		 WHERE ID_CAD_USUARIOS = ?
 		   AND ID_PERFIL = ?
 	", array( $userID, $profileID ) );
 
-	$GLOBALS['conn']->Execute("
+	CONN::get()->Execute("
 		DELETE FROM CAD_USUARIOS
 		 WHERE ID_USUARIO = ?
 	", array( $userID ) );
 }
 
 function checkMemberByCPF($cpf){
-	return $GLOBALS['conn']->Execute("
+	return CONN::get()->Execute("
 		SELECT cu.ID_USUARIO, cu.CD_USUARIO, cu.DS_USUARIO, cu.DS_SENHA, cu.CLASS,
 			   ca.ID_CAD_PESSOA, ca.TP_SEXO, ca.CD_CARGO, ca.CD_CARGO2, ca.NM, ca.ID_MEMBRO, ca.EMAIL
 		  FROM CON_ATIVOS ca
@@ -207,7 +207,7 @@ function checkMemberByCPF($cpf){
 function checkUser($cdUser, $pag){
 
 	//VERIFICA SE PRECISA ATUALIZAR USUARIO
-	$rs = $GLOBALS['conn']->Execute("
+	$rs = CONN::get()->Execute("
 		SELECT cu.ID_USUARIO, cp.ID
 		FROM CAD_USUARIOS cu
 		INNER JOIN CAD_PESSOA cp ON (cp.NR_CPF = cu.CD_USUARIO)
@@ -215,12 +215,12 @@ function checkUser($cdUser, $pag){
 		  AND cu.ID_CAD_PESSOA IS NULL
 	", array($cdUser) );
 	if (!$rs->EOF):
-		$GLOBALS['conn']->Execute("
+		CONN::get()->Execute("
 			UPDATE CAD_USUARIOS SET ID_CAD_PESSOA = ? WHERE ID_USUARIO = ?
 		", array( $rs->fields["ID"], $rs->fields["ID_USUARIO"] ) );
 	endif;
 
-	return $GLOBALS['conn']->Execute("
+	return CONN::get()->Execute("
 		SELECT cu.ID_USUARIO, cu.CD_USUARIO, cu.DS_USUARIO, cu.DS_SENHA, cu.CLASS,
 			   cm.ID_CAD_PESSOA, cm.ID AS ID_CAD_MEMBRO, cm.ID_CLUBE, cm.ID_MEMBRO,
 			   cp.TP_SEXO, cp.EMAIL
@@ -234,7 +234,7 @@ function checkUser($cdUser, $pag){
 
 function setTheme( $parameters ) {
 	session_start();
-	$GLOBALS['conn']->Execute("
+	CONN::get()->Execute("
 		UPDATE CAD_USUARIOS SET CLASS = ? WHERE ID_USUARIO = ?
 	", array( $parameters["theme"], $_SESSION['USER']["ID_USUARIO"] ) );
 }

@@ -23,10 +23,10 @@ $(document).ready(function(){
 			},
 			ajax: {
 				type	: "GET",
-				url	: jsLIB.rootDir+"rules/cadastroEstoque.php",
+				url	: jsLIB.rootDir+"admin/rules/cadastroEstoque.php",
 				data	: function (d) {
 						d.MethodName = "getEstoque",
-						d.data = { 
+						d.data = {
 								 filtro: 'T',
 								 filters: jsFilter.jSON()
 							}
@@ -65,7 +65,7 @@ $(document).ready(function(){
 			}
 		})
 	;
-	
+
 	$("#cadListaForm")
 		.on('init.field.fv', function(e, data) {
 			var $parent = data.element.parents('.form-group'),
@@ -78,7 +78,7 @@ $(document).ready(function(){
 		})
 		.on('success.form.fv', function(e) {
 			e.preventDefault();
-		})	
+		})
 		.formValidation({
 			framework: 'bootstrap',
 			icon: {
@@ -93,7 +93,7 @@ $(document).ready(function(){
 				tp: save
 			};
 			jsLIB.ajaxCall({
-				url: jsLIB.rootDir+"rules/cadastroEstoque.php",
+				url: jsLIB.rootDir+"admin/rules/cadastroEstoque.php",
 				data: { MethodName : 'setEstoque', data : parameter },
 				success: function(dt){
 					dataTable.ajax.reload( function(){
@@ -105,19 +105,19 @@ $(document).ready(function(){
 			});
 		})
 	;
-	
+
 	$('#btnAdd').click(function(){
 		save = "add";
 		$("#cmTipo").prop('disabled', false);
 		$("#cmItem").prop('disabled', false);
 		populateTipos();
-		
+
 		$('#divItem').visible(false);
-		jsLIB.resetForm( $('#cadListaForm') );	
+		jsLIB.resetForm( $('#cadListaForm') );
 		$("#qtItens").val(1);
 		$("#listaModal").modal();
 	});
-	
+
 	$('#cmTipo').change(function(){
 		var value = $(this).val();
 		var visible = value != '';
@@ -126,38 +126,38 @@ $(document).ready(function(){
 		}
 		$('#divItem').visible(visible);
 	});
-	
-	$("#qtItens").TouchSpin({
-		verticalbuttons: true,
-		verticalupclass: 'glyphicon glyphicon-plus',
-		verticaldownclass: 'glyphicon glyphicon-minus'
-	});
-	
+
+	//$("#qtItens").TouchSpin({
+	//	verticalbuttons: true,
+	//	verticalupclass: 'glyphicon glyphicon-plus',
+	//	verticaldownclass: 'glyphicon glyphicon-minus'
+	//});
+
 	$('#matEstTable tbody').on('click', 'tr', function () {
 		var matID = dataTable.row( this ).data().id;
 		jsLIB.ajaxCall({
 			type: "GET",
-			url: jsLIB.rootDir+"rules/cadastroEstoque.php",
+			url: jsLIB.rootDir+"admin/rules/cadastroEstoque.php",
 			data: { MethodName : 'getItem', data : { id: matID } },
 			success: function(es){
 				if (es){
 					save = "edit";
-					
+
 					jsLIB.resetForm( $('#cadListaForm') );
 					$('#divItem').visible(false);
-					
+
 					populateTipos();
 					$("#cmTipo").prop('disabled', true).val(es.tp).change();
-		
+
 					$("#qtItens").val(es.qt_est);
-		
+
 					populateItens(es.tp);
 					$("#cmItem").prop('disabled', true).val(matID).change();
 					$("#listaModal").modal();
 				}
 			}
 		});
-	});	
+	});
 });
 
 function populateTipos(){
@@ -166,7 +166,7 @@ function populateTipos(){
 	};
 	jsLIB.ajaxCall({
 		type: "GET",
-		url: jsLIB.rootDir+"rules/listaCompras.php",
+		url: jsLIB.rootDir+"admin/rules/listaCompras.php",
 		data: { MethodName : 'getData', data : parameter },
 		success: function(cg){
 			jsLIB.populateOptions( $("#cmTipo"), cg.tipos );
@@ -181,7 +181,7 @@ function populateItens(tp){
 	};
 	jsLIB.ajaxCall({
 		type: "GET",
-		url: jsLIB.rootDir+"rules/listaCompras.php",
+		url: jsLIB.rootDir+"admin/rules/listaCompras.php",
 		data: { MethodName : 'getData', data : parameter },
 		success: function(cg){
 			jsLIB.populateOptions( $("#cmItem"), cg.itens );

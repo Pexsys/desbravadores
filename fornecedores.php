@@ -2,7 +2,6 @@
 @require_once("include/functions.php");
 fHeaderPage( array( PATTERNS::getVD()."css/index.css?" )
 		   , array( PATTERNS::getVD()."js/index.js?") );
-fConnDB();
 
 function fGetClass($strTipoEvento){
 	$eventClass = array(
@@ -69,7 +68,7 @@ function fGetType($strTipoEvento){
         <!-- /.row -->
 
 	<?php
-	$result = $GLOBALS['conn']->Execute( "
+	$result = CONN::get()->Execute( "
 	  SELECT TP, COUNT(*) AS QT
 	    FROM CAD_FORNECEDORES
 	   WHERE FG_ATIVO = ?
@@ -85,7 +84,7 @@ function fGetType($strTipoEvento){
 	  </div>
 	  <div class="panel-body">
 	  	<?php
-	  	$rs = $GLOBALS['conn']->Execute( "
+	  	$rs = CONN::get()->Execute( "
 		  SELECT *
 		    FROM CAD_FORNECEDORES
 		   WHERE FG_ATIVO = ?

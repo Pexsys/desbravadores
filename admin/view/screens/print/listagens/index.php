@@ -103,7 +103,7 @@ $classes = FILTERS::getDomain( array( "type" => "C" ) );
 		<select name="cbMembros" id="cbMembros" class="selectpicker form-control input-sm" title="Escolha um ou mais membros" data-live-search="true" multiple data-selected-text-format="count > 2" data-width="100%" data-container="body" data-actions-box="true">
 		<?php
 		$qtdZeros = zeroSizeID();
-        	$result = $GLOBALS['conn']->Execute("
+        	$result = CONN::get()->Execute("
 				SELECT DISTINCT cm.ID, cp.NM
 				FROM CAD_MEMBRO cm
 				INNER JOIN CAD_PESSOA cp ON (cp.ID = cm.ID_CAD_PESSOA)
@@ -125,4 +125,4 @@ $classes = FILTERS::getDomain( array( "type" => "C" ) );
 		<button id="btnGerar" class="btn btn-success pull-right"><i class="fa fa-print"></i>&nbsp;Gerar</button>
 	</div>
 </div>
-<script src="<?php echo PATTERNS::getVD();?>dashboard/js/printListagens.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo PATTERNS::getVD();?>admin/view/screens/print/listagens/index.js<?php echo "?".time();?>"></script>

@@ -24,10 +24,10 @@ $(document).ready(function(){
 		},
 		ajax: {
 			type	: "GET",
-			url	: jsLIB.rootDir+"rules/ocorrencias.php",
+			url	: jsLIB.rootDir+"admin/rules/ocorrencias.php",
 			data	: function (d) {
 					d.MethodName = "getOcorrencias",
-					d.data = { 
+					d.data = {
 						filtro: 'A',
 						filters: jsFilter.jSON()
 					}
@@ -74,7 +74,7 @@ $(document).ready(function(){
 		],
 		fnInitComplete: function(oSettings, json) {
 		  buttonsPrimary();
-		},		
+		},
 		fnRowCallback: function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
         	if ( aData.dh < moment().unix() ) {
            		$('td', nRow).css('color', '#d0d0d0');
@@ -89,20 +89,22 @@ $(document).ready(function(){
 			}
         }
 	});
-	
-	$('#datetimepicker').datetimepicker({
-		locale: 'pt-br',
-		language: 'pt-BR',
-		format: 'DD/MM/YYYY',
-		maskInput: true,
-		pickDate: true,
-		pickTime: false,
-		pickSeconds: false,
-		useCurrent: false
-	}).on('dp.change',function(){
-		$("#cadOcoForm").formValidation('revalidateField', 'ocoDH');
-		buttons();
-	});
+
+	$('#datetimepicker')
+		//.datetimepicker({
+		//	locale: 'pt-br',
+		//	language: 'pt-BR',
+		//	format: 'DD/MM/YYYY',
+		//	maskInput: true,
+		//	pickDate: true,
+		//	pickTime: false,
+		//	pickSeconds: false,
+		//	useCurrent: false
+		//})
+		.on('dp.change',function(){
+			$("#cadOcoForm").formValidation('revalidateField', 'ocoDH');
+			buttons();
+		});
 
 	tinymce.init({
 		selector: '[type=wysiwyg]',
@@ -126,11 +128,11 @@ $(document).ready(function(){
 		statusbar: false
 	});
 
-	$("#nrCopias").TouchSpin({
-		verticalbuttons: true,
-		verticalupclass: 'glyphicon glyphicon-plus',
-		verticaldownclass: 'glyphicon glyphicon-minus'
-	});
+	//$("#nrCopias").TouchSpin({
+	//	verticalbuttons: true,
+	//	verticalupclass: 'glyphicon glyphicon-plus',
+	//	verticaldownclass: 'glyphicon glyphicon-minus'
+	//});
 
 	$('#ocoDataTable tbody').on('click', 'tr', function () {
 		rowSelected = this;
@@ -138,7 +140,7 @@ $(document).ready(function(){
 		populateOcorrencia( ocoDataTable.row( rowSelected ).data().id );
 		$("#ocoModal").modal();
 	});
-	
+
 	$("#cadOcoForm")
 		.on("change", "[field]", function(e) {
 			$("#cadMembrosForm")
@@ -176,7 +178,7 @@ $(document).ready(function(){
 			e.stopPropagation();
 		})
 	;
-	
+
 	$('#btnDel').click(function(){
 		BootstrapDialog.show({
 			title: 'Alerta',
@@ -207,7 +209,7 @@ $(document).ready(function(){
 						};
 						jsLIB.ajaxCall({
 							waiting : true,
-							url: jsLIB.rootDir+"rules/ocorrencias.php",
+							url: jsLIB.rootDir+"admin/rules/ocorrencias.php",
 							data: { MethodName : 'fOcorrencia', data : parameter },
 							success: function(dt){
 								refreshAndButtons();
@@ -219,8 +221,8 @@ $(document).ready(function(){
 				}
 			]
 		});
-	});	
-	
+	});
+
 	$('#btnGravar').click(function(){
 		if (valuePendOrig !== valuePend) {
 			BootstrapDialog.show({
@@ -254,24 +256,24 @@ $(document).ready(function(){
 						}
 					}
 					]
-			});		
+			});
 		} else {
 			updateOcorrencia();
 			refreshAndButtons();
 		}
 	});
-	
+
 	$("#ocoModal").on('show.bs.modal', function(event){
 		buttons();
 	});
-	
+
 	$('#btnNovo').click(function(){
 		jsLIB.resetForm( $('#cadOcoForm') );
 		populateOcorrencia( $("#ocoID").val("Novo").val() );
 		buttons();
 		$("#ocoModal").modal();
 	});
-	
+
 	$("#fgPend").change(function(){
 		valuePend = jsLIB.getValueFromField( $("#fgPend") );
 		buttons();
@@ -280,14 +282,14 @@ $(document).ready(function(){
 	$("#cmNome").change(function(){
 		buttons();
 	});
-	
+
 	$('#btnPrepare').click(function(){
 		jsLIB.resetForm( $('#cadPrepareForm') );
 		populateMembers();
 		$("#prepareModal").modal();
 		ruleBotaoGerar();
 	});
-	
+
 	$('#cadPrepareForm')
 		.submit( function(e) {
 			e.preventDefault();
@@ -300,7 +302,7 @@ $(document).ready(function(){
 		if ( objOrigem.attr("tab-function") == "radio" ) {
 			$('[tab-function=radio]').each(function(){
 				$( '#'+$(this).attr('for') ).visible(false);
-			});			
+			});
 		}
 		$( '#'+objOrigem.attr('for') ).visible( !objOrigem.hasClass("active") );
 		ruleBotaoGerar( true );
@@ -311,7 +313,7 @@ $(document).ready(function(){
 			frm: jsLIB.getJSONFields( $('#cadPrepareForm') )
 		};
 		getFunctions( parameter );
-		
+
 		var url = jsLIB.rootDir+'report/geraOcorrencias.php';
 		if ( parameter.frm.id ) {
 			url += '?id='+ parameter.frm.id.toString();
@@ -319,7 +321,7 @@ $(document).ready(function(){
 			url += '?ip='+ parameter.frm.ip.toString();
 		}
 		window.open(url,'_blank','top=50,left=50,height=750,width=550,menubar=no,status=no,titlebar=no',true);
-		
+
 		$("#prepareModal").modal('hide');
 	});
 });
@@ -368,13 +370,13 @@ function populateOcorrencia( ocorrenciaID ) {
 	jsLIB.ajaxCall({
 		waiting : true,
 		type: "GET",
-		url: jsLIB.rootDir+"rules/ocorrencias.php",
+		url: jsLIB.rootDir+"admin/rules/ocorrencias.php",
 		data: { MethodName : 'fOcorrencia', data : { id : ocorrenciaID } },
 		success: function(oc){
 			if (oc){
 				jsLIB.populateOptions( $("#cmNome"), oc.nomes );
 				jsLIB.populateForm( $("#cadOcoForm"), oc.ocorrencia );
-				valuePendOrig = oc.ocorrencia.fg_pend;				
+				valuePendOrig = oc.ocorrencia.fg_pend;
 			}
 			valuePend = jsLIB.getValueFromField( $("#fgPend") );
 			rulefields();
@@ -392,7 +394,7 @@ function refreshAndButtons(){
 function populateMembers(){
 	jsLIB.ajaxCall({
 		type: "GET",
-		url: jsLIB.rootDir+"rules/ocorrencias.php",
+		url: jsLIB.rootDir+"admin/rules/ocorrencias.php",
 		data: { MethodName : 'fGetMembros' },
 		success: function(oc){
 			jsLIB.populateOptions( $("#cmName"), oc.nomes );
@@ -406,7 +408,7 @@ function updateOcorrencia(){
 		frm: jsLIB.getJSONFields( $('#cadOcoForm') )
 	};
 	jsLIB.ajaxCall({
-		url: jsLIB.rootDir+"rules/ocorrencias.php",
+		url: jsLIB.rootDir+"admin/rules/ocorrencias.php",
 		data: { MethodName : 'fOcorrencia', data : parameter },
 		success: function(oc){
 			$("#ocoID").val(oc.id);

@@ -21,10 +21,10 @@ $(document).ready(function(){
 		},
 		ajax: {
 			type	: "GET",
-			url	: jsLIB.rootDir+"rules/listaCompras.php",
+			url	: jsLIB.rootDir+"admin/rules/listaCompras.php",
 			data	: function (d) {
 					d.MethodName = "getLista",
-					d.data = { 
+					d.data = {
 							 filtro: 'T',
 							 filters: jsFilter.jSON()
 						}
@@ -88,7 +88,7 @@ $(document).ready(function(){
 			selector: 'td:first-child'
 		}
 	});
-	
+
 	$("#controleForm")
 		.on('init.field.fv', function(e, data) {
 			var $parent = data.element.parents('.form-group'),
@@ -102,7 +102,7 @@ $(document).ready(function(){
 		.on('success.form.fv', function(e) {
 			e.preventDefault();
 			e.stopPropagation();
-		})	
+		})
 		.submit( function(event) {
 			e.preventDefault();
 			e.stopPropagation();
@@ -118,7 +118,7 @@ $(document).ready(function(){
 					vl: value
 				};
 				jsLIB.ajaxCall({
-					url: jsLIB.rootDir+"rules/listaCompras.php",
+					url: jsLIB.rootDir+"admin/rules/listaCompras.php",
 					data: { MethodName : 'setAttr', data : parameters },
 					success: function(data){
 						if (field == 'fg_entregue' && value == 'S' && !$("#fgCompra").prop('checked') ){
@@ -134,7 +134,7 @@ $(document).ready(function(){
 			}
 		})
 	;
-	
+
 	$("#cadListaForm")
 		.on('init.field.fv', function(e, data) {
 			var $parent = data.element.parents('.form-group'),
@@ -147,7 +147,7 @@ $(document).ready(function(){
 		})
 		.on('success.form.fv', function(e) {
 			e.preventDefault();
-		})	
+		})
 		.formValidation({
 			framework: 'bootstrap',
 			icon: {
@@ -163,7 +163,7 @@ $(document).ready(function(){
 			};
 			jsLIB.ajaxCall({
 				waiting: true,
-				url: jsLIB.rootDir+"rules/listaCompras.php",
+				url: jsLIB.rootDir+"admin/rules/listaCompras.php",
 				data: { MethodName : 'addCompras', data : parameter },
 				success: function(data){
 					dataTable.ajax.reload();
@@ -172,7 +172,7 @@ $(document).ready(function(){
 			});
 		})
 	;
-	
+
 	$('#btnProcess').click(function(){
 		BootstrapDialog.show({
 			title: 'Alerta',
@@ -199,7 +199,7 @@ $(document).ready(function(){
 						dialogRef.setClosable(false);
 						jsLIB.ajaxCall({
 							waiting: true,
-							url: jsLIB.rootDir+"rules/listaCompras.php",
+							url: jsLIB.rootDir+"admin/rules/listaCompras.php",
 							data: { MethodName : 'process' },
 							success: function(data){
 								dataTable.ajax.reload();
@@ -228,7 +228,7 @@ $(document).ready(function(){
 		})
 		.on('success.form.fv', function(e) {
 			e.preventDefault();
-		})	
+		})
 		.formValidation({
 			framework: 'bootstrap',
 			icon: {
@@ -243,7 +243,7 @@ $(document).ready(function(){
 		jsLIB.resetForm( $('#printForm') );
 		$("#printModal").modal();
 	});
-	
+
 	$('#btnAdd').click(function(){
 		var parameter = {
 			domains : [ "tipos", "nomes" ]
@@ -251,14 +251,14 @@ $(document).ready(function(){
 		jsLIB.ajaxCall({
 			type: "GET",
 			async: false,
-			url: jsLIB.rootDir+"rules/listaCompras.php",
+			url: jsLIB.rootDir+"admin/rules/listaCompras.php",
 			data: { MethodName : 'getData', data : parameter },
 			success: function(data){
 				jsLIB.populateOptions( $("#cmTipo"), data.tipos );
 				jsLIB.populateOptions( $("#cmNome"), data.nomes );
 			}
 		});
-		
+
 		$('#divItem').visible(false);
 		$('#divOQue').visible(true);
 		$('#divParaQuem').visible(true);
@@ -274,7 +274,7 @@ $(document).ready(function(){
 		jsLIB.ajaxCall({
 			async: false,
 			type: "GET",
-			url: jsLIB.rootDir+"rules/listaCompras.php",
+			url: jsLIB.rootDir+"admin/rules/listaCompras.php",
 			data: { MethodName : 'getData', data : parameter },
 			success: function(data){
 				jsLIB.populateOptions( $("#cmNome"), data.nomes );
@@ -287,11 +287,11 @@ $(document).ready(function(){
 		jsLIB.resetForm( $('#cadListaForm') );
 		$("#listaModal").attr('action','SET').modal();
 	});
-	
+
 	$('#btnEdit').click(function(){
 		jsLIB.ajaxCall({
 			type: "GET",
-			url: jsLIB.rootDir+"rules/listaCompras.php",
+			url: jsLIB.rootDir+"admin/rules/listaCompras.php",
 			data: { MethodName : 'getAttr', data : { id: $(this).attr("id-item") } },
 			success: function(data){
 				formPopulated = false;
@@ -301,7 +301,7 @@ $(document).ready(function(){
 			}
 		});
 	});
-	
+
 	$('#comprasModal .modal-footer').click(function(e){
 		e.preventDefault();
 		e.stopPropagation();
@@ -309,7 +309,7 @@ $(document).ready(function(){
 	$('#comprasModal').on('hidden.bs.modal', function(e){
 		ruleBtnEdit(false);
 		dataTable.ajax.reload();
-	});	
+	});
 
 	$('#cmTipo').change(function(){
 		var value = $(this).val();
@@ -322,7 +322,7 @@ $(document).ready(function(){
 			jsLIB.ajaxCall({
 				async: false,
 				type: "GET",
-				url: jsLIB.rootDir+"rules/listaCompras.php",
+				url: jsLIB.rootDir+"admin/rules/listaCompras.php",
 				data: { MethodName : 'getData', data : parameter },
 				success: function(data){
 					jsLIB.populateOptions( $("#cmItem"), data.itens );
@@ -332,17 +332,17 @@ $(document).ready(function(){
 		$('#divItem').visible(visible);
 		$('#cmItem').change();
 	});
-	
+
 	$('#cmItem').change(function(){
 		$('#divCmpl').visible( this.options[this.options.selectedIndex].getAttribute('cm') == 'S' );
 	});
-	
-	$("#qtItens").TouchSpin({
-		verticalbuttons: true,
-		verticalupclass: 'glyphicon glyphicon-plus',
-		verticaldownclass: 'glyphicon glyphicon-minus'
-	});
-	
+
+	//$("#qtItens").TouchSpin({
+	//	verticalbuttons: true,
+	//	verticalupclass: 'glyphicon glyphicon-plus',
+	//	verticaldownclass: 'glyphicon glyphicon-minus'
+	//});
+
 	$('#btnRedist').click(function(){
 		BootstrapDialog.show({
 			title: 'Alerta',
@@ -368,7 +368,7 @@ $(document).ready(function(){
 						ruleBtnDelete( false );
 						dialogRef.enableButtons(false);
 						dialogRef.setClosable(false);
-						
+
 						var selected = dataTable.rows('.selected').data();
 						var tmp = [];
 						for (var i=0;i<selected.length;i++){
@@ -379,7 +379,7 @@ $(document).ready(function(){
 						};
 						jsLIB.ajaxCall({
 							type: "GET",
-							url: jsLIB.rootDir+"rules/listaCompras.php",
+							url: jsLIB.rootDir+"admin/rules/listaCompras.php",
 							data: { MethodName : 'distribuirEstoque' },
 							success: function(data){
 								dataTable.ajax.reload( function(){
@@ -391,8 +391,8 @@ $(document).ready(function(){
 				}
 			]
 	    });
-	});	
-	
+	});
+
 	$('#btnDel').click(function(){
 		BootstrapDialog.show({
 			title: 'Alerta',
@@ -418,7 +418,7 @@ $(document).ready(function(){
 						ruleBtnDelete( false );
 						dialogRef.enableButtons(false);
 						dialogRef.setClosable(false);
-						
+
 						var selected = dataTable.rows('.selected').data();
 						var tmp = [];
 						for (var i=0;i<selected.length;i++){
@@ -429,7 +429,7 @@ $(document).ready(function(){
 						};
 						jsLIB.ajaxCall({
 							waiting: true,
-							url: jsLIB.rootDir+"rules/listaCompras.php",
+							url: jsLIB.rootDir+"admin/rules/listaCompras.php",
 							data: { MethodName : 'delete', data : parameter },
 							success: function(){
 								dataTable.ajax.reload(function(){
@@ -454,12 +454,12 @@ $(document).ready(function(){
 			window.open(url,'_blank','top=50,left=50,height=750,width=550,menubar=no,status=no,titlebar=no',true);
 		}
 	});
-	
+
 	$('#comprasDatatable tbody').on('click', 'tr', function () {
 		$(this).toggleClass('selected');
 		ruleBtnDelete();
 		ruleBtnEdit();
-	});	
+	});
 	ruleBtnDelete(false);
 	ruleBtnEdit(false);
 });
@@ -468,7 +468,7 @@ function rulesGeracao( obj ){
 	$("[name=rowFilter]").visible(false);
 	$("#btnGerar")
 		.attr('report-id', obj.val() );
-	
+
 	var show = obj.find(":selected").attr('show');
 	if (show !== undefined) {
 		$("#"+show).visible(true);
@@ -505,7 +505,7 @@ function ruleBtnEdit( force ){
 			jsLIB.ajaxCall({
 				waiting: true,
 				type: "GET",
-				url: jsLIB.rootDir+"rules/listaCompras.php",
+				url: jsLIB.rootDir+"admin/rules/listaCompras.php",
 				data: { MethodName : 'getAttrPerm', data : { id: selected } },
 				success: function(data){
 					if (!data || !data.edit){

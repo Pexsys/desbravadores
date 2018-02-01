@@ -1,6 +1,6 @@
 <?php
 function filtroDatasAvaliacao(){
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT DISTINCT ah.DT_AVALIACAO
 		FROM APR_HISTORICO ah
 		INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = ah.ID_CAD_PESSOA)
@@ -275,4 +275,4 @@ function filtroDatasAvaliacao(){
 		</form>
 	</div>
 </div>
-<script src="<?php echo PATTERNS::getVD();?>dashboard/js/listaCompras.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo PATTERNS::getVD();?>admin/view/screens/estoque/compras/index.js<?php echo "?".time();?>"></script>

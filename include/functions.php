@@ -23,14 +23,10 @@ mb_http_input('UTF-8');
 @require_once("classes/sendmail.php");
 @require_once("classes/sendmailOcorrencias.php");
 
-use classes\database\CONNECTION_FACTORY;
-
-global $conn;
-
 function zeroSizeID(){
 	if (!isset($_SESSION['USER']['sizeID'])):
 		session_start();
-		$rs = $GLOBALS['conn']->Execute("SELECT COUNT(*) AS qtd FROM CAD_MEMBRO WHERE ID_CLUBE = ?", array( PATTERNS::getBars()->getClubeID() ) );
+		$rs = CONN::get()->Execute("SELECT COUNT(*) AS qtd FROM CAD_MEMBRO WHERE ID_CLUBE = ?", array( PATTERNS::getBars()->getClubeID() ) );
 		if (!$rs->EOF):
 			$_SESSION['USER']['sizeID'] = strlen($rs->fields['qtd']);
 		endif;
@@ -53,7 +49,6 @@ function responseMethod(){
 	elseif ( empty( $json_data->{'MethodName'} ) ):
 		$response = json_encode( array( "status" => 0, "message" => "Invalid function name!" ) );
 	else:
-		fConnDB();
 		$methodName = $json_data->MethodName;
 		if ( isset( $json_data->{'data'} ) ):
 			$response = $methodName( objectToArray( $json_data->{'data'} ) );
@@ -121,7 +116,7 @@ endif;
 <script type="text/javascript" src="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/autosize/autosize.js"></script>
 <script type="text/javascript" src="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/formValidation.io/formValidation.min.js"></script>
 <script type="text/javascript" src="<?php echo PATTERNS::getVD();?>vendor/adminbsb/plugins/formValidation.io/bootstrap.min.js"></script>
-<script type="text/javascript" src="<?php echo PATTERNS::getVD();?>js/functions.lib.js<?php echo "?".microtime();?>"></script>
+<script type="text/javascript" src="<?php echo PATTERNS::getVD();?>js/functions.lib.js<?php echo "?".time();?>"></script>
 <script>jsLIB.rootDir = '<?php echo PATTERNS::getVD();?>';</script>
 <?php
 if (isset($aJsFiles)):
@@ -132,16 +127,6 @@ endif;
 ?>
 </head>
 <?php
-}
-
-function fConnDB(){
-	try{
-		$GLOBALS['conn'] = CONNECTION_FACTORY::instance()->getConnection();
-		return true;
-	}catch (Exception $e){
-		return false;
-	}
-	return false;
 }
 
 function fDescMes($cMes){
@@ -560,7 +545,7 @@ function fDomain($a){
 	$query .= " FROM ".$a['table'];
 	$query .= isset( $a['where'] ) ? " WHERE ".$a['where'] : "";
 	$query .= isset( $a['order'] ) ? " ORDER BY ".$a['order'] : "";
-	$dom = $GLOBALS['conn']->Execute($query);
+	$dom = CONN::get()->Execute($query);
 	while (!$dom->EOF):
 		$arr[] = array("id" => $dom->fields[$id], "ds" => $dom->fields[$ds]);
 		$dom->MoveNext();

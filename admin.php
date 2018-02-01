@@ -21,7 +21,7 @@ session_start();
 <script type="text/javascript" src="<?php echo PATTERNS::getVD();?>include/_core/js/formValidation/formValidation.min.js"></script>
 <script type="text/javascript" src="<?php echo PATTERNS::getVD();?>include/_core/js/formValidation/bootstrap.min.js"></script>
 <script type="text/javascript" src="<?php echo PATTERNS::getVD();?>js/functions.lib.js"></script>
-<script type="text/javascript" src="<?php echo PATTERNS::getVD();?>js/readdata.js<?php echo "?".microtime();?>"></script>
+<script type="text/javascript" src="<?php echo PATTERNS::getVD();?>js/readdata.js<?php echo "?".time();?>"></script>
 </head>
 <body>
 <?php

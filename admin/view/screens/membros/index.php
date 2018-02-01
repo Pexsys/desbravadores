@@ -292,5 +292,5 @@
 		</div>
 	</div>
 </div>
-<script src="<?php echo PATTERNS::getVD();?>js/correios.lib.js<?php echo "?".microtime();?>"></script>
-<script src="<?php echo PATTERNS::getVD();?>dashboard/js/cadastroMembros.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo PATTERNS::getVD();?>js/correios.lib.js<?php echo "?".time();?>"></script>
+<script src="<?php echo PATTERNS::getVD();?>admin/view/screens/membros/index.js<?php echo "?".time();?>"></script>

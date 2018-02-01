@@ -4,25 +4,23 @@
 
 $md = date("m-d");
 
-fConnDB();
 //******* INICIO DA ROTINA DIARIA
-
-$GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.00-Iniciando rotina...')");
+CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.00-Iniciando rotina...')");
 
 //******* LOG
-$GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.01.00-Inicio do tratamento de LOGs...')");
-$GLOBALS['conn']->Execute("DELETE FROM LOG_BATCH WHERE DH < ( NOW() - INTERVAL 30 DAY )");
-$GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.01.99-Exclusão de LOGs antigos concluída.')");
+CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.01.00-Inicio do tratamento de LOGs...')");
+CONN::get()->Execute("DELETE FROM LOG_BATCH WHERE DH < ( NOW() - INTERVAL 30 DAY )");
+CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.01.99-Exclusão de LOGs antigos concluída.')");
 
 //******* SECRETARIA
-$GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.00-Analisando Secretaria...')");
+CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.00-Analisando Secretaria...')");
 
-$rDIR = $GLOBALS['conn']->Execute("SELECT * FROM CON_DIRETOR");
+$rDIR = CONN::get()->Execute("SELECT * FROM CON_DIRETOR");
 $nomeDiretor = titleCase($rDIR->fields["NOME_DIRETOR"]);
 
 //******* SECRETARIA - FELIZ ANIVERSADIO
-$GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.01-Analisando Aniversário...')");
-	$rA = $GLOBALS['conn']->Execute("
+CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.01-Analisando Aniversário...')");
+	$rA = CONN::get()->Execute("
 		SELECT NM, TP_SEXO, Year(NOW())-Year(DT_NASC) AS IDADE_ANO, EMAIL
 		  FROM CAD_PESSOA
 		 WHERE DT_NASC IS NOT NULL
@@ -51,15 +49,15 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
 
 
 //******* SECRETARIA - MESTRADOS
-$GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.02-Analisando Mestrados Completados...')");
+CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.02-Analisando Mestrados Completados...')");
 
-    $rA = $GLOBALS['conn']->Execute("SELECT * FROM CON_ATIVOS");
+    $rA = CONN::get()->Execute("SELECT * FROM CON_ATIVOS");
     foreach ($rA as $lA => $fA):
 
         $a = explode(" ",titleCase($fA["NM"]));
 
         //LE REGRAS
-    	$rg = $GLOBALS['conn']->Execute("
+    	$rg = CONN::get()->Execute("
     	    SELECT DISTINCT car.ID, car.CD_ITEM_INTERNO, car.CD_AREA_INTERNO, car.DS_ITEM, car.TP_ITEM, car.MIN_AREA
     	      FROM CON_APR_REQ car
     	     WHERE car.CD_AREA_INTERNO = 'ME'
@@ -70,7 +68,7 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
 
             $feitas = 0;
             //LE PARAMETRO MINIMO E HISTORICO PARA A REGRA
-    	    $rR = $GLOBALS['conn']->Execute("
+    	    $rR = CONN::get()->Execute("
                     SELECT tar.ID, tar.QT_MIN, COUNT(*) AS QT_FEITAS
                       FROM TAB_APR_ITEM tar
                 INNER JOIN CON_APR_REQ car ON (car.ID_TAB_APR_ITEM = tar.ID AND car.TP_ITEM_RQ = 'ES')
@@ -86,7 +84,7 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
 
     		//VERIFICA SE COMPLETADO, MAS AINDA NÃO CONCLUIDO/AVALIADO/INVESTIDO
     		if ( $pct >= 100 ):
-        	    $rI = $GLOBALS['conn']->Execute("
+        	    $rI = CONN::get()->Execute("
                     SELECT DT_CONCLUSAO
                     FROM APR_HISTORICO
                     WHERE ID_CAD_PESSOA = ?
@@ -95,7 +93,7 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
         	    if ($rI->EOF || is_null($rI->fields["DT_CONCLUSAO"]) ):
 
         	        //INSERE NOTIFICAÇOES SE NÃO EXISTIR.
-        	        $GLOBALS['conn']->Execute("
+        	        CONN::get()->Execute("
         				INSERT INTO LOG_MENSAGEM ( ID_ORIGEM, TP, ID_USUARIO, EMAIL, DH_GERA )
         				SELECT ?, 'M', cu.ID_USUARIO, ca.EMAIL, NOW()
         				  FROM CON_ATIVOS ca
@@ -115,7 +113,7 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
         				if ( SENDMAIL::get()->Send() ):
         					$nrEnviados++;
         					//ATUALIZA ENVIO
-        					$GLOBALS['conn']->Execute("
+        					CONN::get()->Execute("
         						UPDATE LOG_MENSAGEM
         						   SET DH_SEND = NOW()
         						 WHERE ID = ?
@@ -132,8 +130,8 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
 	endforeach;
 
 //*******  SECRETARIA - EXCLUSAO DE ACESSOS/PERFIS DE MEMBROS INATIVOS
-$GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.03-Excluindo Perfis de Membros Inativos...')");
-$result = $GLOBALS['conn']->Execute("
+CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.03-Excluindo Perfis de Membros Inativos...')");
+$result = CONN::get()->Execute("
 	  SELECT DISTINCT cu.ID_USUARIO
 		FROM CAD_PESSOA cp
   INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = cp.ID)
@@ -153,16 +151,16 @@ endforeach;
 if ($md == "01-01"):
 
 	//BASE DE COMPRAS
-	$GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.04-Reorganizando base de compras...')");
-	$result = $GLOBALS['conn']->Execute("
+	CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.04-Reorganizando base de compras...')");
+	$result = CONN::get()->Execute("
 		SELECT *
 		  FROM CAD_COMPRAS
 		 WHERE FG_PREVISAO = 'N'
 	  ORDER BY ID_CAD_MEMBRO, ID_TAB_MATERIAIS, COMPL
 	");
-	$GLOBALS['conn']->Execute("TRUNCATE CAD_COMPRAS");
+	CONN::get()->Execute("TRUNCATE CAD_COMPRAS");
 	foreach($result as $l => $f):
-		$GLOBALS['conn']->Execute("
+		CONN::get()->Execute("
 			INSERT INTO CAD_COMPRAS(
 				ID_CAD_MEMBRO,
 				ID_TAB_MATERIAIS,
@@ -184,12 +182,12 @@ if ($md == "01-01"):
 	endforeach;
 
 	//REQUISITOS ASSINADOS DE ITENS AINDA NÃO CONCLUÍDOS
-	$GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.05-Reorganizando base de requisitos assinados...')");
-	$GLOBALS['conn']->Execute("DELETE FROM APR_PESSOA_REQ WHERE ID_HISTORICO IN (SELECT ID FROM APR_HISTORICO WHERE DT_CONCLUSAO IS NOT NULL)");
-	$result = $GLOBALS['conn']->Execute("SELECT * FROM APR_PESSOA_REQ ORDER BY ID_HISTORICO, ID_TAB_APR_ITEM");
-	$GLOBALS['conn']->Execute("TRUNCATE APR_PESSOA_REQ");
+	CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.05-Reorganizando base de requisitos assinados...')");
+	CONN::get()->Execute("DELETE FROM APR_PESSOA_REQ WHERE ID_HISTORICO IN (SELECT ID FROM APR_HISTORICO WHERE DT_CONCLUSAO IS NOT NULL)");
+	$result = CONN::get()->Execute("SELECT * FROM APR_PESSOA_REQ ORDER BY ID_HISTORICO, ID_TAB_APR_ITEM");
+	CONN::get()->Execute("TRUNCATE APR_PESSOA_REQ");
 	foreach($result as $l => $f):
-		$GLOBALS['conn']->Execute("
+		CONN::get()->Execute("
 			INSERT INTO APR_PESSOA_REQ(
 				ID_HISTORICO,
 				ID_TAB_APR_ITEM,
@@ -203,8 +201,8 @@ if ($md == "01-01"):
 	endforeach;
 
 	//MENSAGEM DE FELIZ ANO NOVO
-	$GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.06-Felicitando pelo novo ano...')");
-	$rA = $GLOBALS['conn']->Execute("
+	CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.06-Felicitando pelo novo ano...')");
+	$rA = CONN::get()->Execute("
 		SELECT NM, TP_SEXO, EMAIL
 		  FROM CAD_PESSOA
 		 WHERE EMAIL IS NOT NULL
@@ -231,8 +229,8 @@ if ($md == "01-01"):
 //MENSAGEM DE FELIZ NATAL
 elseif ($md == "12-25"):
 
-	$GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.07-Felicitando pelo natal...')");
-	$rA = $GLOBALS['conn']->Execute("
+	CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.07-Felicitando pelo natal...')");
+	$rA = CONN::get()->Execute("
 		SELECT cp.NM, cp.TP_SEXO, EMAIL
 			FROM CAD_PESSOA cp
 			WHERE EMAIL IS NOT NULL
@@ -257,13 +255,13 @@ elseif ($md == "12-25"):
 	endforeach;
 endif;
 
-$GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.99-Rotina de secretaria finalizada com Sucesso.')");
+CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.99-Rotina de secretaria finalizada com Sucesso.')");
 
 //******* TESOURARIA
-//$GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.03.00-Analisando Tesouraria...')");
-//$GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.03.99-Rotina de Tesouraria finalizada com Sucesso.')");
+//CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.03.00-Analisando Tesouraria...')");
+//CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.03.99-Rotina de Tesouraria finalizada com Sucesso.')");
 
 //******* FINAL DA ROTINA DIARIA
-$GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.99-Rotina finalizada com sucesso!')");
+CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.99-Rotina finalizada com sucesso!')");
 exit;
 ?>

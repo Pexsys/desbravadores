@@ -1,4 +1,5 @@
 <?php
+@require_once("../../include/functions.php");
 responseMethod();
 
 /****************************
@@ -6,7 +7,7 @@ responseMethod();
  ****************************/
 function getDomains(){
 	$ma = array();
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT DISTINCT DATE_FORMAT(ce.DTHORA_EVENTO_INI,'%Y-%m') AS ANO_MES
 		  FROM CAD_EVENTOS ce
 	INNER JOIN RGR_CHAMADA rc ON (rc.ID_EVENTO = ce.ID_EVENTO)

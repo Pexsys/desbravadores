@@ -2,7 +2,6 @@
 @require_once("include/functions.php");
 fHeaderPage( array( PATTERNS::getVD()."css/index.css?" )
 		   , array( PATTERNS::getVD()."js/index.js?") );
-fConnDB();
 ?><body>
 
     <!-- Navigation -->

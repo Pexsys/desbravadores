@@ -423,7 +423,7 @@ CREATE TABLE PLAN_TABLE (
 		$s = "<p><b>Explain</b>: ".htmlspecialchars($sql)."</p>";
 
 		$this->conn->BeginTrans();
-		$id = "ADODB ".microtime();
+		$id = "ADODB ".time();
 
 		$rs = $this->conn->Execute("EXPLAIN PLAN SET STATEMENT_ID='$id' FOR $sql");
 		$m = $this->conn->ErrorMsg();

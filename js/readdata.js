@@ -8,21 +8,21 @@ $(document).ready(function(){
 	$("#myBtnLogout").click(function(){
 		logout();
 	});
-	
+
 	$('[name=tpCapture]').click( function(event){
 		var tipoFuncao = $(this).attr('type-fn');
 		$("#tipoFuncao").val( tipoFuncao );
 		$("#divDatas").visible(tipoFuncao == "APRENDIZADO");
 	});
-	
+
 	$('[name=toggle-dates]').on("change",function(e) {
 		var value = jsLIB.getValueFromField($(this));
 		$("#"+$(this).attr("for")).visible( value == 'S' );
 	});
-	
+
 	jsLIB.resetForm( $('#cadBarCode') );
-	
-	$(".date").mask('00/00/0000');	
+
+	//$(".date").mask('00/00/0000');	
 });
 
 function onscan( bardata ) {
@@ -33,7 +33,7 @@ function onscan( bardata ) {
 	sendBarCode( parameter,
 		function(data,fx){
 			$("#strResultado").html(data.result);
-			$("#divResultado").show();			
+			$("#divResultado").show();
 		},
 		function(data,fx){
 			$("#strResultado").hide();

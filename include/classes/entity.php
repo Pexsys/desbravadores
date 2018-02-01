@@ -1,6 +1,4 @@
 <?php
-namespace classes\database;
-
 class CONNECTION_FACTORY {
 
 	protected static $connection;
@@ -68,5 +66,11 @@ class ENTITY extends CONNECTION_FACTORY {
 		return self;
 	}
 
+}
+
+class CONN {
+	public static function get(){
+		return CONNECTION_FACTORY::instance()->getConnection();
+	}
 }
 ?>

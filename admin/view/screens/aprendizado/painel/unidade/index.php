@@ -1,10 +1,10 @@
 <?php
 $cadMembroID = $_SESSION['USER']['ID_CAD_MEMBRO'];
 $unidade = "";
-$result = $GLOBALS['conn']->Execute("
+$result = CONN::get()->Execute("
 	SELECT TP_SEXO, CD_CARGO, ID_UNIDADE, DS_UNIDADE
-	  FROM CON_ATIVOS 
-	 WHERE NR_ANO = YEAR(NOW()) 
+	  FROM CON_ATIVOS
+	 WHERE NR_ANO = YEAR(NOW())
 	   AND ID_CAD_MEMBRO = ?
 ", array($cadMembroID) );
 $unidadeID = $result->fields['ID_UNIDADE'];
@@ -17,10 +17,10 @@ $classGraphs = "col-md-12 col-sm-12 col-lg-6";
 
 $cargo = $result->fields['CD_CARGO'];
 if (!fStrStartWith($cargo,"2-07")):
-	$where .= " OR ca.CD_CARGO LIKE '2-07%'";	
+	$where .= " OR ca.CD_CARGO LIKE '2-07%'";
 	$classGraphs = "col-md-12 col-sm-12 col-lg-12";
 endif;
-$rc = $GLOBALS['conn']->Execute("
+$rc = CONN::get()->Execute("
     SELECT DSF, DSM
       FROM TAB_CARGO
      WHERE CD = ?
@@ -36,32 +36,32 @@ endif;
 </div>
 <div class="row">
 <?php
-$result = $GLOBALS['conn']->Execute("
+$result = CONN::get()->Execute("
 	SELECT COUNT(*) as QTD
-	  FROM CON_ATIVOS ca 
+	  FROM CON_ATIVOS ca
 	 WHERE ($where)
 ");
 if (!$result->EOF):
 	echo fItemAprendizado(array(
 		"classPanel" => "panel-green",
-		"leftIcon" => "fa fa-child fa-4x", 
-		"value" => $result->fields["QTD"], 
-		"strBL" => "Ativos", 
+		"leftIcon" => "fa fa-child fa-4x",
+		"value" => $result->fields["QTD"],
+		"strBL" => "Ativos",
 		"strBR" => "Unidade"
 	));
 endif;
-$result = $GLOBALS['conn']->Execute("
+$result = CONN::get()->Execute("
 	SELECT COUNT(*) as QTD
 	  FROM CON_ATIVOS ca
-	 WHERE ($where) 
+	 WHERE ($where)
 	   AND at.DT_BAT IS NOT NULL
 ");
 if (!$result->EOF):
 	echo fItemAprendizado(array(
 		"classPanel" => "panel-primary",
-		"leftIcon" => "fa fa-thumbs-up fa-4x", 
-		"value" => $result->fields["QTD"], 
-		"strBL" => "Batizados", 
+		"leftIcon" => "fa fa-thumbs-up fa-4x",
+		"value" => $result->fields["QTD"],
+		"strBL" => "Batizados",
 		"strBR" => "Unidade"
 	));
 endif;
@@ -74,12 +74,12 @@ endif;
 </div>
 <div class="row">
 <?php
-$result = $GLOBALS['conn']->Execute("
+$result = CONN::get()->Execute("
 	SELECT ta.TP_ITEM, ta.CD_AREA_INTERNO, COUNT(*) as QTD
 	  FROM APR_HISTORICO ah
 	INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = ah.ID_CAD_PESSOA)
 	INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
-	 WHERE ah.DT_CONCLUSAO IS NULL AND ta.TP_ITEM = 'CL'". (!empty($where)?" AND ($where)":"")." 
+	 WHERE ah.DT_CONCLUSAO IS NULL AND ta.TP_ITEM = 'CL'". (!empty($where)?" AND ($where)":"")."
 	  GROUP BY ta.CD_AREA_INTERNO DESC
 ");
 if (!$result->EOF):
@@ -88,9 +88,9 @@ if (!$result->EOF):
 		$area = getMacroArea( $line["TP_ITEM"], $line["CD_AREA_INTERNO"] );
 		echo fItemAprendizado(array(
 			"classPanel" => "panel-primary",
-			"leftIcon" => $icon, 
-			"value" => $line["QTD"], 
-			"strBL" => titleCase( $area ), 
+			"leftIcon" => $icon,
+			"value" => $line["QTD"],
+			"strBL" => titleCase( $area ),
 			"strBR" => "Inscritos"
 		));
 	endforeach;
@@ -104,12 +104,12 @@ endif;
 </div>
 <div class="row">
 <?php
-$result = $GLOBALS['conn']->Execute("
+$result = CONN::get()->Execute("
 	SELECT ta.ID, ta.TP_ITEM, ta.CD_ITEM_INTERNO, ta.CD_AREA_INTERNO, ta.CD_COR, ta.DS_ITEM, COUNT(*) as QTD
 	  FROM APR_HISTORICO ah
 	INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = ah.ID_CAD_PESSOA)
 	INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
-	 WHERE ah.DT_CONCLUSAO IS NULL". (!empty($where)?" AND ($where)":"")." 
+	 WHERE ah.DT_CONCLUSAO IS NULL". (!empty($where)?" AND ($where)":"")."
 	  GROUP BY ta.ID, ta.TP_ITEM, ta.CD_ITEM_INTERNO, ta.CD_AREA_INTERNO, ta.CD_COR, ta.DS_ITEM
 ");
 if (!$result->EOF):
@@ -127,11 +127,11 @@ if (!$result->EOF):
 
 		echo fItemAprendizado(array(
 			"classPanel" => "panel-info",
-			"leftIcon" => $icon, 
-			"value" => $line["QTD"], 
-			"title" => titleCase( $line["DS_ITEM"] ), 
-			"strBL" => titleCase( $area ), 
-			"strBR" => "Inscritos", 
+			"leftIcon" => $icon,
+			"value" => $line["QTD"],
+			"title" => titleCase( $line["DS_ITEM"] ),
+			"strBL" => titleCase( $area ),
+			"strBR" => "Inscritos",
 			"style" => $style
 		));
 	endforeach;
@@ -150,12 +150,12 @@ endif;
 	</div>
 </div>
 <?php
-$result = $GLOBALS['conn']->Execute("
+$result = CONN::get()->Execute("
 	SELECT DISTINCT ca.NM, ca.ID_CAD_PESSOA, ca.ID_MEMBRO
 	  FROM APR_HISTORICO ah
 	INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = ah.ID_CAD_PESSOA)
 	INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
-	  WHERE (ah.DT_INVESTIDURA IS NULL OR YEAR(ah.DT_INICIO) = YEAR(NOW()))". (!empty($where)?" AND ($where)":"")." 
+	  WHERE (ah.DT_INVESTIDURA IS NULL OR YEAR(ah.DT_INICIO) = YEAR(NOW()))". (!empty($where)?" AND ($where)":"")."
 	  ORDER BY ca.NM
 ");
 if (!$result->EOF):
@@ -191,9 +191,5 @@ if (!$result->EOF):
 	echo "</div>";
 endif;
 ?>
-<script src="<?php echo PATTERNS::getVD();?>include/_core/js/flot/jquery.flot.min.js"></script>
-<script src="<?php echo PATTERNS::getVD();?>include/_core/js/flot/jquery.flot.resize.min.js"></script>
-<script src="<?php echo PATTERNS::getVD();?>include/_core/js/flot/jquery.flot.axislabels.js"></script>
-<script src="<?php echo PATTERNS::getVD();?>include/_core/js/flot/jquery.flot.labels.js"></script>
-<script src="<?php echo PATTERNS::getVD();?>dashboard/js/aprendizadoFunctions.js<?php echo "?".microtime();?>"></script>
-<script src="<?php echo PATTERNS::getVD();?>dashboard/js/painelAprendizadoUnidade.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo PATTERNS::getVD();?>js/aprendizadoFunctions.js<?php echo "?".time();?>"></script>
+<script src="<?php echo PATTERNS::getVD();?>admin/view/screens/aprendizado/painel/unidade/index.js<?php echo "?".time();?>"></script>

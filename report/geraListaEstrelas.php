@@ -91,10 +91,9 @@ class LISTAESTRELAS extends TCPDF {
 
 $pdf = new LISTAESTRELAS();
 
-fConnDB();
 $pdf->newPage();
 
-$result = $GLOBALS['conn']->Execute("SELECT NM_PASTOR, NOW() AS DH FROM CON_PASTOR");
+$result = CONN::get()->Execute("SELECT NM_PASTOR, NOW() AS DH FROM CON_PASTOR");
 $nmPastor = titleCase($result->fields["NM_PASTOR"]);
 
 $pdf->posY += 5;
@@ -116,7 +115,7 @@ $html = "<p align=\"justify\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n
 $pdf->setCellHeightRatio(2);
 $pdf->writeHTMLCell(0,0,20,$pdf->posY,$html,0,0,false,true,"",false);
 
-$result = $GLOBALS['conn']->Execute("
+$result = CONN::get()->Execute("
 	SELECT CD, NM, COUNT(*) AS QTD
 	  FROM CON_COMPRAS
 	 WHERE CD LIKE '03-01-%'

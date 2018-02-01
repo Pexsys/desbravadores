@@ -1,5 +1,5 @@
 <?php
-@require_once("../include/functions.php");
+@require_once("../../include/functions.php");
 responseMethod();
 
 /****************************
@@ -95,13 +95,13 @@ function getQueryByFilter( $parameters ) {
 	endif;
 	$query .= " $where ORDER BY ca.NM";
 
-	return $GLOBALS['conn']->Execute( $query, $aWhere );
+	return CONN::get()->Execute( $query, $aWhere );
 }
 
 function getTags( $parameters ) {
 	//$tags = PATTERNS::getBars()->getTagsTipo("tg","S");
 	$arr = array();
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT DISTINCT pt.ID,
 				pt.TP,
 				pt.MD,
@@ -189,7 +189,7 @@ function getClasse( $parameters ){
 		//endif;
 	endforeach;
 
-	$result = $GLOBALS['conn']->Execute("$query ORDER BY CD_ITEM_INTERNO");
+	$result = CONN::get()->Execute("$query ORDER BY CD_ITEM_INTERNO");
 	foreach ($result as $k => $line):
 		$arr[] = array(
 			"id"	=> $line['ID'],

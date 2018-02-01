@@ -22,7 +22,7 @@ $(document).ready(function(){
 		},
 		ajax: {
 			type	: "GET",
-			url	: jsLIB.rootDir+"rules/membros.php",
+			url	: jsLIB.rootDir+"admin/rules/membros.php",
 			data	: function (d) {
 					d.MethodName = "getAniversariantes",
 					d.data = { 

@@ -2,7 +2,7 @@ $(document).ready(function(){
 	jsLIB.ajaxCall({
 		waiting : true,
 		type: "GET",
-		url: jsLIB.rootDir+"rules/painelAprendizado.php",
+		url: jsLIB.rootDir+"admin/rules/painelAprendizado.php",
 		data: { MethodName : 'getGraphData' },
 		success: function(data){
 			if (data){

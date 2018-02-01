@@ -21,4 +21,4 @@
 		</div>
 	</div>
 </div>
-<script src="<?php echo PATTERNS::getVD();?>dashboard/js/tabelaFuncoes.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo PATTERNS::getVD();?>admin/view/screens/tabela/funcoes/index.js<?php echo "?".time();?>"></script>

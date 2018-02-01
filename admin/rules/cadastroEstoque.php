@@ -1,5 +1,5 @@
 <?php
-@require_once("../include/functions.php");
+@require_once("../../include/functions.php");
 responseMethod();
 
 /****************************
@@ -61,7 +61,7 @@ function getQueryByFilter( $parameters ) {
 	 ORDER BY tm.TP, tm.DS
 	";
 	//echo $query;
-	return $GLOBALS['conn']->Execute( $query, $aWhere );
+	return CONN::get()->Execute( $query, $aWhere );
 }
 
 function getEstoque( $parameters ) {
@@ -105,8 +105,8 @@ function getItem( $parameters ){
 	$arr = array();
 	$id = $parameters["id"];
 	$arr["id"] = $id;
-	
-	$result = $GLOBALS['conn']->Execute("
+
+	$result = CONN::get()->Execute("
 		SELECT TP, QT_EST
 		FROM TAB_MATERIAIS
 		WHERE ID = ?

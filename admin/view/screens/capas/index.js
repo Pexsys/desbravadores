@@ -2,7 +2,7 @@ var list = [];
 var dataTable = undefined;
 
 $(document).ready(function(){
-	
+
 	//FORM
 	$("#capas-form")
 		.on('init.field.fv', function(e, data) {
@@ -48,7 +48,7 @@ $(document).ready(function(){
 		.on('success.form.fv', function(e) {
 			// Prevent form submission
 			e.preventDefault();
-		})	
+		})
 		.submit( function() {
 			list.sort();
 			window.open(
@@ -58,7 +58,7 @@ $(document).ready(function(){
 				true
 			);
 		});
-	
+
 	dataTable = $('#simpledatatable')
 		.DataTable({
 			lengthChange: false,
@@ -103,7 +103,7 @@ $(document).ready(function(){
 			]
 		})
 	;
-		
+
 	$('#simpledatatable tbody').on('click', 'tr', function () {
 		lineChecked( $(this) );
 	});
@@ -114,7 +114,7 @@ $(document).ready(function(){
 		list = [];
 		$('#nmMembro').selectpicker('deselectAll');
 	});
-	
+
 	jsLIB.ajaxCall({
 		type: 'GET',
 		url: jsLIB.rootDir+'rules/capas.php',
@@ -138,5 +138,5 @@ function lineChecked( row ) {
 	} else {
 		row.removeClass('selected');
 		list.splice( index, 1 );
-	}	
+	}
 }

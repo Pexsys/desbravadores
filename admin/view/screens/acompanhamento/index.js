@@ -2,7 +2,7 @@ var dataTable = undefined;
 
 $(document).ready(function(){
 	$.fn.dataTable.moment( 'DD/MM/YYYY' );
-	
+
 	dataTable = $('#acompDatatable').DataTable({
 		lengthChange: false,
 		ordering: true,
@@ -21,10 +21,10 @@ $(document).ready(function(){
 		},
 		ajax: {
 			type	: "GET",
-			url	: jsLIB.rootDir+"rules/acompanhamento.php",
+			url	: jsLIB.rootDir+"admin/rules/acompanhamento.php",
 			data	: function (d) {
 					d.MethodName = "getData",
-					d.data = { 
+					d.data = {
 							 filtro: 'T',
 							 filters: jsFilter.jSON()
 						}
@@ -54,7 +54,7 @@ $(document).ready(function(){
 			{	data: "da",
 				width: "8%"
 			},
-			{	
+			{
 				className: 'dt-right',
 				data: 'pg',
 				width: "5%",
@@ -74,11 +74,11 @@ $(document).ready(function(){
 			selector: 'td:first-child'
 		}
 	});
-	
+
 	$('#acompDatatable tbody').on('click', 'tr', function () {
 		$(this).toggleClass('selected');
 	});
-	
+
 	$("#cadAcompForm")
 		.on('init.field.fv', function(e, data) {
 			var $parent = data.element.parents('.form-group'),
@@ -98,7 +98,7 @@ $(document).ready(function(){
 		})
 		.on('success.field.fv', function(e, data) {
 			e.preventDefault();
-			
+
 			var parameter = {
 				brdt : $("#cdBar").val(),
 				frm: jsLIB.getJSONFields( $('#cadAcompForm') )
@@ -117,16 +117,16 @@ $(document).ready(function(){
 							}
 						});
 						checkbox.bootstrapToggle();
-						$("#divResultado").find('[name=dt_assinatura]').datetimepicker({
-							locale: 'pt-br',
-							language: 'pt-BR',
-							format: 'DD/MM/YYYY',
-							maskInput: true,
-							pickDate: true,
-							pickTime: false,
-							pickSeconds: false,
-							useCurrent: false
-						});
+						//$("#divResultado").find('[name=dt_assinatura]').datetimepicker({
+						//	locale: 'pt-br',
+						//	language: 'pt-BR',
+						//	format: 'DD/MM/YYYY',
+						//	maskInput: true,
+						//	pickDate: true,
+						//	pickTime: false,
+						//	pickSeconds: false,
+						//	useCurrent: false
+						//});
 						$('#btnGravar').visible(true);
 					}
 					$("#divResultado").show();
@@ -157,7 +157,7 @@ $(document).ready(function(){
 			e.preventDefault();
 		})
 	;
-	
+
 	$('#cadAcompForm')
 		.submit( function(e) {
 			e.preventDefault();
@@ -173,14 +173,14 @@ $(document).ready(function(){
 		$("#acompModal").modal();
 		$("#cdBar").focus();
 	});
-	
+
 	$('#btnGravar').click(function(e){
 		e.preventDefault();
 		e.stopPropagation();
 		update();
 	});
 
-	$(".date").mask('00/00/0000');
+	//$(".date").mask('00/00/0000');
 });
 
 function update(){
@@ -188,7 +188,7 @@ function update(){
 		frm: jsLIB.getJSONFields( $('#cadAcompForm') )
 	};
 	jsLIB.ajaxCall({
-		url: jsLIB.rootDir+"rules/acompanhamento.php",
+		url: jsLIB.rootDir+"admin/rules/acompanhamento.php",
 		data: { MethodName : 'setRequisito', data : parameter },
 		success: function(){
 			$("#divResultado").empty().hide();

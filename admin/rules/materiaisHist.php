@@ -1,5 +1,5 @@
 <?php
-@require_once("../include/functions.php");
+@require_once("../../include/functions.php");
 responseMethod();
 
 /****************************
@@ -73,7 +73,7 @@ function getQueryByFilter( $parameters ) {
 		 ORDER BY ca.NM, cmh.TP
 		";
 		//echo $query;
-		return $GLOBALS['conn']->Execute( $query, $aWhere );
+		return CONN::get()->Execute( $query, $aWhere );
 	endif;
 	return null;
 }

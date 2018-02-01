@@ -1,5 +1,5 @@
 <?php
-@require_once("../include/functions.php");
+@require_once("../../include/functions.php");
 responseMethod();
 
 /****************************
@@ -10,7 +10,7 @@ function getQueryByFilter( $parameters ) {
 	$cadMembroID = $_SESSION['USER']['ID_CAD_MEMBRO'];
 
 	$where = "";
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT CD_CARGO, CD_CARGO2
 		  FROM CON_ATIVOS
 		 WHERE ID_CAD_MEMBRO = ?
@@ -112,7 +112,7 @@ function getQueryByFilter( $parameters ) {
 		ORDER BY ca.NM, ah.DT_INICIO, cai.CD_ITEM_INTERNO
 	";
 
-	return $GLOBALS['conn']->Execute( $query, $aWhere );
+	return CONN::get()->Execute( $query, $aWhere );
 }
 
 function getData( $parameters ) {
@@ -156,7 +156,7 @@ function setRequisito( $parameters ) {
 		if (fStrStartWith($f,"dt-req-")):
 			$reqID = substr($f, 7);
 
-			$rs = $GLOBALS['conn']->Execute( "SELECT ID_TAB_APREND FROM TAB_APR_ITEM WHERE ID = ?", $reqID );
+			$rs = CONN::get()->Execute( "SELECT ID_TAB_APREND FROM TAB_APR_ITEM WHERE ID = ?", $reqID );
 			if (!$rs->EOF):
 				$uh = HISTORICO::update(
 					$ip,

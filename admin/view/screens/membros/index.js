@@ -23,7 +23,7 @@ $(document).ready(function(){
 		},
 		ajax: {
 			type: "GET",
-			url: jsLIB.rootDir+"rules/membros.php",
+			url: jsLIB.rootDir+"admin/rules/membros.php",
 			data: function (d) {
 				d.MethodName = "getMembros",
 				d.data = {
@@ -297,7 +297,7 @@ $(document).ready(function(){
 							}
 							jsLIB.ajaxCall({
 								async: false,
-								url: jsLIB.rootDir+"rules/membros.php",
+								url: jsLIB.rootDir+"admin/rules/membros.php",
 								data: { MethodName : 'insertMember', data : parameters },
 								success: function(mb){
 									if (mb.result == true){
@@ -316,7 +316,7 @@ $(document).ready(function(){
 						jsLIB.ajaxCall({
 							async: false,
 							type: "GET",
-							url: jsLIB.rootDir+"rules/membros.php",
+							url: jsLIB.rootDir+"admin/rules/membros.php",
 							data: { MethodName : 'verificaResp', data : parameters },
 							success: function(rs){
 								formPopulated = false;
@@ -334,7 +334,7 @@ $(document).ready(function(){
 						}
 						//gravar
 						jsLIB.ajaxCall({
-							url: jsLIB.rootDir+"rules/membros.php",
+							url: jsLIB.rootDir+"admin/rules/membros.php",
 							data: { MethodName : 'updateMember', data : parameters },
 							success: function(mb){
 								//tratamento de dependencias
@@ -395,11 +395,11 @@ $(document).ready(function(){
 		dataTable.ajax.reload();
 	});
 
-	$("#nrUltEstrela, #nrUniformes").TouchSpin({
-		verticalbuttons: true,
-		verticalupclass: 'glyphicon glyphicon-plus',
-		verticaldownclass: 'glyphicon glyphicon-minus'
-	});
+	//$("#nrUltEstrela, #nrUniformes").TouchSpin({
+	//	verticalbuttons: true,
+	//	verticalupclass: 'glyphicon glyphicon-plus',
+	//	verticaldownclass: 'glyphicon glyphicon-minus'
+	//});
 
 	$('#membrosDatatable tbody').on('click', 'tr', function () {
 		rowSelected = this;
@@ -429,10 +429,10 @@ $(document).ready(function(){
 		}
 	});
 
-	$('.date').mask('00/00/0000');
-	$('.cpf').mask('000.000.000-00');
-	$('.cep').mask('00000-000');
-	$('.sp_celphones').mask(SPMaskBehavior, spOptions);
+	//$('.date').mask('00/00/0000');
+	//$('.cpf').mask('000.000.000-00');
+	//$('.cep').mask('00000-000');
+	//$('.sp_celphones').mask(SPMaskBehavior, spOptions);
 	ruleButtonSelection( tpFiltro );
 });
 
@@ -455,7 +455,7 @@ function populateUnidade(membroID) {
 	jsLIB.ajaxCall({
 		async: false,
 		type: "GET",
-		url: jsLIB.rootDir+"rules/membros.php",
+		url: jsLIB.rootDir+"admin/rules/membros.php",
 		data: { MethodName : 'getUnidades', data : { id : membroID } },
 		success: function(un){
 			jsLIB.populateOptions( $("#cmUnidade"), un );
@@ -471,7 +471,7 @@ function populateCargos(membroID) {
 	jsLIB.ajaxCall({
 		async: false,
 		type: "GET",
-		url: jsLIB.rootDir+"rules/membros.php",
+		url: jsLIB.rootDir+"admin/rules/membros.php",
 		data: { MethodName : 'getCargos', data : { id : membroID } },
 		success: function(cg){
 			jsLIB.populateOptions( $("#cmCargo"), cg );
@@ -481,7 +481,7 @@ function populateCargos(membroID) {
 				jsLIB.ajaxCall({
 					async: false,
 					type: "GET",
-					url: jsLIB.rootDir+"rules/membros.php",
+					url: jsLIB.rootDir+"admin/rules/membros.php",
 					data: { MethodName : 'getCargos', data : { id : membroID, tp : true } },
 					success: function(cg){
 						jsLIB.populateOptions( $("#cmCargo2"), cg );
@@ -502,7 +502,7 @@ function getMember( membroID ) {
 	return jsLIB.ajaxCall({
 		async: false,
 		type: "GET",
-		url: jsLIB.rootDir+"rules/membros.php",
+		url: jsLIB.rootDir+"admin/rules/membros.php",
 		data: { MethodName : 'getMember', data : parameters }
 	});
 }

@@ -1,7 +1,7 @@
 function showDetailEspec( objDetail, parameters ){
 	jsLIB.ajaxCall({
 		type: "GET",
-		url: jsLIB.rootDir+"rules/painelAprendizado.php",
+		url: jsLIB.rootDir+"admin/rules/painelAprendizado.php",
 		data: { MethodName : 'getEspec', data : parameters },
 		success: function(espec){
 			if (espec.detail){
@@ -14,7 +14,7 @@ function showDetailEspec( objDetail, parameters ){
 function showDetailEspecPeople( objDetail, parameters ){
 	jsLIB.ajaxCall({
 		type: "GET",
-		url: jsLIB.rootDir+"rules/painelAprendizado.php",
+		url: jsLIB.rootDir+"admin/rules/painelAprendizado.php",
 		data: { MethodName : 'getEspecPeople', data : parameters },
 		success: function(espec){
 			if (espec.people){
@@ -27,7 +27,7 @@ function showDetailEspecPeople( objDetail, parameters ){
 function showDetailClass( objThis, parameters ){
 	jsLIB.ajaxCall({
 		type: "GET",
-		url: jsLIB.rootDir+"rules/painelAprendizado.php",
+		url: jsLIB.rootDir+"admin/rules/painelAprendizado.php",
 		data: { MethodName : 'getClasses', data : parameters },
 		success: function(classes){
 			if (classes.detail){
@@ -49,7 +49,7 @@ function showDetailClass( objThis, parameters ){
 function showDetailClassReq( objDetail, parameters ){
 	jsLIB.ajaxCall({
 		type: "GET",
-		url: jsLIB.rootDir+"rules/painelAprendizado.php",
+		url: jsLIB.rootDir+"admin/rules/painelAprendizado.php",
 		data: { MethodName : 'getPendentes', data : parameters },
 		success: function(detail){
 			if (detail.pend){

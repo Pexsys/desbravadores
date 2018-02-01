@@ -2,9 +2,9 @@
 $cadMembroID = $_SESSION['USER']['ID_CAD_MEMBRO'];
 $classe = "";
 $like = "";
-$result = $GLOBALS['conn']->Execute("
+$result = CONN::get()->Execute("
 	SELECT TP_SEXO, CD_CARGO, CD_CARGO2
-	  FROM CON_ATIVOS 
+	  FROM CON_ATIVOS
 	 WHERE ID_CAD_MEMBRO = ?
 ", array($cadMembroID) );
 $cargo = $result->fields['CD_CARGO'];
@@ -17,7 +17,7 @@ endif;
 if ($cargo <> "2-04-00" && fStrStartWith($cargo,"2-04")):
 	$like = "01-".substr($cargo,-2);
 endif;
-$rc = $GLOBALS['conn']->Execute("
+$rc = CONN::get()->Execute("
 	SELECT DSF, DSM
       FROM TAB_CARGO
      WHERE CD = ?
@@ -40,7 +40,7 @@ if (!empty($like)):
 	endif;
 	$classGraphs = "col-md-12 col-sm-12 col-lg-6";
 endif;
-$result = $GLOBALS['conn']->Execute("
+$result = CONN::get()->Execute("
 	SELECT ah.ID_TAB_APREND, ta.TP_ITEM, ta.CD_ITEM_INTERNO, ta.CD_AREA_INTERNO, ta.CD_COR, ta.DS_ITEM, COUNT(*) as QTD
 	  FROM APR_HISTORICO ah
 	INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = ah.ID_CAD_PESSOA)
@@ -65,11 +65,11 @@ if (!$result->EOF):
 			endif;
 			echo fItemAprendizado(array(
 				"classPanel" => "panel-info",
-				"leftIcon" => $icon, 
-				"value" => $line["QTD"], 
-				"title" => titleCase( $line["DS_ITEM"] ), 
-				"strBL" => titleCase( $area ), 
-				"strBR" => "Inscritos", 
+				"leftIcon" => $icon,
+				"value" => $line["QTD"],
+				"title" => titleCase( $line["DS_ITEM"] ),
+				"strBL" => titleCase( $area ),
+				"strBR" => "Inscritos",
 				"style" => $style
 			));
 		endforeach;
@@ -90,7 +90,7 @@ endif;
 	</div>
 </div>
 <?php
-$pendNome = $GLOBALS['conn']->Execute("
+$pendNome = CONN::get()->Execute("
 	SELECT cap.ID_TAB_APREND, cap.CD_ITEM_INTERNO, cap.CD_REQ_INTERNO, cap.CD_AP_AREA, cap.DS_AP_AREA, cap.DS_ITEM, cap.DS, cap.CD_COR,
 	       ca.NM
 	FROM CON_APR_PESSOA cap
@@ -103,7 +103,7 @@ $pendNome = $GLOBALS['conn']->Execute("
 	ORDER BY cap.CD_ITEM_INTERNO, cap.CD_REQ_INTERNO, ca.NM
 ");
 /*
-$pendItens = $GLOBALS['conn']->Execute("
+$pendItens = CONN::get()->Execute("
 	SELECT cap.ID_TAB_APREND, cap.CD_ITEM_INTERNO, cap.CD_REQ_INTERNO, cap.CD_AP_AREA, cap.DS_AP_AREA, cap.DS_ITEM, cap.DS, cap.CD_COR,
 			at.NM
 	FROM CON_APR_PESSOA cap
@@ -208,7 +208,7 @@ if (!$pendNome->EOF):
 	<?php endif;?>
 </div>
 <?php endif;
-$result = $GLOBALS['conn']->Execute("
+$result = CONN::get()->Execute("
 	SELECT DISTINCT ca.NM, ca.ID_CAD_PESSOA, ca.ID_MEMBRO
 	  FROM APR_HISTORICO ah
 	INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = ah.ID_CAD_PESSOA)
@@ -247,9 +247,5 @@ if (!$result->EOF):
 	echo "</div>";
 endif;
 ?>
-<script src="<?php echo PATTERNS::getVD();?>include/_core/js/flot/jquery.flot.min.js"></script>
-<script src="<?php echo PATTERNS::getVD();?>include/_core/js/flot/jquery.flot.resize.min.js"></script>
-<script src="<?php echo PATTERNS::getVD();?>include/_core/js/flot/jquery.flot.axislabels.js"></script>
-<script src="<?php echo PATTERNS::getVD();?>include/_core/js/flot/jquery.flot.labels.js"></script>
-<script src="<?php echo PATTERNS::getVD();?>dashboard/js/aprendizadoFunctions.js<?php echo "?".microtime();?>"></script>
-<script src="<?php echo PATTERNS::getVD();?>dashboard/js/painelAprendizadoClasse.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo PATTERNS::getVD();?>js/aprendizadoFunctions.js<?php echo "?".time();?>"></script>
+<script src="<?php echo PATTERNS::getVD();?>admin/view/screens/aprendizado/painel/classe/index.js<?php echo "?".time();?>"></script>

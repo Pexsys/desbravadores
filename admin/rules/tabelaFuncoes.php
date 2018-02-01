@@ -1,5 +1,5 @@
 <?php
-@require_once("../include/functions.php");
+@require_once("../../include/functions.php");
 responseMethod();
 
 /****************************
@@ -8,7 +8,7 @@ responseMethod();
 function getFuncoes(){
 	$arr = array();
 
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT ID, DS_NEW AS DS_URL
 		  FROM TAB_FUNCTION
 	  ORDER BY 1");

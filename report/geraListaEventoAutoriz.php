@@ -141,8 +141,7 @@ class LISTAEVENTOALFA extends TCPDF {
 $eveID = fRequest("eve");
 $pdf = new LISTAEVENTOALFA();
 
-fConnDB();
-$result = $GLOBALS['conn']->Execute("
+$result = CONN::get()->Execute("
 	SELECT
 			es.DS, es.DS_TEMA, es.DS_ORG, es.DS_DEST,
 			esp.ID AS ID_EVE_PESSOA,

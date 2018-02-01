@@ -17,4 +17,4 @@
 		</form>
 	</div>
 </div>
-<script src="<?php echo PATTERNS::getVD();?>dashboard/js/agendaConsulta.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo PATTERNS::getVD();?>admin/view/screens/agenda/consulta/index.js<?php echo "?".time();?>"></script>

@@ -37,4 +37,4 @@
 		</div>
 	</div>
 </div>
-<script src="<?php echo PATTERNS::getVD();?>dashboard/js/capas.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo PATTERNS::getVD();?>admin/view/screens/capas/index.js<?php echo "?".time();?>"></script>

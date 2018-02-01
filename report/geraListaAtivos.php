@@ -143,9 +143,8 @@ endif;
 */
 $pdf = new LISTAATIVOSALFA();
 
-fConnDB();
 $pdf->newPage();
-$result = $GLOBALS['conn']->Execute("
+$result = CONN::get()->Execute("
 	SELECT ca.NM, ca.CD_CARGO, ca.DS_CARGO, ca.DT_NASC, ca.FONE_RES, ca.FONE_CEL, ca.IDADE_HOJE, ta.CD_COR_GENERO
 	FROM CON_ATIVOS ca
  INNER JOIN TAB_UNIDADE ta ON (ta.ID = ca.ID_UNIDADE)

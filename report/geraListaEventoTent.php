@@ -84,7 +84,7 @@ class LISTAEVENTOTENT extends TCPDF {
 		$this->Cell(200, 10, "BARRACA ".$f["TENT"], 0, false, 'L', true);
 		$this->posY += 10;
 
-		$rs = $GLOBALS['conn']->Execute("
+		$rs = CONN::get()->Execute("
 			SELECT ca.NM
 			FROM EVE_SAIDA_MEMBRO esp
 			INNER JOIN CAD_MEMBRO cm on (cm.ID = esp.ID_CAD_MEMBRO)
@@ -129,8 +129,7 @@ class LISTAEVENTOTENT extends TCPDF {
 $eveID = fRequest("eve");
 $pdf = new LISTAEVENTOTENT();
 
-fConnDB();
-$result = $GLOBALS['conn']->Execute("
+$result = CONN::get()->Execute("
 		SELECT DISTINCT es.ID, es.DS, es.DS_TEMA, es.DS_ORG, es.DS_DEST, esp.TENT
 		FROM EVE_SAIDA es
 		INNER JOIN EVE_SAIDA_MEMBRO esp on (esp.ID_EVE_SAIDA = es.ID AND esp.TENT IS NOT NULL)

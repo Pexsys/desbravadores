@@ -60,4 +60,4 @@
 		</div>
 	</div>
 </div>
-<script src="<?php echo PATTERNS::getVD();?>dashboard/js/tabelaAgasalhos.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo PATTERNS::getVD();?>admin/view/screens/tabela/agasalhos/index.js<?php echo "?".time();?>"></script>

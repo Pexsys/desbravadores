@@ -3,7 +3,7 @@ class PROFILE {
 
 	public static function getURLAccess($id) {
 		session_start();
-		$result = $GLOBALS['conn']->Execute("
+		$result = CONN::get()->Execute("
 			SELECT DISTINCT tf.DS_NEW AS DS_URL
 				FROM CAD_USU_PERFIL cpp
 			  INNER JOIN TAB_PERFIL_ITEM tpi ON ( tpi.ID_TAB_PERFIL = cpp.ID_PERFIL AND tpi.DH_INI_VALID <= NOW() )
@@ -72,7 +72,7 @@ class PROFILE {
 			$query .= " AND LENGTH(td.CD) = 2";
 		endif;
 		$query .= " ORDER BY td.CD";
-		$result = $GLOBALS['conn']->Execute($query, array($_SESSION['USER']['ID_USUARIO']) );
+		$result = CONN::get()->Execute($query, array($_SESSION['USER']['ID_USUARIO']) );
 		while (!$result->EOF):
 			$child = PROFILE::fGetProfiles( $result->fields['CD'] );
 			$arr[ $result->fields['ID'] ] = array(
@@ -106,14 +106,14 @@ class PROFILE {
 	}
 
 	public static function deleteAllByUserID( $userID ) {
-		$GLOBALS['conn']->Execute("
+		CONN::get()->Execute("
 			DELETE FROM CAD_USU_PERFIL
 			 WHERE ID_CAD_USUARIOS = ?
 		", array( $userID ) );
 	}
 
 	public static function deleteAllByPessoaID( $pessoaID ){
-		$rs = $GLOBALS['conn']->Execute("
+		$rs = CONN::get()->Execute("
 			SELECT ID_USUARIO FROM CAD_USUARIOS
 			WHERE ID_CAD_PESSOA = ?
 		", array( $pessoaID ) );
@@ -123,7 +123,7 @@ class PROFILE {
 	}
 
 	public static function deleteByUserID( $userID, $profileID ) {
-		$GLOBALS['conn']->Execute("
+		CONN::get()->Execute("
 			DELETE FROM CAD_USU_PERFIL
 			 WHERE ID_CAD_USUARIOS = ?
 			   AND ID_PERFIL = ?
@@ -131,7 +131,7 @@ class PROFILE {
 	}
 
 	 public static function deleteByPessoaID( $pessoaID, $profileID ){
-		$rs = $GLOBALS['conn']->Execute("
+		$rs = CONN::get()->Execute("
 			SELECT ID_USUARIO
 			FROM CAD_USUARIOS
 			WHERE ID_CAD_PESSOA = ?
@@ -142,7 +142,7 @@ class PROFILE {
 	}
 
 	 public static function insertByPessoaID( $pessoaID, $profileID ) {
-		$rs = $GLOBALS['conn']->Execute("
+		$rs = CONN::get()->Execute("
 			SELECT ID_USUARIO
 			  FROM CAD_USUARIOS
 			 WHERE ID_CAD_PESSOA = ?
@@ -153,13 +153,13 @@ class PROFILE {
 	}
 
 	 public static function insert( $userID, $profileID ) {
-		$rs = $GLOBALS['conn']->Execute("
+		$rs = CONN::get()->Execute("
 			SELECT 1 FROM CAD_USU_PERFIL
 			WHERE ID_CAD_USUARIOS = ?
 			  AND ID_PERFIL = ?
 		", array( $userID, $profileID ) );
 		if ($rs->EOF):
-			$GLOBALS['conn']->Execute("
+			CONN::get()->Execute("
 				INSERT INTO CAD_USU_PERFIL (
 					ID_CAD_USUARIOS,
 					ID_PERFIL

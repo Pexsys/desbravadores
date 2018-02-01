@@ -24,7 +24,7 @@ $(document).ready(function(){
 			},
 			ajax: {
 				type	: "GET",
-				url	: jsLIB.rootDir+"rules/comunicados.php",
+				url	: jsLIB.rootDir+"admin/rules/comunicados.php",
 				data	: function (d) {
 						d.MethodName = "getComunicados",
 						d.data = { 
@@ -76,7 +76,7 @@ $(document).ready(function(){
 	$('#btnCiente').on('click', function(){
 		jsLIB.ajaxCall({
 			async: false,
-			url: jsLIB.rootDir+"rules/comunicados.php",
+			url: jsLIB.rootDir+"admin/rules/comunicados.php",
 			data: { MethodName : 'fSetRead', data : { id : $(this).attr("comunic-id") } },
 			success: function(data){
 				comDataTable.ajax.reload( function(){
@@ -93,7 +93,7 @@ function populateComunicado( data ) {
 	jsLIB.ajaxCall({
 		waiting : true,
 		type: "GET",
-		url: jsLIB.rootDir+"rules/comunicados.php",
+		url: jsLIB.rootDir+"admin/rules/comunicados.php",
 		data: { MethodName : 'fComunicado', data : { id : data.id } },
 		success: function(cm){
 			if (cm.comunicado){

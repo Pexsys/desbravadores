@@ -45,4 +45,4 @@
 		</div>
 	</div>
 </div>
-<script src="<?php echo PATTERNS::getVD();?>dashboard/js/consultaComunicados.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo PATTERNS::getVD();?>admin/view/screens/comunicados/consulta/index.js<?php echo "?".time();?>"></script>
