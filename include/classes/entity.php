@@ -49,7 +49,7 @@ class ENTITY extends CONNECTION_FACTORY {
 		return self;
 	}
 
-	public function Insert_ID(){
+	public function getID(){
 		return self::$connection->Insert_ID();
 	}
 

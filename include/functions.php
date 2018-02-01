@@ -9,6 +9,7 @@ mb_http_input('UTF-8');
 @require_once(__DIR__ ."/../vendor/autoload.php");
 
 @require_once("classes/entity.php");
+@require_once("classes/ranking.php");
 @require_once("classes/patterns.php");
 @require_once("classes/compras.php");
 @require_once("classes/materiais.php");
