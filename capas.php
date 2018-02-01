@@ -11,11 +11,6 @@ fHeaderPage(
 	)
 );
 ?>
-<style>
-table .table-selected{
-	background-color: #D5D5D5;
-}
-</style>
 <body>
 	<?php @require_once("include/navbar.php");?>
     <div class="container">
