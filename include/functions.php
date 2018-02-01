@@ -481,6 +481,25 @@ function fItemAprendizado($aP) {
 	if (!isset($aP["classSize"])):
 		$aP["classSize"] = "col-md-6 col-xs-12 col-sm-6 col-lg-4 col-xl-3";
 	endif;
+	$str = "<div class=\"{$aP["classSize"]}\"". (isset($aP["hint"]) ? " title=\"{$aP["hint"]}\" style=\"cursor:pointer\"" : "") .">";
+	$str .= "<div class=\"info-box-3 {$aP["classPanel"]} hover-zoom-effect\"";
+	if ( isset($aP["fields"]) ):
+		foreach ($aP["fields"] as $k => $i):
+			$str .= " $k=\"$i\"";
+		endforeach;
+	endif;
+	$str .= ">";
+	$str .= "<div class=\"icon\">";
+	$str .= "<i class=\"{$aP["leftIcon"]}\"></i>";
+	$str .= "</div>";
+	$str .= "<div class=\"content\">";
+	$str .= "<div class=\"text\">{$aP["title"]}</div>";
+	$str .= "<div class=\"number\">{$aP["value"]}</div>";
+	$str .= "</div>";
+	$str .= "</div>";
+	$str .= "</div>";
+
+	/*
 	$str = "<div class=\"".$aP["classSize"]."\"". (isset($aP["hint"]) ? " title=\"".$aP["hint"]."\"" : "") .">";
 	$str .= "<div class=\"panel ".$aP["classPanel"]."\"";
 	if ( isset($aP["fields"]) ):
@@ -512,6 +531,7 @@ function fItemAprendizado($aP) {
 			</div>";
     endif;
     $str .= "</div></div>";
+	*/
     return $str;
 }
 

@@ -4,13 +4,13 @@ $pessoaID = $_SESSION['USER']['ID_CAD_PESSOA'];
 
 function getClass( $pct ){
 	if ($pct < 51):
-		return "panel-danger";
+		return "bg-danger";
 	elseif ($pct < 85):
-		return "panel-warning";
+		return "bg-warning";
 	elseif ($pct < 100):
-		return "panel-primary";
+		return "bg-primary";
 	else:
-		return "panel-green";
+		return "bg-green";
 	endif;
 }
 
@@ -20,7 +20,7 @@ function drawBoxesArea($title,$result,$boxClass = NULL){
 		<div class="row">
 			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 				<div class="card">
-					<div class="header bg-orange">
+					<div class="header bg-deep-orange">
 						<h2><?php echo $title;?></h2>
 					</div>
 					<div class="body">
@@ -32,7 +32,7 @@ function drawBoxesArea($title,$result,$boxClass = NULL){
 								$value = ( $tp == "ES" ? $fields["CD_ITEM_INTERNO"] : "" );
 								$icon = getIconAprendizado( $fields["TP_ITEM"], $fields["CD_AREA_INTERNO"], "fa-4x" );
 								$area = getMacroArea( $fields["TP_ITEM"], $fields["CD_AREA_INTERNO"] );
-								$class = (isset($boxClass) ? $boxClass : (empty($fields["BOX_CLASS"]) ? "panel-default" : $fields["BOX_CLASS"]));
+								$class = (isset($boxClass) ? $boxClass : (empty($fields["BOX_CLASS"]) ? "bg-default" : $fields["BOX_CLASS"]));
 								echo fItemAprendizado(array(
 									"classPanel" => $class,
 									"leftIcon" => $icon,
@@ -91,7 +91,7 @@ if (!$result->EOF):
 			$icon = getIconAprendizado( $fields["TP"], "", "fa-4x" );
 			$area = getMacroArea( $fields["TP"], "" );
 			echo fItemAprendizado(array(
-				"classPanel" => "panel-red",
+				"classPanel" => "bg-red",
 				"leftIcon" => $icon,
 				"value" => $area,
 				"title" => titleCase( $ds, array(" "), array("OU", "COU", "APS") )
@@ -137,7 +137,7 @@ if (!$result->EOF):
 			$icon = getIconAprendizado( $fields["TP"], "", "fa-4x" );
 			$area = getMacroArea( $fields["TP"], "" );
 			echo fItemAprendizado(array(
-				"classPanel" => "panel-warning",
+				"classPanel" => "bg-orange",
 				"leftIcon" => $icon,
 				"value" => $area,
 				"title" => titleCase( $ds, array(" "), array("OU", "COU", "APS") )
@@ -169,7 +169,7 @@ if (!$result->EOF):
 
 			if ($fields["TP_ITEM"] == "ES"):
 				echo fItemAprendizado(array(
-					"classPanel" => "panel-danger",
+					"classPanel" => "bg-pink",
 					"leftIcon" => $icon,
 					"value" => $fields["CD_ITEM_INTERNO"],
 					"title" => titleCase( $fields["DS_ITEM"] ),
@@ -225,11 +225,11 @@ INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
 	  AND ah.DT_AVALIACAO IS NULL
 	ORDER BY ta.TP_ITEM, ta.CD_ITEM_INTERNO
 ", array($pessoaID) );
-drawBoxesArea("Itens não avaliados pelo regional",$result,"panel-yellow");
+drawBoxesArea("Itens não avaliados pelo regional",$result,"bg-yellow");
 
 $result = CONN::get()->Execute("
    SELECT DISTINCT ta.TP_ITEM, ta.CD_ITEM_INTERNO, ta.DS_ITEM, ta.CD_AREA_INTERNO, ah.DT_AVALIACAO AS DT,
-			 IF(cc.FG_COMPRA = 'S' OR ccag.ID IS NOT NULL,'panel-success','panel-warning') AS BOX_CLASS,
+			 IF(cc.FG_COMPRA = 'S' OR ccag.ID IS NOT NULL,'panel-success','bg-amber') AS BOX_CLASS,
 			 IF(cc.FG_COMPRA = 'S' OR ccag.ID IS NOT NULL,'Item comprado','Item ainda não comprado') AS BOX_HINT
 	 FROM APR_HISTORICO ah
 INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
@@ -252,7 +252,7 @@ INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
 	  AND YEAR(ah.DT_INVESTIDURA) = Year(NOW())
 	ORDER BY ta.TP_ITEM, ta.CD_ITEM_INTERNO
 ", array($pessoaID) );
-drawBoxesArea("Itens recebidos em ".date("Y"),$result,"panel-green");
+drawBoxesArea("Itens recebidos em ".date("Y"),$result,"bg-green");
 
 $matAnteriores = CONN::get()->Execute("
 	SELECT COMPL, DT_ENTREGA, TP, DS, FUNDO, CMPL, FG_ALMOX, FG_IM

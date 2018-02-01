@@ -64,7 +64,7 @@ if (!$result->EOF):
 				$style = "color:$color;background-color:$back";
 			endif;
 			echo fItemAprendizado(array(
-				"classPanel" => "panel-info",
+				"classPanel" => "bg-light-blue",
 				"leftIcon" => $icon,
 				"value" => $line["QTD"],
 				"title" => titleCase( $line["DS_ITEM"] ),

@@ -3,7 +3,11 @@
         <div class="navbar-header">
             <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
             <a href="javascript:void(0);" class="bars"></a>
-            <a class="navbar-brand" href="index.html">ADMINBSB - MATERIAL DESIGN</a>
+            <?php
+                $vd = PATTERNS::getVD();
+                $desc = PATTERNS::getClubeDS(array("cl","cj","db","nm"));
+                echo "<a class=\"navbar-brand\" href=\"$vd\" style=\"margin:0;padding:0px\"><img class=\"img-responsive\" src=\"{$vd}img/logos.png\" width=\"100\" alt=\"$desc\" title=\"$desc\"></a>";
+            ?>
         </div>
         <div class="collapse navbar-collapse" id="navbar-collapse">
             <ul class="nav navbar-nav navbar-right">

@@ -43,7 +43,7 @@ $result = CONN::get()->Execute("
 ");
 if (!$result->EOF):
 	echo fItemAprendizado(array(
-		"classPanel" => "panel-green",
+		"classPanel" => "bg-green",
 		"leftIcon" => "fa fa-child fa-4x",
 		"value" => $result->fields["QTD"],
 		"strBL" => "Ativos",
@@ -58,7 +58,7 @@ $result = CONN::get()->Execute("
 ");
 if (!$result->EOF):
 	echo fItemAprendizado(array(
-		"classPanel" => "panel-primary",
+		"classPanel" => "bg-primary",
 		"leftIcon" => "fa fa-thumbs-up fa-4x",
 		"value" => $result->fields["QTD"],
 		"strBL" => "Batizados",
@@ -87,7 +87,7 @@ if (!$result->EOF):
 		$icon = getIconAprendizado( $line["TP_ITEM"], $line["CD_AREA_INTERNO"], "fa-4x" );
 		$area = getMacroArea( $line["TP_ITEM"], $line["CD_AREA_INTERNO"] );
 		echo fItemAprendizado(array(
-			"classPanel" => "panel-primary",
+			"classPanel" => "bg-primary",
 			"leftIcon" => $icon,
 			"value" => $line["QTD"],
 			"strBL" => titleCase( $area ),
@@ -126,7 +126,7 @@ if (!$result->EOF):
 		endif;
 
 		echo fItemAprendizado(array(
-			"classPanel" => "panel-info",
+			"classPanel" => "bg-light-blue",
 			"leftIcon" => $icon,
 			"value" => $line["QTD"],
 			"title" => titleCase( $line["DS_ITEM"] ),
