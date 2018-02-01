@@ -35,7 +35,7 @@ fHeaderPage( array( PATTERNS::getVD()."css/index.css?" )
                 <h3 class="page-header">Nosso Logo</h3>
             </div>
             <div class="col-md-5">
-                <img class="img-responsive" src="img/logo.png" width="400px" height="400px"/>
+                <img class="img-responsive" src="img/logo-1959.png" width="400px" height="400px"/>
             </div>
             <div class="col-md-7">
                 <p style="text-align:justify">Entre os índios apaches era comum que os jovens trouxessem uma pena de Águia em seu rito de passagem, pois os ninhos de Águia são normalmente construídos no alto de penhascos, e esse ato demonstraria a coragem e bravura do jovem índio. Este olhar focado representado em nosso logo, mostra justamente isso, a determinação que temos desde 1959 até os dias de hoje, construíndo pouco a pouco nossa própria história, influenciando gerações e superando os mais diversos desafios.</p>
