@@ -2,11 +2,11 @@
 @require_once("include/functions.php");
 fHeaderPage(
 	array(
-		PATTERNS::getVD()."vendor/adminbsb/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.min.css"
+		PATTERNS::getVD()."vendor/adminbsb/plugins/jquery-datatable/dataTables.bootstrap.min.css"
 	),
 	array(
 		PATTERNS::getVD()."vendor/adminbsb/plugins/jquery-datatable/jquery.dataTables.js",
-		PATTERNS::getVD()."vendor/adminbsb/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.min.js",
+		PATTERNS::getVD()."vendor/adminbsb/plugins/jquery-datatable/dataTables.bootstrap.min.js",
 		PATTERNS::getVD()."js/capas.js?".time()
 	)
 );
