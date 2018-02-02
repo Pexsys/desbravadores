@@ -30,7 +30,7 @@ session_start();
 </head>
 <body>
 <?php
-$temPerfil = isset($_SESSION['USER']['ID_USUARIO']);
+$temPerfil = isset($_SESSION['USER']['ID']);
 if (!$temPerfil):
 	session_destroy();
 	@include("include/login.php");

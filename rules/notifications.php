@@ -30,9 +30,9 @@ function getItemNotify( $arr, $tp, $icon, $title, $url ){
 		  FROM LOG_MENSAGEM
 		 WHERE YEAR(DH_GERA) = YEAR(NOW())
 		   AND DH_READ IS NULL
-		   AND ID_USUARIO = ?
+		   AND ID_CAD_USUARIO = ?
 		   AND TP = ?
-	", array($_SESSION['USER']['ID_USUARIO'], $tp));
+	", array($_SESSION['USER']['ID'], $tp));
 
 	if (!$result->EOF):
 		$qt = $result->fields["QT"];

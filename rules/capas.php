@@ -32,7 +32,7 @@ function getNames(){
 	$arr = array();
 
 	session_start();
-	$usuarioID = $_SESSION['USER']['ID_USUARIO'];
+	$usuarioID = $_SESSION['USER']['ID'];
 	$qtdZeros = zeroSizeID();
 
 	$unidadeID	= null;
@@ -43,8 +43,8 @@ function getNames(){
 	$result = CONN::get()->Execute("
 		SELECT cu.ID_CAD_PESSOA, ca.ID_UNIDADE, ca.CD_CARGO, ca.CD_CARGO2, ca.NM, ca.ID_MEMBRO, ca.ID_CAD_MEMBRO
 		  FROM CON_ATIVOS ca
-	INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
-		 WHERE cu.ID_USUARIO = ?
+	INNER JOIN CAD_USUARIO cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
+		 WHERE cu.ID = ?
 	", array( $usuarioID ) );
 	if (!$result->EOF):
 		$unidadeID = $result->fields["ID_UNIDADE"];
@@ -91,9 +91,9 @@ function getNames(){
 	//TRATAMENTO MEUS DEPENDENTES, SUAS UNIDADES OU SUAS CLASSES
 	$rd = CONN::get()->Execute("
 		SELECT ca.ID_CAD_PESSOA, ca.ID_UNIDADE
-		FROM CAD_USUARIOS cu
+		FROM CAD_USUARIO cu
 		INNER JOIN CON_ATIVOS ca ON (ca.ID_PESSOA_RESP = cu.ID_CAD_PESSOA)
-		WHERE cu.ID_USUARIO = ?
+		WHERE cu.ID = ?
 	", array($usuarioID) );
 	foreach ($rd as $k => $l):
 		$aQuery = getUnionByUnidade( $aQuery, $l["ID_UNIDADE"], $cadMembroID );

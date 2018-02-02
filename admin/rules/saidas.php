@@ -151,7 +151,7 @@ function getQueryByFilter( $parameters ) {
 function getNames(){
 	$arr = array();
 	session_start();
-	$usuarioID = $_SESSION['USER']['ID_USUARIO'];
+	$usuarioID = $_SESSION['USER']['ID'];
 	$qtdZeros = zeroSizeID();
 
 	$unidadeID = null;
@@ -164,8 +164,8 @@ function getNames(){
 	$result = CONN::get()->Execute("
 		SELECT cu.ID_CAD_PESSOA, ca.ID_MEMBRO, ca.ID_CAD_MEMBRO, ca.ID_UNIDADE, ca.CD_CARGO, ca.CD_CARGO2, ca.NM, ca.IDADE_HOJE, ca.ID_PESSOA_RESP
 		  FROM CON_ATIVOS ca
-	INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
-	     WHERE cu.ID_USUARIO = ?
+	INNER JOIN CAD_USUARIO cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
+	     WHERE cu.ID = ?
 	", array( $usuarioID ) );
 	if (!$result->EOF):
 		$unidadeID = $result->fields["ID_UNIDADE"];
@@ -257,11 +257,11 @@ function getNames(){
 	//TRATAMENTO MEUS DEPENDENTES, SUAS UNIDADES OU SUAS CLASSES
 	$rd = CONN::get()->Execute("
 		SELECT ca.ID_CAD_PESSOA, ca.ID_UNIDADE
-		FROM CAD_USUARIOS cu
+		FROM CAD_USUARIO cu
 		INNER JOIN CON_ATIVOS ca ON (ca.ID_PESSOA_RESP = cu.ID_CAD_PESSOA)
 		INNER JOIN EVE_SAIDA_MEMBRO esm ON (esm.ID_CAD_MEMBRO = ca.ID_CAD_MEMBRO AND esm.FG_AUTORIZ = 'S')
 		INNER JOIN EVE_SAIDA es ON (es.ID = esm.ID_EVE_SAIDA AND es.DH_R > NOW() AND es.FG_IMPRIMIR = 'S')
-		WHERE cu.ID_USUARIO = ?
+		WHERE cu.ID = ?
 		  AND ca.IDADE_HOJE < 18
 	", array($usuarioID) );
 	foreach ($rd as $k => $l):
@@ -520,7 +520,7 @@ function getSaidas( $parameters ) {
 	$arr = array();
 
 	session_start();
-	$usuarioID = $_SESSION['USER']['ID_USUARIO'];
+	$usuarioID = $_SESSION['USER']['ID'];
 
 	$query = "SELECT es.ID, es.DS, es.DS_DEST, es.DH_S, es.DH_R FROM EVE_SAIDA es";
 	if ( $parameters["filter"] == "Y" ):
@@ -532,8 +532,8 @@ function getSaidas( $parameters ) {
     	$result = CONN::get()->Execute("
     		SELECT cu.ID_CAD_MEMBRO, ca.ID_UNIDADE, ca.CD_CARGO, ca.CD_CARGO2, ca.NM, ca.IDADE_HOJE
     		  FROM CON_ATIVOS ca
-    	INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
-    	     WHERE cu.ID_USUARIO = ?
+    	INNER JOIN CAD_USUARIO cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
+    	     WHERE cu.ID = ?
     	", array( $usuarioID ) );
     	if ( !$result->EOF && fStrStartWith($result->fields["CD_CARGO"], "1") ):
     	    $query .= " AND ID_CAD_MEMBRO = ".$result->fields["ID_CAD_MEMBRO"];

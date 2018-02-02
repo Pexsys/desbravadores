@@ -291,7 +291,7 @@ class ESPCR extends TCPDF {
 				UPDATE LOG_MENSAGEM SET DH_READ = NOW()
 				WHERE ID_ORIGEM = ?
 				AND TP = ?
-				AND ID_USUARIO = (SELECT ID_USUARIO FROM CAD_USUARIOS WHERE ID_CAD_PESSOA = ?)
+				AND ID_CAD_USUARIO = (SELECT ID FROM CAD_USUARIO WHERE ID_CAD_PESSOA = ?)
 			", array( $result->fields["ID"], "M", $pessoaID ) );
 
 		endif;

@@ -142,7 +142,7 @@ function delete( $parameters ) {
             //REMOVE NOTIFICACOES, SE EXISTIREM.
             CONN::get()->Execute("
     		    DELETE FROM LOG_MENSAGEM
-    		    WHERE ID_ORIGEM = ? AND TP = ? AND ID_USUARIO = (SELECT ID_USUARIO FROM CAD_USUARIOS WHERE ID_CAD_PESSOA = ?)
+    		    WHERE ID_ORIGEM = ? AND TP = ? AND ID_CAD_USUARIO = (SELECT ID FROM CAD_USUARIO WHERE ID_CAD_PESSOA = ?)
     		", array( $rs->fields["ID_TAB_APREND"], "M", $rs->fields["ID_CAD_PESSOA"] ) );
 		endif;
 

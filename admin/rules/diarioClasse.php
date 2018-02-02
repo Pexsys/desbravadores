@@ -5,7 +5,7 @@ responseMethod();
 function getQueryByFilter( $parameters ) {
 	session_start();
 
-	$userID = $_SESSION['USER']['ID_USUARIO'];
+	$userID = $_SESSION['USER']['ID'];
 	$membroID = $_SESSION['USER']['ID_CAD_PESSOA'];
 	$out = array();
 	$frm = null;
@@ -59,7 +59,7 @@ function getQueryByFilter( $parameters ) {
 function fRegistro( $parameters ) {
 	session_start();
 
-	$userID = $_SESSION['USER']['ID_USUARIO'];
+	$userID = $_SESSION['USER']['ID'];
 	$membroID = $_SESSION['USER']['ID_CAD_PESSOA'];
 	$out = array();
 	$frm = null;
@@ -132,7 +132,7 @@ function fRegistro( $parameters ) {
 					ID_TAB_APREND,
 					ID_TAB_APR_ITEM,
 					ID_TAB_APR_ITEM_SEL,
-					ID_USUARIO_INS,
+					ID_CAD_USUARIO,
 					SQ,
 					TXT
 				) VALUES (?,?,?,?,?,?,?,?)
@@ -159,7 +159,7 @@ function fRegistro( $parameters ) {
 			$result = CONN::get()->Execute("
 				SELECT *
 				  FROM CAD_DIARIO cd
-			INNER JOIN CAD_USUARIOS cu ON (cu.ID_USUARIO = cd.ID_USUARIO_INS)
+			INNER JOIN CAD_USUARIO cu ON (cu.ID = cd.ID_CAD_USUARIO)
 				 WHERE cd.ID = ?
 			", array( $parameters["id"] ) );
 			if (!$result->EOF):
