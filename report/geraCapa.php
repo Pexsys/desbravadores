@@ -33,7 +33,7 @@ class ESPCR extends TCPDF {
 		);
 
 		$this->SetCreator(PDF_CREATOR);
-		$this->SetAuthor('Ricardo J. Cesar');
+		
 		$this->SetTitle('Geração automática de capas de especialidades');
 		$this->SetSubject($GLOBALS['pattern']->getClubeDS(array("cl","nm")));
 		$this->SetKeywords('Especialidades, ' . str_replace(" ", ", ", $GLOBALS['pattern']->getClubeDS( array("db","nm","ibd") ) ));

@@ -15,7 +15,7 @@ class OCORRENCIAS extends TCPDF {
 		$this->hPoint = 0;
 		
 		$this->SetCreator(PDF_CREATOR);
-		$this->SetAuthor('Ricardo J. Cesar');
+		
 		$this->SetTitle('Geração automática de Ocorrências');
 		$this->SetSubject($GLOBALS['pattern']->getClubeDS(array("cl","nm")));
 		$this->SetKeywords('Ocorrências, ' . str_replace(" ", ", ", $GLOBALS['pattern']->getClubeDS( array("db","nm","ibd") ) ));

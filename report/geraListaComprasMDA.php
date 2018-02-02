@@ -40,7 +40,7 @@ class LISTAINVESTIDURAMDA extends TCPDF {
 		);
 
 		$this->SetCreator(PDF_CREATOR);
-		$this->SetAuthor('Ricardo J. Cesar');
+		
 		$this->SetTitle('Listagem de Investidura - MDA');
 		$this->SetSubject($GLOBALS['pattern']->getClubeDS(array("cl","nm")));
 		$this->SetKeywords('Compras, ' . str_replace(" ", ", ", $GLOBALS['pattern']->getClubeDS( array("db","nm","ibd") ) ));

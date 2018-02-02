@@ -36,7 +36,7 @@ class LISTAATIVOSALFA extends TCPDF {
 		);
 
 		$this->SetCreator(PDF_CREATOR);
-		$this->SetAuthor('Ricardo J. Cesar');
+		
 		$this->SetTitle('Listagem de Membros não Batizados');
 		$this->SetSubject($GLOBALS['pattern']->getClubeDS(array("cl","nm")));
 		$this->SetKeywords('Batismos, ' . str_replace(" ", ", ", $GLOBALS['pattern']->getClubeDS( array("db","nm","ibd") ) ));
