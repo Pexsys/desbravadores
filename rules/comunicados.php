@@ -58,17 +58,17 @@ function fComunicado( $parameters ) {
 		//GRAVACAO DEFINITIVA, ENVIO POR EMAIL
 		if ($fg_pend == "N"):
 			$GLOBALS['conn']->Execute("
-				INSERT INTO LOG_MENSAGEM (ID_ORIGEM, TP, ID_USUARIO, EMAIL, DH_GERA)
-				SELECT $id, 'C',  cu.ID_USUARIO, ca.EMAIL, NOW() 
+				INSERT INTO LOG_MENSAGEM (ID_ORIGEM, TP, ID_CAD_USUARIO, EMAIL, DH_GERA)
+				SELECT $id, 'C',  cu.ID, ca.EMAIL, NOW() 
 				  FROM CON_ATIVOS ca
-		    INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA) 
+		    INNER JOIN CAD_USUARIO cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA) 
 				
 				UNION
 				
-				SELECT $id, 'C', cu.ID_USUARIO, cr.EMAIL, NOW() 
+				SELECT $id, 'C', cu.ID, cr.EMAIL, NOW() 
 				FROM CON_RESP_LEGAL cr 
 				INNER JOIN CON_ATIVOS ca ON (ca.ID_PESSOA_RESP = cr.ID) 
-				INNER JOIN CAD_USUARIOS cu ON (cu.CD_USUARIO = cr.NR_CPF) 
+				INNER JOIN CAD_USUARIO cu ON (cu.CD_USUARIO = cr.NR_CPF) 
 				WHERE NOT EXISTS (SELECT 1 FROM CON_ATIVOS WHERE NR_CPF = cr.NR_CPF) 
 			");
 		endif;
@@ -113,7 +113,7 @@ function fComunicado( $parameters ) {
 
 function getComunicados( $parameters ){
 	session_start();
-	$usuarioID = $_SESSION['USER']['id_usuario'];
+	$usuarioID = $_SESSION['USER']['id'];
 	
 	$arr = array();
 	fConnDB();
@@ -125,7 +125,7 @@ function getComunicados( $parameters ){
 		INNER JOIN LOG_MENSAGEM lc ON (lc.ID_ORIGEM = cc.ID AND lc.TP = 'C')
 			 WHERE YEAR(cc.DH) = YEAR(NOW())
 			   AND cc.FG_PEND = 'N'
-			   AND lc.ID_USUARIO = ?
+			   AND lc.ID_CAD_USUARIO = ?
 		  ORDER BY ID DESC
 		", array( $usuarioID ) );
 	else:
@@ -159,7 +159,7 @@ function getComunicados( $parameters ){
 function fSetRead( $parameters ){
 	session_start();
 	$comunicadoID = $parameters["id"];
-	$usuarioID = $_SESSION['USER']['id_usuario'];
+	$usuarioID = $_SESSION['USER']['id'];
 	$usuarioCD = $_SESSION['USER']['cd_usuario'];
 	
 	fConnDB();
@@ -168,7 +168,7 @@ function fSetRead( $parameters ){
 	$GLOBALS['conn']->Execute("
 		UPDATE LOG_MENSAGEM SET
 			DH_READ = NOW()
-		WHERE ID_USUARIO = ?
+		WHERE ID_CAD_USUARIO = ?
 		  AND ID_ORIGEM = ?
 		  AND TP = ?
 	", array($usuarioID,$comunicadoID,"C"));
@@ -177,11 +177,11 @@ function fSetRead( $parameters ){
 	$result = $GLOBALS['conn']->Execute("
 		UPDATE LOG_MENSAGEM SET
 			  DH_READ = NOW()
-		WHERE ID_USUARIO IN (
-							SELECT cu.ID_USUARIO
+		WHERE ID_CAD_USUARIO IN (
+							SELECT cu.ID
 							FROM CON_RESP_LEGAL cr
 							INNER JOIN CON_ATIVOS ca ON (ca.ID_PESSOA_RESP = cr.ID)
-							INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
+							INNER JOIN CAD_USUARIO cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
 							WHERE cr.NR_CPF = ?		
 							)
 		  AND DH_READ IS NULL

@@ -8,14 +8,14 @@ class PROFILE {
 	      INNER JOIN TAB_PERFIL_ITEM tpi ON ( tpi.id_tab_perfil = cpp.id_perfil AND tpi.dh_ini_valid <= NOW() )
 	      INNER JOIN TAB_DASHBOARD td ON ( td.id = tpi.id_tab_dashboard )
 	       LEFT JOIN TAB_FUNCTION tf ON ( tf.id = td.id_tab_function )
-		   WHERE cpp.id_cad_usuarios = ?";
+		   WHERE cpp.id_CAD_USUARIO = ?";
 		if ( isset($cd) && !empty($cd) ):
 			$query .= " AND td.cd LIKE '$cd.%' AND LENGTH(td.cd) = LENGTH('$cd')+3";
 		else:
 			$query .= " AND LENGTH(td.cd) = 2";
 		endif;
 		$query .= " ORDER BY td.cd";
-		$result = $GLOBALS['conn']->Execute($query, array($_SESSION['USER']['id_usuario']) );
+		$result = $GLOBALS['conn']->Execute($query, array($_SESSION['USER']['id']) );
 		while (!$result->EOF):
 			$child = PROFILE::fGetProfiles( $result->fields['cd'] );
 			$arr[ $result->fields['id'] ] = array(
@@ -47,7 +47,7 @@ class PROFILE {
 		$_SESSION['USER']['ssid']			= session_id();
 		$_SESSION['USER']['cd_usuario']		= $result->fields['CD_USUARIO'];
 		$_SESSION['USER']['ds_usuario']		= $result->fields['DS_USUARIO'];
-		$_SESSION['USER']['id_usuario']		= $result->fields['ID_USUARIO'];
+		$_SESSION['USER']['id']				= $result->fields['ID'];
 		$_SESSION['USER']['id_cad_membro']	= $result->fields['ID_CAD_MEMBRO'];
 		$_SESSION['USER']['id_clube']		= $result->fields['ID_CLUBE'];
 		$_SESSION['USER']['id_membro']		= $result->fields['ID_MEMBRO'];
@@ -58,60 +58,61 @@ class PROFILE {
 	public static function deleteAllByUserID( $userID ) {
 		$GLOBALS['conn']->Execute("
 			DELETE FROM CAD_USU_PERFIL
-			 WHERE ID_CAD_USUARIOS = ? 
+			 WHERE ID_CAD_USUARIO = ? 
 		", array( $userID ) );		
 	}
 
 	public static function deleteAllByPessoaID( $pessoaID ){
 		$rs = $GLOBALS['conn']->Execute("
-			SELECT ID_USUARIO FROM CAD_USUARIOS
+			SELECT ID 
+			FROM CAD_USUARIO
 			WHERE ID_CAD_PESSOA = ?
 		", array( $pessoaID ) );
 		if (!$rs->EOF):
-			PROFILE::deleteAllByUserID( $rs->fields["ID_USUARIO"] );
+			PROFILE::deleteAllByUserID( $rs->fields["ID"] );
 		endif;
 	}
 
 	public static function deleteByUserID( $userID, $profileID ) {
 		$GLOBALS['conn']->Execute("
 			DELETE FROM CAD_USU_PERFIL
-			 WHERE ID_CAD_USUARIOS = ? 
+			 WHERE ID_CAD_USUARIO = ? 
 			   AND ID_PERFIL = ? 
 		", array( $userID, $profileID ) );		
 	}
 
 	 public static function deleteByPessoaID( $pessoaID, $profileID ){
 		$rs = $GLOBALS['conn']->Execute("
-			SELECT ID_USUARIO
-			FROM CAD_USUARIOS
+			SELECT ID
+			FROM CAD_USUARIO
 			WHERE ID_CAD_PESSOA = ? 
 		", array( $pessoaID ) );
 		if (!$rs->EOF):
-			PROFILE::deleteByUserID( $rs->fields["ID_USUARIO"], $profileID );
+			PROFILE::deleteByUserID( $rs->fields["ID"], $profileID );
 		endif;
 	}
 
 	 public static function insertByPessoaID( $pessoaID, $profileID ) {
 		$rs = $GLOBALS['conn']->Execute("
-			SELECT ID_USUARIO
-			  FROM CAD_USUARIOS
+			SELECT ID
+			  FROM CAD_USUARIO
 			 WHERE ID_CAD_PESSOA = ? 
 		", array( $pessoaID ) );
 		if (!$rs->EOF):
-			PROFILE::insert( $rs->fields["ID_USUARIO"], $profileID );
+			PROFILE::insert( $rs->fields["ID"], $profileID );
 		endif;
 	}
 
 	 public static function insert( $userID, $profileID ) {
 		$rs = $GLOBALS['conn']->Execute("
 			SELECT 1 FROM CAD_USU_PERFIL
-			WHERE ID_CAD_USUARIOS = ? 
+			WHERE ID_CAD_USUARIO = ? 
 			  AND ID_PERFIL = ?
 		", array( $userID, $profileID ) );
 		if ($rs->EOF):
 			$GLOBALS['conn']->Execute("
 				INSERT INTO CAD_USU_PERFIL (
-					ID_CAD_USUARIOS,
+					ID_CAD_USUARIO,
 					ID_PERFIL
 				) VALUES (
 					?,

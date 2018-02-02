@@ -155,7 +155,7 @@ function getNames(){
 	fConnDB();
 
 	session_start();
-	$usuarioID = $_SESSION['USER']['id_usuario'];
+	$usuarioID = $_SESSION['USER']['id'];
 	$qtdZeros = zeroSizeID();
 	
 	$unidadeID = null;
@@ -168,8 +168,8 @@ function getNames(){
 	$result = $GLOBALS['conn']->Execute("
 		SELECT cu.ID_CAD_PESSOA, ca.ID_MEMBRO, ca.ID_CAD_MEMBRO, ca.ID_UNIDADE, ca.CD_CARGO, ca.CD_CARGO2, ca.NM, ca.IDADE_HOJE, ca.ID_PESSOA_RESP
 		  FROM CON_ATIVOS ca
-	INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
-	     WHERE cu.ID_USUARIO = ? 
+	INNER JOIN CAD_USUARIO cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
+	     WHERE cu.ID = ? 
 	", array( $usuarioID ) );
 	if (!$result->EOF):
 		$unidadeID = $result->fields["ID_UNIDADE"];
@@ -261,11 +261,11 @@ function getNames(){
 	//TRATAMENTO MEUS DEPENDENTES, SUAS UNIDADES OU SUAS CLASSES
 	$rd = $GLOBALS['conn']->Execute("
 		SELECT ca.ID_CAD_PESSOA, ca.ID_UNIDADE
-		FROM CAD_USUARIOS cu
+		FROM CAD_USUARIO cu
 		INNER JOIN CON_ATIVOS ca ON (ca.ID_PESSOA_RESP = cu.ID_CAD_PESSOA)
 		INNER JOIN EVE_SAIDA_MEMBRO esm ON (esm.ID_CAD_MEMBRO = ca.ID_CAD_MEMBRO AND esm.FG_AUTORIZ = 'S')
 		INNER JOIN EVE_SAIDA es ON (es.ID = esm.ID_EVE_SAIDA AND es.DH_R > NOW() AND es.FG_IMPRIMIR = 'S')
-		WHERE cu.ID_USUARIO = ?
+		WHERE cu.ID = ?
 		  AND ca.IDADE_HOJE < 18
 	", array($usuarioID) );
 	foreach ($rd as $k => $l):
@@ -528,7 +528,7 @@ function getSaidas( $parameters ) {
 	$arr = array();
 	
 	session_start();
-	$usuarioID = $_SESSION['USER']['id_usuario'];	
+	$usuarioID = $_SESSION['USER']['id'];	
 	
 	fConnDB();
 	
@@ -542,8 +542,8 @@ function getSaidas( $parameters ) {
     	$result = $GLOBALS['conn']->Execute("
     		SELECT cu.ID_CAD_MEMBRO, ca.ID_UNIDADE, ca.CD_CARGO, ca.CD_CARGO2, ca.NM, ca.IDADE_HOJE
     		  FROM CON_ATIVOS ca
-    	INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
-    	     WHERE cu.ID_USUARIO = ? 
+    	INNER JOIN CAD_USUARIO cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
+    	     WHERE cu.ID = ? 
     	", array( $usuarioID ) );
     	if ( !$result->EOF && fStrStartWith($result->fields["CD_CARGO"], "1") ):
     	    $query .= " AND ID_CAD_MEMBRO = ".$result->fields["ID_CAD_MEMBRO"];

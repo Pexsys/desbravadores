@@ -46,7 +46,7 @@ function login( $parameters ) {
 			//VERIFICA SE CPF É DE UM MEMBRO ATIVO
 			$result = checkMemberByCPF($usr);
 			if (!$result->EOF):
-				$usuarioID = $result->fields["ID_USUARIO"];
+				$usuarioID = $result->fields["ID"];
 				$usr = $result->fields["CD_USUARIO"];
 				$psw = $result->fields["DS_SENHA"];
 
@@ -120,7 +120,7 @@ function login( $parameters ) {
 			else:
 				$resp = verificaRespByCPF($usr);
 				if (!is_null($resp) && !existeMenorByRespID($resp["ID_CAD_PESSOA"])):
-					fDeleteUserAndProfile( $result->fields["ID_USUARIO"], 10 );
+					fDeleteUserAndProfile( $result->fields["ID"], 10 );
 					return $arr;
 				endif;
 			endif;
@@ -131,10 +131,10 @@ function login( $parameters ) {
 				PROFILE::fSetSessionLogin($result);
 
 				$GLOBALS['conn']->Execute("
-					UPDATE CAD_USUARIOS SET 
+					UPDATE CAD_USUARIO SET 
 						DH_ATUALIZACAO = NOW()
-					WHERE ID_USUARIO = ?
-				", array( $result->fields['ID_USUARIO'] ) );
+					WHERE ID = ?
+				", array( $result->fields['ID'] ) );
 
 				if ( $pag == "READDATA" ):
 					$arr['page'] = $GLOBALS['pattern']->getVD()."readdata.php";
@@ -152,7 +152,7 @@ function login( $parameters ) {
 
 function fInsertUser( $usr, $nm, $psw, $pessoaID ){
 	$GLOBALS['conn']->Execute("
-			INSERT INTO CAD_USUARIOS(
+			INSERT INTO CAD_USUARIO(
 				CD_USUARIO,
 				DS_USUARIO,
 				DS_SENHA,
@@ -166,13 +166,13 @@ function fInsertUserProfile( $userID, $profileID ){
 	$rs = $GLOBALS['conn']->Execute("
 		SELECT 1 
 		  FROM CAD_USU_PERFIL
-		 WHERE ID_CAD_USUARIOS = ?
+		 WHERE ID_CAD_USUARIO = ?
 		   AND ID_PERFIL = ?
 	", array( $userID, $profileID ) );
 	if ($rs->EOF):
 		$GLOBALS['conn']->Execute("
 			INSERT INTO CAD_USU_PERFIL(
-				ID_CAD_USUARIOS,
+				ID_CAD_USUARIO,
 				ID_PERFIL
 			) VALUES( ?, ? )
 		", array( $userID, $profileID ) );
@@ -182,22 +182,22 @@ function fInsertUserProfile( $userID, $profileID ){
 function fDeleteUserAndProfile( $userID, $profileID ){
 	$GLOBALS['conn']->Execute("
 		DELETE FROM CAD_USU_PERFIL
-		 WHERE ID_CAD_USUARIOS = ?
+		 WHERE ID_CAD_USUARIO = ?
 		   AND ID_PERFIL = ?
 	", array( $userID, $profileID ) );
 	
 	$GLOBALS['conn']->Execute("
-		DELETE FROM CAD_USUARIOS
-		 WHERE ID_USUARIO = ?
+		DELETE FROM CAD_USUARIO
+		 WHERE ID = ?
 	", array( $userID ) );
 }
 
 function checkMemberByCPF($cpf){
 	return $GLOBALS['conn']->Execute("
-		SELECT cu.ID_USUARIO, cu.CD_USUARIO, cu.DS_USUARIO, cu.DS_SENHA, 
+		SELECT cu.ID, cu.CD_USUARIO, cu.DS_USUARIO, cu.DS_SENHA, 
 			   ca.ID_CAD_PESSOA, ca.TP_SEXO, ca.CD_CARGO, ca.CD_CARGO2, ca.NM, ca.ID_MEMBRO
 		  FROM CON_ATIVOS ca
-	 LEFT JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
+	 LEFT JOIN CAD_USUARIO cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
 		 WHERE ca.NR_CPF = ?
 	",array( fClearBN($cpf) ) );
 }
@@ -206,25 +206,25 @@ function checkUser($cdUser, $pag){
 
 	//VERIFICA SE PRECISA ATUALIZAR USUARIO
 	$rs = $GLOBALS['conn']->Execute("
-		SELECT cu.ID_USUARIO, cp.ID
-		FROM CAD_USUARIOS cu
+		SELECT cu.ID, cp.ID
+		FROM CAD_USUARIO cu
 		INNER JOIN CAD_PESSOA cp ON (cp.NR_CPF = cu.CD_USUARIO)
 		WHERE cu.CD_USUARIO = ? 
 		  AND cu.ID_CAD_PESSOA IS NULL
 	", array($cdUser) );
 	if (!$rs->EOF):
 		$GLOBALS['conn']->Execute("
-			UPDATE CAD_USUARIOS SET ID_CAD_PESSOA = ? WHERE ID_USUARIO = ?
-		", array( $rs->fields["ID"], $rs->fields["ID_USUARIO"] ) );
+			UPDATE CAD_USUARIO SET ID_CAD_PESSOA = ? WHERE ID = ?
+		", array( $rs->fields["ID"], $rs->fields["ID"] ) );
 	endif;
 
 	return $GLOBALS['conn']->Execute("
-		SELECT cu.ID_USUARIO, cu.CD_USUARIO, cu.DS_USUARIO, cu.DS_SENHA, 
+		SELECT cu.ID, cu.CD_USUARIO, cu.DS_USUARIO, cu.DS_SENHA, 
 			   cm.ID_CAD_PESSOA, cp.TP_SEXO, cm.ID AS ID_CAD_MEMBRO, cm.ID_CLUBE, cm.ID_MEMBRO
-		  FROM CAD_USUARIOS cu
+		  FROM CAD_USUARIO cu
 		LEFT JOIN CAD_PESSOA cp ON (cp.ID = cu.ID_CAD_PESSOA OR cp.NR_CPF = ?)
 		LEFT JOIN CAD_MEMBRO cm ON (cm.ID_CAD_PESSOA = cp.ID)
-	". ($pag == "READDATA" ? " INNER JOIN CAD_USU_PERFIL cuf ON (cuf.ID_CAD_USUARIOS = cu.ID_USUARIO AND cuf.ID_PERFIL = 2) " : "") ."
+	". ($pag == "READDATA" ? " INNER JOIN CAD_USU_PERFIL cuf ON (cuf.ID_CAD_USUARIO = cu.ID AND cuf.ID_PERFIL = 2) " : "") ."
 		 WHERE cu.CD_USUARIO = ?
 	", array( $cdUser, $cdUser ) );
 }
