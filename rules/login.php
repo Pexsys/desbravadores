@@ -206,7 +206,7 @@ function checkUser($cdUser, $pag){
 
 	//VERIFICA SE PRECISA ATUALIZAR USUARIO
 	$rs = $GLOBALS['conn']->Execute("
-		SELECT cu.ID, cp.ID
+		SELECT cu.ID, cp.ID AS ID_CAD_PESSOA
 		FROM CAD_USUARIO cu
 		INNER JOIN CAD_PESSOA cp ON (cp.NR_CPF = cu.CD_USUARIO)
 		WHERE cu.CD_USUARIO = ? 
@@ -215,7 +215,7 @@ function checkUser($cdUser, $pag){
 	if (!$rs->EOF):
 		$GLOBALS['conn']->Execute("
 			UPDATE CAD_USUARIO SET ID_CAD_PESSOA = ? WHERE ID = ?
-		", array( $rs->fields["ID"], $rs->fields["ID"] ) );
+		", array( $rs->fields["ID_CAD_PESSOA"], $rs->fields["ID"] ) );
 	endif;
 
 	return $GLOBALS['conn']->Execute("
