@@ -2,7 +2,7 @@
 session_start();
 @require_once("../functions.php");
 @require_once("../../rules/profile.php");
-fConnDB();
+
 $arrPerfil = $_SESSION['USER']['perfil'];
 $temPerfil = sizeof($arrPerfil) > 0;
 if (!$temPerfil):
@@ -45,7 +45,7 @@ $idParam = fRequest("id");
 		<div class="col-sm-9">
 			<?php
 				$DATA_NOW = date('Y-m-d H:i:s');
-				$result = $GLOBALS['conn']->Execute("
+				$result = CONN::get()->Execute("
 				SELECT *
 				FROM CAD_EVENTOS 
 				WHERE ( DTHORA_EVENTO_INI >= '$DATA_NOW' OR 

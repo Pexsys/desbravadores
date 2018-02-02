@@ -14,11 +14,11 @@
 			"filterTo" => "#membrosDatatable",
 			"filters" => 
 				array( 
-					array( "id" => "G", "ds" => "Grupo", "icon" => "fa fa-group" ),
-					array( "id" => "X", "ds" => "Sexo", "icon" => "fa fa-venus-mars" ),
-					array( "id" => "B", "ds" => "Batizado", "icon" => "fa fa-bath" ),
-					array( "id" => "U", "ds" => "Unidade", "icon" => "fa fa-universal-access" ),
-					array( "id" => "PC", "ds" => "Pend&ecirc;ncia Cadastral", "icon" => "fa fa-exclamation-triangle" )
+					array( "id" => "G", "ds" => "Grupo", "icon" => "far fa-group" ),
+					array( "id" => "X", "ds" => "Sexo", "icon" => "far fa-venus-mars" ),
+					array( "id" => "B", "ds" => "Batizado", "icon" => "far fa-bath" ),
+					array( "id" => "U", "ds" => "Unidade", "icon" => "far fa-universal-access" ),
+					array( "id" => "PC", "ds" => "Pend&ecirc;ncia Cadastral", "icon" => "far fa-exclamation-triangle" )
 				)
 		) 
 	);?>
@@ -39,9 +39,9 @@
 		<br/>
 	</div>
 	<div class="row">
-		<a role="button" class="btn btn-warning pull-left" id="btnNovo" style="display:none"><i class="fa fa-plus"></i>&nbsp;Novo</a>
-		<a role="button" class="btn btn-primary pull-right" name="filtro" id="btnAtivos" tp-filtro="A"><i class="fa fa-filter"></i>&nbsp;Ativos</a>
-		<a role="button" class="btn btn-primary-outline pull-right" name="filtro" id="btnTodos" tp-filtro="T"><i class="fa fa-globe"></i>&nbsp;Todos</a>
+		<a role="button" class="btn btn-warning pull-left" id="btnNovo" style="display:none"><i class="far fa-plus"></i>&nbsp;Novo</a>
+		<a role="button" class="btn btn-primary pull-right" name="filtro" id="btnAtivos" tp-filtro="A"><i class="far fa-filter"></i>&nbsp;Ativos</a>
+		<a role="button" class="btn btn-primary-outline pull-right" name="filtro" id="btnTodos" tp-filtro="T"><i class="far fa-globe"></i>&nbsp;Todos</a>
 	</div>
 </div>
 <div class="modal fade" id="membrosModal" role="dialog" data-backdrop="static">
@@ -235,7 +235,7 @@
 										</select>
 									</div>
 									<div class="form-group col-xs-4">
-										<label for="nrUltEstrela" class="control-label"><i class="fa fa-star-o"></i> (&Uacute;ltima devolvida)</label>
+										<label for="nrUltEstrela" class="control-label"><i class="far fa-star-o"></i> (&Uacute;ltima devolvida)</label>
 										<input type="text" name="nrUltEstrela" id="nrUltEstrela" field="cad_membro-estr_devol" class="form-control" placeholder="&Uacute;ltima Estrela" data-min="2"/>
 									</div>
 									<div class="form-group col-xs-4">
@@ -281,9 +281,9 @@
 			</div>	
 			<div class="modal-footer">
 				<?php /*
-				<a role="button" class="btn btn-default pull-right" id="btnAprendizado"><i class="fa fa-graduation-cap"></i></a>
-				<a role="button" class="btn btn-default pull-right" id="btnHistorico"><i class="fa fa-university"></i></a>
-				<a role="button" class="btn btn-default pull-right" id="btnFinanceiro"><i class="fa fa-money"></i></a>
+				<a role="button" class="btn btn-default pull-right" id="btnAprendizado"><i class="far fa-graduation-cap"></i></a>
+				<a role="button" class="btn btn-default pull-right" id="btnHistorico"><i class="far fa-university"></i></a>
+				<a role="button" class="btn btn-default pull-right" id="btnFinanceiro"><i class="far fa-money"></i></a>
 				*/?>
 				<a role="button" class="btn btn-default pull-left" name="memberNavigate" id="navFirst" type-nav="first"><i class="glyphicon glyphicon-step-backward"></i></a>
 				<a role="button" class="btn btn-default pull-left" name="memberNavigate" id="navPrior" type-nav="prior"><i class="glyphicon glyphicon-chevron-left"></i></a>

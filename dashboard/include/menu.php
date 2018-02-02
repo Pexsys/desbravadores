@@ -25,7 +25,7 @@ function fMontaMenu( $perfil ) {
 		endif;
 		echo "$opt";
 		if ( count($value["child"]) > 0 ):
-			echo "<span class=\"fa arrow\"></span>";
+			echo "<span class=\"far arrow\"></span>";
 		endif;
 		echo "</a>";
 		if ( count($value["child"]) > 0 ):
@@ -75,7 +75,7 @@ $perfil = fSetActive( PROFILE::fGetProfiles(), fRequest("id") );
 					<input type="text" class="form-control" placeholder="Pesquisar...">
 					<span class="input-group-btn">
 					<button class="btn btn-default" type="button">
-						<i class="fa fa-search"></i>
+						<i class="far fa-search"></i>
 					</button>
 				</span>
 				</div>

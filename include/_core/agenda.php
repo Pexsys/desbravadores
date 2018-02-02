@@ -42,8 +42,8 @@ fHeaderPage();
                 <div class="panel panel-default text-center">
                     <div class="panel-heading">
                         <span class="fa-stack fa-5x">
-                              <i class="fa fa-circle fa-stack-2x text-primary"></i>
-                              <i class="fa fa-tree fa-stack-1x fa-inverse"></i>
+                              <i class="far fa-circle fa-stack-2x text-primary"></i>
+                              <i class="far fa-tree fa-stack-1x fa-inverse"></i>
                         </span>
                     </div>
                     <div class="panel-body">
@@ -57,8 +57,8 @@ fHeaderPage();
                 <div class="panel panel-default text-center">
                     <div class="panel-heading">
                         <span class="fa-stack fa-5x">
-                              <i class="fa fa-circle fa-stack-2x text-primary"></i>
-                              <i class="fa fa-car fa-stack-1x fa-inverse"></i>
+                              <i class="far fa-circle fa-stack-2x text-primary"></i>
+                              <i class="far fa-car fa-stack-1x fa-inverse"></i>
                         </span>
                     </div>
                     <div class="panel-body">
@@ -72,8 +72,8 @@ fHeaderPage();
                 <div class="panel panel-default text-center">
                     <div class="panel-heading">
                         <span class="fa-stack fa-5x">
-                              <i class="fa fa-circle fa-stack-2x text-primary"></i>
-                              <i class="fa fa-support fa-stack-1x fa-inverse"></i>
+                              <i class="far fa-circle fa-stack-2x text-primary"></i>
+                              <i class="far fa-support fa-stack-1x fa-inverse"></i>
                         </span>
                     </div>
                     <div class="panel-body">
@@ -87,8 +87,8 @@ fHeaderPage();
                 <div class="panel panel-default text-center">
                     <div class="panel-heading">
                         <span class="fa-stack fa-5x">
-                              <i class="fa fa-circle fa-stack-2x text-primary"></i>
-                              <i class="fa fa-database fa-stack-1x fa-inverse"></i>
+                              <i class="far fa-circle fa-stack-2x text-primary"></i>
+                              <i class="far fa-database fa-stack-1x fa-inverse"></i>
                         </span>
                     </div>
                     <div class="panel-body">
@@ -108,13 +108,13 @@ fHeaderPage();
             <div class="col-lg-12">
 
                 <ul id="myTab" class="nav nav-tabs nav-justified">
-                    <li class="active"><a href="#service-one" data-toggle="tab"><i class="fa fa-tree"></i> Service One</a>
+                    <li class="active"><a href="#service-one" data-toggle="tab"><i class="far fa-tree"></i> Service One</a>
                     </li>
-                    <li class=""><a href="#service-two" data-toggle="tab"><i class="fa fa-car"></i> Service Two</a>
+                    <li class=""><a href="#service-two" data-toggle="tab"><i class="far fa-car"></i> Service Two</a>
                     </li>
-                    <li class=""><a href="#service-three" data-toggle="tab"><i class="fa fa-support"></i> Service Three</a>
+                    <li class=""><a href="#service-three" data-toggle="tab"><i class="far fa-support"></i> Service Three</a>
                     </li>
-                    <li class=""><a href="#service-four" data-toggle="tab"><i class="fa fa-database"></i> Service Four</a>
+                    <li class=""><a href="#service-four" data-toggle="tab"><i class="far fa-database"></i> Service Four</a>
                     </li>
                 </ul>
 
@@ -154,8 +154,8 @@ fHeaderPage();
                 <div class="media">
                     <div class="pull-left">
                         <span class="fa-stack fa-2x">
-                              <i class="fa fa-circle fa-stack-2x text-primary"></i>
-                              <i class="fa fa-tree fa-stack-1x fa-inverse"></i>
+                              <i class="far fa-circle fa-stack-2x text-primary"></i>
+                              <i class="far fa-tree fa-stack-1x fa-inverse"></i>
                         </span> 
                     </div>
                     <div class="media-body">
@@ -166,8 +166,8 @@ fHeaderPage();
                 <div class="media">
                     <div class="pull-left">
                         <span class="fa-stack fa-2x">
-                              <i class="fa fa-circle fa-stack-2x text-primary"></i>
-                              <i class="fa fa-car fa-stack-1x fa-inverse"></i>
+                              <i class="far fa-circle fa-stack-2x text-primary"></i>
+                              <i class="far fa-car fa-stack-1x fa-inverse"></i>
                         </span> 
                     </div>
                     <div class="media-body">
@@ -178,8 +178,8 @@ fHeaderPage();
                 <div class="media">
                     <div class="pull-left">
                         <span class="fa-stack fa-2x">
-                              <i class="fa fa-circle fa-stack-2x text-primary"></i>
-                              <i class="fa fa-support fa-stack-1x fa-inverse"></i>
+                              <i class="far fa-circle fa-stack-2x text-primary"></i>
+                              <i class="far fa-support fa-stack-1x fa-inverse"></i>
                         </span> 
                     </div>
                     <div class="media-body">
@@ -192,8 +192,8 @@ fHeaderPage();
                 <div class="media">
                     <div class="pull-left">
                         <span class="fa-stack fa-2x">
-                              <i class="fa fa-circle fa-stack-2x text-primary"></i>
-                              <i class="fa fa-database fa-stack-1x fa-inverse"></i>
+                              <i class="far fa-circle fa-stack-2x text-primary"></i>
+                              <i class="far fa-database fa-stack-1x fa-inverse"></i>
                         </span> 
                     </div>
                     <div class="media-body">
@@ -204,8 +204,8 @@ fHeaderPage();
                 <div class="media">
                     <div class="pull-left">
                         <span class="fa-stack fa-2x">
-                              <i class="fa fa-circle fa-stack-2x text-primary"></i>
-                              <i class="fa fa-bomb fa-stack-1x fa-inverse"></i>
+                              <i class="far fa-circle fa-stack-2x text-primary"></i>
+                              <i class="far fa-bomb fa-stack-1x fa-inverse"></i>
                         </span> 
                     </div>
                     <div class="media-body">
@@ -216,8 +216,8 @@ fHeaderPage();
                 <div class="media">
                     <div class="pull-left">
                         <span class="fa-stack fa-2x">
-                              <i class="fa fa-circle fa-stack-2x text-primary"></i>
-                              <i class="fa fa-bank fa-stack-1x fa-inverse"></i>
+                              <i class="far fa-circle fa-stack-2x text-primary"></i>
+                              <i class="far fa-bank fa-stack-1x fa-inverse"></i>
                         </span> 
                     </div>
                     <div class="media-body">
@@ -230,8 +230,8 @@ fHeaderPage();
                 <div class="media">
                     <div class="pull-left">
                         <span class="fa-stack fa-2x">
-                              <i class="fa fa-circle fa-stack-2x text-primary"></i>
-                              <i class="fa fa-paper-plane fa-stack-1x fa-inverse"></i>
+                              <i class="far fa-circle fa-stack-2x text-primary"></i>
+                              <i class="far fa-paper-plane fa-stack-1x fa-inverse"></i>
                         </span> 
                     </div>
                     <div class="media-body">
@@ -242,8 +242,8 @@ fHeaderPage();
                 <div class="media">
                     <div class="pull-left">
                         <span class="fa-stack fa-2x">
-                              <i class="fa fa-circle fa-stack-2x text-primary"></i>
-                              <i class="fa fa-space-shuttle fa-stack-1x fa-inverse"></i>
+                              <i class="far fa-circle fa-stack-2x text-primary"></i>
+                              <i class="far fa-space-shuttle fa-stack-1x fa-inverse"></i>
                         </span> 
                     </div>
                     <div class="media-body">
@@ -254,8 +254,8 @@ fHeaderPage();
                 <div class="media">
                     <div class="pull-left">
                         <span class="fa-stack fa-2x">
-                              <i class="fa fa-circle fa-stack-2x text-primary"></i>
-                              <i class="fa fa-recycle fa-stack-1x fa-inverse"></i>
+                              <i class="far fa-circle fa-stack-2x text-primary"></i>
+                              <i class="far fa-recycle fa-stack-1x fa-inverse"></i>
                         </span> 
                     </div>
                     <div class="media-body">

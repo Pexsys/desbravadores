@@ -196,8 +196,8 @@ $request = fRequest("cmFiltro");
 $filter = implode(",",array_map("fArrayStr", explode(",",$request)));
 $innerJoinDA = ($request == "null" || empty($request) || empty($filter) ? "" : " AND ah.DT_AVALIACAO IN ($filter)");
 
-fConnDB();
-$result = $GLOBALS['conn']->Execute("
+
+$result = CONN::get()->Execute("
 	SELECT DISTINCT
 		1 AS ORD,
 		ta.CD_ITEM_INTERNO AS X,

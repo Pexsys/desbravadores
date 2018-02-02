@@ -16,7 +16,7 @@ require_once("../include/_metaheader.php");
 <link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/css/bootstrap-toggle.min.css" rel="stylesheet" type="text/css"/>
 <link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/css/bootstrap-touchspin.min.css" rel="stylesheet" type="text/css"/>
 <link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/css/bootstrap-select.min.css" rel="stylesheet" type="text/css"/>
-<link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+<link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/font-awesome/css/fontawesome-all.min.css" rel="stylesheet" type="text/css"/>
 <link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/css/metisMenu.min.css" rel="stylesheet"/>
 <link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/css/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
 <link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/css/timeline.css" rel="stylesheet"/>

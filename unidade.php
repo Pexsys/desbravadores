@@ -1,8 +1,8 @@
 <?php 
 @require_once("include/functions.php");
-fConnDB();
 
-$result = $GLOBALS['conn']->Execute( "
+
+$result = CONN::get()->Execute( "
   SELECT *
     FROM TAB_UNIDADE 
    WHERE FG_ATIVA = ?
@@ -16,7 +16,7 @@ endif;
 fHeaderPage();
 
 $strmembros = "";
-$membros = $GLOBALS['conn']->Execute( "
+$membros = CONN::get()->Execute( "
 	SELECT * 
 	  FROM CON_ATIVOS 
 	 WHERE ID_UNIDADE = ? 
@@ -62,8 +62,8 @@ endforeach;
                 <ul>
                     <li><b>Idade</b>:&nbsp;<?php echo $result->fields["IDADE"];?> anos</li>
                     <li><b>G&ecirc;nero</b>:&nbsp;<?php echo ( $result->fields["TP"] == "F" ? "Feminino" : "Masculino" );?></li>
-                    <li><b>Cor do g&ecirc;nero</b>:&nbsp;<i class="fa fa-stop" aria-hidden="true" style="color:<?php echo $result->fields["CD_COR_GENERO"];?>"></i></li>
-                    <li><b>Cor da unidade</b>:&nbsp;<i class="fa fa-stop" aria-hidden="true" style="color:<?php echo $result->fields["CD_COR"];?>"></i></li>
+                    <li><b>Cor do g&ecirc;nero</b>:&nbsp;<i class="fas fa-stop" aria-hidden="true" style="color:<?php echo $result->fields["CD_COR_GENERO"];?>"></i></li>
+                    <li><b>Cor da unidade</b>:&nbsp;<i class="fas fa-stop" aria-hidden="true" style="color:<?php echo $result->fields["CD_COR"];?>"></i></li>
                     <li><b>Grito de Guerra</b>:<br/><i><?php echo ($result->fields["GRITO"]);?></i></li>
                     <?php 
                     if (strlen($strmembros)):
@@ -91,7 +91,7 @@ endforeach;
             </div>
             
             <?php
-            $result = $GLOBALS['conn']->Execute( "
+            $result = CONN::get()->Execute( "
         	  SELECT *
         	    FROM TAB_UNIDADE 
         	   WHERE FG_ATIVA = ?

@@ -232,7 +232,7 @@ class ESPCR extends TCPDF {
 	public function add() {
 	    $this->newPage();
         
-        $rYear = $GLOBALS['conn']->Execute("
+        $rYear = CONN::get()->Execute("
             SELECT YEAR(es.DH_S) as YEAR_INDEX
             FROM EVE_SAIDA_MEMBRO esp
             INNER JOIN EVE_SAIDA es ON (es.ID = esp.ID_EVE_SAIDA)
@@ -245,7 +245,7 @@ class ESPCR extends TCPDF {
         ", array($this->line['ID'], $this->line['ID_CAD_PESSOA']) );
         
         foreach ($rYear as $yK => $f):
-            $o = $GLOBALS['conn']->Execute("
+            $o = CONN::get()->Execute("
 				SELECT tu.DS, IF(cp.TP_SEXO='F',tc.DSF,tc.DSM) AS DS_CARGO
 				FROM CAD_ATIVOS ca
 				INNER JOIN CAD_MEMBRO cm ON (cm.ID = ca.ID_CAD_MEMBRO)
@@ -268,7 +268,7 @@ class ESPCR extends TCPDF {
     		$this->Cell(50, 5, "CARGO: ".$o->fields["DS_CARGO"], '', 1, 'R', 1, '', 0, false, 'T', 'C');
     		$this->top += 5;
     		
-    		$aprend = $GLOBALS['conn']->Execute("
+    		$aprend = CONN::get()->Execute("
                 SELECT ta.TP_ITEM, ta.DS_ITEM, ta.CD_ITEM_INTERNO, ta.CD_AREA_INTERNO,
                        ah.DT_INICIO, ah.DT_CONCLUSAO, ah.DT_AVALIACAO, ah.DT_INVESTIDURA
                   FROM APR_HISTORICO ah
@@ -308,7 +308,7 @@ class ESPCR extends TCPDF {
         	endif;
         	
         	//EVENTOS
-            $events = $GLOBALS['conn']->Execute("
+            $events = CONN::get()->Execute("
             SELECT es.DS, es.DS_TEMA, es.DS_ORG, es.DH_S, es.DH_R
             FROM EVE_SAIDA_MEMBRO esp
             INNER JOIN EVE_SAIDA es on (es.ID = esp.ID_EVE_SAIDA)
@@ -360,10 +360,10 @@ $filter = fRequest("filter");
 if ( !isset($filter) || empty($filter) || strlen($filter) == 0 ):
 	exit("PESSOA N&Atilde;O ENCONTRADA!");
 endif;
-fConnDB();
+
 
 $pdf = new ESPCR();
-$result = $GLOBALS['conn']->Execute("
+$result = CONN::get()->Execute("
 	SELECT cm.ID, cm.ID_CAD_PESSOA, cp.NM, cp.DT_NASC
 		FROM CAD_MEMBRO cm
   INNER JOIN CAD_PESSOA cp ON (cp.ID = cm.ID_CAD_PESSOA)

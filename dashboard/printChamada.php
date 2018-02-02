@@ -19,7 +19,7 @@
 <br/>
 <div class="row">
 	<div class="col-lg-5">
-		<button id="btnGerar" class="btn btn-success pull-right"><i class="fa fa-print"></i>&nbsp;Gerar</button>
+		<button id="btnGerar" class="btn btn-success pull-right"><i class="far fa-print"></i>&nbsp;Gerar</button>
 	</div>
 </div>
 <script src="<?php echo $GLOBALS['pattern']->getVD();?>dashboard/js/printChamada.js<?php echo "?".microtime();?>"></script>

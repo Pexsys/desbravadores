@@ -36,7 +36,7 @@
 				</div>
 				<div class="row">
 					<div class="col-lg-12">
-						<a role="button" class="btn btn-info pull-right" id="btnCiente" style="display:none"><i class="fa fa-check"></i>&nbsp;Eu Li</a>
+						<a role="button" class="btn btn-info pull-right" id="btnCiente" style="display:none"><i class="far fa-check"></i>&nbsp;Eu Li</a>
 					</div>
 				</div>
 			</div>

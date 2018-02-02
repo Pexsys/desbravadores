@@ -21,9 +21,9 @@
 			"filterTo" => "#ocoDataTable",
 			"filters" => 
 				array( 
-					array( "id" => "X", "ds" => "Sexo", "icon" => "fa fa-venus-mars" ),
-					array( "id" => "U", "ds" => "Unidade", "icon" => "fa fa-universal-access" ),
-					array( "id" => "TO", "ds" => "Tipo", "icon" => "fa fa-check" )
+					array( "id" => "X", "ds" => "Sexo", "icon" => "far fa-venus-mars" ),
+					array( "id" => "U", "ds" => "Unidade", "icon" => "far fa-universal-access" ),
+					array( "id" => "TO", "ds" => "Tipo", "icon" => "far fa-check" )
 				)
 		) 
 	);?>
@@ -47,7 +47,7 @@
 	</div>
 	<div class="row">
 		<div class="col-xs-6">
-			<a role="button" class="btn btn-warning pull-left" id="btnNovo"><i class="fa fa-plus"></i>&nbsp;Nova</a>
+			<a role="button" class="btn btn-warning pull-left" id="btnNovo"><i class="far fa-plus"></i>&nbsp;Nova</a>
 		</div>
 		<div class="col-xs-6">
 			<a role="button" class="btn btn-info pull-right" data-toggle="modal" id="btnPrepare" style="display:none"><i class="glyphicon glyphicon-print"></i>&nbsp;Preparar</a>
@@ -85,11 +85,11 @@
 										</div>
 										<div class="form-group col-xs-2">
 											<label for="tpOcor" class="control-label">Tipo</label>
-											<input type="checkbox" name="tpOcor" id="tpOcor" field="tp" value-on="P" value-off="N" data-toggle="toggle" data-onstyle="success" data-offstyle="danger" data-on="<i class='fa fa-thumbs-up'></i>&nbsp;<b>POSITIVA</b>" data-off="<i class='fa fa-thumbs-down'></i>&nbsp;NEGATIVA" data-size="small" data-width="120"/>
+											<input type="checkbox" name="tpOcor" id="tpOcor" field="tp" value-on="P" value-off="N" data-toggle="toggle" data-onstyle="success" data-offstyle="danger" data-on="<i class='far fa-thumbs-up'></i>&nbsp;<b>POSITIVA</b>" data-off="<i class='far fa-thumbs-down'></i>&nbsp;NEGATIVA" data-size="small" data-width="120"/>
 										</div>
 										<div class="form-group col-xs-2">
 											<label for="fgPend" class="control-label">Status</label>
-											<input type="checkbox" name="fgPend" id="fgPend" field="fg_pend" value-on="N" value-off="S" data-toggle="toggle" data-onstyle="success" data-offstyle="warning" data-on="<i class='fa fa-gavel'></i>&nbsp;<b>EFETIVADO</b>" data-off="<i class='fa fa-pencil'></i>&nbsp;RASCUNHO" data-size="small" data-width="120"/>
+											<input type="checkbox" name="fgPend" id="fgPend" field="fg_pend" value-on="N" value-off="S" data-toggle="toggle" data-onstyle="success" data-offstyle="warning" data-on="<i class='far fa-gavel'></i>&nbsp;<b>EFETIVADO</b>" data-off="<i class='fas fa-pencil-alt'></i>&nbsp;RASCUNHO" data-size="small" data-width="120"/>
 										</div>
 									</div>
 									<div class="row">
@@ -159,7 +159,7 @@
 				<div class="panel-footer">
 					<div class="row">
 						<div class="col-lg-12">
-							<button id="btnGerar" class="btn btn-success pull-right"><i class="fa fa-print"></i>&nbsp;Gerar</button>
+							<button id="btnGerar" class="btn btn-success pull-right"><i class="far fa-print"></i>&nbsp;Gerar</button>
 						</div>	
 					</div>	
 				</div>

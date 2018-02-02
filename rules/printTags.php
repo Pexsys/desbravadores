@@ -96,15 +96,15 @@ function getQueryByFilter( $parameters ) {
 	endif;	
 	$query .= " $where ORDER BY ca.NM";
 
-	return $GLOBALS['conn']->Execute( $query, $aWhere );
+	return CONN::get()->Execute( $query, $aWhere );
 }
 
 function getTags( $parameters ) {
 	$tags = $GLOBALS['pattern']->getBars()->getTagsTipo("tg","S");
 	$arr = array();
 	
-	fConnDB();
-	$result = $GLOBALS['conn']->Execute("
+	
+	$result = CONN::get()->Execute("
 		SELECT DISTINCT pt.ID,
 				pt.TP,
 				pt.MD,
@@ -148,7 +148,7 @@ function getData( $parameters ){
 
 function getMembros( $parameters ) {
 	$arr = array();
-	fConnDB();
+	
 	$qtdZeros = zeroSizeID();
 	
 	$result = getQueryByFilter( $parameters );
@@ -164,7 +164,7 @@ function getMembros( $parameters ) {
 
 function getMembrosFilter( $parameters ) {
 	$arr = array();
-	fConnDB();
+	
 	$result = getQueryByFilter( $parameters );
 	foreach ($result as $k => $fields):
 		$arr[] = $fields['ID_CAD_MEMBRO'];
@@ -174,7 +174,7 @@ function getMembrosFilter( $parameters ) {
 
 function getClasse( $parameters ){
 	$arr = array();
-	fConnDB();
+	
 	
 	$query = "";
 
@@ -196,7 +196,7 @@ function getClasse( $parameters ){
 		//endif;
 	endforeach;
 	
-	$result = $GLOBALS['conn']->Execute("$query ORDER BY CD_ITEM_INTERNO");
+	$result = CONN::get()->Execute("$query ORDER BY CD_ITEM_INTERNO");
 	foreach ($result as $k => $line):
 		$arr[] = array( 
 			"id"	=> $line['ID'],
@@ -208,7 +208,7 @@ function getClasse( $parameters ){
 }
 
 function addTags( $parameters ){
-	fConnDB();
+	
 	
 	session_start();
 	$tags = new TAGS();
@@ -239,7 +239,7 @@ function addTags( $parameters ){
 function delete($parameters){
 	$action = $parameters["action"];
 	
-	fConnDB();
+	
 	
 	$tags = new TAGS();
 

@@ -152,8 +152,8 @@
 														<select field="id_regra" name="cmRegra" id="cmRegra" class="form-control input-sm" placeholder="Regra">
 															<option></option>
 															<?php
-															fConnDB();
-															$result = $GLOBALS['conn']->Execute("SELECT id, ds FROM TAB_RGR_CHAMADA ORDER BY ds");
+															
+															$result = CONN::get()->Execute("SELECT id, ds FROM TAB_RGR_CHAMADA ORDER BY ds");
 															foreach ($result as $ln):
 																echo "<option value=\"".$ln["id"]."\">".$ln["ds"]."</option>";
 															endforeach;
@@ -165,7 +165,7 @@
 														<select field="id_uniforme" name="cmUniforme" id="cmUniforme" class="form-control input-sm" placeholder="Uniforme">
 															<option></option>
 															<?php
-															$result = $GLOBALS['conn']->Execute("SELECT id, ds FROM TAB_TP_UNIFORME ORDER BY ds");
+															$result = CONN::get()->Execute("SELECT id, ds FROM TAB_TP_UNIFORME ORDER BY ds");
 															foreach ($result as $ln):
 																echo "<option value=\"".$ln["id"]."\">".$ln["ds"]."</option>";
 															endforeach;

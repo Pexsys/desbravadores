@@ -196,10 +196,10 @@ else:
 endif;
 $query .= " ORDER BY ca.CEP, ca.NR_LOGR, ca.NM";
 
-fConnDB();
+
 $pdf->newPage();
 
-$result = $GLOBALS['conn']->Execute($query);
+$result = CONN::get()->Execute($query);
 foreach ( $result as $ra => $f ):
 	$pdf->startTransaction();
 	$start_page = $pdf->getPage();

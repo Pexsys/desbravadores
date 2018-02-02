@@ -53,7 +53,7 @@ rect:hover { opacity:0.5; }
 	<hr/>
 </div>
 <?php
-$result = $GLOBALS['conn']->Execute("
+$result = CONN::get()->Execute("
 	SELECT COUNT(*) AS QTD
 	FROM APR_HISTORICO h
 	INNER JOIN CON_ATIVOS a ON (a.ID_CAD_PESSOA = h.ID_CAD_PESSOA)
@@ -62,7 +62,7 @@ $result = $GLOBALS['conn']->Execute("
 	AND YEAR(h.DT_CONCLUSAO) = YEAR(NOW())
 ");
 if (!$result->EOF):
-	$rs = $GLOBALS['conn']->Execute("
+	$rs = CONN::get()->Execute("
 		SELECT r.CD_ITEM_INTERNO, r.DS_ITEM, COUNT(*) AS QTD
 		FROM APR_HISTORICO h
 		INNER JOIN TAB_APRENDIZADO r ON (r.ID = h.ID_TAB_APREND)
@@ -80,7 +80,7 @@ if (!$result->EOF):
 	</div>
 	<div class="row">
 	<?php
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT ra.CD_AREA_INTERNO, ra.DS_ITEM, COUNT(*) AS QTD
 		FROM APR_HISTORICO h
 		INNER JOIN TAB_APRENDIZADO r ON (r.ID = h.ID_TAB_APREND)

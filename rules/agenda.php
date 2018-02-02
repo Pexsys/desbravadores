@@ -9,7 +9,7 @@ function events( $parameters ) {
 	$DATA_NOW = date('Y-m-d H:i:s');
 	
 	$out = array();
-	fConnDB();
+	
 	$aBind = array();
 
 	$query = "SELECT e.*, 
@@ -30,7 +30,7 @@ function events( $parameters ) {
 			ORDER BY e.DTHORA_EVENTO_INI ";
 		$aBind = array( $parameters["from"], $parameters["to"] );
 	endif;
-	$result = $GLOBALS['conn']->Execute( $query, $aBind );
+	$result = CONN::get()->Execute( $query, $aBind );
 	
 	while (!$result->EOF):
 	
@@ -95,7 +95,7 @@ function fEvent( $parameters ) {
 	$out = array();
 	$out["success"] = false;
 
-	fConnDB();
+	
 
 	$frm = $parameters["frm"];
 	$op = $parameters["op"];
@@ -141,7 +141,7 @@ function fEvent( $parameters ) {
 				fReturnStringNull($frm["fg_publ"]),
 				$id
 			);
-			$GLOBALS['conn']->Execute($query,$arr);
+			CONN::get()->Execute($query,$arr);
 			
 		else:
 			$query = "
@@ -178,16 +178,16 @@ function fEvent( $parameters ) {
 			);
 			$out["arr"] = $arr;
 			
-			$GLOBALS['conn']->Execute($query,$arr);
-			$id = $GLOBALS['conn']->Insert_ID();
+			CONN::get()->Execute($query,$arr);
+			$id = CONN::get()->Insert_ID();
 		endif;
 
 		//VERIFICA REGRA CHAMADA.
-		$rgr = $GLOBALS['conn']->Execute("SELECT * FROM RGR_CHAMADA WHERE ID_EVENTO = ?", Array( $id ) );
+		$rgr = CONN::get()->Execute("SELECT * FROM RGR_CHAMADA WHERE ID_EVENTO = ?", Array( $id ) );
 		
 		//SE NAO EXISTE NO BANCO E TELA PREENCHIDA.
 		if ( $rgr->EOF && ( is_numeric($frm["id_regra"]) || !empty($frm["tp_grupo"]) || is_numeric($frm["id_uniforme"]) ) ):
-			$GLOBALS['conn']->Execute("
+			CONN::get()->Execute("
 			INSERT INTO RGR_CHAMADA ( 
 				TP_GRUPO, 
 				ID_TAB_RGR_CHAMADA, 
@@ -198,7 +198,7 @@ function fEvent( $parameters ) {
 			
 		//SE EXISTE NO BANCO E TELA PREENCHIDA
 		elseif ( !$rgr->EOF && ( is_numeric($frm["id_regra"]) || !empty($frm["tp_grupo"]) || is_numeric($frm["id_uniforme"]) ) ):
-			$GLOBALS['conn']->Execute("
+			CONN::get()->Execute("
 			UPDATE RGR_CHAMADA SET 
 				TP_GRUPO = ?, 
 				ID_TAB_RGR_CHAMADA = ?, 
@@ -215,7 +215,7 @@ function fEvent( $parameters ) {
 	//EXCLUSAO DE EVENTO
 	elseif ( $op == "DELETE" ):
 		fDeleteRegraChamada($parameters["id"]);
-		$GLOBALS['conn']->Execute("DELETE FROM CAD_EVENTOS WHERE ID_EVENTO = ?", Array( $parameters["id"] ) );
+		CONN::get()->Execute("DELETE FROM CAD_EVENTOS WHERE ID_EVENTO = ?", Array( $parameters["id"] ) );
 		$out["success"] = true;
 	
 	endif;
@@ -224,7 +224,7 @@ function fEvent( $parameters ) {
 }
 
 function fDeleteRegraChamada($idEvento){
-	$GLOBALS['conn']->Execute("DELETE FROM RGR_CHAMADA WHERE ID_EVENTO = ?", Array( $idEvento ) );
+	CONN::get()->Execute("DELETE FROM RGR_CHAMADA WHERE ID_EVENTO = ?", Array( $idEvento ) );
 }
 
 function fGetClass($strTipoEvento){
@@ -248,14 +248,14 @@ function agendaConsulta( $parameters ) {
 	$cadMembroID = $_SESSION['USER']['id_cad_membro'];
 
 	$out = array();
-	fConnDB();
+	
 
 	$ano = $parameters["ano"];
 	if ( empty($ano) || is_null($ano) ):
 		$out["years"] = array();
 		$query = "SELECT DISTINCT NR_ANO 
 			  FROM CAD_ATIVOS ". ( is_null($cadMembroID) ? "" : "WHERE ID_CAD_MEMBRO = $cadMembroID" ) ." ORDER BY NR_ANO DESC";
-		$result = $GLOBALS['conn']->Execute($query);
+		$result = CONN::get()->Execute($query);
 		$ano = $result->fields["NR_ANO"];
 		foreach ($result as $k => $line):
 			$out["years"][] = array( "id" => $line["NR_ANO"], "ds" => $line["NR_ANO"] );
@@ -264,7 +264,7 @@ function agendaConsulta( $parameters ) {
 	if ( !empty($ano) ):
 		$mesHoje = date("m");
 		$str = "";
-		$result = $GLOBALS['conn']->Execute("
+		$result = CONN::get()->Execute("
 		 	SELECT * 
 		 	  FROM CAD_EVENTOS 
 		 	 WHERE YEAR(DTHORA_EVENTO_INI) = ? 
@@ -301,7 +301,7 @@ function agendaConsulta( $parameters ) {
 				$str .= "<div id=\"m$nrMesAtu\" class=\"panel-body panel-collapse collapse\">";
 			endif;
 			$str .= "<div class=\"media row col-lg-12\">";
-			$str .= "<div class=\"pull-left\"><i class=\"fa ". fGetClassTipoEvento($line['TIPO_EVENTO']) ." fa-2x\"></i></div>";
+			$str .= "<div class=\"pull-left\"><i class=\"". fGetClassTipoEvento($line['TIPO_EVENTO']) ." fa-2x\"></i></div>";
 			$str .= "<div class=\"media-body\">";
 			$str .= "<h4 class=\"media-heading\"><b>".fDtHoraEvento($line['DTHORA_EVENTO_INI'],$line['DTHORA_EVENTO_FIM'],"%d/%m")."</b></h4>";
 			$str .= "<p>";

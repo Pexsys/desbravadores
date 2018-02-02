@@ -9,11 +9,11 @@ function getGraphData() {
 	session_start();
 
 	$arr = array();
-	fConnDB();
+	
 	
 	/*
 	$qtdRegulares = 0;
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT COUNT(*) AS QT
 		  FROM TAB_APRENDIZADO 
 		 WHERE CD_ITEM_INTERNO LIKE '01%00'
@@ -24,7 +24,7 @@ function getGraphData() {
 	endif;
 
 	$qtdAvancadas = 0;
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT COUNT(*) AS QT
 		  FROM TAB_APRENDIZADO 
 		 WHERE CD_ITEM_INTERNO LIKE '01%01'
@@ -36,7 +36,7 @@ function getGraphData() {
 
 	//ANALISE GRAFICA DAS CLASSES COMPLETADAS
 	$arr["clsC"] = array();
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT a.TP_ITEM, a.CD_AREA_INTERNO, a.CD_ITEM_INTERNO, a.DS_ITEM, a.CD_COR, COUNT(*) AS QTD
 		FROM APR_HISTORICO h
 		INNER JOIN TAB_APRENDIZADO a ON (a.ID = h.ID_TAB_APREND)
@@ -58,7 +58,7 @@ function getGraphData() {
 
 	//CLASSES REGULARES A COMPLETAR
 	$aCompletar = 0;
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT COUNT(*) AS QT_RG
 		  FROM CON_ATIVOS at
 	 LEFT JOIN (SELECT ah.ID_CAD_PESSOA, COUNT(*) AS QT
@@ -77,7 +77,7 @@ function getGraphData() {
 
 	//CLASSES REGULARES COMPLETADAS
 	$aCompletadas = 0;
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT COUNT(*) AS QT_RG_OK
 		  FROM CON_ATIVOS at
 	 LEFT JOIN (SELECT ah.ID_CAD_PESSOA, COUNT(*) AS QT
@@ -109,7 +109,7 @@ function getGraphData() {
 
 	//CLASSES AVANCADAS A COMPLETAR
 	$aCompletar = 0;
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT COUNT(*) AS QT_AV
 		  FROM CON_ATIVOS at
 	 LEFT JOIN (SELECT ah.ID_CAD_PESSOA, COUNT(*) AS QT
@@ -128,7 +128,7 @@ function getGraphData() {
 
 	//CLASSES AVANCADAS COMPLETADAS
 	$aCompletadas = 0;
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT COUNT(*) AS QT_AV_OK
 		  FROM CON_ATIVOS at
 	 LEFT JOIN (SELECT ah.ID_CAD_PESSOA, COUNT(*) AS QT
@@ -162,7 +162,7 @@ function getGraphData() {
 	$a1 = 50;
 	$a2 = 85;
 
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT ta.ID, ta.CD_COR,
 
 				(SELECT COUNT(*)
@@ -240,7 +240,7 @@ function getGraphData() {
 
 function getClasses( $parameters ) {
 	$arr = array();
-	fConnDB();
+	
 	
 	$id = $parameters["id"];
 	
@@ -253,7 +253,7 @@ function getClasses( $parameters ) {
 	$str .= "<div class=\"col-lg-12\">";
 	
 	//CLASSES EM ANDAMENTO
-	$rs = $GLOBALS['conn']->Execute("
+	$rs = CONN::get()->Execute("
 		  SELECT ta.ID_TAB_APREND, ta.TP_ITEM, ta.CD_AREA_INTERNO, ta.CD_ITEM_INTERNO, ta.DS_ITEM, COUNT(*) AS QT_REQ
 			FROM CON_APR_PESSOA ta
 		   WHERE ta.ID_CAD_PESSOA = ? AND ta.TP_ITEM = 'CL' AND ta.DT_CONCLUSAO IS NULL $where
@@ -271,7 +271,7 @@ function getClasses( $parameters ) {
 			$tabAprID =  $rs->fields["ID_TAB_APREND"];
 			$pct = 0;
 			$qtd = 0;
-			$rc = $GLOBALS['conn']->Execute("
+			$rc = CONN::get()->Execute("
 				SELECT COUNT(*) AS QT_COMPL
 				  FROM CON_APR_PESSOA
 				 WHERE ID_CAD_PESSOA = ?
@@ -304,7 +304,7 @@ function getClasses( $parameters ) {
 	endif;
 	
 	//CLASSES PENDENTES DE AVALIACAO
-	$rs = $GLOBALS['conn']->Execute("
+	$rs = CONN::get()->Execute("
 		  SELECT ta.ID_TAB_APREND, ta.TP_ITEM, ta.CD_AREA_INTERNO, ta.CD_ITEM_INTERNO, ta.DS_ITEM, COUNT(*) AS QT_REQ
 			FROM CON_APR_PESSOA ta
 		   WHERE ta.ID_CAD_PESSOA = ? AND ta.TP_ITEM = 'CL'
@@ -330,7 +330,7 @@ function getClasses( $parameters ) {
 	endif;	
 
 	//CLASSES A RECEBER
-	$rs = $GLOBALS['conn']->Execute("
+	$rs = CONN::get()->Execute("
 			SELECT DISTINCT ta.ID_TAB_APREND, ta.TP_ITEM, ta.CD_AREA_INTERNO, ta.CD_ITEM_INTERNO, ta.DS_ITEM,
 				IF(cc.FG_COMPRA = 'S' OR ccag.ID IS NOT NULL,'OK','NOK') AS TP_BUY
 			FROM CON_APR_PESSOA ta
@@ -352,7 +352,7 @@ function getClasses( $parameters ) {
 		
 		foreach ($rs as $ks2 => $det):
 			$str .= "<i class=\"".getIconAprendizado( $det["TP_ITEM"], $det["CD_AREA_INTERNO"] )."\"></i>&nbsp;".titleCase($det["DS_ITEM"]);
-			$str .= "<i class=\"fa ".($det["TP_BUY"] == "OK"?"fa-info-circle":"fa-question-circle")." pull-right\" title=\"".($det["TP_BUY"] == "OK"?"Item comprado":"Item ainda não comprado")."\" style=\"".($det["TP_BUY"] == "OK"?"color:green":"color:red")."\"></i>";
+			$str .= "<i class=\"far ".($det["TP_BUY"] == "OK"?"fa-info-circle":"fa-question-circle")." pull-right\" title=\"".($det["TP_BUY"] == "OK"?"Item comprado":"Item ainda não comprado")."\" style=\"".($det["TP_BUY"] == "OK"?"color:green":"color:red")."\"></i>";
 			$str .= "<br/>";
 		endforeach;
 		$str .= "</div>";
@@ -361,7 +361,7 @@ function getClasses( $parameters ) {
 	endif;
 	
 	//ESPECIALIDADES PENDENTES DE AVALIACAO
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT a.CD_AREA_INTERNO, ae.DS_ITEM AS DS_ITEM_AREA, a.CD_ITEM_INTERNO, a.DS_ITEM
 		  FROM APR_HISTORICO h
 	    INNER JOIN TAB_APRENDIZADO a ON (a.ID = h.ID_TAB_APREND)
@@ -376,7 +376,7 @@ function getClasses( $parameters ) {
 	$str .= fGetDetailEspClass("panel-warning","Especialidades Pendentes de Avaliação Regional",$result);
 	
 	//ESPECIALIDADES A RECEBER
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT a.CD_AREA_INTERNO, ae.DS_ITEM AS DS_ITEM_AREA, a.CD_ITEM_INTERNO, a.DS_ITEM,
 				IF(cc.FG_COMPRA = 'S' OR cc.ID IS NOT NULL,'OK','NOK') AS TP_BUY
 		  FROM APR_HISTORICO h
@@ -393,7 +393,7 @@ function getClasses( $parameters ) {
 	$str .= fGetDetailEspClass("panel-success","Especialidades Pendentes de Investidura",$result);
 
 	//ITENS INVESTIDOS
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT ta.ID_TAB_APREND, ta.TP_ITEM, ta.CD_AREA_INTERNO, ta.CD_ITEM_INTERNO, ta.DS_ITEM, COUNT(*) AS QT_REQ
 			FROM CON_APR_PESSOA ta
 		WHERE ta.ID_CAD_PESSOA = ? AND YEAR(ta.DT_INVESTIDURA) = YEAR(NOW())
@@ -412,7 +412,7 @@ function fGetDetailClass( $class, $titulo, $icon, $result ) {
 		$str .= "<div class=\"col-lg-12 col-xs-12 col-md-12 col-sm-12\">";
 		$str .= "<div class=\"row\">";
 		$str .= "<div class=\"panel $class\" style=\"margin-bottom:1px\">";
-		$str .= "<div class=\"panel-heading\" style=\"padding:3px 10px\"><i class=\"fa $icon\" aria-hidden=\"true\"></i>&nbsp;$titulo</div>";
+		$str .= "<div class=\"panel-heading\" style=\"padding:3px 10px\"><i class=\"far $icon\" aria-hidden=\"true\"></i>&nbsp;$titulo</div>";
 		$str .= "<div class=\"panel-body\" style=\"padding:5px 10px\">";
 		$areaAtu = "";
 		$first = true;
@@ -448,7 +448,7 @@ function fGetDetailEspClass( $class, $titulo, $result ) {
 			endif;
 			$str .= "&nbsp;<i class=\"".getIconAprendizado( $line["TP_ITEM"], $line["CD_AREA_INTERNO"] )."\"></i> ".titleCase($line["DS_ITEM"]);
 			if (isset($line["TP_BUY"])):
-				$str .= "&nbsp;&nbsp;<i class=\"fa ".($line["TP_BUY"] == "OK"?"fa-info-circle":"fa-question-circle")."\" title=\"".($line["TP_BUY"] == "OK"?"Item comprado":"Item ainda não comprado")."\" style=\"".($line["TP_BUY"] == "OK"?"color:green":"color:red")."\"></i>";
+				$str .= "&nbsp;&nbsp;<i class=\"far ".($line["TP_BUY"] == "OK"?"fa-info-circle":"fa-question-circle")."\" title=\"".($line["TP_BUY"] == "OK"?"Item comprado":"Item ainda não comprado")."\" style=\"".($line["TP_BUY"] == "OK"?"color:green":"color:red")."\"></i>";
 			endif;
 			$str .= "<br/>";
 		endforeach;
@@ -461,11 +461,11 @@ function fGetDetailEspClass( $class, $titulo, $result ) {
 
 function getPendentes( $parameters ) {
 	$arr = array();
-	fConnDB();
+	
 	
 	$str = "";
 
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT CD_REQ_INTERNO, CD_AP_AREA, DS_AP_AREA, DS
 		FROM CON_APR_PESSOA
 		WHERE ID_CAD_PESSOA = ?
@@ -476,7 +476,7 @@ function getPendentes( $parameters ) {
 	", array( $parameters["id"], $parameters["req"] ) );
 	$str .= fGetDetailClass("panel-danger","Itens Pendentes","fa-frown-o",$result);
 
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT CD_REQ_INTERNO, CD_AP_AREA, DS_AP_AREA, DS
 		  FROM CON_APR_PESSOA
 		 WHERE ID_CAD_PESSOA = ?
@@ -494,10 +494,10 @@ function getPendentes( $parameters ) {
 
 function getEspec( $parameters ) {
 	$arr = array();
-	fConnDB();
+	
 	
 	$str = "";
-	$rs = $GLOBALS['conn']->Execute("
+	$rs = CONN::get()->Execute("
 		SELECT ta.CD_ITEM_INTERNO, ta.DS_ITEM, COUNT(*) AS QTD
 		  FROM APR_HISTORICO h
 	INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = h.ID_TAB_APREND)
@@ -530,10 +530,10 @@ function getEspec( $parameters ) {
 
 function getEspecPeople( $parameters ) {
 	$arr = array();
-	fConnDB();
+	
 	
 	$str = "";
-	$rs = $GLOBALS['conn']->Execute("
+	$rs = CONN::get()->Execute("
 		SELECT a.NM
 		  FROM APR_HISTORICO h
 	INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = h.ID_TAB_APREND)

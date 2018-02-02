@@ -2,7 +2,7 @@
 @require_once("../include/sendmail.php");
 
 function sendOcorrenciaByID($ocorrenciaID){
-	$rs = $GLOBALS['conn']->Execute("
+	$rs = CONN::get()->Execute("
 			SELECT DISTINCT co.ID, co.CD, co.DH, co.TXT
 			  FROM LOG_MENSAGEM lc
 		INNER JOIN CAD_OCORRENCIA co ON (co.ID = lc.ID_ORIGEM AND lc.TP = 'O')
@@ -15,7 +15,7 @@ function sendOcorrenciaByID($ocorrenciaID){
 	if (!$rs->EOF):
 		$GLOBALS['mail']->Subject = $GLOBALS['pattern']->getClubeDS( array("cl","nm") ) . " - Ocorrencia #".$l["CD"]." [".strftime("%d/%m/%Y",strtotime($l["DH"])) ."]";
 		
-		$rs1 = $GLOBALS['conn']->Execute("
+		$rs1 = CONN::get()->Execute("
 			SELECT *
 			  FROM LOG_MENSAGEM
 			 WHERE DH_SEND IS NULL
@@ -34,7 +34,7 @@ function sendOcorrenciaByID($ocorrenciaID){
 				if ( $GLOBALS['mail']->Send() ):
 					$nrEnviados++;
 					//ATUALIZA ENVIO
-					$GLOBALS['conn']->Execute("
+					CONN::get()->Execute("
 						UPDATE LOG_MENSAGEM
 						   SET DH_SEND = NOW()
 						 WHERE ID = ?

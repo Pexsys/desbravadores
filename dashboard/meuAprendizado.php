@@ -29,7 +29,7 @@ $pessoaID = $_SESSION['USER']['id_cad_pessoa'];
 </div>
 <div class="row">
 <?php
-$result = $GLOBALS['conn']->Execute("
+$result = CONN::get()->Execute("
 	SELECT TP_ITEM, DS_ITEM, CD_AREA_INTERNO, DT_INICIO, MAX(DT_ASSINATURA) AS DT_ASSINATURA
 	FROM CON_APR_PESSOA
 	WHERE ID_CAD_PESSOA = ?
@@ -74,7 +74,7 @@ if (!$result->EOF):
 <?php
 endif;
 
-$result = $GLOBALS['conn']->Execute("
+$result = CONN::get()->Execute("
 	SELECT TP_ITEM, DS_ITEM, CD_AREA_INTERNO, DT_INICIO, MAX(DT_ASSINATURA) AS DT_ASSINATURA
 	FROM CON_APR_PESSOA
 	WHERE ID_CAD_PESSOA = ?
@@ -126,7 +126,7 @@ endif;
 </div>
 
 <?php
-$result = $GLOBALS['conn']->Execute("
+$result = CONN::get()->Execute("
    SELECT ta.TP_ITEM, ta.CD_ITEM_INTERNO, ta.CD_AREA_INTERNO, ta.DS_ITEM, ah.DT_INICIO, ah.DT_CONCLUSAO, ah.DT_AVALIACAO, ah.DT_INVESTIDURA
 	 FROM APR_HISTORICO ah
 INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)

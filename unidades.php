@@ -1,7 +1,7 @@
 <?php 
 @require_once("include/functions.php");
 fHeaderPage();
-fConnDB();
+
 ?>
 <body>
 
@@ -27,7 +27,7 @@ fConnDB();
         <!-- /.row -->
         
         <?php
-        $result = $GLOBALS['conn']->Execute( "
+        $result = CONN::get()->Execute( "
         	  SELECT *
         	    FROM TAB_UNIDADE 
         	   WHERE FG_ATIVA = 'S'

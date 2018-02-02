@@ -217,10 +217,10 @@ $title = ($fgCompra == "S"
 $pdf = new LISTACOMPRASALM($title);
 $pdf->newPage();
 
-fConnDB();
+
 
 $pdf->SetTitle($pdf->reportTitle);
-$result = $GLOBALS['conn']->Execute("
+$result = CONN::get()->Execute("
 	SELECT * FROM (
 		SELECT cp.ID_TAB_MATERIAIS, cp.TP_GRP, cp.DS_GRP, cp.CD_ITEM_INTERNO, cp.CD_AREA_INTERNO, ta.DS_ITEM AS DS_GRP_ESP, cp.NR_GAVETA_APS, cp.TP_ITEM, cp.DS, cp.DS_ITEM, cp.FUNDO, (COUNT(*)-cp.QT_EST) AS QT_ITENS
 		 FROM CON_COMPRAS cp

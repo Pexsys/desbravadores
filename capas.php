@@ -1,6 +1,6 @@
 <?php 
 @require_once("include/functions.php");
-fConnDB();
+
 
 fHeaderPage(
 	array(  
@@ -51,7 +51,7 @@ fHeaderPage(
 							<label class="col-xs-1 control-label" for="cdMembro">C&oacute;digo</label>
 							<div class="col-xs-4 inputGroupContainer">
 								<div class="input-group">
-									<div class="input-group-addon"><i class="fa fa-barcode form-group-sm"></i></div>
+									<div class="input-group-addon"><i class="fas fa-barcode form-group-sm"></i></div>
 									<input type="text" id="cdMembro" name="cdMembro" field="cd_membro" class="form-control" placeholder="Pasta/Caderno/Cart&atilde;o" style="text-transform: uppercase"
 										maxlength="<?php echo $GLOBALS['pattern']->getBars()->getLength();?>" 
 										pattern="<?php echo $GLOBALS['pattern']->getBars()->getPattern(".");?>"
@@ -66,7 +66,7 @@ fHeaderPage(
 							<label class="col-xs-1 control-label" for="nmMembro">Nome</label>
 							<div class="col-xs-9 inputGroupContainer">
 								<div class="input-group">
-									<div class="input-group-addon"><i class="fa fa-user form-group-sm"></i></div>
+									<div class="input-group-addon"><i class="far fa-user form-group-sm"></i></div>
 									<input type="hidden" id="id" name="id" field="id" class="form-control"/>
 									<input type="text" id="nmMembro" name="nmMembro" field="nm_membro" class="form-control" placeholder="Nome Completo"/>
 								</div>

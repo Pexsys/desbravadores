@@ -113,7 +113,7 @@ class LISTAEVENTOBUS extends TCPDF {
 	    $this->setHeaderFields($g);
 	    $this->newPage();
 	    
-	    $rsM = $GLOBALS['conn']->Execute("
+	    $rsM = CONN::get()->Execute("
 		  SELECT ca.NM, ca.DT_NASC, ca.FONE_RES, ca.FONE_CEL, ca.NR_DOC, ca.NR_CPF, ca.NR_CPF_RESP
 		  FROM EVE_SAIDA_MEMBRO esp
 		  INNER JOIN CAD_MEMBRO cm on (cm.ID = esp.ID_CAD_MEMBRO)
@@ -188,8 +188,8 @@ class LISTAEVENTOBUS extends TCPDF {
 $eveID = fRequest("eve");
 $pdf = new LISTAEVENTOBUS();
 
-fConnDB();
-$result = $GLOBALS['conn']->Execute("
+
+$result = CONN::get()->Execute("
 	SELECT DISTINCT es.ID, es.DS, es.DS_TEMA, es.DS_ORG, es.DS_DEST, esp.BUS
       FROM EVE_SAIDA es
 	  INNER JOIN EVE_SAIDA_MEMBRO esp on (esp.ID_EVE_SAIDA = es.ID AND esp.BUS IS NOT NULL)

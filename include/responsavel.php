@@ -1,6 +1,6 @@
 <?php
 function verificaRespByCPF( $cpf ) {
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT DISTINCT cp.*, rl.DS_TP
 		  FROM CON_PESSOA cp
 	 LEFT JOIN CAD_RESP_LEGAL rl ON (rl.ID_PESSOA_RESP = cp.ID_CAD_PESSOA)
@@ -14,7 +14,7 @@ function verificaRespByCPF( $cpf ) {
 }
 
 function verificaRespByID( $pessoaRespID, $pessoaID ) {
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT 
 			cp.ID AS ID_CAD_PESSOA,
 			rl.DS_TP,
@@ -35,7 +35,7 @@ function verificaRespByID( $pessoaRespID, $pessoaID ) {
 }
 
 function existeMenorByRespID( $pessoaRespID ) {
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT *
 		  FROM CON_ATIVOS
 		 WHERE ID_PESSOA_RESP = ?

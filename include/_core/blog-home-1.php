@@ -36,14 +36,14 @@ fHeaderPage();
                 <p class="lead">
                     by <a href="index.php">Start Bootstrap</a>
                 </p>
-                <p><i class="fa fa-clock-o"></i> Posted on August 28, 2013 at 10:00 PM</p>
+                <p><i class="far fa-clock-o"></i> Posted on August 28, 2013 at 10:00 PM</p>
                 <hr>
                 <a href="blog-post.php">
                     <img class="img-responsive img-hover" src="http://placehold.it/900x300" alt="">
                 </a>
                 <hr>
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolore, veritatis, tempora, necessitatibus inventore nisi quam quia repellat ut tempore laborum possimus eum dicta id animi corrupti debitis ipsum officiis rerum.</p>
-                <a class="btn btn-primary" href="#">Read More <i class="fa fa-angle-right"></i></a>
+                <a class="btn btn-primary" href="#">Read More <i class="far fa-angle-right"></i></a>
 
                 <hr>
 
@@ -54,14 +54,14 @@ fHeaderPage();
                 <p class="lead">
                     by <a href="index.php">Start Bootstrap</a>
                 </p>
-                <p><i class="fa fa-clock-o"></i> Posted on August 28, 2013 at 10:45 PM</p>
+                <p><i class="far fa-clock-o"></i> Posted on August 28, 2013 at 10:45 PM</p>
                 <hr>
                 <a href="blog-post.php">
                     <img class="img-responsive img-hover" src="http://placehold.it/900x300" alt="">
                 </a>
                 <hr>
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quibusdam, quasi, fugiat, asperiores harum voluptatum tenetur a possimus nesciunt quod accusamus saepe tempora ipsam distinctio minima dolorum perferendis labore impedit voluptates!</p>
-                <a class="btn btn-primary" href="#">Read More <i class="fa fa-angle-right"></i></a>
+                <a class="btn btn-primary" href="#">Read More <i class="far fa-angle-right"></i></a>
 
                 <hr>
 
@@ -72,14 +72,14 @@ fHeaderPage();
                 <p class="lead">
                     by <a href="index.php">Start Bootstrap</a>
                 </p>
-                <p><i class="fa fa-clock-o"></i> Posted on August 28, 2013 at 10:45 PM</p>
+                <p><i class="far fa-clock-o"></i> Posted on August 28, 2013 at 10:45 PM</p>
                 <hr>
                 <a href="blog-post.php">
                     <img class="img-responsive img-hover" src="http://placehold.it/900x300" alt="">
                 </a>
                 <hr>
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cupiditate, voluptates, voluptas dolore ipsam cumque quam veniam accusantium laudantium adipisci architecto itaque dicta aperiam maiores provident id incidunt autem. Magni, ratione.</p>
-                <a class="btn btn-primary" href="#">Read More <i class="fa fa-angle-right"></i></a>
+                <a class="btn btn-primary" href="#">Read More <i class="far fa-angle-right"></i></a>
 
                 <hr>
 
@@ -104,7 +104,7 @@ fHeaderPage();
                     <div class="input-group">
                         <input type="text" class="form-control">
                         <span class="input-group-btn">
-                            <button class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
+                            <button class="btn btn-default" type="button"><i class="far fa-search"></i></button>
                         </span>
                     </div>
                     <!-- /.input-group -->

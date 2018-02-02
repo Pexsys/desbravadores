@@ -20,7 +20,7 @@ function marcaRequisitoID( $assDT, $histID, $reqID ) {
 	
 	//APAGA CASO DATA DE ASSINATURA NULA
 	if ( is_null($assDT) || empty($assDT) ):
-		$GLOBALS['conn']->Execute("
+		CONN::get()->Execute("
 			DELETE FROM APR_PESSOA_REQ
 			WHERE ID_HISTORICO = ?
 				AND ID_TAB_APR_ITEM = ?
@@ -28,7 +28,7 @@ function marcaRequisitoID( $assDT, $histID, $reqID ) {
 
 	else:
 		//RECUPERA REQUISITO COM ITEM APRENDIZADO
-		$rs = $GLOBALS['conn']->Execute("
+		$rs = CONN::get()->Execute("
 			SELECT 1
 			FROM APR_PESSOA_REQ
 			WHERE ID_HISTORICO = ?
@@ -37,7 +37,7 @@ function marcaRequisitoID( $assDT, $histID, $reqID ) {
 		
 		//SE NAO EXISTIR, INSERE
 		if ($rs->EOF):
-			$GLOBALS['conn']->Execute("
+			CONN::get()->Execute("
 				INSERT INTO APR_PESSOA_REQ(
 					ID_HISTORICO,
 					ID_TAB_APR_ITEM,
@@ -49,7 +49,7 @@ function marcaRequisitoID( $assDT, $histID, $reqID ) {
 			
 		//ATUALIZA
 		else:
-			$GLOBALS['conn']->Execute("
+			CONN::get()->Execute("
 				UPDATE APR_PESSOA_REQ
 					SET DT_ASSINATURA = ?
 					WHERE ID_HISTORICO = ?
@@ -99,7 +99,7 @@ function updateHistorico( $barpessoaid, $barfnid, $paramDates, $compras = null )
 	$arrayDB = array();
 	
 	//PESQUISA INFORMACOES SOBRE O ITEM
-	$rh = $GLOBALS['conn']->Execute("
+	$rh = CONN::get()->Execute("
 		SELECT TP_ITEM, CD_ITEM_INTERNO
 		  FROM TAB_APRENDIZADO
 		 WHERE ID = ?
@@ -108,7 +108,7 @@ function updateHistorico( $barpessoaid, $barfnid, $paramDates, $compras = null )
 	$cdInte = $rh->fields["CD_ITEM_INTERNO"];
 	
 	//PESQUISAR SE EXISTE O ITEM
-	$rh = $GLOBALS['conn']->Execute("
+	$rh = CONN::get()->Execute("
 		SELECT ah.ID, ah.DT_INICIO, ah.DT_CONCLUSAO, ah.DT_AVALIACAO, ah.DT_INVESTIDURA
 		  FROM APR_HISTORICO	ah
 	INNER JOIN CON_ATIVOS 		at ON (at.ID_CAD_PESSOA = ah.ID_CAD_PESSOA)
@@ -139,7 +139,7 @@ function updateHistorico( $barpessoaid, $barfnid, $paramDates, $compras = null )
 			$arrayDB[] = $paramDates["dt_investidura"];
 		endif;
 		
-		$GLOBALS['conn']->Execute("
+		CONN::get()->Execute("
     		INSERT INTO APR_HISTORICO(
     			ID_CAD_PESSOA, 
     			ID_TAB_APREND, 
@@ -148,7 +148,7 @@ function updateHistorico( $barpessoaid, $barfnid, $paramDates, $compras = null )
     		VALUES (?,?,?
     		    $queryInsert2)
         ", $arrayDB );
-		$id = $GLOBALS['conn']->Insert_ID();
+		$id = CONN::get()->Insert_ID();
 		$str = "INSERT";
 
 	//SE EXISTE, ATUALIZA
@@ -182,11 +182,11 @@ function updateHistorico( $barpessoaid, $barfnid, $paramDates, $compras = null )
 		//SE EXISTE DATAS PARA UPDATE
 		if ( count($arrayDB) > 0 ):
 			$arrayDB[] = $id;
-			$GLOBALS['conn']->Execute("UPDATE APR_HISTORICO SET $queryUpdate WHERE ID = ?", $arrayDB);
+			CONN::get()->Execute("UPDATE APR_HISTORICO SET $queryUpdate WHERE ID = ?", $arrayDB);
 			$str = "UPDATE";
 			
 			if ( !is_null($paramDates["dt_conclusao"]) && $paramDates["dt_conclusao"] != "N"):
-				$GLOBALS['conn']->Execute("
+				CONN::get()->Execute("
 					DELETE FROM 
 					  FROM APR_PESSOA_REQ
 					 WHERE ID_HISTORICO = ?
@@ -207,7 +207,7 @@ function updateHistorico( $barpessoaid, $barfnid, $paramDates, $compras = null )
 
 	//VERIFICA SE EXISTEM EXPECIALIDADES JA COMPLETADAS VALIDAS NO INICIO DE UMA CLASSE
 	if ( $tpItem == "CL" ):
-		$rs = $GLOBALS['conn']->Execute("
+		$rs = CONN::get()->Execute("
 			SELECT DISTINCT car.ID_RQ, ah.DT_INICIO, ar.DT_CONCLUSAO
 			FROM CON_APR_REQ car
 			INNER JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = car.ID AND ah.ID_CAD_PESSOA = ?)
@@ -233,7 +233,7 @@ function updateHistorico( $barpessoaid, $barfnid, $paramDates, $compras = null )
 }
 
 function regraRequisitoEspecialidade($barfnid, $barpessoaid, $dtInicio, $dtConclusao ){
-	$rg = $GLOBALS['conn']->Execute("SELECT ID, ID_TAB_APR_ITEM, TP_ITEM, MIN_AREA, DS_ITEM FROM CON_APR_REQ WHERE ID_RQ = ? ORDER BY CD_ITEM_INTERNO", array($barfnid) );
+	$rg = CONN::get()->Execute("SELECT ID, ID_TAB_APR_ITEM, TP_ITEM, MIN_AREA, DS_ITEM FROM CON_APR_REQ WHERE ID_RQ = ? ORDER BY CD_ITEM_INTERNO", array($barfnid) );
 	foreach ($rg as $lg => $fg):
 
 		//NOT EXISTS (SELECT 1 FROM CON_APR_REQ WHERE ID_RQ = car.ID_RQ AND ID = car.ID AND ID_TAB_APR_ITEM != car.ID_TAB_APR_ITEM)
@@ -247,7 +247,7 @@ function regraRequisitoEspecialidade($barfnid, $barpessoaid, $dtInicio, $dtConcl
 		
 		$feitas = 0;
 		//LE PARAMETRO MINIMO E HISTORICO PARA A REGRA
-		$rR = $GLOBALS['conn']->Execute("
+		$rR = CONN::get()->Execute("
 			SELECT tar.ID, tar.QT_MIN, COUNT(*) AS QT_FEITAS
 			  FROM TAB_APR_ITEM tar
 		INNER JOIN CON_APR_REQ car ON (car.ID_TAB_APR_ITEM = tar.ID AND car.TP_ITEM_RQ = 'ES')
@@ -259,7 +259,7 @@ function regraRequisitoEspecialidade($barfnid, $barpessoaid, $dtInicio, $dtConcl
 			$feitas += min( $fR["QT_MIN"], $fR["QT_FEITAS"] );
 		endforeach;
 		
-		$rI = $GLOBALS['conn']->Execute("
+		$rI = CONN::get()->Execute("
 			SELECT ID, DT_INICIO, DT_CONCLUSAO
 			FROM APR_HISTORICO
 			WHERE ID_CAD_PESSOA = ?
@@ -285,7 +285,7 @@ function regraRequisitoEspecialidade($barfnid, $barpessoaid, $dtInicio, $dtConcl
 				if ($rI->EOF || is_null($rI->fields["DT_CONCLUSAO"]) ):
 
 					//INSERE NOTIFICAÇOES SE NÃO EXISTIR.
-					$GLOBALS['conn']->Execute("
+					CONN::get()->Execute("
 						INSERT INTO LOG_MENSAGEM ( ID_ORIGEM, TP, ID_CAD_USUARIO, EMAIL, DH_GERA )
 						SELECT ?, 'M', cu.ID, ca.EMAIL, NOW()
 							FROM CON_ATIVOS ca
@@ -293,7 +293,7 @@ function regraRequisitoEspecialidade($barfnid, $barpessoaid, $dtInicio, $dtConcl
 							WHERE ca.ID_CAD_PESSOA = ?
 							AND NOT EXISTS (SELECT 1 FROM LOG_MENSAGEM WHERE ID_ORIGEM = ? AND TP = 'M' AND ID_CAD_USUARIO = cu.ID)
 					", array( $fg["ID"], $barpessoaid, $fg["ID"] ) );
-					$logID = $GLOBALS['conn']->Insert_ID();
+					$logID = CONN::get()->Insert_ID();
 					
 					updateHistorico( $barpessoaid, $fg["ID"], 
 						array(
@@ -304,11 +304,11 @@ function regraRequisitoEspecialidade($barfnid, $barpessoaid, $dtInicio, $dtConcl
 							), 
 						$compras );
 						
-					$rA = $GLOBALS['conn']->Execute("SELECT * FROM CON_ATIVOS WHERE ID_CAD_PESSOA = ?",array($barpessoaid));
+					$rA = CONN::get()->Execute("SELECT * FROM CON_ATIVOS WHERE ID_CAD_PESSOA = ?",array($barpessoaid));
 					$a = explode(" ",titleCase($rA->fields["NM"]));
 						
 					if (!empty($rA->fields["EMAIL"])):
-						$rD = $GLOBALS['conn']->Execute("SELECT * FROM CON_DIRETOR");
+						$rD = CONN::get()->Execute("SELECT * FROM CON_DIRETOR");
 						$nomeDiretor = titleCase($rD->fields["NOME_DIRETOR"]);
 
 						$message = new MESSAGE( array( "np" => $a[0], "nm" => $fg["DS_ITEM"], "sx" => $rA->fields["SEXO"], "nd" => $nomeDiretor ) );
@@ -319,7 +319,7 @@ function regraRequisitoEspecialidade($barfnid, $barpessoaid, $dtInicio, $dtConcl
 						$GLOBALS['mail']->MsgHTML( $message->getConclusao() );
 							
 						if ( $GLOBALS['mail']->Send() ):
-							$GLOBALS['conn']->Execute("UPDATE LOG_MENSAGEM SET DH_SEND = NOW() WHERE ID = ?", array( $logID ) );
+							CONN::get()->Execute("UPDATE LOG_MENSAGEM SET DH_SEND = NOW() WHERE ID = ?", array( $logID ) );
 						endif;
 					endif;
 				endif;
@@ -330,7 +330,7 @@ function regraRequisitoEspecialidade($barfnid, $barpessoaid, $dtInicio, $dtConcl
 
 function consultaAprendizadoPessoa( $tabAprendID, $pessoaID ){
 	$arr = array( "ap" => "", "ar" => "", "cd" => "", "nm" => "" );
-	$rs = $GLOBALS['conn']->Execute("
+	$rs = CONN::get()->Execute("
 		SELECT ta.CD_COR, ta.DS_ITEM, ta.CD_AREA_INTERNO, ta.CD_ITEM_INTERNO, tm.NR_PG_ASS
 		  FROM TAB_APRENDIZADO ta
 	 LEFT JOIN TAB_MATERIAIS tm ON (tm.ID_TAB_APREND = ta.ID)
@@ -344,7 +344,7 @@ function consultaAprendizadoPessoa( $tabAprendID, $pessoaID ){
 		$arr["pg"] = $rs->fields["NR_PG_ASS"];
 	endif;
 	
-	$rp = $GLOBALS['conn']->Execute("
+	$rp = CONN::get()->Execute("
 		SELECT *
 		  FROM CON_ATIVOS
 		 WHERE ID_CAD_PESSOA = ?
@@ -356,7 +356,7 @@ function consultaAprendizadoPessoa( $tabAprendID, $pessoaID ){
 }
 
 function podeAtualizarDtInvestidura($pessoaID,$aprendID){
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT 1
 		  FROM CON_COMPRAS
 		WHERE FG_ENTREGUE = 'N'
@@ -374,7 +374,7 @@ function analiseHistoricoPessoa($pessoaID){
 	$alterados = 0;
 	$deletados = 0;
 	
-	$res = $GLOBALS['conn']->Execute("
+	$res = CONN::get()->Execute("
 		  SELECT ta.ID_TAB_APREND, ta.TP_ITEM, ta.CD_AREA_INTERNO, ta.CD_ITEM_INTERNO, ta.DS_ITEM, ta.DT_INICIO, 
 			 MAX(DT_ASSINATURA) AS DT_MAX_ASSINATURA, COUNT(*) AS QT_REQ
 			FROM CON_APR_PESSOA ta
@@ -385,13 +385,13 @@ function analiseHistoricoPessoa($pessoaID){
 	", array( $pessoaID ) );
 
 	if ($res->EOF):
-		$GLOBALS['conn']->Execute("
+		CONN::get()->Execute("
 			DELETE FROM APR_PESSOA_REQ 
 			WHERE ID_HISTORICO IN (SELECT ID FROM APR_HISTORICO WHERE ID_CAD_PESSOA = ?)	
 		", array( $pessoaID ) );
 	else:
 		foreach ($res as $kes => $les):
-			$rc = $GLOBALS['conn']->Execute("
+			$rc = CONN::get()->Execute("
 				SELECT COUNT(*) AS QT_COMPL
 				FROM CON_APR_PESSOA
 				WHERE ID_CAD_PESSOA = ?
@@ -404,7 +404,7 @@ function analiseHistoricoPessoa($pessoaID){
 				$qtdCompl = $rc->fields["QT_COMPL"];
 				$reqok = ($qtdCompl >= $les["QT_REQ"]);
 
-				$pq = $GLOBALS['conn']->Execute("
+				$pq = CONN::get()->Execute("
 					SELECT h.ID
 					FROM APR_HISTORICO h
 					INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = h.ID_TAB_APREND)
@@ -416,7 +416,7 @@ function analiseHistoricoPessoa($pessoaID){
 
 				$op = "";
 				if ($reqok == true && !$pq->EOF):
-					$GLOBALS['conn']->Execute("
+					CONN::get()->Execute("
 						UPDATE APR_HISTORICO 
 						SET DT_CONCLUSAO = ? 
 						WHERE ID = ?
@@ -428,7 +428,7 @@ function analiseHistoricoPessoa($pessoaID){
 					$op .= ",NOT UPDATED";
 				endif;
 				if ( $reqok == true ):
-					$GLOBALS['conn']->Execute("
+					CONN::get()->Execute("
 						DELETE FROM APR_PESSOA_REQ 
 						WHERE ID_HISTORICO IN (SELECT ID FROM APR_HISTORICO WHERE ID_CAD_PESSOA = ? AND ID_TAB_APREND = ?)	
 					", array( $pessoaID, $les["ID_TAB_APREND"] ) );

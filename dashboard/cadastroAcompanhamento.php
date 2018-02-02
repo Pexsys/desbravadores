@@ -20,11 +20,11 @@
 			"filterTo" => "#acompDatatable",
 			"filters" => 
 				array( 
-					array( "id" => "HA", "ds" => "Avaliações", "icon" => "fa fa-thermometer-half" ),
-					array( "id" => "X", "ds" => "Sexo", "icon" => "fa fa-venus-mars" ),
-					array( "id" => "C", "ds" => "Classe", "icon" => "fa fa-graduation-cap" ),
-					array( "id" => "G", "ds" => "Grupo", "icon" => "fa fa-group" ),
-					array( "id" => "U", "ds" => "Unidade", "icon" => "fa fa-universal-access" )
+					array( "id" => "HA", "ds" => "Avaliações", "icon" => "far fa-thermometer-half" ),
+					array( "id" => "X", "ds" => "Sexo", "icon" => "far fa-venus-mars" ),
+					array( "id" => "C", "ds" => "Classe", "icon" => "far fa-graduation-cap" ),
+					array( "id" => "G", "ds" => "Grupo", "icon" => "far fa-group" ),
+					array( "id" => "U", "ds" => "Unidade", "icon" => "far fa-universal-access" )
 				)
 		) 
 	);?>
@@ -47,7 +47,7 @@
 		<br/>
 	</div>
 	<div class="row">
-		<button class="btn btn-primary" id="btnNovo"><i class="fa fa-plus"></i>&nbsp;Adicionar</button>
+		<button class="btn btn-primary" id="btnNovo"><i class="far fa-plus"></i>&nbsp;Adicionar</button>
 	</div>
 </div>
 <div class="modal fade" id="acompModal" role="dialog" data-backdrop="static"> <!---->
@@ -65,7 +65,7 @@
 							<div class="row">
 								<div class="form-group col-md-4 col-xs-6 col-sm-6 col-lg-4">
 									<div class="input-group">
-										<div class="input-group-addon"><i class="fa fa-barcode"></i></div>
+										<div class="input-group-addon"><i class="far fa-barcode"></i></div>
 										<input type="text" id="cdBar" name="cdBar" field="cd_bar" class="form-control input-sm" placeholder="C&oacute;digo" style="text-transform: uppercase"
 											maxlength="<?php echo $GLOBALS['pattern']->getBars()->getLength();?>" 
 											pattern="<?php echo $GLOBALS['pattern']->getBars()->getPattern("A");?>"

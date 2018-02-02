@@ -4,7 +4,7 @@ session_start();
 @require_once("include/control.php");
 
 PROFILE::verificaPerfil();
-fConnDB();
+
 fHeaderDashboard();
 ?>
 <div id="wrapper">

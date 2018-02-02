@@ -101,7 +101,7 @@ class OCORRENCIAS extends TCPDF {
 		$this->Output("Ocorrencias_".date('Y-m-d_H:i:s').".pdf", 'I');
 	}
 }
-fConnDB();
+
 
 $where = "";
 $id = fRequest("id");
@@ -115,7 +115,7 @@ if (isset($ip) && !empty($ip)):
 endif;
 
 $pdf = new OCORRENCIAS();
-$result = $GLOBALS['conn']->Execute("
+$result = CONN::get()->Execute("
  	 SELECT co.*, cu.DS_USUARIO, cp.NM
 	   FROM CAD_OCORRENCIA co
  INNER JOIN CAD_USUARIO cu ON (cu.ID = co.ID_CAD_USUARIO)

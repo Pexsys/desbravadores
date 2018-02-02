@@ -1,7 +1,7 @@
 <?php
 $cadMembroID = $_SESSION['USER']['id_cad_membro'];
 $unidade = "";
-$result = $GLOBALS['conn']->Execute("
+$result = CONN::get()->Execute("
 	SELECT TP_SEXO, CD_CARGO, ID_UNIDADE, DS_UNIDADE
 	  FROM CON_ATIVOS 
 	 WHERE NR_ANO = YEAR(NOW()) 
@@ -20,7 +20,7 @@ if (!fStrStartWith($cargo,"2-07")):
 	$where .= " OR ca.CD_CARGO LIKE '2-07%'";	
 	$classGraphs = "col-md-12 col-sm-12 col-lg-12";
 endif;
-$rc = $GLOBALS['conn']->Execute("
+$rc = CONN::get()->Execute("
     SELECT DSF, DSM
       FROM TAB_CARGO
      WHERE CD = ?
@@ -36,7 +36,7 @@ endif;
 </div>
 <div class="row">
 <?php
-$result = $GLOBALS['conn']->Execute("
+$result = CONN::get()->Execute("
 	SELECT COUNT(*) as QTD
 	  FROM CON_ATIVOS ca 
 	 WHERE ($where)
@@ -44,13 +44,13 @@ $result = $GLOBALS['conn']->Execute("
 if (!$result->EOF):
 	echo fItemAprendizado(array(
 		"classPanel" => "panel-green",
-		"leftIcon" => "fa fa-child fa-4x", 
+		"leftIcon" => "far fa-child fa-4x", 
 		"value" => $result->fields["QTD"], 
 		"strBL" => "Ativos", 
 		"strBR" => "Unidade"
 	));
 endif;
-$result = $GLOBALS['conn']->Execute("
+$result = CONN::get()->Execute("
 	SELECT COUNT(*) as QTD
 	  FROM CON_ATIVOS ca
 	 WHERE ($where) 
@@ -59,7 +59,7 @@ $result = $GLOBALS['conn']->Execute("
 if (!$result->EOF):
 	echo fItemAprendizado(array(
 		"classPanel" => "panel-primary",
-		"leftIcon" => "fa fa-thumbs-up fa-4x", 
+		"leftIcon" => "far fa-thumbs-up fa-4x", 
 		"value" => $result->fields["QTD"], 
 		"strBL" => "Batizados", 
 		"strBR" => "Unidade"
@@ -74,7 +74,7 @@ endif;
 </div>
 <div class="row">
 <?php
-$result = $GLOBALS['conn']->Execute("
+$result = CONN::get()->Execute("
 	SELECT ta.TP_ITEM, ta.CD_AREA_INTERNO, COUNT(*) as QTD
 	  FROM APR_HISTORICO ah
 	INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = ah.ID_CAD_PESSOA)
@@ -104,7 +104,7 @@ endif;
 </div>
 <div class="row">
 <?php
-$result = $GLOBALS['conn']->Execute("
+$result = CONN::get()->Execute("
 	SELECT ta.ID, ta.TP_ITEM, ta.CD_ITEM_INTERNO, ta.CD_AREA_INTERNO, ta.CD_COR, ta.DS_ITEM, COUNT(*) as QTD
 	  FROM APR_HISTORICO ah
 	INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = ah.ID_CAD_PESSOA)
@@ -150,7 +150,7 @@ endif;
 	</div>
 </div>
 <?php
-$result = $GLOBALS['conn']->Execute("
+$result = CONN::get()->Execute("
 	SELECT DISTINCT ca.NM, ca.ID_CAD_PESSOA, ca.ID_MEMBRO
 	  FROM APR_HISTORICO ah
 	INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = ah.ID_CAD_PESSOA)

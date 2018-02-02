@@ -20,16 +20,16 @@
 			"filterTo" => "#aprDatatable",
 			"filters" => 
 				array( 
-					array( "id" => "Z", "ds" => "Tipo", "icon" => "fa fa-check" ),
-					array( "id" => "X", "ds" => "Sexo", "icon" => "fa fa-venus-mars" ),
-					array( "id" => "C", "ds" => "Classe", "icon" => "fa fa-graduation-cap" ),
-					array( "id" => "G", "ds" => "Grupo", "icon" => "fa fa-group" ),
-					array( "id" => "HA", "ds" => "Avaliações", "icon" => "fa fa-thermometer-half" ),
-					array( "id" => "IC", "ds" => "Compras", "icon" => "fa fa-shopping-cart" ),
-					array( "id" => "U", "ds" => "Unidade", "icon" => "fa fa-universal-access" ),
-					array( "id" => "A", "ds" => "Áreas", "icon" => "fa fa-bookmark" ),
-					array( "id" => "E", "ds" => "Especialidade", "icon" => "fa fa-check-circle-o" ),
-					array( "id" => "M", "ds" => "Mestrado", "icon" => "fa fa-check-circle" )
+					array( "id" => "Z", "ds" => "Tipo", "icon" => "far fa-check" ),
+					array( "id" => "X", "ds" => "Sexo", "icon" => "far fa-venus-mars" ),
+					array( "id" => "C", "ds" => "Classe", "icon" => "far fa-graduation-cap" ),
+					array( "id" => "G", "ds" => "Grupo", "icon" => "far fa-group" ),
+					array( "id" => "HA", "ds" => "Avaliações", "icon" => "far fa-thermometer-half" ),
+					array( "id" => "IC", "ds" => "Compras", "icon" => "far fa-shopping-cart" ),
+					array( "id" => "U", "ds" => "Unidade", "icon" => "far fa-universal-access" ),
+					array( "id" => "A", "ds" => "Áreas", "icon" => "far fa-bookmark" ),
+					array( "id" => "E", "ds" => "Especialidade", "icon" => "far fa-check-circle-o" ),
+					array( "id" => "M", "ds" => "Mestrado", "icon" => "far fa-check-circle" )
 				)
 		) 
 	);?>
@@ -51,9 +51,9 @@
 	<div class="row">
 		<button class="btn btn-info" id="btnManual"><i class="glyphicon glyphicon-pencil"></i>&nbsp;Manual</button>
 		&nbsp;
-		<button class="btn btn-success" id="btnDigital"><i class="fa fa-barcode"></i>&nbsp;Digital</button>
+		<button class="btn btn-success" id="btnDigital"><i class="far fa-barcode"></i>&nbsp;Digital</button>
 		&nbsp;
-		<button class="btn btn-danger" id="btnDelAprend"><i class="fa fa-trash-o"></i>&nbsp;Excluir</button>
+		<button class="btn btn-danger" id="btnDelAprend"><i class="far fa-trash-o"></i>&nbsp;Excluir</button>
 	</div>
 </div>
 <div class="modal fade" id="aprendModal" role="dialog" data-backdrop="static"> <!---->
@@ -194,9 +194,9 @@
 						<div class="col-lg-12">
 							<button type="submit" class="btn btn-success pull-right"><i class="glyphicon glyphicon-floppy-save"></i>&nbsp;Gravar</button>
 							<?php /*
-							<a role="button" class="btn btn-default pull-right" id="btnAprendizado"><i class="fa fa-graduation-cap"></i></a>
-							<a role="button" class="btn btn-default pull-right" id="btnHistorico"><i class="fa fa-university"></i></a>
-							<a role="button" class="btn btn-default pull-right" id="btnFinanceiro"><i class="fa fa-money"></i></a>
+							<a role="button" class="btn btn-default pull-right" id="btnAprendizado"><i class="far fa-graduation-cap"></i></a>
+							<a role="button" class="btn btn-default pull-right" id="btnHistorico"><i class="far fa-university"></i></a>
+							<a role="button" class="btn btn-default pull-right" id="btnFinanceiro"><i class="far fa-money"></i></a>
 							*/?>
 						</div>	
 					</div>	
@@ -254,7 +254,7 @@
 							</div>
 							<div class="form-group col-lg-5">
 								<div class="input-group">
-									<div class="input-group-addon"><i class="fa fa-barcode fa-2x"></i></div>
+									<div class="input-group-addon"><i class="far fa-barcode fa-2x"></i></div>
 									<input type="text" id="cdBar" name="cdBar" field="cd_bar" class="form-control input-lg" placeholder="C&oacute;digo" style="text-transform: uppercase"
 										maxlength="<?php echo $GLOBALS['pattern']->getBars()->getLength();?>" 
 										pattern="<?php echo $GLOBALS['pattern']->getBars()->getPattern("AE");?>"

@@ -20,7 +20,7 @@
 			"filterTo" => "#comDataTable",
 			"filters" =>
 				array(
-					array( "id" => "SA", "ds" => "Status", "icon" => "fa fa-hourglass-start" )
+					array( "id" => "SA", "ds" => "Status", "icon" => "far fa-hourglass-start" )
 				)
 		)
 	);?>
@@ -41,13 +41,13 @@
 		<br/>
 	</div>
 	<div class="row">
-		<a role="button" class="btn btn-warning pull-left" id="btnNovo"><i class="fa fa-plus"></i>&nbsp;Novo</a>
+		<a role="button" class="btn btn-warning pull-left" id="btnNovo"><i class="far fa-plus"></i>&nbsp;Novo</a>
 	</div>
 </div>
 <div class="col-lg-12" id="divAcordo" style="display:none">
 	<div class="row">
-		<a role="button" class="btn btn-primary pull-left" id="btnFechar"><i class="fa fa-times"></i>&nbsp;Fechar</a>
-		<a role="button" class="btn btn-success pull-right" id="btnGravar"><i class="fa fa-floppy-o"></i>&nbsp;Salvar</a>
+		<a role="button" class="btn btn-primary pull-left" id="btnFechar"><i class="far fa-times"></i>&nbsp;Fechar</a>
+		<a role="button" class="btn btn-success pull-right" id="btnGravar"><i class="far fa-floppy-o"></i>&nbsp;Salvar</a>
 	</div>
 </div>
 <script src="<?php echo $GLOBALS['pattern']->getVD();?>dashboard/js/cadastroAcordo.js<?php echo "?".microtime();?>"></script>

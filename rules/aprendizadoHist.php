@@ -105,7 +105,7 @@ function getQueryByFilter( $parameters ) {
 		";
 		//echo $query;
 		//print_r($aWhere);
-		return $GLOBALS['conn']->Execute( $query, $aWhere );
+		return CONN::get()->Execute( $query, $aWhere );
 	endif;
 	return null;
 }
@@ -113,7 +113,7 @@ function getQueryByFilter( $parameters ) {
 function getAprHist( $parameters ) {
 	$arr = array();
 	
-	fConnDB();
+	
 	$qtdZeros = zeroSizeID();
 
 	$result = getQueryByFilter($parameters);

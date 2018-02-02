@@ -207,8 +207,8 @@ elseif ($tpInves == "N"):
 	$innerNaoInvest = " AND ah.DT_INVESTIDURA IS NULL";
 endif;
 
-fConnDB();
-$result = $GLOBALS['conn']->Execute("
+
+$result = CONN::get()->Execute("
 	SELECT DISTINCT
 		at.NM,
 		ta.TP_ITEM,

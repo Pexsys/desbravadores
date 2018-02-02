@@ -57,13 +57,13 @@ function getQueryByFilter( $parameters ) {
 		WHERE fa.NR_ANO = YEAR(NOW()) $where
 	 ORDER BY fa.TP
 	";
-	return $GLOBALS['conn']->Execute( $query, $aWhere );
+	return CONN::get()->Execute( $query, $aWhere );
 }
 
 function getAcordos( $parameters ) {
 	$arr = array();
 
-	fConnDB();
+	
 	$result = getQueryByFilter( $parameters );
 	foreach ($result as $k => $f):
 		$arr[] = array(

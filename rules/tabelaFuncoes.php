@@ -7,9 +7,9 @@ responseMethod();
  ****************************/
 function getFuncoes(){
 	$arr = array();
-	fConnDB();
 	
-	$result = $GLOBALS['conn']->Execute("
+	
+	$result = CONN::get()->Execute("
 		SELECT ID, DS_URL
 		  FROM TAB_FUNCTION
 	  ORDER BY DS_URL");

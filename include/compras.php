@@ -5,7 +5,7 @@
 class COMPRAS {
 
 	public function deleteItemPessoaEntregue( $pessoaID, $itemAprendID ) {
-		$GLOBALS['conn']->Execute("
+		CONN::get()->Execute("
 			DELETE FROM CAD_COMPRAS
 			 WHERE FG_COMPRA = 'S'
 			   AND FG_ENTREGUE = 'S'
@@ -15,18 +15,18 @@ class COMPRAS {
 	}
 
 	public function deleteByPessoa( $pessoaID ) {
-		$GLOBALS['conn']->Execute("
+		CONN::get()->Execute("
 			DELETE FROM CAD_COMPRAS
 			 WHERE ID_CAD_MEMBRO IN (SELECT ID_CAD_MEMBRO FROM CAD_MEMBRO WHERE ID_CAD_PESSOA = ?)
 		", array( $pessoaID ) );
 	}
 
 	public function deleteByID( $id ) {
-		 $GLOBALS['conn']->Execute("DELETE FROM CAD_COMPRAS WHERE ID = ?", array($id) );
+		 CONN::get()->Execute("DELETE FROM CAD_COMPRAS WHERE ID = ?", array($id) );
 	}
 
 	public function forceInsert( $arr ){
-		$GLOBALS['conn']->Execute("
+		CONN::get()->Execute("
 			INSERT INTO CAD_COMPRAS(
 				ID_CAD_MEMBRO,
 				ID_TAB_MATERIAIS,
@@ -39,7 +39,7 @@ class COMPRAS {
 	}
 
 	public function insertItemCompra( $cd, $cadMembroID, $tp, $compl = null, $previsao = "N" ) {
-		$r = $GLOBALS['conn']->Execute("
+		$r = CONN::get()->Execute("
 			SELECT ID
 			  FROM TAB_MATERIAIS
 			 WHERE CD = ?
@@ -51,7 +51,7 @@ class COMPRAS {
 			if (!is_null($compl)):
 				$arr[] = $compl;
 			endif;
-			$r2 = $GLOBALS['conn']->Execute("
+			$r2 = CONN::get()->Execute("
 				SELECT 1
 				  FROM CAD_COMPRAS
 				 WHERE ID_CAD_MEMBRO = ?
@@ -75,14 +75,14 @@ class COMPRAS {
 
 	function processaListaMembroID( $cadMembroID, $tp ) {
 		//SELECIONA AS CARACTERISTICAS DA PESSOA
-		$r1 = $GLOBALS['conn']->Execute("SELECT * FROM CON_ATIVOS WHERE ID_CAD_MEMBRO = ?", array($cadMembroID) );
+		$r1 = CONN::get()->Execute("SELECT * FROM CON_ATIVOS WHERE ID_CAD_MEMBRO = ?", array($cadMembroID) );
 		$pessoaID = $r1->fields['ID_CAD_PESSOA'];
 
 		$qtItens = max( $r1->fields['QT_UNIFORMES'], 1 );
 		$isProxAnoDir = fIdadeAtual($r1->fields['DT_NASC']) >= 15 && date( 'n' ) >= 10;
 		$fundo = ( fStrStartWith( $r1->fields['CD_CARGO'], "2-") || $isProxAnoDir ? "BR" : "CQ" );
 
-		$GLOBALS['conn']->Execute("
+		CONN::get()->Execute("
 			DELETE FROM CAD_COMPRAS
 			WHERE FG_COMPRA = 'N'
 			  AND ID_CAD_MEMBRO = ?
@@ -90,7 +90,7 @@ class COMPRAS {
 		", array($cadMembroID, $tp) );
 
 		//SELECIONA OS ITENS DE HISTORICO
-		$r1 = $GLOBALS['conn']->Execute("
+		$r1 = CONN::get()->Execute("
 				SELECT ah.ID, ah.ID_TAB_APREND, ah.DT_AVALIACAO,
 					   ta.TP_ITEM, ta.TP_PARA, ta.CD_ITEM_INTERNO, ta.CD_AREA_INTERNO
 				  FROM APR_HISTORICO ah
@@ -116,7 +116,7 @@ class COMPRAS {
 					$idMax = "";
 					$dtMax = "";
 					$concat = "";
-					$r2 = $GLOBALS['conn']->Execute("
+					$r2 = CONN::get()->Execute("
 						SELECT ta.ID, ta.CD_ITEM_INTERNO, ah.DT_INVESTIDURA
 						  FROM APR_HISTORICO ah
 					INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
@@ -189,7 +189,7 @@ class COMPRAS {
 
 				//RECUPERA AS CLASSES AVANCADAS CONCLUIDAS
 				else:
-					$r2 = $GLOBALS['conn']->Execute("
+					$r2 = CONN::get()->Execute("
 						SELECT ta.CD_ITEM_INTERNO
 						  FROM APR_HISTORICO ah
 					INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
@@ -202,7 +202,7 @@ class COMPRAS {
 						if ($r2->RecordCount() == 6):
 
 							//VERIFICAR SE EXISTEM AS 6 REGULARES CONCLUIDAS
-							$r3 = $GLOBALS['conn']->Execute("
+							$r3 = CONN::get()->Execute("
 								SELECT ta.CD_ITEM_INTERNO
 								  FROM APR_HISTORICO ah
 							INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
@@ -219,7 +219,7 @@ class COMPRAS {
 							$a = explode("-", $r1->fields["CD_ITEM_INTERNO"]);
 
 							//VERIFICAR SE EXISTE A RESPECTIVA REGULAR CONCLU�DA
-							$r3 = $GLOBALS['conn']->Execute("
+							$r3 = CONN::get()->Execute("
 								SELECT ta.CD_ITEM_INTERNO
 								  FROM APR_HISTORICO ah
 							INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)

@@ -1,9 +1,9 @@
 <?php
 @require_once("../include/functions.php");
-fConnDB();
+
 
 //ANALISE/IMPORTACAO DE HISTORICO DSA/UCB
-$result = $GLOBALS['conn']->Execute("
+$result = CONN::get()->Execute("
     SELECT * FROM extract ORDER BY nome
 ");
 
@@ -21,7 +21,7 @@ foreach ($result as $k => $ls):
 
 	$email = $nomes[0].".".$nomes[count($nomes)-1] . "@pioneiros.com.br";
 
-	$GLOBALS['conn']->Execute("UPDATE extract SET email = ? WHERE ID = ?", array($email, $ls["id"]) );
+	CONN::get()->Execute("UPDATE extract SET email = ? WHERE ID = ?", array($email, $ls["id"]) );
 
 	echo "$str - $email<br/>";
 
