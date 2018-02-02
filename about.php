@@ -5,7 +5,7 @@ fHeaderPage( array( PATTERNS::getVD()."css/index.css?" )
 ?>
 <body>
 	<?php @require_once("include/navbar.php");?>
-    <div class="container">
+    <div class="container" style="margin:60px">
         <div class="row">
             <div class="col-md-12 col-lg-12">
                 <h1 class="page-header">Nossa História
@@ -19,12 +19,12 @@ fHeaderPage( array( PATTERNS::getVD()."css/index.css?" )
             </div>
         </div>
         <div class="row">
-            <div class="col-md-9">
+            <div class="col-md-9 col-sm-9 col-lg-9 col-xl-9">
                 <h3>Quem são os desbravadores?</h3>
                 <p style="text-align:justify">Meninos e meninas com idades entre 10 e 15 anos, de diferentes classes sociais, cor, ou religião. Reunem-se uma vez por semana para aprender a desenvolver talentos, habilidades, percepções e o gosto pela natureza. Vibram com atividades ao ar livre. Gostam de acampamentos, caminhadas, escaladas, explorações nas matas e cavernas. Sabem cozinhar ao ar livre, fazendo fogo sem fósforo. Demonstram habilidade com a disciplina através de ordem unida, e têm a criatividade despertada pelas artes manuais. Combatem, também, o uso do fumo, álcool e drogas. Trabalham em equipe procurando sempre serem úteis à comunidade. Prestam, também, socorro em calamidades e participam ativamente de campanhas comunitárias para ajudar pessoas carentes. Em tudo o que fazem procuram desenvolver amor a Deus e à Pátria e, além disso, fazem muitos amigos! O Clube de Desbravadores está presente em mais de 160 países, com 90.000 sedes e mais de dois milhões de participantes. Existem oficialmente desde 1950, como um programa oficial da Igreja Adventista do 7º Dia. Meninos e meninas de qualquer fé religiosa podem participar deste movimento que tira da diversidade, o colorido da energia juvenil.</p>
                 <small><b>Fonte</b>: <i>http://www.adventistas.org/pt/desbravadores/sobre-nos/</i></small>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 col-sm-3 col-lg-3 col-xl-3">
                 <img class="img-responsive" src="img/D1.png" width="450px" height="450px"/>
             </div>
         </div>
@@ -34,10 +34,10 @@ fHeaderPage( array( PATTERNS::getVD()."css/index.css?" )
             <div class="col-md-12 col-lg-12">
                 <h3 class="page-header">Nosso Logo</h3>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-5 col-sm-5 col-lg-5 col-xl-5">
                 <img class="img-responsive" src="img/logo-1959.png" width="400px" height="400px"/>
             </div>
-            <div class="col-md-7">
+            <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
                 <p style="text-align:justify">Entre os índios apaches era comum que os jovens trouxessem uma pena de Águia em seu rito de passagem, pois os ninhos de Águia são normalmente construídos no alto de penhascos, e esse ato demonstraria a coragem e bravura do jovem índio. Este olhar focado representado em nosso logo, mostra justamente isso, a determinação que temos desde 1959 até os dias de hoje, construíndo pouco a pouco nossa própria história, influenciando gerações e superando os mais diversos desafios.</p>
                 <p style="text-align:justify">Nossa marca perpétua é a formação de líderes para servir a igreja, nos mais diversos locais, tanto dentro do Brasil, como fora dele, pois os membros que passam por aqui, levam a garra a e força de nossa história. Por onde que que estejam, estão sempre cientes de que nosso serviço baseia-se na esperança da breve volta de Jesus, e aqui somos soldados espalhando Sua mensagem e ensinando meninos e meninas a amar a Deus, a pátria e ao próximo.</p>
                 <p style="text-align:justify"><b>Salvar do pecado e guiar no serviço</b> - Na busca por esse ideal desde o início de suas atividades, e superando os mais diversos desafios desde o início, o animal escolhido para representar essa força tornou-se rapidamente o simbolo do clube: A <b>Águia de Cabeça Branca</b>.</p>
@@ -57,13 +57,13 @@ fHeaderPage( array( PATTERNS::getVD()."css/index.css?" )
             <div class="col-md-12 col-lg-12">
                 <h3 class="page-header">A Ave Símbolo</h3>
             </div>
-            <div class="col-md-8">
+            <div class="col-md-8 col-sm-8 col-lg-8 col-xl-8">
                 <p style="text-align:justify">Este animal imponente, representa sobre tudo a força e a vontade. Com sua beleza e força reina absoluta sobre os céus. Também conhecida como <a href="https://pt.wikipedia.org/wiki/Haliaeetus_leucocephalus" target="_blank">Águia-Americana</a> ou Águia-careca (nome deriva de um significado antico da palavra cabeça-branca), é um predador oportunista que se alimenta principalmente de peixes, que mergulha sobrevoando a superfície da água e apanha seu alimento com suas garras.</p>
                 <p style="text-align:justify">O adulto é principalmente marrom com cabeça e cauda brancas. Os sexos são idênticos na plumagem, mas as fêmeas são cerca de 25 por cento maiores do que os machos. O bico é grande e enganchado. A plumagem do imaturo é marrom. Essa espécie constrói o maior ninho de qualquer pássaro norte-americano e os maiores ninhos de árvores já registrados para qualquer espécie animal. 1,1 metro de comprimento. Tem entre 1,8 – 2,3 m de envergadura das asas, e 3 – 6,3 kg de peso. Alcança a velocidade de 120 – 160 km/h (mergulho).</p>
                 <p style="text-align:justify">A maturidade sexual é atingida na idade de quatro a cinco anos. As águias formam casais permanentes e quando os filhotes conseguem voar e caçar sozinhos, são expulsos do ninho pelos pais que lhes negam alimento.</p>
                 <small><b>Fonte</b>: <i>https://pt.wikipedia.org/wiki/Haliaeetus_leucocephalus</i></small>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
                 <img class="img-responsive" src="img/aguia1.jpg" width="450px" height="450px"/>
             </div>
         </div>
@@ -73,10 +73,10 @@ fHeaderPage( array( PATTERNS::getVD()."css/index.css?" )
             <div class="col-md-12 col-lg-12">
                 <h3 class="page-header">Nossa Bandeira</h3>
             </div>
-            <div class="col-md-7">
+            <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
                 <img class="img-responsive" src="img/bandeira.jpg" width="700px" height="450px"/>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-5 col-sm-5 col-lg-5 col-xl-5">
                 <p style="text-align:justify">A bandeira &eacute; algo que nos identifica. Atrav&eacute;s dela dizemos e reconhecemos, que por sermos Pioneiros, que sempre estaremos em evid&ecirc;ncia, que sempre seremos cobrados e por isso a cada dia nosso desafio &eacute; a auto-supera&ccedil;&atilde;o.</p>
                 <p style="text-align:justify">Outra caracter&iacute;stica que nos marca &eacute; a presen&ccedil;a de membros que por este clube passaram, e que hoje est&atilde;o espalhados pelos mais variados locais do Brasil e do mundo.</p>
                 <p style="text-align:justify">Por ser o primeiro clube (não oficial) em atividade no Brasil, nossa bandeira também representa nossa missão como clube de levar <i>"A mensagem o evangelho a todo o mundo em minha geração"</i> retratada no <u>Alvo dos Desbravadores</u>, como também nas palavras do <u>Hino dos Desbravadores</u>, onde cantamos juntos que </i>"Devemos ao mundo anunciar, as novas da salvação: que Cristo virá em breve, dar o galardão."</i></p>

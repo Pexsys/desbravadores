@@ -33,7 +33,7 @@ endforeach;
 	<?php @require_once("include/navbar.php");?>
 
     <!-- Page Content -->
-    <div class="container">
+    <div class="container" style="margin:60px">
 
         <!-- Page Heading/Breadcrumbs -->
         <div class="row">

@@ -9,7 +9,7 @@ fHeaderPage( array( PATTERNS::getVD()."css/index.css?" )
 	<?php @require_once("include/navbar.php");?>
 
     <!-- Page Content -->
-    <div class="container">
+    <div class="container" style="margin:60px">
 
         <!-- Page Heading/Breadcrumbs -->
         <div class="row">
@@ -53,7 +53,7 @@ fHeaderPage( array( PATTERNS::getVD()."css/index.css?" )
                 echo "<div class=\"row\">";
             endif;
             ?>
-            <div class="col-md-2 img-portfolio">
+            <div class="col-md-2 col-sm-2 col-lg-2 col-xl-2 img-portfolio">
                 <a href="<?php echo ( $i[1] ? "unidade.php?id=".$i[0] : "#"); ?>">
                     <img class="img-responsive img-hover" src="report/img/unidade/<?php echo $i[0];?>_E.png" alt="">
                 </a>
