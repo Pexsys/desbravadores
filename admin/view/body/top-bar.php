@@ -6,7 +6,7 @@
             <?php
                 $vd = PATTERNS::getVD();
                 $desc = PATTERNS::getClubeDS(array("cl","cj","db","nm"));
-                echo "<a class=\"navbar-brand\" href=\"$vd\" style=\"margin:0;padding:0px\"><img class=\"img-responsive\" src=\"{$vd}img/d1-lg-tr-fb.svg\" width=\"100\" alt=\"$desc\" title=\"$desc\"></a>";
+                echo "<a class=\"navbar-brand\" href=\"$vd\" style=\"margin:10;padding:0px\"><img class=\"img-responsive\" src=\"{$vd}img/d1-lg-tr-fb.svg\" width=\"100\" alt=\"$desc\" title=\"$desc\"></a>";
             ?>
         </div>
         <div class="collapse navbar-collapse" id="navbar-collapse">
