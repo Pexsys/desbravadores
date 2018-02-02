@@ -37,7 +37,7 @@ fHeaderPage();
                 <hr>
 
                 <!-- Date/Time -->
-                <p><i class="fa fa-clock-o"></i> Posted on August 24, 2013 at 9:00 PM</p>
+                <p><i class="far fa-clock-o"></i> Posted on August 24, 2013 at 9:00 PM</p>
 
                 <hr>
 
@@ -122,7 +122,7 @@ fHeaderPage();
                     <div class="input-group">
                         <input type="text" class="form-control">
                         <span class="input-group-btn">
-                            <button class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
+                            <button class="btn btn-default" type="button"><i class="far fa-search"></i></button>
                         </span>
                     </div>
                     <!-- /.input-group -->

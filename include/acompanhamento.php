@@ -13,7 +13,7 @@ function marcaRequisito( $pessoaID, $itemID, $reqCD, $assDT ) {
 	endif;
 	
 	//RECUPERA O ID DO ITEM_APRENDIZADO, BASEADO NO CODIGO DE BARRAS E REQUISITO APONTADO.
-	$rs = $GLOBALS['conn']->Execute("
+	$rs = CONN::get()->Execute("
 		SELECT tai.ID
 		FROM TAB_APR_ITEM tai
 	  INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = tai.ID_TAB_APREND)
@@ -63,7 +63,7 @@ function fGetClassAcomp( $cap, $param ){
 	$strC = "";
 
 	//SELECIONA ITENS PENDENTES
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		   SELECT taa.CD AS CD_AP_AREA, taa.DS AS DS_AP_AREA, 
 				  ta.TP_ITEM, ta.CD_COR, ta.CD_ITEM_INTERNO, ta.CD_AREA_INTERNO, ta.DS_ITEM, 
 				  tai.ID, tai.CD_REQ_INTERNO, tai.DS, tai.QT_MIN,
@@ -81,7 +81,7 @@ function fGetClassAcomp( $cap, $param ){
 	$strC .= fGetDetailAcomp("panel-danger","Itens Pendentes","fa-frown-o",$result);	
 	
 	//SELECIONA ITENS CONCLUIDOS
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		   SELECT taa.CD AS CD_AP_AREA, taa.DS AS DS_AP_AREA, 
 				  ta.TP_ITEM, ta.CD_COR, ta.CD_ITEM_INTERNO, ta.CD_AREA_INTERNO, ta.DS_ITEM, 
 				  tai.ID, tai.CD_REQ_INTERNO, tai.DS, tai.QT_MIN,
@@ -100,7 +100,7 @@ function fGetClassAcomp( $cap, $param ){
 	
 	$str = "<div class=\"row\">";
 	$str .= "<div class=\"well well-sm\" style=\"padding:4px;margin-bottom:0px;font-size:10px;color:". ($param["it"] > 10 ? "#000000" : "#ffffff") .";background-color:".$cap["cr"]."\">";
-	$str .= "<b>".$cap["nm"]."<br/>".titleCase($cap["ap"]). (empty($strC) ? "<i class=\"fa fa-check pull-left\"></i> - CLASSE JÁ CONCLUÍDA" : "") ."</b></div>";
+	$str .= "<b>".$cap["nm"]."<br/>".titleCase($cap["ap"]). (empty($strC) ? "<i class=\"far fa-check pull-left\"></i> - CLASSE JÁ CONCLUÍDA" : "") ."</b></div>";
 	$str .= (empty($strC) ? "" : $strC);
 	$str .= "</div>";
 	return $str;

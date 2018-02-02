@@ -10,12 +10,12 @@ function getGraphData() {
 	$membroID = $_SESSION['USER']['id_cad_pessoa'];
 
 	$arr = array();
-	fConnDB();
+	
 
 	$dtInicio = null;
 
 	//OBJETIVO DO CLUBE
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT DISTINCT DTHORA_EVENTO_INI
 		  FROM CAD_EVENTOS 
 		 WHERE FLAG_PUBLICACAO = 'S'
@@ -63,7 +63,7 @@ function getGraphData() {
 	endif;
 
 	//MINHAS CLASSES ABERTAS NO ANO
-	$rsCls = $GLOBALS['conn']->Execute("
+	$rsCls = CONN::get()->Execute("
 		SELECT DISTINCT ID_TAB_APREND, DS_ITEM, CD_COR, CD_ITEM_INTERNO
 		  FROM CON_APR_PESSOA 
 		 WHERE ID_CAD_PESSOA = ?
@@ -75,7 +75,7 @@ function getGraphData() {
 		$arr["checkbox"] = array();
 
 		foreach($rsCls as $j => $lnc):
-			$result = $GLOBALS['conn']->Execute("
+			$result = CONN::get()->Execute("
 				SELECT X.DT_ASSINATURA, Y.QTD, COUNT(*) AS QT
 				  FROM CON_APR_PESSOA X
 				INNER JOIN CON_APR_ITEM Y ON (Y.ID = X.ID_TAB_APREND)
@@ -114,9 +114,9 @@ function getGraphData() {
 function getMestrados(){
 	session_start();
 	
-	fConnDB();
+	
 	$arr = array();
-	$rg = $GLOBALS['conn']->Execute("
+	$rg = CONN::get()->Execute("
 	    SELECT DISTINCT car.ID
 	      FROM CON_APR_REQ car
    LEFT JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = car.ID AND ah.ID_CAD_PESSOA = ?)
@@ -148,10 +148,10 @@ function getPainelMestrado( $parameters ){
 }
 
 function getPainelMestradoPessoa( $ruleID, $membroID ){
-	fConnDB();
+	
 	
 	//LE REGRAS
-	$rg = $GLOBALS['conn']->Execute("
+	$rg = CONN::get()->Execute("
 	 	SELECT DISTINCT car.CD_ITEM_INTERNO, car.CD_AREA_INTERNO, car.DS_ITEM, car.TP_ITEM, car.MIN_AREA, ah.DT_CONCLUSAO
 	 	  FROM CON_APR_REQ car
 	 LEFT JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = car.ID AND ah.ID_CAD_PESSOA = ?)
@@ -163,7 +163,7 @@ function getPainelMestradoPessoa( $ruleID, $membroID ){
 	
 	$feitas = 0;
 	//LE PARAMETRO MINIMO E HISTORICO PARA A REGRA
-	$rR = $GLOBALS['conn']->Execute("
+	$rR = CONN::get()->Execute("
 		 SELECT tar.ID, tar.QT_MIN, COUNT(*) AS QT_FEITAS
 		 FROM TAB_APR_ITEM tar
 		 INNER JOIN CON_APR_REQ car ON (car.ID_TAB_APR_ITEM = tar.ID AND car.TP_ITEM_RQ = 'ES')
@@ -198,7 +198,7 @@ function getPainelMestradoPessoa( $ruleID, $membroID ){
 	
 	//VERIFICA REQUISITOS CUMPRIDOS, MAS AINDA NÃO FINALIZADO.
 	if ( $pct >= 100 ):
-		 $rI = $GLOBALS['conn']->Execute("
+		 $rI = CONN::get()->Execute("
 			 SELECT DT_CONCLUSAO
 			 FROM APR_HISTORICO
 			 WHERE ID_CAD_PESSOA = ?
@@ -209,7 +209,7 @@ function getPainelMestradoPessoa( $ruleID, $membroID ){
 		 	$sizeClass = "col-md-4 col-xs-12 col-sm-6 col-xl-3 col-lg-4 blink";
 		
 			 //INSERE NOTIFICAÇOES SE NÃO EXISTIR.
-			 $GLOBALS['conn']->Execute("
+			 CONN::get()->Execute("
 				 INSERT INTO LOG_MENSAGEM ( ID_ORIGEM, TP, ID_CAD_USUARIO, EMAIL, DH_GERA )
 				 SELECT ?, 'M', cu.ID, ca.EMAIL, NOW()
 				 FROM CON_ATIVOS ca
@@ -247,10 +247,10 @@ function getMasterRules( $parameters ) {
 function getMasterRulesPessoa( $ruleID, $cadMembroID ){
 	$title = "";
 	$message = "";
-	fConnDB();
+	
 	
 	//LE PARAMETRO MINIMO E HISTORICO PARA A REGRA
-	$rR = $GLOBALS['conn']->Execute("
+	$rR = CONN::get()->Execute("
 		SELECT taq.ID, taq.QT_MIN, ta.DS_ITEM
 		  FROM TAB_APR_ITEM taq
 	INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = taq.ID_TAB_APREND)
@@ -266,7 +266,7 @@ function getMasterRulesPessoa( $ruleID, $cadMembroID ){
 		);
 		//ADICIONAR REGRA E SELECAO DA REGRA.
 		//LE PARAMETRO MINIMO E HISTORICO PARA A REGRA
-		$rS = $GLOBALS['conn']->Execute("
+		$rS = CONN::get()->Execute("
 			SELECT car.CD_ITEM_INTERNO_RQ, car.DS_ITEM_RQ, ah.DT_INICIO, ah.DT_CONCLUSAO
 			FROM CON_APR_REQ car
 			LEFT JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = car.ID_RQ AND ah.ID_CAD_PESSOA = (SELECT ID_CAD_PESSOA FROM CAD_MEMBRO WHERE ID = ?) )

@@ -2,13 +2,13 @@
 	<ul class="nav navbar-top-links navbar-right">
 		<li class="dropdown" style="display:none" id="notifyTasks">
 			<a class="dropdown-toggle" data-toggle="dropdown" href="#" style="color:#777777">
-				<i class="fa fa-tasks fa-fw"></i>&nbsp;<i class="fa fa-caret-down"></i>
+				<i class="far fa-tasks fa-fw"></i>&nbsp;<i class="far fa-caret-down"></i>
 			</a>
 			<ul class="dropdown-menu dropdown-tasks"></ul>
 		</li>
 		<li class="dropdown" id="notifyAlerts" style="display:none">
 			<a class="dropdown-toggle" data-toggle="dropdown" href="#" style="color:#777777">
-				<i class="fa fa-bell fa-fw"></i><span id="notifyAlertsBadge" style="display:none"><span class="badge badge-notify"></span></span><i class="fa fa-caret-down"></i>
+				<i class="far fa-bell fa-fw"></i><span id="notifyAlertsBadge" style="display:none"><span class="badge badge-notify"></span></span><i class="far fa-caret-down"></i>
 			</a>
 			<ul class="dropdown-menu dropdown-alerts"></ul>
 		</li>
@@ -17,15 +17,15 @@
 				<span style="color:#777777">
 					<?php 
 						if (!is_null($_SESSION['USER']['sexo'])):
-							echo "<i class=\"fa ". ( $_SESSION['USER']['sexo'] == "F" ? "fa-female" : "fa-male" )." fa-fw\"></i>";
+							echo "<i class=\"far ". ( $_SESSION['USER']['sexo'] == "F" ? "fa-female" : "fa-male" )." fa-fw\"></i>";
 						endif;
 						echo titleCase(fAbrevia($_SESSION['USER']['ds_usuario']));
 					?>&nbsp;
-					<i class="fa fa-caret-down"></i>
+					<i class="far fa-caret-down"></i>
 				</span>
 			</a>
 			<ul class="dropdown-menu">
-				<li><a href="#" id="myBtnLogout"><i class="fa fa-sign-out fa-fw"></i>&nbsp;Sair</a></li>
+				<li><a href="#" id="myBtnLogout"><i class="far fa-sign-out fa-fw"></i>&nbsp;Sair</a></li>
 			</ul>
 		</li>
 	</ul>

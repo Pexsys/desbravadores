@@ -2,7 +2,7 @@
 $cadMembroID = $_SESSION['USER']['id_cad_membro'];
 $classe = "";
 $like = "";
-$result = $GLOBALS['conn']->Execute("
+$result = CONN::get()->Execute("
 	SELECT TP_SEXO, CD_CARGO, CD_CARGO2
 	  FROM CON_ATIVOS 
 	 WHERE ID_CAD_MEMBRO = ?
@@ -17,7 +17,7 @@ endif;
 if ($cargo <> "2-04-00" && fStrStartWith($cargo,"2-04")):
 	$like = "01-".substr($cargo,-2);
 endif;
-$rc = $GLOBALS['conn']->Execute("
+$rc = CONN::get()->Execute("
 	SELECT DSF, DSM
       FROM TAB_CARGO
      WHERE CD = ?
@@ -40,7 +40,7 @@ if (!empty($like)):
 	endif;
 	$classGraphs = "col-md-12 col-sm-12 col-lg-6";
 endif;
-$result = $GLOBALS['conn']->Execute("
+$result = CONN::get()->Execute("
 	SELECT ah.ID_TAB_APREND, ta.TP_ITEM, ta.CD_ITEM_INTERNO, ta.CD_AREA_INTERNO, ta.CD_COR, ta.DS_ITEM, COUNT(*) as QTD
 	  FROM APR_HISTORICO ah
 	INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = ah.ID_CAD_PESSOA)
@@ -90,7 +90,7 @@ endif;
 	</div>
 </div>
 <?php
-$pendNome = $GLOBALS['conn']->Execute("
+$pendNome = CONN::get()->Execute("
 	SELECT cap.ID_TAB_APREND, cap.CD_ITEM_INTERNO, cap.CD_REQ_INTERNO, cap.CD_AP_AREA, cap.DS_AP_AREA, cap.DS_ITEM, cap.DS, cap.CD_COR,
 	       ca.NM
 	FROM CON_APR_PESSOA cap
@@ -103,7 +103,7 @@ $pendNome = $GLOBALS['conn']->Execute("
 	ORDER BY cap.CD_ITEM_INTERNO, cap.CD_REQ_INTERNO, ca.NM
 ");
 /*
-$pendItens = $GLOBALS['conn']->Execute("
+$pendItens = CONN::get()->Execute("
 	SELECT cap.ID_TAB_APREND, cap.CD_ITEM_INTERNO, cap.CD_REQ_INTERNO, cap.CD_AP_AREA, cap.DS_AP_AREA, cap.DS_ITEM, cap.DS, cap.CD_COR,
 			at.NM
 	FROM CON_APR_PESSOA cap
@@ -129,7 +129,7 @@ if (!$pendNome->EOF):
 	if (!$pendItens->EOF):
 	<div class="col-xs-12 col-md-12 col-sm-12 col-xl-12 col-lg-12">
 		<div class="panel panel-danger">
-		<div class="panel-heading"><h5 class="panel-title"><i class="fa fa-frown-o"></i>&nbsp;Classe / Pessoa</h5></div>
+		<div class="panel-heading"><h5 class="panel-title"><i class="far fa-frown-o"></i>&nbsp;Classe / Pessoa</h5></div>
 			<div class="panel-body" style="padding:5px 10px;font-size:12px">
 				<?php
 				$nomeAtu = "";
@@ -170,7 +170,7 @@ if (!$pendNome->EOF):
 	<?php if (!$pendNome->EOF):?>
 	<div class="col-xs-12 col-md-12 col-sm-12 col-xl-12 col-lg-12">
 		<div class="panel panel-danger">
-			<div class="panel-heading"><h5 class="panel-title"><i class="fa fa-frown-o"></i>&nbsp;Classe / Item</h5></div>
+			<div class="panel-heading"><h5 class="panel-title"><i class="far fa-frown-o"></i>&nbsp;Classe / Item</h5></div>
 			<div class="panel-body" style="padding:5px 10px;font-size:12px">
 				<?php
 				$nomeAtu = "";
@@ -208,7 +208,7 @@ if (!$pendNome->EOF):
 	<?php endif;?>
 </div>
 <?php endif;
-$result = $GLOBALS['conn']->Execute("
+$result = CONN::get()->Execute("
 	SELECT DISTINCT ca.NM, ca.ID_CAD_PESSOA, ca.ID_MEMBRO
 	  FROM APR_HISTORICO ah
 	INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = ah.ID_CAD_PESSOA)

@@ -10,11 +10,11 @@ function getGraphData() {
 	$cadMembroID = $_SESSION['USER']['id_cad_membro'];
 
 	$arr = array();
-	fConnDB();
+	
 
 	$arr["cls"] = array();
 
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT ID_UNIDADE, CD_CARGO
 		  FROM CAD_ATIVOS 
 		 WHERE NR_ANO = YEAR(NOW()) 
@@ -31,7 +31,7 @@ function getGraphData() {
 		$where .= " OR ca.CD_CARGO LIKE '2-07%'";	
 	endif;
 
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT a.CD_ITEM_INTERNO, a.CD_COR, a.DS_ITEM, cai.QTD, AVG(a.QTD) AS QT_MD
 		FROM (
 			SELECT cap.ID_CAD_PESSOA, cap.CD_COR, cap.DS_ITEM, cap.ID_TAB_APREND, cap.CD_ITEM_INTERNO, COUNT(*) AS QTD 

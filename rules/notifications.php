@@ -4,12 +4,12 @@ responseMethod();
 
 function getNotifications(){
 	session_start();
-	fConnDB();
+	
 	
 	$arr = array();
-	$arr = getItemNotify( $arr, "C", "fa-bullhorn", "Comunicados", $GLOBALS['pattern']->getVD()."dashboard/index.php?id=41" );
-	$arr = getItemNotify( $arr, "O", "fa-exclamation-triangle", "Ocorr&ecirc;ncias", $GLOBALS['pattern']->getVD()."dashboard/index.php?id=51" );
-	$arr = getItemNotify( $arr, "M", "fa-check-circle", "Mestrado Conclu&iacute;do", $GLOBALS['pattern']->getVD()."dashboard/index.php?id=16#mestrados" );
+	$arr = getItemNotify( $arr, "C", "fas fa-bullhorn", "Comunicados", $GLOBALS['pattern']->getVD()."dashboard/index.php?id=41" );
+	$arr = getItemNotify( $arr, "O", "fas fa-exclamation-triangle", "Ocorr&ecirc;ncias", $GLOBALS['pattern']->getVD()."dashboard/index.php?id=51" );
+	$arr = getItemNotify( $arr, "M", "fas fa-check-circle", "Mestrado Conclu&iacute;do", $GLOBALS['pattern']->getVD()."dashboard/index.php?id=16#mestrados" );
 	
 	$html = "";
 	$qt = 0;
@@ -26,7 +26,7 @@ function getNotifications(){
 
 function getItemNotify( $arr, $tp, $icon, $title, $url ){
 	//VERIFICA COMUNICADOS PENDENTES
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT MIN(DH_GERA) AS DT, COUNT(*) AS QT
 		  FROM LOG_MENSAGEM
 		 WHERE YEAR(DH_GERA) = YEAR(NOW())
@@ -42,7 +42,7 @@ function getItemNotify( $arr, $tp, $icon, $title, $url ){
 				"html" => "<li>
 					<a href=\"$url\">
 						<div>
-						<i class=\"fa $icon fa-fw\"></i>&nbsp;$title&nbsp;
+						<i class=\"$icon fa-fw\"></i>&nbsp;$title&nbsp;
 						<span class=\"badge progress-bar-danger\">$qt</span>
 						<span class=\"text-muted pull-right\">". strftime("%d/%m/%Y",strtotime($result->fields["DT"])) ."</span>
 						</div>

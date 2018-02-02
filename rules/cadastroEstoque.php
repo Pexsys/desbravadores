@@ -62,13 +62,13 @@ function getQueryByFilter( $parameters ) {
 	 ORDER BY tm.TP, tm.DS
 	";
 	//echo $query;
-	return $GLOBALS['conn']->Execute( $query, $aWhere );
+	return CONN::get()->Execute( $query, $aWhere );
 }
 
 function getEstoque( $parameters ) {
 	$arr = array();
 	
-	fConnDB();
+	
 	$result = getQueryByFilter($parameters);
 	if (!is_null($result)):
 		foreach ($result as $k => $fields):
@@ -94,7 +94,7 @@ function setEstoque( $parameters ){
 	$frm = $parameters["frm"];
 	$qtItens = max( $frm["qt_itens"], 0 );
 	
-	fConnDB();
+	
 	$materiais = new MATERIAIS();
 	
 	if ($parameters["tp"] == "edit"):
@@ -111,8 +111,8 @@ function getItem( $parameters ){
 	$id = $parameters["id"];
 	$arr["id"] = $id;
 
-	fConnDB();
-	$result = $GLOBALS['conn']->Execute("
+	
+	$result = CONN::get()->Execute("
 		SELECT TP, QT_EST
 		FROM TAB_MATERIAIS
 		WHERE ID = ?

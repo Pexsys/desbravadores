@@ -89,7 +89,7 @@ class LISTAFANFARRA extends TCPDF {
 	
 	private function addGrupoInstrumentoTitle($af) {
 		$this->setCellPaddings(2,1,1,1);
-		$rsM = $GLOBALS['conn']->Execute("
+		$rsM = CONN::get()->Execute("
           SELECT ca.NM, ca.CD_FANFARRA, tti.DS
         	FROM CON_ATIVOS ca
       INNER JOIN CAD_INSTRUMENTO ci ON (ci.CD = ca.CD_FANFARRA)
@@ -180,12 +180,12 @@ class LISTAFANFARRA extends TCPDF {
 $pdf = new LISTAFANFARRA();
 $pdf->filter = fRequest("filter");
 
-fConnDB();
+
 $pdf->newPage();
 
 //AGRUPAMENTO POR INSTRUMENTO
 if ($pdf->filter == "I"):
-    $result = $GLOBALS['conn']->Execute("
+    $result = CONN::get()->Execute("
     	SELECT *
     	FROM TAB_TP_INSTRUMENTO
     	ORDER BY NR_SEQ
@@ -196,7 +196,7 @@ if ($pdf->filter == "I"):
     
 //AGRUPAMENTO ALFABETICO
 else:
-    $result = $GLOBALS['conn']->Execute("
+    $result = CONN::get()->Execute("
       SELECT ca.NM, ca.CD_FANFARRA, tti.DS
     	FROM CON_ATIVOS ca
   INNER JOIN CAD_INSTRUMENTO ci ON (ci.CD = ca.CD_FANFARRA)

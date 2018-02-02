@@ -333,7 +333,7 @@ class ETIQUETAS extends TCPDF {
 		endif;
 	}
 }
-fConnDB();
+
 
 $where = "";
 $id = fRequest("id");
@@ -354,7 +354,7 @@ $query = "
 	 ORDER BY 1
 ";
 $arr = array( fRequest("md") );
-$result = $GLOBALS['conn']->Execute($query, $arr);
+$result = CONN::get()->Execute($query, $arr);
 if ($result->EOF):
 	echo "Fila de impress&atilde;o de identifica&ccedil;&atilde;o n&atilde;o encontrada para esta sele&ccedil;&atilde;o!";
 	exit;
@@ -377,7 +377,7 @@ foreach ($result as $k => $l):
 		$aPage = $aPageParam;
 	endif;
 	
-	$rs = $GLOBALS['conn']->Execute("
+	$rs = CONN::get()->Execute("
 		SELECT DISTINCT 
 				pt.TP,
 				pt.BC,

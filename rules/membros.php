@@ -112,7 +112,7 @@ function getQueryByFilter( $parameters ) {
 //echo $where;
 //exit;
 
-	return $GLOBALS['conn']->Execute("
+	return CONN::get()->Execute("
 	  SELECT DISTINCT
 			m.ID,
 			m.ID_MEMBRO,
@@ -133,7 +133,7 @@ function getQueryByFilter( $parameters ) {
 
 function getMembros( $parameters ) {
 	$arr = array();
-	fConnDB();
+	
 	
 	$qtdZeros = zeroSizeID();
 	$result = getQueryByFilter( $parameters );
@@ -154,12 +154,12 @@ function updateMember( $parameters ) {
 	$arr = array();
 	$arr["result"] = false;
 	
-	fConnDB();
+	
 
 	$id = $parameters["id"];
 	$pessoaID = null;
 
-	$rc = $GLOBALS['conn']->Execute("SELECT * FROM CAD_MEMBRO WHERE ID = ?", array( $id ) );
+	$rc = CONN::get()->Execute("SELECT * FROM CAD_MEMBRO WHERE ID = ?", array( $id ) );
 	if (!$rc->EOF):
 		$pessoaID = $rc->fields["ID_CAD_PESSOA"];
 	endif;
@@ -174,13 +174,13 @@ function updateMember( $parameters ) {
 		//tratamento para ativo/inativo
 		if ($field == "FG_ATIVO"):
 
-			$GLOBALS['conn']->Execute( "
+			CONN::get()->Execute( "
 				UPDATE CAD_MEMBRO SET QT_UNIFORMES = NULL
 				WHERE ID_CAD_MEMBRO = ? AND NR_ANO = YEAR(NOW())"
 			, array( $id ) );
 		
 			if ( $vl == "N" ):
-				$GLOBALS['conn']->Execute( "
+				CONN::get()->Execute( "
 					DELETE FROM CAD_ATIVOS 
 					WHERE ID_CAD_MEMBRO = ? AND NR_ANO = YEAR(NOW())"
 				, array( $id ) );
@@ -197,7 +197,7 @@ function updateMember( $parameters ) {
 				$reun	= "S";
 
 				//Ultimo ano ativo.
-				$result = $GLOBALS['conn']->Execute( "
+				$result = CONN::get()->Execute( "
 					SELECT  a.ID_UNIDADE,
 							a.CD_CARGO,
 							a.CD_CARGO2,
@@ -224,7 +224,7 @@ function updateMember( $parameters ) {
 					endif;
 				endif;
 				
-				$GLOBALS['conn']->Execute( "
+				CONN::get()->Execute( "
 					INSERT INTO CAD_ATIVOS (
 						NR_ANO,
 						DT_ATIVACAO,
@@ -294,16 +294,16 @@ function updateMember( $parameters ) {
 		endif;
 
 		$arr["query"] = array( $str, $vl, $id );
-		$GLOBALS['conn']->Execute( $str, $aUpdate );
+		CONN::get()->Execute( $str, $aUpdate );
 		
 		//REGRA PARA CALCULO DA ESTRELA DE TEMPO DE SERVICO
 		if ( $field == "ANO_DIR" || $field == "ESTR_DEVOL" || $field == "QT_UNIFORMES"):
 		    
 		    //EXCLUI ESTRELAS DA LISTA DE COMPRAS
-		    $GLOBALS['conn']->Execute( "DELETE FROM CAD_COMPRAS WHERE ID_CAD_MEMBRO = ? AND ID_TAB_MATERIAIS IN (SELECT ID FROM TAB_MATERIAIS WHERE TP = 'ESTRELA')", array( $id ) );
+		    CONN::get()->Execute( "DELETE FROM CAD_COMPRAS WHERE ID_CAD_MEMBRO = ? AND ID_TAB_MATERIAIS IN (SELECT ID FROM TAB_MATERIAIS WHERE TP = 'ESTRELA')", array( $id ) );
 		    
 		    //CALCULAR E INCLUIR ESTRELAS
-		    $rs = $GLOBALS['conn']->Execute("
+		    $rs = CONN::get()->Execute("
         		SELECT (YEAR(NOW())-ANO_DIR) AS CALC_ATUAL, ESTR_DEVOL, QT_UNIFORMES
         		  FROM CON_ATIVOS 
         		 WHERE ANO_DIR IS NOT NULL
@@ -348,28 +348,28 @@ function verificaResp( $parameters ) {
 	$membroID = $parameters["id"];
 	$cpf = fClearBN($parameters["cpf"]);
 		
-	fConnDB();
+	
 
-	$rs = $GLOBALS['conn']->Execute("SELECT * FROM CAD_MEMBRO WHERE ID = ?", array( $membroID ) );
+	$rs = CONN::get()->Execute("SELECT * FROM CAD_MEMBRO WHERE ID = ?", array( $membroID ) );
 	if (!$rs->EOF && !empty($cpf)):
 		$fields = verificaRespByCPF($cpf);
 
 		if (is_null($fields)):
-			$GLOBALS['conn']->Execute("INSERT INTO CAD_PESSOA(NR_CPF) VALUES (?)", array( $cpf ) );
-			$fields["ID_CAD_PESSOA"] = $GLOBALS['conn']->Insert_ID();
+			CONN::get()->Execute("INSERT INTO CAD_PESSOA(NR_CPF) VALUES (?)", array( $cpf ) );
+			$fields["ID_CAD_PESSOA"] = CONN::get()->Insert_ID();
 			$fields['NR_CPF'] = fCPF($cpf);
 		endif;
-		$rc = $GLOBALS['conn']->Execute("
+		$rc = CONN::get()->Execute("
 			SELECT 1 FROM CAD_RESP_LEGAL 
 			WHERE ID_CAD_PESSOA = ? AND ID_PESSOA_RESP = ?
 		", array( $rs->fields["ID_CAD_PESSOA"], $fields["ID_CAD_PESSOA"] ) );
 		if ($rc->EOF):
-			$GLOBALS['conn']->Execute("
+			CONN::get()->Execute("
 				INSERT INTO CAD_RESP_LEGAL( ID_CAD_PESSOA, ID_PESSOA_RESP ) 
 				VALUES (?,?)
 			", array( $rs->fields["ID_CAD_PESSOA"], $fields["ID_CAD_PESSOA"] ) );
 		else:
-			$GLOBALS['conn']->Execute("
+			CONN::get()->Execute("
 				UPDATE CAD_RESP_LEGAL SET ID_PESSOA_RESP = ? 
 				WHERE ID_CAD_PESSOA = ?
 			", array( $fields["ID_CAD_PESSOA"], $rs->fields["ID_CAD_PESSOA"] ) );
@@ -394,7 +394,7 @@ function fMergeResp( $arr, $fields ){
 }
 
 function getMembroID(){
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT MAX(ID_MEMBRO) + 1 AS ID_MEMBRO
 		FROM CAD_MEMBRO
 		WHERE ID_CLUBE = ?
@@ -410,16 +410,16 @@ function insertMember( $parameters ) {
 		if (isset($parameters["nm"]) && isset($parameters["dt"]) && isset($parameters["sx"])):
 			$dc = $parameters["dc"];
 			
-			fConnDB();
+			
 		
 			//PROCURA SE EXISTE A PESSOA
-			$result = $GLOBALS['conn']->Execute("
+			$result = CONN::get()->Execute("
 				SELECT ID
 				FROM CAD_PESSOA
 				WHERE NR_DOC = ?
 				", array( $dc ) );
 			if ($result->EOF):
-				$GLOBALS['conn']->Execute("
+				CONN::get()->Execute("
 					INSERT INTO CAD_PESSOA(
 						NM,
 						DT_NASC,
@@ -431,13 +431,13 @@ function insertMember( $parameters ) {
 						?,
 						?
 					)", array( $parameters["nm"], fStrToDate($parameters["dt"],"Y-m-d"), $parameters["sx"], $dc ) );
-				$pessoaID = $GLOBALS['conn']->Insert_ID();
+				$pessoaID = CONN::get()->Insert_ID();
 			else:
 				$pessoaID = $result->fields['ID'];
 			endif;
 
 			//PROCURA SE EXISTE COMO MEMBRO
-			$result = $GLOBALS['conn']->Execute("
+			$result = CONN::get()->Execute("
 				SELECT ID
 				FROM CAD_MEMBRO
 				WHERE ID_CAD_PESSOA = ?
@@ -446,7 +446,7 @@ function insertMember( $parameters ) {
 			if ($result->EOF):
 				$membroID = getMembroID();
 
-				$GLOBALS['conn']->Execute("
+				CONN::get()->Execute("
 					INSERT INTO CAD_MEMBRO(
 						ID_CLUBE,
 						ID_MEMBRO,
@@ -460,7 +460,7 @@ function insertMember( $parameters ) {
 						$membroID, 
 						$pessoaID ) 
 					);
-				$cadMembroID = $GLOBALS['conn']->Insert_ID();
+				$cadMembroID = CONN::get()->Insert_ID();
 			else:
 				$cadMembroID = $result->fields['ID'];
 			endif;
@@ -477,12 +477,12 @@ function getMember( $parameters ) {
 	
 	$id = $parameters["id"];
 
-	fConnDB();
+	
 
 	$cargo2 = false;
 
 	$qtdZeros = zeroSizeID();
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT  p.NM,
 				p.EMAIL,
 				p.NM_ESCOLA,
@@ -569,7 +569,7 @@ function getMember( $parameters ) {
 		if ($idadeAtual < 18):
 			$arr["membro"] = fMergeResp( $arr["membro"], verificaRespByID( $result->fields['ID_PESSOA_RESP'], $result->fields['ID_CAD_PESSOA'] ) );
 		else:
-			$GLOBALS['conn']->Execute("DELETE FROM CAD_RESP_LEGAL WHERE ID_CAD_PESSOA = ?", array( $result->fields['ID_CAD_PESSOA'] ) );
+			CONN::get()->Execute("DELETE FROM CAD_RESP_LEGAL WHERE ID_CAD_PESSOA = ?", array( $result->fields['ID_CAD_PESSOA'] ) );
 		endif;
 
 		$cargo2 = strpos($result->fields['CD_CARGO'], "2-07") === 0;
@@ -590,9 +590,9 @@ function getMember( $parameters ) {
 
 function getUnidades( $parameters ) {
 	$arr = array();
-	fConnDB();
 	
-	$result = $GLOBALS['conn']->Execute("
+	
+	$result = CONN::get()->Execute("
 		SELECT cp.TP_SEXO, cp.DT_NASC
 		  FROM CAD_MEMBRO cm
 		INNER JOIN CAD_PESSOA cp ON (cp.ID = cm.ID_CAD_PESSOA)
@@ -612,7 +612,7 @@ function getUnidades( $parameters ) {
 			endif;
 		endif;
 		
-		$result = $GLOBALS['conn']->Execute("
+		$result = CONN::get()->Execute("
 			SELECT ID, CONCAT(DS,' (',IDADE,')') AS DS
 			  FROM TAB_UNIDADE
 			 WHERE TP IN ('".$result->fields['TP_SEXO']."'$fd)
@@ -631,9 +631,9 @@ function getUnidades( $parameters ) {
 
 function getCargos( $parameters ) {
 	$arr = array();
-	fConnDB();
 	
-	$result = $GLOBALS['conn']->Execute("
+	
+	$result = CONN::get()->Execute("
 		SELECT ID_UNIDADE, TP_SEXO
 		  FROM CON_ATIVOS 
 		 WHERE ID_CAD_MEMBRO = ?
@@ -649,7 +649,7 @@ function getCargos( $parameters ) {
 				$lsWhere = "WHERE CD LIKE '1-%' OR CD LIKE '2-07%'";
 			endif;
 		endif;
-		$result = $GLOBALS['conn']->Execute("
+		$result = CONN::get()->Execute("
 			SELECT CD AS ID, ".($result->fields['TP_SEXO'] == "F" ? "DSF" : "DSM"). " AS DS
 			  FROM TAB_CARGO
 			  $lsWhere
@@ -668,9 +668,9 @@ function getCargos( $parameters ) {
 
 function getInstrumentos( $parameters ) {
 	$arr = array();
-	fConnDB();
 	
-	$result = $GLOBALS['conn']->Execute("
+	
+	$result = CONN::get()->Execute("
 		SELECT DISTINCT i.CD AS ID, CONCAT( i.CD, '-', t.DS ) AS DS
 		FROM CAD_INSTRUMENTO i
 		INNER JOIN TAB_TP_INSTRUMENTO t ON (t.ID = i.ID_TP)
@@ -689,9 +689,9 @@ function getInstrumentos( $parameters ) {
 
 function getAnosDir( $parameters ) {
 	$arr = array();
-	fConnDB();
 	
-	$result = $GLOBALS['conn']->Execute("
+	
+	$result = CONN::get()->Execute("
 		SELECT YEAR(cp.DT_NASC) AS ANO, MONTH(cp.DT_NASC) AS MES, YEAR(NOW()) AS HOJE
 		  FROM CAD_MEMBRO cm
 	INNER JOIN CAD_PESSOA cp ON (cp.ID = cm.ID_CAD_PESSOA)
@@ -715,7 +715,7 @@ function getAnosDir( $parameters ) {
 
 function getAniversariantes( $parameters ){
 	$arr = array();
-	fConnDB();
+	
 
 	$result = getQueryByFilter( $parameters );
 	foreach ($result as $k => $f):

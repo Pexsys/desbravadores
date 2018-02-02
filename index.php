@@ -2,13 +2,13 @@
 @include_once("include/functions.php");
 fHeaderPage( array( $GLOBALS['pattern']->getVD()."include/_core/css/index.css" )
 		   , array( $GLOBALS['pattern']->getVD()."js/index.js") );
-fConnDB();
+
 
 function nextEvents(){
 ?>
  <div class="col-md-4">
 	<div class="panel panel-danger">
-		<div class="panel-heading"><h4><i class="fa fa-fw fa-calendar"></i>&nbsp;Pr&oacute;ximos Eventos</h4></div>
+		<div class="panel-heading"><h4><i class="far fa-calendar"></i>&nbsp;Pr&oacute;ximos Eventos</h4></div>
 		<div class="panel-body">
 			<?php
 			$DATA_NOW = date('Y-m-d H:i:s');
@@ -21,7 +21,7 @@ function nextEvents(){
 					( e.DTHORA_EVENTO_INI >= ? OR ( e.DTHORA_EVENTO_FIM IS NOT NULL AND e.DTHORA_EVENTO_FIM >= ? ) )
 				ORDER BY e.DTHORA_EVENTO_INI 
 				   LIMIT 0, 3 ";
-			$result = $GLOBALS['conn']->Execute( $query, Array( $DATA_NOW, $DATA_NOW ) );
+			$result = CONN::get()->Execute( $query, Array( $DATA_NOW, $DATA_NOW ) );
 
 			$MES_ANT = "";
 			while (!$result->EOF):
@@ -97,10 +97,10 @@ function myUnit(){
 ?>
     <div class="col-md-4">
     	<div class="panel panel-success">
-    		<div class="panel-heading"><h4><i class="fa fa-fw fa-bullhorn"></i>&nbsp;Conheça a Unidade</h4></div>
+    		<div class="panel-heading"><h4><i class="fas fa-bullhorn"></i>&nbsp;Conheça a Unidade</h4></div>
     		<div class="panel-body">
     		<?php
-                $result = $GLOBALS['conn']->Execute( "
+                $result = CONN::get()->Execute( "
             	  SELECT ID
             	    FROM TAB_UNIDADE 
             	   WHERE FG_ATIVA = 'S'
@@ -129,7 +129,7 @@ function about(){
 	?>
 	<div class="col-md-4">
 		<div class="panel panel-info">
-			<div class="panel-heading"><h4><i class="fa fa-fw fa-history"></i>&nbsp;Voltando no tempo...</h4></div>
+			<div class="panel-heading"><h4><i class="fas fa-fw fa-history"></i>&nbsp;Voltando no tempo...</h4></div>
 			<div class="panel-body">
 				<p>Quem são os <?php echo $GLOBALS['pattern']->getClubeDS(array("nm"));?>? Quer saber como tudo começou? A história real contada em detalhes.</p>
 				<p><a class="btn btn-info pull-right" href="about.php" role="button">Saiba mais... &raquo;</a></p>
@@ -183,18 +183,18 @@ function about(){
             </div>
 			<div class="col-md-4">
 				<div class="panel panel-primary">
-					<div class="panel-heading"><h4><i class="fa fa-fw fa-file-text"></i>&nbsp;Capas de Especialidades</h4></div>
+					<div class="panel-heading"><h4><i class="far fa-file-alt"></i>&nbsp;Capas de Especialidades</h4></div>
 					<div class="panel-body">
 						<p>Aqui nesta se&ccedil;&atilde;o, voc&ecirc; poder&aacute; em poucos cliques acessar a ferramenta de gera&ccedil;&atilde;o e gerar todas as capas das especialidades que precisa, no padr&atilde;o exigido por nosso regional.</p>
 						<p><a class="btn btn-info pull-right" href="capas.php" role="button">Gerar Capas</a></p>
 					</div>
 				</div>
 				<div class="panel panel-primary">
-					<div class="panel-heading"><h4><i class="fa fa-fw fa-film"></i>&nbsp;V&iacute;deos</h4></div>
+					<div class="panel-heading"><h4><i class="fas fa-film"></i>&nbsp;V&iacute;deos</h4></div>
 					<div class="panel-body">
 						<div class="media">
 							<a class="media-left" href="http://www.youtube.com/embed/VIi2gv2lRnk" target="_new">
-								<i class="fa fa-play"></i>
+								<i class="far fa-play"></i>
 							</a>
 							<div class="media-body">
 								<h4 class="media-heading">Comemora&ccedil;&atilde;o do Dia Mundial 2014</h4>
@@ -202,7 +202,7 @@ function about(){
 						</div>
 						<div class="media">
 							<a class="media-left" href="http://new.livestream.com/accounts/6786166/events/2683751/videos/53302646/player?autoPlay=false" target="_new">
-								<i class="fa fa-play"></i>
+								<i class="far fa-play"></i>
 							</a>
 							<div class="media-body">
 								<h4 class="media-heading">Encena&ccedil;&atilde;o da Fornalha Ardente</h4>
@@ -212,7 +212,7 @@ function about(){
 				</div>
             </div>
 			<div class="col-md-4">
-			<?php echo fListDocumentos("docs/outros/","<h4><i class=\"fa fa-fw fa-pencil\"></i>&nbsp;Outros Documentos</h4>",".doc;.docx;.xls;.xlsx;.pdf;","panel-primary","h5");?>
+			<?php echo fListDocumentos("docs/outros/","<h4><i class=\"fas fa-pencil-alt\"></i>&nbsp;Outros Documentos</h4>",".doc;.docx;.xls;.xlsx;.pdf;","panel-primary","h5");?>
 			</div>
 		</div>
         <!-- /.row -->

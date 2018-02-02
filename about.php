@@ -42,11 +42,11 @@ fHeaderPage();
                 <p style="text-align:justify"><b>Salvar do pecado e guiar no serviço</b> - Na busca por esse ideal desde o início de suas atividades, e superando os mais diversos desafios desde o início, o animal escolhido para representar essa força tornou-se rapidamente o simbolo do clube: A <b>Águia de Cabeça Branca</b>.</p>
                 <p style="text-align:justify">Hoje estamos mais fortes do que nunca, sempre buscando melhorias constantes em nossos processos, em nossa organização, na excelência de nosso trabalho e em nossas atividades, quer sejam elas internas ou externas.</p>
                 <ul class="list-inline pull-right">
-                    <li><a href="https://www.facebook.com/clubepioneiroscapao/" target="_blank"><i class="fa fa-2x fa-facebook-square"></i></a></li>
-                    <li><a href="https://www.instagram.com/pioneiros_cr/" target="_blank"><i class="fa fa-2x fa-instagram"></i></a></li>
-                    <li><a href="https://www.twitter.com/PioneirosCapao" target="_blank"><i class="fa fa-2x fa-twitter-square"></i></a></li>
-                    <li><a href="http://www.iasd-capaoredondo.com.br/desbravadores/"><i class="fa fa-2x fa-sitemap"></i></a></li>
-                    <li><a href="mailto:desbravadores@iasd-capaoredondo.com.br"><i class="fa fa-2x fa-envelope"></i></a></li>
+                    <li><a href="https://www.facebook.com/clubepioneiroscapao/" target="_blank"><i class="fab fa-2x fa-facebook-square"></i></a></li>
+                    <li><a href="https://www.instagram.com/pioneiros_cr/" target="_blank"><i class="fab fa-2x fa-instagram"></i></a></li>
+                    <li><a href="https://www.twitter.com/PioneirosCapao" target="_blank"><i class="fab fa-2x fa-twitter-square"></i></a></li>
+                    <li><a href="http://www.iasd-capaoredondo.com.br/desbravadores/"><i class="fas fa-2x fa-sitemap"></i></a></li>
+                    <li><a href="mailto:desbravadores@iasd-capaoredondo.com.br"><i class="far fa-2x fa-envelope"></i></a></li>
                 </ul>
             </div>
         </div>

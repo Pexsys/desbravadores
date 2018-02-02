@@ -46,12 +46,12 @@ td.details-control {
 	</div>
 	<div class="row">
 		<div class="col-xs-6">
-			<a role="button" class="btn btn-warning pull-left" id="btnNovo"><i class="fa fa-plus"></i>&nbsp;Novo</a>
+			<a role="button" class="btn btn-warning pull-left" id="btnNovo"><i class="far fa-plus"></i>&nbsp;Novo</a>
 			<a role="button" class="btn btn-info pull-right" data-toggle="modal" id="btnPrepare" style="display:none"><i class="glyphicon glyphicon-print"></i>&nbsp;Preparar</a>
 		</div>
 		<div class="col-xs-6">
-			<a role="button" class="btn btn-primary pull-right" name="filtro" id="btnAtivos" tp-filtro="Y"><i class="fa fa-filter"></i>&nbsp;<?php echo date("Y");?></a>
-			<a role="button" class="btn btn-primary-outline pull-right" name="filtro" id="btnTodos" tp-filtro="T"><i class="fa fa-globe"></i>&nbsp;Todos</a>
+			<a role="button" class="btn btn-primary pull-right" name="filtro" id="btnAtivos" tp-filtro="Y"><i class="far fa-filter"></i>&nbsp;<?php echo date("Y");?></a>
+			<a role="button" class="btn btn-primary-outline pull-right" name="filtro" id="btnTodos" tp-filtro="T"><i class="far fa-globe"></i>&nbsp;Todos</a>
 		</div>
 	</div>
 </div>
@@ -87,7 +87,7 @@ td.details-control {
 										</div>
 										<div class="form-group col-xs-2">
 											<label for="fgPend" class="control-label">Status</label>
-											<input type="checkbox" name="fgPend" id="fgPend" field="fg_pend" value-on="N" value-off="S" data-toggle="toggle" data-onstyle="success" data-offstyle="warning" data-on="<i class='fa fa-gavel'></i>&nbsp;<b>Conclu&iacute;do</b>" data-off="<i class='fa fa-pencil'></i>&nbsp;PLANEJADO" data-size="small" data-width="120"/>
+											<input type="checkbox" name="fgPend" id="fgPend" field="fg_pend" value-on="N" value-off="S" data-toggle="toggle" data-onstyle="success" data-offstyle="warning" data-on="<i class='far fa-gavel'></i>&nbsp;<b>Conclu&iacute;do</b>" data-off="<i class='fas fa-pencil-alt'></i>&nbsp;PLANEJADO" data-size="small" data-width="120"/>
 										</div>
 									</div>
 									<div class="row">
@@ -168,7 +168,7 @@ td.details-control {
 				<div class="panel-footer">
 					<div class="row">
 						<div class="col-lg-12">
-							<button id="btnGerar" class="btn btn-success pull-right"><i class="fa fa-print"></i>&nbsp;Gerar</button>
+							<button id="btnGerar" class="btn btn-success pull-right"><i class="far fa-print"></i>&nbsp;Gerar</button>
 						</div>	
 					</div>	
 				</div>

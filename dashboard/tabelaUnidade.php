@@ -23,7 +23,7 @@
 	<?php
 	/*
 	<div class="row">
-		<a role="button" class="btn btn-warning pull-left" id="btnNovo"><i class="fa fa-plus"></i>&nbsp;Novo</a>
+		<a role="button" class="btn btn-warning pull-left" id="btnNovo"><i class="far fa-plus"></i>&nbsp;Novo</a>
 	</div>
 	*/
 	?>

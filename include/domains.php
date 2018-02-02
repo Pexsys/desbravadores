@@ -1,11 +1,11 @@
 <?php
-fConnDB();
+
 
 function getDomainMembrosAtivos(){
 	$arr = array();
 	
 	$qtdZeros = zeroSizeID();
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT ID_CAD_MEMBRO, ID_MEMBRO, NM, IDADE_HOJE
 		FROM CON_ATIVOS 
 		ORDER BY NM
@@ -15,7 +15,7 @@ function getDomainMembrosAtivos(){
 			"id" => $f['ID_CAD_MEMBRO'],
 			"ds" => $f['NM'],
 			"sb" => fStrZero($f['ID_MEMBRO'], $qtdZeros),
-			"icon" => ($f['IDADE_HOJE'] < 18 ? "fa fa-circle" : "fa fa-circle-thin")
+			"icon" => ($f['IDADE_HOJE'] < 18 ? "far fa-circle" : "far fa-circle-thin")
 		);
 		if ($f['IDADE_HOJE'] < 18):
 			$a["icon-color"] = "text-danger";
@@ -29,7 +29,7 @@ function getDomainMembrosInativos(){
 	$arr = array();
 	
 	$qtdZeros = zeroSizeID();
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT cm.ID, cm.ID_MEMBRO, cp.NM, cp.IDADE_HOJE
 		FROM CAD_MEMBRO cm
 		INNER JOIN CON_PESSOA cp ON (cp.ID_CAD_PESSOA = cm.ID_CAD_PESSOA)
@@ -41,7 +41,7 @@ function getDomainMembrosInativos(){
 			"id" => $f['ID'],
 			"ds" => $f['NM'],
 			"sb" => fStrZero($f['ID_MEMBRO'], $qtdZeros),
-			"icon" => ($f['IDADE_HOJE'] < 18 ? "fa fa-circle" : "fa fa-circle-thin")
+			"icon" => ($f['IDADE_HOJE'] < 18 ? "far fa-circle" : "far fa-circle-thin")
 		);
 		if ($f['IDADE_HOJE'] < 18):
 			$a["icon-color"] = "text-danger";
@@ -54,7 +54,7 @@ function getDomainMembrosInativos(){
 function getDomainEventos(){
 	$arr = array();
 	
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT ID, DS, DH_S 
 		FROM EVE_SAIDA 
 		ORDER BY DH_S DESC
@@ -64,7 +64,7 @@ function getDomainEventos(){
 			"id"	=> $f['ID'],
 			"ds"	=> $f['DS'],
 			"sb"	=> strftime("%d/%m/%Y",strtotime($f["DH_S"])),
-			"icon" => "fa fa-calendar-o"
+			"icon" => "far fa-calendar-o"
 		);
 	endforeach;
 	return $arr;
@@ -86,13 +86,13 @@ function getDomainUnidades($fAtivo = false){
 			ORDER BY ca.DS_UNIDADE";
 	endif;
 	
-	$result = $GLOBALS['conn']->Execute($query);
+	$result = CONN::get()->Execute($query);
 	foreach ($result as $k => $f):
 		$arr[] = array( 
 			"id"	=> $f['ID'],
 			"ds"	=> $f['DS'],
 			"sb"  => $f['IDADE'],
-			"icon" => ($f['TP'] == "F" ? "fa fa-female" : ( $f['TP'] == "M" ? "fa fa-male" : "fa fa-user-secret" ) )
+			"icon" => ($f['TP'] == "F" ? "far fa-female" : ( $f['TP'] == "M" ? "far fa-male" : "far fa-user-secret" ) )
 		);
 	endforeach;
 	return $arr;
@@ -101,7 +101,7 @@ function getDomainUnidades($fAtivo = false){
 function getTipoAprendizado(){
 	$arr = array();
 	
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT ID, DS, ICON
 		  FROM TAB_TP_APRENDIZADO
 		  ORDER BY ID");
@@ -118,7 +118,7 @@ function getTipoAprendizado(){
 function getTipoMateriais(){
 	$arr = array();
 	
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT DISTINCT TP
 		  FROM TAB_MATERIAIS
 		  ORDER BY TP");
@@ -134,7 +134,7 @@ function getTipoMateriais(){
 function getDomainClasses(){
 	$arr = array();
 	
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT ID, DS_ITEM, CD_AREA_INTERNO
 		  FROM TAB_APRENDIZADO
 		WHERE TP_ITEM = 'CL'
@@ -144,7 +144,7 @@ function getDomainClasses(){
 			"id"	=> $f['ID'],
 			"ds"	=> $f['DS_ITEM'],
 			"sb"	=> $f['CD_ITEM_INTERNO'],
-			"icon" => $f['CD_AREA_INTERNO'] == "REGULAR" ? "fa fa-check-square" : "fa fa-check-square-o"
+			"icon" => $f['CD_AREA_INTERNO'] == "REGULAR" ? "far fa-check-square" : "far fa-check-square-o"
 		);
 	endforeach;
 	return $arr;
@@ -153,7 +153,7 @@ function getDomainClasses(){
 function getDomainMestrados(){
 	$arr = array();
 	
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT ID, DS_ITEM, CD_ITEM_INTERNO
 		  FROM TAB_APRENDIZADO
 		WHERE TP_ITEM = 'ES'
@@ -165,7 +165,7 @@ function getDomainMestrados(){
 			"id"	=> $f['ID'],
 			"ds"	=> $f['DS_ITEM'],
 			"sb"	=> $f['CD_ITEM_INTERNO'],
-			"icon" => "fa fa-check-circle"
+			"icon" => "far fa-check-circle"
 		);
 	endforeach;
 	return $arr;
@@ -174,7 +174,7 @@ function getDomainMestrados(){
 function getDomainEspecialidades(){
 	$arr = array();
 	
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT ID, DS_ITEM, CD_ITEM_INTERNO
 		  FROM TAB_APRENDIZADO
 		WHERE TP_ITEM = 'ES'
@@ -186,7 +186,7 @@ function getDomainEspecialidades(){
 			"id"	=> $f['ID'],
 			"ds"	=> $f['DS_ITEM'],
 			"sb"	=> $f['CD_ITEM_INTERNO'],
-			"icon" => "fa fa-check-circle-o"
+			"icon" => "far fa-check-circle-o"
 		);
 	endforeach;
 	return $arr;
@@ -195,7 +195,7 @@ function getDomainEspecialidades(){
 function getDomainAreasEspecialidades(){
 	$arr = array();
 	
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT CD_AREA_INTERNO, DS_ITEM, CD_ITEM_INTERNO
 		  FROM TAB_APRENDIZADO
 		WHERE TP_ITEM = 'ES'
@@ -206,14 +206,14 @@ function getDomainAreasEspecialidades(){
 			"id"	=> $f['CD_AREA_INTERNO'],
 			"ds"	=> $f['DS_ITEM'],
 			"sb"	=> $f['CD_ITEM_INTERNO'],
-			"icon" => $f['CD_AREA_INTERNO'] == "ME" ? "fa fa-check-circle" : "fa fa-check-circle-o"
+			"icon" => $f['CD_AREA_INTERNO'] == "ME" ? "far fa-check-circle" : "far fa-check-circle-o"
 		);
 	endforeach;
 	return $arr;
 }
 
 function getMesAniversario(){
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT DISTINCT DATE_FORMAT(DT_NASC,'%m') AS MES
 		  FROM CON_ATIVOS
 	  ORDER BY 1
@@ -223,7 +223,7 @@ function getMesAniversario(){
 			"id" => $f["MES"], 
 			"ds" => mb_strtoupper(fDescMes($f["MES"])),
 			"sb" => $f["MES"],
-			"icon" => "fa fa-calendar"
+			"icon" => "far fa-calendar"
 		);
 	endforeach;
 	return $arr;

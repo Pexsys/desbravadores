@@ -80,7 +80,7 @@ class LISTAUNIDADE extends TCPDF {
 	}
 	
 	private function addUnidadeTitle($af) {
-		$rsM = $GLOBALS['conn']->Execute("
+		$rsM = CONN::get()->Execute("
 			SELECT ID_CAD_MEMBRO, NM, CD_CARGO, DS_CARGO, DT_NASC, FONE_RES, FONE_CEL,
 			       LOGRADOURO, NR_LOGR, COMPLEMENTO, BAIRRO, CIDADE, UF, CEP
 			FROM CON_ATIVOS
@@ -211,9 +211,9 @@ class LISTAUNIDADE extends TCPDF {
 $filter = fRequest("filter");
 $pdf = new LISTAUNIDADE();
 
-fConnDB();
+
 $pdf->newPage();
-$result = $GLOBALS['conn']->Execute("
+$result = CONN::get()->Execute("
 	SELECT *
 	FROM TAB_UNIDADE
 	WHERE FG_ATIVA = ?

@@ -5,7 +5,7 @@
 class MATERIAIS {
 	
 	public function deleteItemPessoa( $pessoaID, $tabMateriaisID ) {
-		$GLOBALS['conn']->Execute("
+		CONN::get()->Execute("
 			DELETE FROM MAT_HISTORICO
 			 WHERE ID_CAD_PESSOA = ? 
 			   AND ID_TAB_MATERIAIS ? 
@@ -13,11 +13,11 @@ class MATERIAIS {
 	}
 	
 	public function deleteByID( $id ) {
-		 $GLOBALS['conn']->Execute("DELETE FROM MAT_HISTORICO WHERE ID = ?", array($id) );
+		 CONN::get()->Execute("DELETE FROM MAT_HISTORICO WHERE ID = ?", array($id) );
 	}
 	
 	public function forceInsert( $arr ){
-		$GLOBALS['conn']->Execute("
+		CONN::get()->Execute("
 			INSERT INTO MAT_HISTORICO(
 				ID_CAD_PESSOA,
 				ID_TAB_MATERIAIS,
@@ -27,7 +27,7 @@ class MATERIAIS {
 	}
 	
 	public function insertItemPessoa( $cd, $pessoaID, $dt ) {
-		$r = $GLOBALS['conn']->Execute("
+		$r = CONN::get()->Execute("
 			SELECT ID
 			  FROM TAB_MATERIAIS
 			 WHERE CD = ?
@@ -35,7 +35,7 @@ class MATERIAIS {
 		if (!$r->EOF):
 			$item = $r->fields["ID"];
 
-			$r2 = $GLOBALS['conn']->Execute("
+			$r2 = CONN::get()->Execute("
 				SELECT 1
 				  FROM MAT_HISTORICO
 				 WHERE ID_CAD_PESSOA = ?
@@ -55,7 +55,7 @@ class MATERIAIS {
 
 	public function addItemEstoque( $matID, $qtd ){
 		if ( $qtd > 0 ):
-			$GLOBALS['conn']->Execute("
+			CONN::get()->Execute("
 				UPDATE TAB_MATERIAIS 
 				SET QT_EST = QT_EST + ?
 				WHERE ID = ?
@@ -64,7 +64,7 @@ class MATERIAIS {
 	}
 	
 	public function setQtdEstoque( $matID, $qtd ){
-		$GLOBALS['conn']->Execute("
+		CONN::get()->Execute("
 			UPDATE TAB_MATERIAIS
 			SET QT_EST = ?
 			WHERE ID = ?

@@ -1,7 +1,7 @@
 <?php 
 @require_once("include/functions.php");
 fHeaderPage();
-fConnDB();
+
 ?><body>
 
     <!-- Navigation -->
@@ -35,7 +35,7 @@ fConnDB();
 		   WHERE e.FLAG_PUBLICACAO = 'S' AND
 			( e.DTHORA_EVENTO_INI >= ? OR ( e.DTHORA_EVENTO_FIM IS NOT NULL AND e.DTHORA_EVENTO_FIM >= ? ) )
 		ORDER BY e.DTHORA_EVENTO_INI ";
-	$result = $conn->Execute( $query, Array( $DATA_NOW, $DATA_NOW ) );
+	$result = CONN::get()->Execute( $query, Array( $DATA_NOW, $DATA_NOW ) );
 
 	$MES_ANT = "";
 	while (!$result->EOF):
@@ -53,8 +53,8 @@ fConnDB();
 		<div class="row media col-lg-12">
 			<div class="pull-left">
 				<span class="fa-stack fa-2x">
-					  <i class="fa fa-circle fa-stack-2x text-primary"></i>
-					  <i class="fa <?php echo fGetClassTipoEvento($result->fields['TIPO_EVENTO']);?> fa-stack-1x fa-inverse"></i>
+					  <i class="fas fa-circle fa-stack-2x text-primary"></i>
+					  <i class="<?php echo fGetClassTipoEvento($result->fields['TIPO_EVENTO']);?> fa-stack-1x fa-inverse"></i>
 				</span> 
 			</div>
 			<div class="media-body">
@@ -63,10 +63,10 @@ fConnDB();
 				<?php 
 				$info = "";
 				if (trim($result->fields['INFO_ADIC']) != ""):
-					$info .= "<i class=\"fa fa-question-circle\"></i>&nbsp;" .trim($result->fields['INFO_ADIC']);
+					$info .= "<i class=\"fas fa-question-circle\"></i>&nbsp;" .trim($result->fields['INFO_ADIC']);
 				endif;
 				if (trim($result->fields['DESC_LOCAL']) != ""):
-					$info .= "<br/><i class=\"fa fa-map-marker\"></i>&nbsp;".trim($result->fields['DESC_LOCAL']);
+					$info .= "<br/><i class=\"fas fa-map-marker-alt\"></i>&nbsp;".trim($result->fields['DESC_LOCAL']);
 				endif;
 				if ($info != ""):
 					echo "$info<br/>";

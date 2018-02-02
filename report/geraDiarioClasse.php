@@ -101,7 +101,7 @@ class DIARIO extends TCPDF {
 		$this->Output("DiarioClasse_".date('Y-m-d_H:i:s').".pdf", 'I');
 	}
 }
-fConnDB();
+
 
 $where = "";
 $id = fRequest("id");
@@ -120,7 +120,7 @@ if (isset($it) && !empty($it)):
 endif;
 
 $pdf = new DIARIO();
-$result = $GLOBALS['conn']->Execute("
+$result = CONN::get()->Execute("
 		SELECT cd.ID, cd.SQ, ta.DS_ITEM, taa.CD AS CD_AREA, taa.DS AS DS_AREA, tap.CD_REQ_INTERNO, tap.DS, cd.DH, cd.FG_PEND, cd.TXT
 		FROM CAD_DIARIO cd
 	INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = cd.ID_TAB_APREND)

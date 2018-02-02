@@ -7,16 +7,16 @@ mb_internal_encoding('UTF-8');
 mb_http_output('UTF-8');
 mb_http_input('UTF-8');
 
-global $pattern, $conn, $DBType, $DBServerHost, $DBUser, $DBPassWord, $DBDataBase;
-@require_once("_patterns.php");
+global $pattern;
 @require_once("_core/lib/adodb5/adodb.inc.php");
-@require_once("_core/lib/dbconnect/_base.php");
-@require_once("profile.php");
+@require_once("classes/_patterns.php");
+@require_once("classes/profile.php");
+@require_once("classes/entity.php");
 
 function zeroSizeID(){
 	if (!isset($_SESSION['USER']['sizeID'])):
 		session_start();
-		$rs = $GLOBALS['conn']->Execute("SELECT COUNT(*) AS qtd FROM CAD_MEMBRO WHERE ID_CLUBE = ?", array( $GLOBALS['pattern']->getBars()->getClubeID() ) );
+		$rs = CONN::get()->Execute("SELECT COUNT(*) AS qtd FROM CAD_MEMBRO WHERE ID_CLUBE = ?", array( $GLOBALS['pattern']->getBars()->getClubeID() ) );
 		if (!$rs->EOF):
 			$_SESSION['USER']['sizeID'] = strlen($rs->fields['qtd']);
 		endif;
@@ -81,7 +81,7 @@ function fHeaderPage( $aCssFiles = NULL, $aJsFiles = NULL ){
 <link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css"/>
 <link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/css/bootstrap-select.min.css" rel="stylesheet" type="text/css"/>
 <link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/css/modern-business.css" rel="stylesheet" type="text/css"/>
-<link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+<link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/font-awesome/css/fontawesome-all.min.css" rel="stylesheet" type="text/css"/>
 <?php
 if (isset($aCssFiles)):
 	foreach ($aCssFiles as &$file):
@@ -106,19 +106,6 @@ endif;
 ?>
 </head>
 <?php
-}
-
-function fConnDB(){
-	try{
-		$GLOBALS['conn'] = ADONewConnection($GLOBALS['DBType']);
-		$GLOBALS['conn']->SetCharSet('utf8');
-		$GLOBALS['conn']->Connect($GLOBALS['DBServerHost'],$GLOBALS['DBUser'],$GLOBALS['DBPassWord'],$GLOBALS['DBDataBase']);
-		$GLOBALS['conn']->SetFetchMode(ADODB_FETCH_ASSOC);
-		return true;
-	}catch (Exception $e){
-		return false;
-	}
-	return false;
 }
 
 function fDescMes($cMes){
@@ -240,7 +227,7 @@ function fMontaCarrousel($relativePath,$extentions){
 }
 
 function insDocs(){
-	$retorno = fListDocumentos("docs/inscricoes/".date('Y')."/","<h4><i class=\"fa fa-fw fa-pencil\"></i>&nbsp;Inscri&ccedil;&otilde;es ".date('Y')."</h4>",".pdf", ( date("m") < 4 ? "panel-danger" : "panel-warning" ) ,"h4");
+	$retorno = fListDocumentos("docs/inscricoes/".date('Y')."/","<h4><i class=\"fas fa-pencil-alt\"></i>&nbsp;Inscri&ccedil;&otilde;es ".date('Y')."</h4>",".pdf", ( date("m") < 4 ? "panel-danger" : "panel-warning" ) ,"h4");
 	if (!empty($retorno)):
 		echo "<div class=\"col-md-6 col-sm-9 col-lg-4\">$retorno</div>";
 	endif;
@@ -356,7 +343,7 @@ function fListFanfarra($relativePath,$title,$extentions){
 				sort($dirRepertorio);
 				?>
 				<div class="panel panel-primary">
-				<div class="panel-heading"><h4><i class="fa fa-fw fa-music"></i><?php echo $title;?></h4></div>
+				<div class="panel-heading"><h4><i class="fas fa-fw fa-music"></i><?php echo $title;?></h4></div>
 				<div class="panel-body">
 				<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 				<?php
@@ -421,12 +408,12 @@ function fListFanfarra($relativePath,$title,$extentions){
 
 function fGetClassTipoEvento($strTipoEvento){
 	$eventClass = array(
-		"APS"		=> "fa-building",	//VERMELHO
-		"IASD"		=> "fa-institution",	//AZUL
-		"REGIAO"	=> "fa-building-o",	//VERDE
-		"DEFAULT"	=> "fa-child",	//PRETO
-		"EGW"		=> "fa-graduation-cap",	//AMARELO
-		"SPECIAL"	=> "fa-exclamation-triangle"	//VINHO
+		"APS"		=> "far fa-building",	//VERMELHO
+		"IASD"		=> "fas fa-star",	//AZUL
+		"REGIAO"	=> "fas fa-building",	//VERDE
+		"DEFAULT"	=> "fas fa-child",	//PRETO
+		"EGW"		=> "fas fa-graduation-cap",	//AMARELO
+		"SPECIAL"	=> "fas fa-exclamation-triangle"	//VINHO
 	);
 	if (array_key_exists($strTipoEvento,$eventClass)):
 		return $eventClass[$strTipoEvento];
@@ -449,23 +436,23 @@ function getMacroArea( $tpItem, $areaInterno ){
 }
 
 function getIconAprendizado( $tpItem, $areaInterno, $sizeClass = "" ){
-    $retorno = "fa fa-info";
+    $retorno = "far fa-info";
 	if ($tpItem == "CL" && $areaInterno == "REGULAR"):
-		$retorno = "fa fa-check-square";
+		$retorno = "far fa-check-square";
 	elseif ($tpItem == "CL" && fStrStartWith($areaInterno, "AVAN")):
-		$retorno = "fa fa-check-square-o";
+		$retorno = "far fa-check-square-o";
 	elseif ($tpItem == "ES"):
 		if ($areaInterno == "ME" ):
-			$retorno = "fa fa-check-circle";
+			$retorno = "far fa-check-circle";
 		else:
-			$retorno = "fa fa-check-circle-o";
+			$retorno = "far fa-check-circle-o";
 		endif;
 	elseif ($tpItem == "TRUNFO"):
-		$retorno = "fa fa-picture-o";
+		$retorno = "far fa-picture-o";
 	elseif ($tpItem == "MEDALHA"):
-		$retorno = "fa fa-trophy";
+		$retorno = "far fa-trophy";
 	elseif ($tpItem == "TIRA"):
-		$retorno = "fa fa-square-o";
+		$retorno = "far fa-square-o";
 	endif;
 	if (!empty($sizeClass)):
 		$retorno = "$retorno $sizeClass";
@@ -541,7 +528,7 @@ function fDomain($a){
 	$query .= " FROM ".$a['table'];
 	$query .= isset( $a['where'] ) ? " WHERE ".$a['where'] : "";
 	$query .= isset( $a['order'] ) ? " ORDER BY ".$a['order'] : "";
-	$dom = $GLOBALS['conn']->Execute($query);
+	$dom = CONN::get()->Execute($query);
 	while (!$dom->EOF):
 		$arr[] = array("id" => $dom->fields[$id], "ds" => $dom->fields[$ds]);
 		$dom->MoveNext();

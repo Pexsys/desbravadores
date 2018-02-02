@@ -11,7 +11,7 @@ function fComunicado( $parameters ) {
 	endif;
 	$op = isset($parameters["op"]) ? $parameters["op"] : "";
 
-	fConnDB();
+	
 
 	//LEITURA DE SAIDA.
 	//ATUALIZACAO DE SAIDA
@@ -29,7 +29,7 @@ function fComunicado( $parameters ) {
 				fReturnStringNull($fg_pend),
 				$id
 			);
-			$GLOBALS['conn']->Execute("
+			CONN::get()->Execute("
 				UPDATE CAD_COMUNICADO SET
 					DH = ?,
 					TXT = ?,
@@ -44,7 +44,7 @@ function fComunicado( $parameters ) {
 				fReturnStringNull(trim($frm["cd"])),
 				fReturnStringNull($fg_pend)
 			);
-			$GLOBALS['conn']->Execute("
+			CONN::get()->Execute("
 				INSERT INTO CAD_COMUNICADO(
 					DH,
 					TXT,
@@ -52,12 +52,12 @@ function fComunicado( $parameters ) {
 					FG_PEND
 				) VALUES (?,?,?,?)
 			",$arr);
-			$id = $GLOBALS['conn']->Insert_ID();
+			$id = CONN::get()->Insert_ID();
 		endif;
 		
 		//GRAVACAO DEFINITIVA, ENVIO POR EMAIL
 		if ($fg_pend == "N"):
-			$GLOBALS['conn']->Execute("
+			CONN::get()->Execute("
 				INSERT INTO LOG_MENSAGEM (ID_ORIGEM, TP, ID_CAD_USUARIO, EMAIL, DH_GERA)
 				SELECT $id, 'C',  cu.ID, ca.EMAIL, NOW() 
 				  FROM CON_ATIVOS ca
@@ -79,14 +79,14 @@ function fComunicado( $parameters ) {
 
 	//EXCLUSAO DE COMUNICADO
 	elseif ( $op == "DELETE" ):
-		$GLOBALS['conn']->Execute("DELETE FROM LOG_MENSAGEM WHERE ID_ORIGEM = ? AND TP = ?", Array( $parameters["id"], "C" ) );
-		$GLOBALS['conn']->Execute("DELETE FROM CAD_COMUNICADO WHERE ID = ?", Array( $parameters["id"] ) );
+		CONN::get()->Execute("DELETE FROM LOG_MENSAGEM WHERE ID_ORIGEM = ? AND TP = ?", Array( $parameters["id"], "C" ) );
+		CONN::get()->Execute("DELETE FROM CAD_COMUNICADO WHERE ID = ?", Array( $parameters["id"] ) );
 		$out["success"] = true;
 
 	//GET COMUNICADO
 	else:
 		if ( $parameters["id"] == "Novo" ):
-			$result = $GLOBALS['conn']->Execute("SELECT YEAR(NOW()) AS ANO, COUNT(*)+1 AS CD FROM CAD_COMUNICADO WHERE YEAR(DH) = YEAR(NOW())" );
+			$result = CONN::get()->Execute("SELECT YEAR(NOW()) AS ANO, COUNT(*)+1 AS CD FROM CAD_COMUNICADO WHERE YEAR(DH) = YEAR(NOW())" );
 			$out["success"] = true;
 			$out["comunicado"] = array(
 				"id" => $parameters["id"],
@@ -95,7 +95,7 @@ function fComunicado( $parameters ) {
 			);
 			
 		else:
-			$result = $GLOBALS['conn']->Execute("SELECT * FROM CAD_COMUNICADO WHERE ID = ?", array( $parameters["id"] ) );
+			$result = CONN::get()->Execute("SELECT * FROM CAD_COMUNICADO WHERE ID = ?", array( $parameters["id"] ) );
 			if (!$result->EOF):
 				$out["success"] = true;
 				$out["comunicado"] = array(
@@ -116,10 +116,10 @@ function getComunicados( $parameters ){
 	$usuarioID = $_SESSION['USER']['id'];
 	
 	$arr = array();
-	fConnDB();
+	
 	
 	if ($parameters["filter"] == "N"):
-		$result = $GLOBALS['conn']->Execute("
+		$result = CONN::get()->Execute("
 			SELECT cc.ID, cc.CD, cc.DH, cc.FG_PEND, lc.DH_READ
 			  FROM CAD_COMUNICADO cc
 		INNER JOIN LOG_MENSAGEM lc ON (lc.ID_ORIGEM = cc.ID AND lc.TP = 'C')
@@ -129,7 +129,7 @@ function getComunicados( $parameters ){
 		  ORDER BY ID DESC
 		", array( $usuarioID ) );
 	else:
-		$result = $GLOBALS['conn']->Execute("SELECT ID, CD, DH, FG_PEND
+		$result = CONN::get()->Execute("SELECT ID, CD, DH, FG_PEND
 				   FROM CAD_COMUNICADO 
 				  WHERE YEAR(DH) = YEAR(NOW())
 			   ORDER BY ID DESC");
@@ -162,10 +162,10 @@ function fSetRead( $parameters ){
 	$usuarioID = $_SESSION['USER']['id'];
 	$usuarioCD = $_SESSION['USER']['cd_usuario'];
 	
-	fConnDB();
+	
 	
 	//ATUALIZA USUARIO ATUAL
-	$GLOBALS['conn']->Execute("
+	CONN::get()->Execute("
 		UPDATE LOG_MENSAGEM SET
 			DH_READ = NOW()
 		WHERE ID_CAD_USUARIO = ?
@@ -174,7 +174,7 @@ function fSetRead( $parameters ){
 	", array($usuarioID,$comunicadoID,"C"));
 	
 	//VERIFICA SE USUARIO ATUAL EH RESPONSAVEL POR OUTRO.
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		UPDATE LOG_MENSAGEM SET
 			  DH_READ = NOW()
 		WHERE ID_CAD_USUARIO IN (

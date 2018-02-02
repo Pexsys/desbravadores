@@ -4,7 +4,7 @@ function fDashBoard( $panelClass, $iconLeft, $query, $showZero, $titulo, $urlDet
 	$mostra = true;
 	$qtd = 0;
 	
-	$result = $GLOBALS['conn']->Execute($query);
+	$result = CONN::get()->Execute($query);
 	if (!$result->EOF):
 		$qtd = $result->fields['qtd'];
 	endif;
@@ -30,7 +30,7 @@ function fDashBoard( $panelClass, $iconLeft, $query, $showZero, $titulo, $urlDet
 				</div>";
 	
 		
-		$rs = $GLOBALS['conn']->Execute("
+		$rs = CONN::get()->Execute("
 			SELECT 1
 			  FROM CAD_USUARIO cu
 		  INNER JOIN CON_ATIVOS cp ON (cp.ID_CAD_PESSOA = cu.ID_CAD_PESSOA)
@@ -42,7 +42,7 @@ function fDashBoard( $panelClass, $iconLeft, $query, $showZero, $titulo, $urlDet
 			echo 	"<a href=\"$urlDetalhes\">
 						<div class=\"panel-footer\">
 							<span class=\"pull-left\">Detalhes</span>
-							<span class=\"pull-right\"><i class=\"fa fa-arrow-circle-right\"></i></span>
+							<span class=\"pull-right\"><i class=\"far fa-arrow-circle-right\"></i></span>
 							<div class=\"clearfix\"></div>
 						</div>
 					</a>";
@@ -61,7 +61,7 @@ function fDashBoard( $panelClass, $iconLeft, $query, $showZero, $titulo, $urlDet
 <div class="row">
 	<?php
 		insDocs();
-		fDashBoard( "panel-red", "fa fa-thumbs-down fa-4x", 
+		fDashBoard( "panel-red", "far fa-thumbs-down fa-4x", 
 			"SELECT COUNT(*) AS qtd FROM (
 				SELECT 'NOME COMPLETO' AS INCONSIST FROM CON_ATIVOS WHERE LENGTH(NM)<=5
 				UNION ALL 
@@ -93,19 +93,19 @@ function fDashBoard( $panelClass, $iconLeft, $query, $showZero, $titulo, $urlDet
 			) c",
 			false, "Pend&ecirc;ncias", $GLOBALS['pattern']->getVD()."dashboard/index.php?id=5&flt=PC&op=ALL" );
 			
-		fDashBoard( "panel-green", "fa fa-toggle-on fa-4x", 
+		fDashBoard( "panel-green", "fas fa-toggle-on fa-4x", 
 			"SELECT COUNT(*) AS qtd FROM CON_ATIVOS", 
 			true, "Ativos", $GLOBALS['pattern']->getVD()."dashboard/index.php?id=5" );
 
-		fDashBoard( "panel-yellow", "fa fa-check-circle fa-4x", 
+		fDashBoard( "panel-yellow", "far fa-check-circle fa-4x", 
 			"SELECT COUNT(*) AS qtd FROM CON_ATIVOS WHERE dt_bat IS NULL",
 			false, "N&atilde;o Batizados", $GLOBALS['pattern']->getVD()."dashboard/index.php?id=5&flt=B&op=N" );
 
-		fDashBoard( "panel-primary", "fa fa-bath fa-4x", 
+		fDashBoard( "panel-primary", "far fa-bath fa-4x", 
 			"SELECT COUNT(*) AS qtd FROM CON_ATIVOS WHERE dt_bat IS NOT NULL",
 			false, "Batizados", $GLOBALS['pattern']->getVD()."dashboard/index.php?id=5&flt=B&op=S" );
 			
-		fDashBoard( "panel-info", "fa fa-info-circle fa-4x", 
+		fDashBoard( "panel-info", "far fa-info-circle fa-4x", 
 			"SELECT COUNT(*) AS qtd FROM CAD_MEMBRO",
 			true, "Cadastrados", $GLOBALS['pattern']->getVD()."dashboard/index.php?id=5&flt=ALL" );
 	?>

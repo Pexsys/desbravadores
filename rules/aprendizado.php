@@ -114,13 +114,13 @@ function getQueryByFilter( $parameters ) {
 	 ORDER BY ca.NM, ap.CD_ITEM_INTERNO, ah.DT_INICIO
 	";
 
-	return $GLOBALS['conn']->Execute( $query, $aWhere );
+	return CONN::get()->Execute( $query, $aWhere );
 }
 
 function getAprendizado( $parameters ) {
 	$arr = array();
 	
-	fConnDB();
+	
 	$result = getQueryByFilter( $parameters );
 	foreach ($result as $k => $fields):
 		$arr[] = array( 
@@ -139,20 +139,20 @@ function delete( $parameters ) {
 	$ids = $parameters["ids"];
 	$compras = new COMPRAS();
 	
-	fConnDB();
+	
 	foreach ($ids as $k => $id):
-		$rs = $GLOBALS['conn']->Execute("SELECT ID_CAD_PESSOA, ID_TAB_APREND FROM APR_HISTORICO WHERE ID = ?", array($id) );
+		$rs = CONN::get()->Execute("SELECT ID_CAD_PESSOA, ID_TAB_APREND FROM APR_HISTORICO WHERE ID = ?", array($id) );
 		if (!$rs->EOF):
 			$compras->deleteByPessoa($rs->fields["ID_CAD_PESSOA"]);
 			
             //REMOVE NOTIFICACOES, SE EXISTIREM.
-            $GLOBALS['conn']->Execute("
+            CONN::get()->Execute("
     		    DELETE FROM LOG_MENSAGEM 
     		    WHERE ID_ORIGEM = ? AND TP = ? AND ID_CAD_USUARIO = (SELECT ID FROM CAD_USUARIO WHERE ID_CAD_PESSOA = ?)
     		", array( $rs->fields["ID_TAB_APREND"], "M", $rs->fields["ID_CAD_PESSOA"] ) );
 		endif;
 
-		$rs = $GLOBALS['conn']->Execute("
+		$rs = CONN::get()->Execute("
 			SELECT apr.ID
 			FROM APR_HISTORICO ah
 			INNER JOIN TAB_APR_ITEM_SEL tais ON (tais.ID_REF = ah.ID_TAB_APREND)
@@ -162,11 +162,11 @@ function delete( $parameters ) {
 			WHERE ah.ID = ?
 		", array($id) );
 		foreach ($rs as $k => $f):
-			$GLOBALS['conn']->Execute("DELETE FROM APR_PESSOA_REQ WHERE ID = ?", array($f["ID"]) );
+			CONN::get()->Execute("DELETE FROM APR_PESSOA_REQ WHERE ID = ?", array($f["ID"]) );
 		endforeach;
 
-		$GLOBALS['conn']->Execute("DELETE FROM APR_PESSOA_REQ WHERE ID_HISTORICO = ?", array($id) );
-		$GLOBALS['conn']->Execute("DELETE FROM APR_HISTORICO WHERE ID = ?", array($id) );
+		CONN::get()->Execute("DELETE FROM APR_PESSOA_REQ WHERE ID_HISTORICO = ?", array($id) );
+		CONN::get()->Execute("DELETE FROM APR_HISTORICO WHERE ID = ?", array($id) );
 		
 	endforeach;
 	return array( "result" => true );
@@ -182,7 +182,7 @@ function setAprendizado( $parameters ) {
 
 	//ATRIBUTOS PARA INCLUSAO/ATUALIZACAO
 	$paramDates = getParamDates( $frm );
-	fConnDB();
+	
 	
 	//UNIFICACAO DE ITENS DE APRENDIZADO.
 	$arrItens = array();
@@ -217,7 +217,7 @@ function setAprendizado( $parameters ) {
 
 			foreach ($frm["id"] as $id):
 				$paramDates = getParamDates( $frm );
-				$rh = $GLOBALS['conn']->Execute("SELECT ID_CAD_PESSOA, ID_TAB_APREND FROM APR_HISTORICO WHERE ID = ?", array($id));
+				$rh = CONN::get()->Execute("SELECT ID_CAD_PESSOA, ID_TAB_APREND FROM APR_HISTORICO WHERE ID = ?", array($id));
 				if (!$rh->EOF):
 					if ( !in_array($rh->fields["ID_CAD_PESSOA"],$frm["id_pessoa"]) ):
 						$frm["id_pessoa"][] = $rh->fields["ID_CAD_PESSOA"];
@@ -229,7 +229,7 @@ function setAprendizado( $parameters ) {
 					
 					$tmp = $prepare["bind"];
 					$tmp[] = $id;
-					$GLOBALS['conn']->Execute( $prepare["query"], $tmp );		
+					CONN::get()->Execute( $prepare["query"], $tmp );		
 
 					if (!is_null($paramDates["dt_investidura"])):
 						$compras->deleteItemPessoaEntregue( $rh->fields["ID_CAD_PESSOA"], $rh->fields["ID_TAB_APREND"] );
@@ -242,7 +242,7 @@ function setAprendizado( $parameters ) {
 		elseif ( isset($frm["id_pessoa"]) && is_array($frm["id_pessoa"]) && count($arrItens) == 0 ):
 		    $arr["x"] = array();
 			foreach ($frm["id_pessoa"] as $id):
-				$rh = $GLOBALS['conn']->Execute("SELECT ID_TAB_APREND FROM APR_HISTORICO WHERE ID_CAD_PESSOA = ? AND DT_INVESTIDURA IS NULL", array($id));
+				$rh = CONN::get()->Execute("SELECT ID_TAB_APREND FROM APR_HISTORICO WHERE ID_CAD_PESSOA = ? AND DT_INVESTIDURA IS NULL", array($id));
 				if (!$rh->EOF):
 					foreach ($rh as $k => $ln):
 						$paramDates = getParamDates( $frm );
@@ -253,7 +253,7 @@ function setAprendizado( $parameters ) {
 						$prepare = updateHistoricoQuery( $paramDates, "ID_CAD_PESSOA = ?" );
 						$tmp = $prepare["bind"];
 						$tmp[] = $id;
-						$GLOBALS['conn']->Execute( $prepare["query"], $tmp );
+						CONN::get()->Execute( $prepare["query"], $tmp );
 						
 						if (!is_null($paramDates["dt_investidura"])):
 							$compras->deleteItemPessoaEntregue( $id, $ln["ID_TAB_APREND"] );
@@ -277,7 +277,7 @@ function setAprendizado( $parameters ) {
 		    if ( isset($frm["cd_mest"]) && is_array($frm["cd_mest"]) && in_array($id, is_array($frm["cd_mest"])) ):
 		        
 		        //LE REGRAS
-            	$rg = $GLOBALS['conn']->Execute("
+            	$rg = CONN::get()->Execute("
             	    SELECT DISTINCT car.ID, car.CD_ITEM_INTERNO, car.CD_AREA_INTERNO, car.DS_ITEM, car.TP_ITEM, car.MIN_AREA
             	      FROM CON_APR_REQ car
             	     WHERE car.ID = ?
@@ -287,7 +287,7 @@ function setAprendizado( $parameters ) {
             
                     $feitas = 0;
                     //LE PARAMETRO MINIMO E HISTORICO PARA A REGRA
-            	    $rR = $GLOBALS['conn']->Execute("
+            	    $rR = CONN::get()->Execute("
                             SELECT tar.ID, tar.QT_MIN, COUNT(*) AS QT_FEITAS
                               FROM TAB_APR_ITEM tar
                         INNER JOIN CON_APR_REQ car ON (car.ID_TAB_APR_ITEM = tar.ID AND car.TP_ITEM_RQ = 'ES')
@@ -335,9 +335,9 @@ function getData(){
 	$arr["result"] = false;
 	$arr["nomes"] = array();
 	
-	fConnDB();
+	
 	$qtdZeros = zeroSizeID();
-	$result = $GLOBALS['conn']->Execute("SELECT ID_CAD_PESSOA, ID_MEMBRO, NM FROM CON_ATIVOS ORDER BY NM");
+	$result = CONN::get()->Execute("SELECT ID_CAD_PESSOA, ID_MEMBRO, NM FROM CON_ATIVOS ORDER BY NM");
 	while (!$result->EOF):
 		$arr["nomes"][] = array( 
 			"id" => $result->fields['ID_CAD_PESSOA'],
@@ -358,7 +358,7 @@ function getData(){
 
 function getMerito(){
 	$arr = array();
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT ID, CD_ITEM_INTERNO, DS_ITEM
 		  FROM TAB_APRENDIZADO 
 		 WHERE TP_ITEM = ?
@@ -374,7 +374,7 @@ function getMerito(){
 
 function getClasse(){
 	$arr = array();
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT ID, CD_ITEM_INTERNO, DS_ITEM
 		  FROM TAB_APRENDIZADO 
 		 WHERE TP_ITEM = 'CL'
@@ -390,7 +390,7 @@ function getClasse(){
 
 function getMestrado(){
 	$arr = array();
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT ID, CD_ITEM_INTERNO, DS_ITEM
 		  FROM TAB_APRENDIZADO 
 		 WHERE TP_ITEM = 'ES'
@@ -409,7 +409,7 @@ function getMestrado(){
 
 function getEspecialidade(){
 	$arr = array();
-	$result = $GLOBALS['conn']->Execute("
+	$result = CONN::get()->Execute("
 		SELECT ID, CD_ITEM_INTERNO, DS_ITEM
 		  FROM TAB_APRENDIZADO 
 		 WHERE TP_ITEM = 'ES'

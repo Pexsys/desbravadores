@@ -29,15 +29,15 @@
 	</div>
 	<div class="row">
 		<div class="col-lg-4">
-			<button class="btn btn-primary" id="btnNovo"><i class="fa fa-plus"></i>&nbsp;Adicionar Identifica&ccedil;&atilde;o</button>
+			<button class="btn btn-primary" id="btnNovo"><i class="far fa-plus"></i>&nbsp;Adicionar Identifica&ccedil;&atilde;o</button>
 		</div>
 		<div class="col-lg-4">
-			<button class="btn btn-danger" id="btnClear" style="display:none"><i class="fa fa-trash-o"></i>&nbsp;Limpar Tudo</button>
+			<button class="btn btn-danger" id="btnClear" style="display:none"><i class="far fa-trash-o"></i>&nbsp;Limpar Tudo</button>
 			&nbsp;
 			<button class="btn btn-warning" id="btnDel" style="display:none"><i class="glyphicon glyphicon-remove"></i>&nbsp;Apagar Linha(s)</button>
 		</div>
 		<div class="col-lg-4">
-			<button class="btn btn-success pull-right" id="btnPrepare" style="display:none"><i class="fa fa-list-alt"></i>&nbsp;Preparar</button>
+			<button class="btn btn-success pull-right" id="btnPrepare" style="display:none"><i class="far fa-list-alt"></i>&nbsp;Preparar</button>
 		</div>
 	</div>
 </div>
@@ -83,11 +83,11 @@
 									"filterTo" => "#cbNomes",
 									"filters" => 
 										array( 
-											array( "id" => "G", "ds" => "Grupo", "icon" => "fa fa-group" ),
-											array( "id" => "X", "ds" => "Sexo", "icon" => "fa fa-venus-mars" ),
-											array( "id" => "U", "ds" => "Unidade", "icon" => "fa fa-universal-access" ),
-											array( "id" => "IC", "ds" => "Compras", "icon" => "fa fa-shopping-cart" ),
-											array( "id" => "C", "ds" => "Classe", "icon" => "fa fa-graduation-cap" )
+											array( "id" => "G", "ds" => "Grupo", "icon" => "far fa-group" ),
+											array( "id" => "X", "ds" => "Sexo", "icon" => "far fa-venus-mars" ),
+											array( "id" => "U", "ds" => "Unidade", "icon" => "far fa-universal-access" ),
+											array( "id" => "IC", "ds" => "Compras", "icon" => "far fa-shopping-cart" ),
+											array( "id" => "C", "ds" => "Classe", "icon" => "far fa-graduation-cap" )
 										)
 								) 
 							);
@@ -101,7 +101,7 @@
 				<div class="panel-footer">
 					<div class="row">
 						<div class="col-lg-12">
-							<button type="addList" class="btn btn-success pull-right"><i class="fa fa-cart-arrow-down"></i>&nbsp;Colocar na lista</button>
+							<button type="addList" class="btn btn-success pull-right"><i class="far fa-cart-arrow-down"></i>&nbsp;Colocar na lista</button>
 						</div>	
 					</div>	
 				</div>
@@ -133,7 +133,7 @@
 							</div>
 							<div style="display:none" id="divPageControl">
 								<div class="col-lg-12">
-									<div class="well well-sm" style="padding:4px;margin-bottom:0px;font-size:11px"><button class="btn btn-default btn-xs" id="btnAddFI"><i class="fa fa-plus"></i></button>&nbsp;<b>P&aacute;gina Incompleta</b></div>
+									<div class="well well-sm" style="padding:4px;margin-bottom:0px;font-size:11px"><button class="btn btn-default btn-xs" id="btnAddFI"><i class="far fa-plus"></i></button>&nbsp;<b>P&aacute;gina Incompleta</b></div>
 									<div class="row" id="divIncomplete" qt-sq="0">
 									</div>
 								</div>
@@ -171,7 +171,7 @@
 				<div class="panel-footer">
 					<div class="row">
 						<div class="col-lg-12">
-							<button id="btnGerar" class="btn btn-success pull-right"><i class="fa fa-print"></i>&nbsp;Gerar</button>
+							<button id="btnGerar" class="btn btn-success pull-right"><i class="far fa-print"></i>&nbsp;Gerar</button>
 						</div>	
 					</div>	
 				</div>

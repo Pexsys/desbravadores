@@ -13,17 +13,17 @@
 			"filterTo" => "#aprHstTable",
 			"filters" => 
 				array( 
-					array( "id" => "Z", "ds" => "Tipo", "icon" => "fa fa-check" ),
-					array( "id" => "X", "ds" => "Sexo","icon" => "fa fa-venus-mars" ),
-					array( "id" => "C", "ds" => "Classe", "icon" => "fa fa-graduation-cap" ),
-					array( "id" => "G", "ds" => "Grupo", "icon" => "fa fa-group" ),
-					array( "id" => "HH", "ds" => "Avaliações", "icon" => "fa fa-thermometer-half" ),
-					array( "id" => "U", "ds" => "Unidade", "icon" => "fa fa-universal-access" ),
-					array( "id" => "A", "ds" => "Áreas", "icon" => "fa fa-bookmark" ),
-					array( "id" => "T", "ds" => "Membros Ativos", "icon" => "fa fa-toggle-on" ),
-					array( "id" => "I", "ds" => "Membros Inativos", "icon" => "fa fa-toggle-off" ),
-					array( "id" => "E", "ds" => "Especialidade", "icon" => "fa fa-check-circle-o" ),
-					array( "id" => "M", "ds" => "Mestrado", "icon" => "fa fa-check-circle" )
+					array( "id" => "Z", "ds" => "Tipo", "icon" => "far fa-check" ),
+					array( "id" => "X", "ds" => "Sexo","icon" => "far fa-venus-mars" ),
+					array( "id" => "C", "ds" => "Classe", "icon" => "far fa-graduation-cap" ),
+					array( "id" => "G", "ds" => "Grupo", "icon" => "far fa-group" ),
+					array( "id" => "HH", "ds" => "Avaliações", "icon" => "far fa-thermometer-half" ),
+					array( "id" => "U", "ds" => "Unidade", "icon" => "far fa-universal-access" ),
+					array( "id" => "A", "ds" => "Áreas", "icon" => "far fa-bookmark" ),
+					array( "id" => "T", "ds" => "Membros Ativos", "icon" => "fas fa-toggle-on" ),
+					array( "id" => "I", "ds" => "Membros Inativos", "icon" => "fas fa-toggle-off" ),
+					array( "id" => "E", "ds" => "Especialidade", "icon" => "far fa-check-circle-o" ),
+					array( "id" => "M", "ds" => "Mestrado", "icon" => "far fa-check-circle" )
 				)
 		) 
 	);?>

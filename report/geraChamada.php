@@ -132,7 +132,7 @@ class CHAMADA extends TCPDF {
 		//achar o nome e a area com select
 		$this->newPage();
 
-		$rsM = $GLOBALS['conn']->Execute("
+		$rsM = CONN::get()->Execute("
 			SELECT * 
 			  FROM CON_ATIVOS 
 			 WHERE ID_UNIDADE = ? 
@@ -226,14 +226,14 @@ if ( !isset($aU) || count($aU) == 0 ):
 endif;
 $pdf = new CHAMADA();
 
-fConnDB();
-$result = $GLOBALS['conn']->Execute("SELECT * FROM TAB_UNIDADE WHERE ID IN ($u) ORDER BY TP, IDADE" );
+
+$result = CONN::get()->Execute("SELECT * FROM TAB_UNIDADE WHERE ID IN ($u) ORDER BY TP, IDADE" );
 foreach ( $result as $ru => $f ):
 	foreach( $aM as $m ):
 		$arr = explode("-",$m);
 		$arr[] = ($f["TP"] == "A" ? "I" : "D");
 	
-		$rm = $GLOBALS['conn']->Execute("
+		$rm = CONN::get()->Execute("
 			SELECT e.DTHORA_EVENTO_INI
 			  FROM CAD_EVENTOS e
 	     LEFT JOIN RGR_CHAMADA c ON (c.ID_EVENTO = e.ID_EVENTO)
