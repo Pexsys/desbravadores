@@ -118,7 +118,7 @@ $pdf = new OCORRENCIAS();
 $result = $GLOBALS['conn']->Execute("
  	 SELECT co.*, cu.DS_USUARIO, cp.NM
 	   FROM CAD_OCORRENCIA co
- INNER JOIN CAD_USUARIOS cu ON (cu.ID_USUARIO = co.ID_USUARIO_INS)
+ INNER JOIN CAD_USUARIO cu ON (cu.ID = co.ID_CAD_USUARIO)
  INNER JOIN CAD_PESSOA cp ON (cp.ID = co.ID_CAD_PESSOA)
 	  WHERE co.FG_PEND = 'N'
 	 $where

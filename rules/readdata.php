@@ -162,7 +162,7 @@ function setChamada( $parm ) {
 		$rs = $GLOBALS['conn']->Execute("
 			SELECT u.cd_usuario, l.dh 
 			  FROM LOG_CHAMADA l 
-		INNER JOIN CAD_USUARIOS u ON (u.id_usuario = l.id_usuario) 
+		INNER JOIN CAD_USUARIO u ON (u.ID = l.ID_CAD_USUARIO) 
 			 WHERE l.id_rgr_chamada = ? 
 			   AND l.id_cad_pessoa = ?", Array( $idRegra, $parm["ni"] ) );
 			   
@@ -172,11 +172,11 @@ function setChamada( $parm ) {
 		else:
 			$GLOBALS['conn']->Execute("
 				INSERT INTO LOG_CHAMADA (
-					id_cad_pessoa, id_rgr_chamada, dh, id_usuario
+					id_cad_pessoa, id_rgr_chamada, dh, ID_CAD_USUARIO
 				) VALUES (
 					?,?,?,?
 				)", 
-			array( $parm["ni"], $idRegra, $dhApontamento, $_SESSION['USER']['id_usuario'] ) );
+			array( $parm["ni"], $idRegra, $dhApontamento, $_SESSION['USER']['id'] ) );
 			
 			$strRetorno = "";
 			if ( !empty($nmPessoa) ):

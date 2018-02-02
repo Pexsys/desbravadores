@@ -99,12 +99,12 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
 
         	        //INSERE NOTIFICAÇOES SE NÃO EXISTIR.
         	        $GLOBALS['conn']->Execute("
-        				INSERT INTO LOG_MENSAGEM ( ID_ORIGEM, TP, ID_USUARIO, EMAIL, DH_GERA )
-        				SELECT ?, 'M', cu.ID_USUARIO, ca.EMAIL, NOW()
+        				INSERT INTO LOG_MENSAGEM ( ID_ORIGEM, TP, ID_CAD_USUARIO, EMAIL, DH_GERA )
+        				SELECT ?, 'M', cu.ID, ca.EMAIL, NOW()
         				  FROM CON_ATIVOS ca
-        			INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
+        			INNER JOIN CAD_USUARIO cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
         				 WHERE ca.ID_CAD_PESSOA = ?
-        				   AND NOT EXISTS (SELECT 1 FROM LOG_MENSAGEM WHERE ID_ORIGEM = ? AND TP = 'M' AND ID_USUARIO = cu.ID_USUARIO)
+        				   AND NOT EXISTS (SELECT 1 FROM LOG_MENSAGEM WHERE ID_ORIGEM = ? AND TP = 'M' AND ID_CAD_USUARIO = cu.ID)
         			", array( $fg["ID"], $fA["ID_CAD_PESSOA"], $fg["ID"] ) );
 
 					if (!empty($fA["EMAIL"]) && $fA["ID_CAD_PESSOA"] != $rDIR->fields["ID_DIRETOR"] ):
@@ -137,10 +137,10 @@ $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.
 //*******  SECRETARIA - EXCLUSAO DE ACESSOS/PERFIS DE MEMBROS INATIVOS
 $GLOBALS['conn']->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.03-Excluindo Perfis de Membros Inativos...')");
 $result = $GLOBALS['conn']->Execute("
-	  SELECT DISTINCT cu.ID_USUARIO
+	  SELECT DISTINCT cu.ID
 		FROM CAD_PESSOA cp
-  INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = cp.ID)
-  INNER JOIN CAD_USU_PERFIL cup ON (cup.ID_CAD_USUARIOS = cu.ID_USUARIO)
+  INNER JOIN CAD_USUARIO cu ON (cu.ID_CAD_PESSOA = cp.ID)
+  INNER JOIN CAD_USU_PERFIL cup ON (cup.ID_CAD_USUARIO = cu.ID)
 	   WHERE NOT EXISTS (SELECT 1
 							FROM CAD_ATIVOS a
 					  INNER JOIN CAD_MEMBRO m ON (m.ID = a.ID_CAD_MEMBRO)
@@ -149,7 +149,7 @@ $result = $GLOBALS['conn']->Execute("
 						)
 ");
 foreach($result as $l => $fields):
-	PROFILE::deleteAllByUserID( $fields['ID_USUARIO'] );
+	PROFILE::deleteAllByUserID( $fields['ID'] );
 endforeach;
 
 //*******  SECRETARIA - REORGANIZACAO DA BASE EM 01/JANEIRO

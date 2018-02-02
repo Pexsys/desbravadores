@@ -32,12 +32,12 @@ function fDashBoard( $panelClass, $iconLeft, $query, $showZero, $titulo, $urlDet
 		
 		$rs = $GLOBALS['conn']->Execute("
 			SELECT 1
-			  FROM CAD_USUARIOS cu
+			  FROM CAD_USUARIO cu
 		  INNER JOIN CON_ATIVOS cp ON (cp.ID_CAD_PESSOA = cu.ID_CAD_PESSOA)
-		  INNER JOIN CAD_USU_PERFIL cuf ON (cuf.ID_CAD_USUARIOS = cu.ID_USUARIO)
+		  INNER JOIN CAD_USU_PERFIL cuf ON (cuf.ID_CAD_USUARIO = cu.ID
 		  INNER JOIN TAB_PERFIL_ITEM tpi ON (tpi.ID_TAB_PERFIL = cuf.ID_PERFIL AND tpi.ID_TAB_DASHBOARD = 5)
-			 WHERE cu.ID_USUARIO = ?
-		",array( $_SESSION['USER']['id_usuario'] ) );
+			 WHERE cu.ID = ?
+		",array( $_SESSION['USER']['id'] ) );
 		if (!$rs->EOF):
 			echo 	"<a href=\"$urlDetalhes\">
 						<div class=\"panel-footer\">

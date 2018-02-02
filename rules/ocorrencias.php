@@ -5,7 +5,7 @@ responseMethod();
 
 function getQueryByFilter( $parameters ) {
 	session_start();
-	$usuarioID = $_SESSION['USER']['id_usuario'];
+	$usuarioID = $_SESSION['USER']['id'];
 	
 	if ($parameters["filter"] == "N"):
 		return $GLOBALS['conn']->Execute("
@@ -15,7 +15,7 @@ function getQueryByFilter( $parameters ) {
 			INNER JOIN LOG_MENSAGEM l ON (l.ID_ORIGEM = o.ID AND l.TP = 'O')
 				 WHERE YEAR(o.DH) = YEAR(NOW())
 				   AND o.FG_PEND = 'N'
-				   AND l.ID_USUARIO = ?
+				   AND l.ID_CAD_USUARIO = ?
 			  ORDER BY o.ID DESC
 		", array( $usuarioID ) );
 	
@@ -93,7 +93,7 @@ function fOcorrencia( $parameters ) {
 	session_start();
 	fConnDB();
 	
-	$userID = $_SESSION['USER']['id_usuario'];
+	$userID = $_SESSION['USER']['id'];
 	$membroID = $_SESSION['USER']['id_cad_pessoa'];
 	$out = array();
 	$frm = null;
@@ -164,7 +164,7 @@ function fOcorrencia( $parameters ) {
 					TP,
 					ID_CAD_PESSOA,
 					FG_PEND,
-					ID_USUARIO_INS
+					ID_CAD_USUARIO
 				) VALUES (?,?,?,?,?,?,?)
 			",$arr);
 			$id = $GLOBALS['conn']->Insert_ID();
@@ -173,18 +173,18 @@ function fOcorrencia( $parameters ) {
 		//GRAVACAO DEFINITIVA PARA O RESPONSAVEL, ENVIO POR EMAIL
 		if ($fg_pend == "N"):
 			$GLOBALS['conn']->Execute("
-				INSERT INTO LOG_MENSAGEM (ID_ORIGEM, TP, ID_USUARIO, EMAIL, DH_GERA)
-				SELECT $id, 'O', cu.ID_USUARIO, ca.EMAIL, NOW() 
+				INSERT INTO LOG_MENSAGEM (ID_ORIGEM, TP, ID_CAD_USUARIO, EMAIL, DH_GERA)
+				SELECT $id, 'O', cu.ID, ca.EMAIL, NOW() 
 				  FROM CON_ATIVOS ca
-		    INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA) 
+		    INNER JOIN CAD_USUARIO cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA) 
  				 WHERE ca.ID_CAD_PESSOA = ? 
 				
 				UNION
 				
-				SELECT $id, 'O', cu.ID_USUARIO, cr.EMAIL, NOW() 
+				SELECT $id, 'O', cu.ID, cr.EMAIL, NOW() 
 				FROM CON_RESP_LEGAL cr 
 				INNER JOIN CON_ATIVOS ca ON (ca.ID_PESSOA_RESP = cr.ID) 
-				INNER JOIN CAD_USUARIOS cu ON (cu.CD_USUARIO = cr.NR_CPF) 
+				INNER JOIN CAD_USUARIO cu ON (cu.CD_USUARIO = cr.NR_CPF) 
 				WHERE NOT EXISTS (SELECT 1 FROM CON_ATIVOS WHERE NR_CPF = cr.NR_CPF)
 				WHERE ca.ID_CAD_PESSOA = ? 
 			", array( $frm["id_pessoa"], $frm["id_pessoa"] ) );
@@ -217,7 +217,7 @@ function fOcorrencia( $parameters ) {
 				SELECT co.*, ca.NM, cu.DS_USUARIO
 				  FROM CAD_OCORRENCIA co
 			INNER JOIN CON_ATIVOS ca ON (ca.id_cad_pessoa = co.id_cad_pessoa)
-			INNER JOIN CAD_USUARIOS cu ON (cu.ID_USUARIO = co.ID_USUARIO_INS)
+			INNER JOIN CAD_USUARIO cu ON (cu.ID = co.ID_CAD_USUARIO)
 				 WHERE co.ID = ?
 			", array( $parameters["id"] ) );
 			if (!$result->EOF):
@@ -301,7 +301,7 @@ function getOcorrencias( $parameters ){
 function fSetRead( $parameters ){
 	session_start();
 	$comunicadoID = $parameters["id"];
-	$usuarioID = $_SESSION['USER']['id_usuario'];
+	$usuarioID = $_SESSION['USER']['id'];
 	$usuarioCD = $_SESSION['USER']['cd_usuario'];
 	
 	fConnDB();
@@ -310,7 +310,7 @@ function fSetRead( $parameters ){
 	$GLOBALS['conn']->Execute("
 		UPDATE LOG_MENSAGEM SET
 			DH_READ = NOW()
-		WHERE ID_USUARIO = ?
+		WHERE ID_CAD_USUARIO = ?
 		  AND ID_ORIGEM = ?
 		  AND TP = ?
 	", array($usuarioID,$comunicadoID,"O"));
@@ -319,11 +319,11 @@ function fSetRead( $parameters ){
 	$result = $GLOBALS['conn']->Execute("
 		UPDATE LOG_MENSAGEM SET
 			  DH_READ = NOW()
-		WHERE ID_USUARIO IN (
-							SELECT cu.ID_USUARIO
+		WHERE ID_CAD_USUARIO IN (
+							SELECT cu.ID
 							FROM CON_RESP_LEGAL cr
 							INNER JOIN CON_ATIVOS ca ON (ca.ID_PESSOA_RESP = cr.ID)
-							INNER JOIN CAD_USUARIOS cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
+							INNER JOIN CAD_USUARIO cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
 							WHERE cr.NR_CPF = ?		
 							)
 		  AND DH_READ IS NULL
