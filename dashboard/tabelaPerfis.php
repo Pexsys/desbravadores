@@ -16,7 +16,7 @@
 		<br/>
 	</div>
 	<div class="row">
-		<button class="btn btn-warning" id="btnAdd"><i class="far fa-plus"></i>&nbsp;Adicionar</button>
+		<button class="btn btn-warning" id="btnAdd"><i class="fas fa-plus"></i>&nbsp;Adicionar</button>
 	</div>
 </div>
 <script src="<?php echo $GLOBALS['pattern']->getVD();?>dashboard/js/tabelaPerfis.js<?php echo "?".microtime();?>"></script>

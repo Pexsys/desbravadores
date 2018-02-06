@@ -22,18 +22,18 @@ $classes = getDomainFilter( array( "type" => "C" ) );
 			<option data-icon="fas fa-graduation-cap" show="divClasses" value="geraListaClasse.php?filter=">LISTAGEM DE MEMBROS - CLASSE</option>
 			<option data-icon="fas fa-universal-access" show="divUnidades" value="geraListaUnidade.php?filter=">LISTAGEM DE MEMBROS - UNIDADE</option>
 			<option data-icon="fas fa-music" show="divFanfarra" value="geraListaFanfarra.php?filter=">LISTAGEM DE MEMBROS - FANFARRA</option>
-			<option data-icon="fas fa-user-circle-o" show="divUniformes" value="geraListaUniformes.php?filter=">LISTAGEM DE MEMBROS - UNIFORMES</option>
+			<option data-icon="fas fa-user-circle" show="divUniformes" value="geraListaUniformes.php?filter=">LISTAGEM DE MEMBROS - UNIFORMES</option>
 			<option data-divider="true"></option>
-			<option data-icon="fas fa-hand-o-up" value="geraListaPresencaPais.php?">LISTAGEM DE PRESEN&Ccedil;A - REUNI&Atilde;O DE PAIS</option>
+			<option data-icon="far fa-hand-point-up" value="geraListaPresencaPais.php?">LISTAGEM DE PRESEN&Ccedil;A - REUNI&Atilde;O DE PAIS</option>
 			<option data-divider="true"></option>
 			<option data-icon="fas fa-star" value="geraListaEstrelas.php?">REQUISI&Ccedil;&Atilde;O DE ESTRELAS DE TEMPO DE SERVI&Ccedil;O</option>
 			<option data-divider="true"></option>
-			<option data-icon="fas fa-sort-alpha-asc" show="divEventos" value="geraListaEvento.php?eve=">LISTAGEM DE SA&Iacute;DA - ALFAB&Eacute;TICA</option>
+			<option data-icon="fas fa-sort-alpha-up" show="divEventos" value="geraListaEvento.php?eve=">LISTAGEM DE SA&Iacute;DA - ALFAB&Eacute;TICA</option>
 			<option data-icon="fas fa-list" show="divEventos" value="geraListaEventoAutoriz.php?eve=">LISTAGEM DE SA&Iacute;DA - CONTROLE DE AUTORIZA&Ccedil;&Otilde;ES - GERAL</option>
 			<option data-icon="fas fa-venus-mars" show="divEventos" value="geraListaEventoAutorizGen.php?eve=">LISTAGEM DE SA&Iacute;DA - CONTROLE DE AUTORIZA&Ccedil;&Otilde;ES - G&Ecirc;NERO</option>
-			<option data-icon="fas fa-leanpub" show="divEventos" value="geraListaDispensaEscola.php?eve=">LISTAGEM DE SA&Iacute;DA - DISPENSA ESCOLAR</option>
+			<option data-icon="fab fa-leanpub" show="divEventos" value="geraListaDispensaEscola.php?eve=">LISTAGEM DE SA&Iacute;DA - DISPENSA ESCOLAR</option>
 			<option data-icon="glyphicon glyphicon-tent" show="divEventos" value="geraListaEventoTent.php?eve=">LISTAGEM DE SA&Iacute;DA - BARRACAS</option>
-			<option data-icon="fas fa-cutlery" show="divEventos" value="geraListaEventoKitchen.php?eve=">LISTAGEM DE SA&Iacute;DA - COZINHA</option>
+			<option data-icon="fas fa-utensils" show="divEventos" value="geraListaEventoKitchen.php?eve=">LISTAGEM DE SA&Iacute;DA - COZINHA</option>
 			<option data-icon="fas fa-bus" show="divEventos" value="geraListaEventoBus.php?eve=">LISTAGEM DE SA&Iacute;DA - PASSAGEIROS</option>
 			<option data-icon="fas fa-user" show="divEventos" value="geraListaUniformes.php?filter=C&eve=">LISTAGEM DE SA&Iacute;DA - CAMISETAS - GERAL</option>
 			<option data-icon="fas fa-male" show="divEventos" value="geraListaUniformes.php?filter=A&eve=">LISTAGEM DE SA&Iacute;DA - AGASALHOS - GERAL</option>
@@ -125,7 +125,7 @@ $classes = getDomainFilter( array( "type" => "C" ) );
 <br/>
 <div class="row">
 	<div class="col-lg-8">
-		<button id="btnGerar" class="btn btn-success pull-right"><i class="far fa-print"></i>&nbsp;Gerar</button>
+		<button id="btnGerar" class="btn btn-success pull-right"><i class="fas fa-print"></i>&nbsp;Gerar</button>
 	</div>
 </div>
 <script src="<?php echo $GLOBALS['pattern']->getVD();?>dashboard/js/printListagens.js<?php echo "?".microtime();?>"></script>

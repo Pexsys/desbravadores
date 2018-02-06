@@ -13,7 +13,7 @@
 			"filterTo" => "#matEstTable",
 			"filters" => 
 				array( 
-					array( "id" => "HT", "ds" => "Tipo de Material", "icon" => "far fa-shopping-basket" )
+					array( "id" => "HT", "ds" => "Tipo de Material", "icon" => "fas fa-shopping-basket" )
 				)
 		) 
 	);?>
@@ -32,7 +32,7 @@
 		<br/>
 	</div>
 	<div class="row">
-		<button class="btn btn-warning" id="btnAdd"><i class="far fa-plus"></i>&nbsp;Adicionar Item</button>
+		<button class="btn btn-warning" id="btnAdd"><i class="fas fa-plus"></i>&nbsp;Adicionar Item</button>
 	</div>
 </div>
 

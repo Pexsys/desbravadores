@@ -89,10 +89,10 @@ $activeLogin = ($showLogin && !$temPerfil);
 						</li>
 						<li class="dropdown active">
 							<a class="dropdown-toggle active" data-toggle="dropdown" href="#">
-								<i class="far fa-user fa-fw"></i>  <i class="far fa-caret-down"></i>
+								<i class="fas fa-user fa-fw"></i>  <i class="fas fa-caret-down"></i>
 							</a>
 							<ul class="dropdown-menu">
-								<li><a href="#" id="myBtnLogout"><i class="far fa-sign-out fa-fw"></i>&nbsp;Logout</a></li>
+								<li><a href="#" id="myBtnLogout"><i class="fas fa-sign-out fa-fw"></i>&nbsp;Logout</a></li>
 							</ul>
 						</li>
 						<li><a href="#"><span class="glyphicon glyphicon-user"></span> Cadastre-se</a></li>

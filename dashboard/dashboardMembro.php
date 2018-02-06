@@ -150,16 +150,23 @@ endif;
 	echo fItemAprendizado(array(
 		"classPanel" => "panel-default",
 		"classSize" => "col-md-12 col-xs-12 col-sm-12 col-lg-4 col-xl-4",
-		"leftIcon" => $icon, 
-		"value" => "$pct%", 
-		"title" => titleCase( $fields["DS_ITEM"] ), 
-		"strBL" => titleCase( $area ), 
-		"strBR" => "$qtd / $qtdReq", 
-		"fields" => array( 
-			"name" => "progress",
-			"cad-id" => $fields["ID_CAD_PESSOA"],
-			"req-id" => $fields["ID_TAB_APREND"]
-		)
+		"leftIcon" => "fas fa-chart-line fa-4x", 
+		"value" => "0", 
+		"title" => "Semanal"
+	));
+	echo fItemAprendizado(array(
+		"classPanel" => "panel-default",
+		"classSize" => "col-md-12 col-xs-12 col-sm-12 col-lg-4 col-xl-4",
+		"leftIcon" => "fas fa-chart-line fa-4x", 
+		"value" => "0", 
+		"title" => "Mensal"
+	));
+	echo fItemAprendizado(array(
+		"classPanel" => "panel-default",
+		"classSize" => "col-md-12 col-xs-12 col-sm-12 col-lg-4 col-xl-4",
+		"leftIcon" => "fas fa-chart-line fa-4x", 
+		"value" => "0", 
+		"title" => "Anual"
 	));
 	?>
 </div>

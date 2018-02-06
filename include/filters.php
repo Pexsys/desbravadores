@@ -49,74 +49,74 @@ function getDomainFilter( $parameters ) {
 	//SEXO
 	if ( $type == "X" ):
 		$domain = array(
-			array( "id" => "F", "ds" => "FEMININO", "icon" => "far fa-venus" ),
-			array( "id" => "M", "ds" => "MASCULINO", "icon" => "far fa-mars" )
+			array( "id" => "F", "ds" => "FEMININO", "icon" => "fas fa-venus" ),
+			array( "id" => "M", "ds" => "MASCULINO", "icon" => "fas fa-mars" )
 		);
 
 	//SITUACAO
 	elseif ( $type == "S" ):
 		$domain = array(
 			array( "id" => "A", "ds" => "ATIVOS", "icon" => "fas fa-toggle-on" ),
-			array( "id" => "I", "ds" => "INATIVOS", "icon" => "far fa-toggle-off" ),
+			array( "id" => "I", "ds" => "INATIVOS", "icon" => "fas fa-toggle-off" ),
 			array( "id" => "T", "ds" => "TODOS", "icon" => "fa-globe" )
 		);
 
 	//SITUACAO
 	elseif ( $type == "SA" ):
 		$domain = array(
-			array( "id" => "C", "ds" => "CONCLUÍDO", "icon" => "far fa-star" ),
-			array( "id" => "L", "ds" => "LIBERADO", "icon" => "far fa-star-half-o" ),
-			array( "id" => "P", "ds" => "PENDENTE", "icon" => "far fa-star-o" )
+			array( "id" => "C", "ds" => "CONCLUÍDO", "icon" => "fas fa-star" ),
+			array( "id" => "L", "ds" => "LIBERADO", "icon" => "fas fa-star-half-o" ),
+			array( "id" => "P", "ds" => "PENDENTE", "icon" => "fas fa-star-o" )
 		);
 
 	//GRUPO
 	elseif ( $type == "G" ):
 		$domain = array(
-			array( "id" => "1", "ds" => "DESBRAVADORES", "icon" => "far fa-child" ),
-			array( "id" => "2", "ds" => "DIRETORIA GERAL", "icon" => "far fa-user-secret" ),
+			array( "id" => "1", "ds" => "DESBRAVADORES", "icon" => "fas fa-child" ),
+			array( "id" => "2", "ds" => "DIRETORIA GERAL", "icon" => "fas fa-user-secret" ),
 			array( "id" => "3", "ds" => "FANFARRA", "icon" => "fas fa-music" ),
-			array( "id" => "4", "ds" => "INSTRUTORES", "icon" => "far fa-graduation-cap" ),
-			array( "id" => "5", "ds" => "CONSELHEIROS", "icon" => "far fa-heart" ),
-			array( "id" => "6", "ds" => "CAPITÃES", "icon" => "far fa-first-order" )
+			array( "id" => "4", "ds" => "INSTRUTORES", "icon" => "fas fa-graduation-cap" ),
+			array( "id" => "5", "ds" => "CONSELHEIROS", "icon" => "fas fa-heart" ),
+			array( "id" => "6", "ds" => "CAPITÃES", "icon" => "fab fa-first-order" )
 		);
 
 	//APRENDIZADO
 	elseif ( $type == "HA" ):
 		$year = date("Y");
 		$domain = array(
-			array( "id" => "0", "ds" => "EM ANDAMENTO", "icon" => "far fa-battery-half" ),
-			array( "id" => "1", "ds" => "PENDENTES DE AVALIAÇÃO", "icon" => "far fa-battery-full" ),
-			array( "id" => "2", "ds" => "AVALIADOS EM $year", "icon" => "far fa-eye" ),
-			array( "id" => "3", "ds" => "PENDENTES DE INVESTIDURA", "icon" => "far fa-graduation-cap" )
+			array( "id" => "0", "ds" => "EM ANDAMENTO", "icon" => "fas fa-battery-half" ),
+			array( "id" => "1", "ds" => "PENDENTES DE AVALIAÇÃO", "icon" => "fas fa-battery-full" ),
+			array( "id" => "2", "ds" => "AVALIADOS EM $year", "icon" => "fas fa-eye" ),
+			array( "id" => "3", "ds" => "PENDENTES DE INVESTIDURA", "icon" => "fas fa-graduation-cap" )
 		);
 
 	//PENDENCIAS CADASTRAIS
 	elseif ( $type == "PC" ):
 		$domain = array(
-			array( "id" => "NC5", "ds" => "NOME COMPLETO INV&Aacute;LIDO", "icon" => "far fa-address-book" ),
-			array( "id" => "SEX", "ds" => "SEXO INVÁLIDO", "icon" => "far fa-venus-mars" ),
-			array( "id" => "DTN", "ds" => "DATA DE NASCIMENTO INVÁLIDA", "icon" => "far fa-calendar" ),
-			array( "id" => "DOC", "ds" => "DOCUMENTO INVÁLIDO", "icon" => "far fa-id-card-o" ),
-			array( "id" => "CPF", "ds" => "CPF INVÁLIDO", "icon" => "far fa-id-card" ),
-			array( "id" => "LOG", "ds" => "LOGRADOURO INVÁLIDO", "icon" => "far fa-road" ),
-			array( "id" => "NLG", "ds" => "NUMERO LOGRADOURO INVÁLIDO", "icon" => "far fa-map-marker" ),
-			array( "id" => "BAI", "ds" => "BAIRRO INVÁLIDO", "icon" => "far fa-location-arrow" ),
-			array( "id" => "CID", "ds" => "CIDADE INVÁLIDA", "icon" => "far fa-street-view" ),
-			array( "id" => "EST", "ds" => "UF INVÁLIDA", "icon" => "far fa-map" ),
-			array( "id" => "CEP", "ds" => "CEP INVÁLIDO", "icon" => "far fa-map-signs" ),
-			array( "id" => "TEL", "ds" => "TELEFONES INVÁLIDOS", "icon" => "far fa-phone" ),
-			array( "id" => "UNI", "ds" => "UNIDADE INVÁLIDA", "icon" => "far fa-universal-access" ),
-			array( "id" => "CAR", "ds" => "CARGO/FUNÇÃO INVÁLIDA", "icon" => "far fa-user-md" )
+			array( "id" => "NC5", "ds" => "NOME COMPLETO INV&Aacute;LIDO", "icon" => "fas fa-address-book" ),
+			array( "id" => "SEX", "ds" => "SEXO INVÁLIDO", "icon" => "fas fa-venus-mars" ),
+			array( "id" => "DTN", "ds" => "DATA DE NASCIMENTO INVÁLIDA", "icon" => "far fa-calendar-alt" ),
+			array( "id" => "DOC", "ds" => "DOCUMENTO INVÁLIDO", "icon" => "fas fa-id-card-o" ),
+			array( "id" => "CPF", "ds" => "CPF INVÁLIDO", "icon" => "fas fa-id-card" ),
+			array( "id" => "LOG", "ds" => "LOGRADOURO INVÁLIDO", "icon" => "fas fa-road" ),
+			array( "id" => "NLG", "ds" => "NUMERO LOGRADOURO INVÁLIDO", "icon" => "fas fa-map-marker" ),
+			array( "id" => "BAI", "ds" => "BAIRRO INVÁLIDO", "icon" => "fas fa-location-arrow" ),
+			array( "id" => "CID", "ds" => "CIDADE INVÁLIDA", "icon" => "fas fa-street-view" ),
+			array( "id" => "EST", "ds" => "UF INVÁLIDA", "icon" => "fas fa-map" ),
+			array( "id" => "CEP", "ds" => "CEP INVÁLIDO", "icon" => "fas fa-map-signs" ),
+			array( "id" => "TEL", "ds" => "TELEFONES INVÁLIDOS", "icon" => "fas fa-phone" ),
+			array( "id" => "UNI", "ds" => "UNIDADE INVÁLIDA", "icon" => "fas fa-universal-access" ),
+			array( "id" => "CAR", "ds" => "CARGO/FUNÇÃO INVÁLIDA", "icon" => "fas fa-user-md" )
 		);
 
 	//ITENS COMPRADOS
 	elseif ( $type == "IC" ):
 		$domain = array(
-			array( "id" => "0", "ds" => "ITENS COMPRADOS", "icon" => "far fa-shopping-bag" ),
-			array( "id" => "1", "ds" => "ITENS A COMPRAR", "icon" => "far fa-shopping-basket" ),
-			array( "id" => "4", "ds" => "ITENS PREVISTOS", "icon" => "far fa-cart-plus" ),
-			array( "id" => "2", "ds" => "ITENS ENTREGUES", "icon" => "far fa-cart-arrow-down" ),
-			array( "id" => "3", "ds" => "ITENS A ENTREGAR", "icon" => "far fa-truck" )
+			array( "id" => "0", "ds" => "ITENS COMPRADOS", "icon" => "fas fa-shopping-bag" ),
+			array( "id" => "1", "ds" => "ITENS A COMPRAR", "icon" => "fas fa-shopping-basket" ),
+			array( "id" => "4", "ds" => "ITENS PREVISTOS", "icon" => "fas fa-cart-plus" ),
+			array( "id" => "2", "ds" => "ITENS ENTREGUES", "icon" => "fas fa-cart-arrow-down" ),
+			array( "id" => "3", "ds" => "ITENS A ENTREGAR", "icon" => "fas fa-truck" )
 		);
 
 	//MES ANIVERSARIO
@@ -127,8 +127,8 @@ function getDomainFilter( $parameters ) {
 	elseif ( $type == "HH" ):
 		$year = date("Y");
 		$domain = array(
-			array( "id" => "4", "ds" => "INVESTIDOS EM $year", "icon" => "far fa-trophy" ),
-			array( "id" => "5", "ds" => "INVESTIDOS ANTES DE $year", "icon" => "far fa-shield" )
+			array( "id" => "4", "ds" => "INVESTIDOS EM $year", "icon" => "fas fa-trophy" ),
+			array( "id" => "5", "ds" => "INVESTIDOS ANTES DE $year", "icon" => "fas fa-shield-alt" )
 		);
 
 	//TIPO DE MATERIAIS
@@ -139,20 +139,20 @@ function getDomainFilter( $parameters ) {
 	elseif ( $type == "B" ):
 		$y = date("Y");
 		$domain = array(
-			array( "id" => "S", "ds" => "SIM", "icon" => "far fa-thumbs-o-up" ),
-			array( "id" => "N", "ds" => "NÃO", "icon" => "far fa-thumbs-o-down" ),
-			array( "id" => $y, "ds" => "EM ". $y, "icon" => "far fa-pause" ),
-			array( "id" => ($y-1), "ds" => "EM ". ($y-1), "icon" => "far fa-play" ),
-			array( "id" => ($y-2), "ds" => "EM ". ($y-2), "icon" => "far fa-step-backward" ),
-			array( "id" => ($y-3), "ds" => "EM ". ($y-3), "icon" => "far fa-backward" ),
-			array( "id" => "A". ($y-3), "ds" => "ANTES DE ". ($y-3), "icon" => "far fa-fast-backward" )
+			array( "id" => "S", "ds" => "SIM", "icon" => "fas fa-thumbs-o-up" ),
+			array( "id" => "N", "ds" => "NÃO", "icon" => "fas fa-thumbs-o-down" ),
+			array( "id" => $y, "ds" => "EM ". $y, "icon" => "fas fa-pause" ),
+			array( "id" => ($y-1), "ds" => "EM ". ($y-1), "icon" => "fas fa-play" ),
+			array( "id" => ($y-2), "ds" => "EM ". ($y-2), "icon" => "fas fa-step-backward" ),
+			array( "id" => ($y-3), "ds" => "EM ". ($y-3), "icon" => "fas fa-backward" ),
+			array( "id" => "A". ($y-3), "ds" => "ANTES DE ". ($y-3), "icon" => "fas fa-fast-backward" )
 		);
 
 	//TIPO DE OCORRENCIA
 	elseif ( $type == "TO" ):
 		$domain = array(
-			array( "id" => "P", "ds" => "POSITIVA", "icon" => "far fa-thumbs-o-up" ),
-			array( "id" => "N", "ds" => "NEGATIVA", "icon" => "far fa-thumbs-o-down" )
+			array( "id" => "P", "ds" => "POSITIVA", "icon" => "fas fa-thumbs-o-up" ),
+			array( "id" => "N", "ds" => "NEGATIVA", "icon" => "fas fa-thumbs-o-down" )
 		);
 
 	//UNIDADE

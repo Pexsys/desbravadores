@@ -21,9 +21,9 @@
 			"filterTo" => "#ocoDataTable",
 			"filters" => 
 				array( 
-					array( "id" => "X", "ds" => "Sexo", "icon" => "far fa-venus-mars" ),
-					array( "id" => "U", "ds" => "Unidade", "icon" => "far fa-universal-access" ),
-					array( "id" => "TO", "ds" => "Tipo", "icon" => "far fa-check" )
+					array( "id" => "X", "ds" => "Sexo", "icon" => "fas fa-venus-mars" ),
+					array( "id" => "U", "ds" => "Unidade", "icon" => "fas fa-universal-access" ),
+					array( "id" => "TO", "ds" => "Tipo", "icon" => "fas fa-check" )
 				)
 		) 
 	);?>
@@ -47,7 +47,7 @@
 	</div>
 	<div class="row">
 		<div class="col-xs-6">
-			<a role="button" class="btn btn-warning pull-left" id="btnNovo"><i class="far fa-plus"></i>&nbsp;Nova</a>
+			<a role="button" class="btn btn-warning pull-left" id="btnNovo"><i class="fas fa-plus"></i>&nbsp;Nova</a>
 		</div>
 		<div class="col-xs-6">
 			<a role="button" class="btn btn-info pull-right" data-toggle="modal" id="btnPrepare" style="display:none"><i class="glyphicon glyphicon-print"></i>&nbsp;Preparar</a>
@@ -159,7 +159,7 @@
 				<div class="panel-footer">
 					<div class="row">
 						<div class="col-lg-12">
-							<button id="btnGerar" class="btn btn-success pull-right"><i class="far fa-print"></i>&nbsp;Gerar</button>
+							<button id="btnGerar" class="btn btn-success pull-right"><i class="fas fa-print"></i>&nbsp;Gerar</button>
 						</div>	
 					</div>	
 				</div>

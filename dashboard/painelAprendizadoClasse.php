@@ -129,7 +129,7 @@ if (!$pendNome->EOF):
 	if (!$pendItens->EOF):
 	<div class="col-xs-12 col-md-12 col-sm-12 col-xl-12 col-lg-12">
 		<div class="panel panel-danger">
-		<div class="panel-heading"><h5 class="panel-title"><i class="far fa-frown-o"></i>&nbsp;Classe / Pessoa</h5></div>
+		<div class="panel-heading"><h5 class="panel-title"><i class="fas fa-frown-o"></i>&nbsp;Classe / Pessoa</h5></div>
 			<div class="panel-body" style="padding:5px 10px;font-size:12px">
 				<?php
 				$nomeAtu = "";
@@ -170,7 +170,7 @@ if (!$pendNome->EOF):
 	<?php if (!$pendNome->EOF):?>
 	<div class="col-xs-12 col-md-12 col-sm-12 col-xl-12 col-lg-12">
 		<div class="panel panel-danger">
-			<div class="panel-heading"><h5 class="panel-title"><i class="far fa-frown-o"></i>&nbsp;Classe / Item</h5></div>
+			<div class="panel-heading"><h5 class="panel-title"><i class="fas fa-frown-o"></i>&nbsp;Classe / Item</h5></div>
 			<div class="panel-body" style="padding:5px 10px;font-size:12px">
 				<?php
 				$nomeAtu = "";

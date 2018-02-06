@@ -66,7 +66,7 @@ fHeaderPage(
 							<label class="col-xs-1 control-label" for="nmMembro">Nome</label>
 							<div class="col-xs-9 inputGroupContainer">
 								<div class="input-group">
-									<div class="input-group-addon"><i class="far fa-user form-group-sm"></i></div>
+									<div class="input-group-addon"><i class="fas fa-user form-group-sm"></i></div>
 									<input type="hidden" id="id" name="id" field="id" class="form-control"/>
 									<input type="text" id="nmMembro" name="nmMembro" field="nm_membro" class="form-control" placeholder="Nome Completo"/>
 								</div>

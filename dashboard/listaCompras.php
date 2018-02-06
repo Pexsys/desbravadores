@@ -34,16 +34,16 @@ function filtroDatasAvaliacao(){
 			"filterTo" => "#comprasDatatable",
 			"filters" => 
 				array( 
-					array( "id" => "Z", "ds" => "Tipo", "icon" => "far fa-check" ),
-					array( "id" => "X", "ds" => "Sexo", "icon" => "far fa-venus-mars" ),
-					array( "id" => "C", "ds" => "Classe", "icon" => "far fa-graduation-cap" ),
-					array( "id" => "G", "ds" => "Grupo", "icon" => "far fa-group" ),
-					array( "id" => "U", "ds" => "Unidade", "icon" => "far fa-universal-access" ),
-					array( "id" => "A", "ds" => "&Aacute;reas", "icon" => "far fa-bookmark" ),
-					array( "id" => "IC", "ds" => "Compras", "icon" => "far fa-shopping-cart" ),
+					array( "id" => "Z", "ds" => "Tipo", "icon" => "fas fa-check" ),
+					array( "id" => "X", "ds" => "Sexo", "icon" => "fas fa-venus-mars" ),
+					array( "id" => "C", "ds" => "Classe", "icon" => "fas fa-graduation-cap" ),
+					array( "id" => "G", "ds" => "Grupo", "icon" => "fas fa-object-group" ),
+					array( "id" => "U", "ds" => "Unidade", "icon" => "fas fa-universal-access" ),
+					array( "id" => "A", "ds" => "&Aacute;reas", "icon" => "fas fa-bookmark" ),
+					array( "id" => "IC", "ds" => "Compras", "icon" => "fas fa-shopping-cart" ),
 					array( "id" => "T", "ds" => "Membros Ativos", "icon" => "fas fa-toggle-on" ),
-					array( "id" => "E", "ds" => "Especialidade", "icon" => "far fa-check-circle-o" ),
-					array( "id" => "M", "ds" => "Mestrado", "icon" => "far fa-check-circle" )
+					array( "id" => "E", "ds" => "Especialidade", "icon" => "fas fa-check-circle" ),
+					array( "id" => "M", "ds" => "Mestrado", "icon" => "fas fa-check-circle" )
 				)
 		) 
 	);?>
@@ -65,19 +65,19 @@ function filtroDatasAvaliacao(){
 		<br/>
 	</div>
 	<div class="row">
-		<button class="btn btn-default" id="btnProcess"><i class="far fa-cog"></i>&nbsp;Processar Lista</button>
+		<button class="btn btn-default" id="btnProcess"><i class="fas fa-cog"></i>&nbsp;Processar Lista</button>
 		&nbsp;
-		<button class="btn btn-default" id="btnAdd"><i class="far fa-plus"></i>&nbsp;Adicionar Item</button>
+		<button class="btn btn-default" id="btnAdd"><i class="fas fa-plus"></i>&nbsp;Adicionar Item</button>
 		&nbsp;
-		<button class="btn btn-default" id="btnRedist"><i class="far fa-cubes"></i>&nbsp;Distribuir Estoque</button>
+		<button class="btn btn-default" id="btnRedist"><i class="fas fa-cubes"></i>&nbsp;Distribuir Estoque</button>
 		&nbsp;
 		<button class="btn btn-warning" id="btnEdit"><i class="fas fa-pencil-alt"></i>&nbsp;Edi&ccedil;&atilde;o Manual</button>
 		&nbsp;
 		<button class="btn btn-success" id="btnEntrega"><i class="fas fa-pencil-alt"></i>&nbsp;Atualizar Entrega</button>
 		&nbsp;
-		<button class="btn btn-danger" id="btnDel"><i class="far fa-trash-o"></i>&nbsp;Excluir</button>
+		<button class="btn btn-danger" id="btnDel"><i class="fas fa-trash-o"></i>&nbsp;Excluir</button>
 		&nbsp;
-		<button class="btn btn-default pull-right" id="btnListagens"><i class="far fa-print"></i>&nbsp;Listagens</button>
+		<button class="btn btn-default pull-right" id="btnListagens"><i class="fas fa-print"></i>&nbsp;Listagens</button>
 	</div>
 </div>
 
@@ -178,7 +178,7 @@ function filtroDatasAvaliacao(){
 				<div class="panel-footer">
 					<div class="row">
 						<div class="col-lg-12">
-							<button id="btnGerar" class="btn btn-success pull-right"><i class="far fa-file-pdf-o"></i>&nbsp;Gerar PDF</button>
+							<button id="btnGerar" class="btn btn-success pull-right"><i class="fas fa-file-pdf-o"></i>&nbsp;Gerar PDF</button>
 						</div>	
 					</div>	
 				</div>

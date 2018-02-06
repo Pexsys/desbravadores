@@ -13,16 +13,16 @@
 			"filterTo" => "#aprHstTable",
 			"filters" => 
 				array( 
-					array( "id" => "Z", "ds" => "Tipo", "icon" => "far fa-check" ),
-					array( "id" => "X", "ds" => "Sexo", "icon" => "far fa-venus-mars" ),
-					array( "id" => "C", "ds" => "Classe", "icon" => "far fa-graduation-cap" ),
-					array( "id" => "G", "ds" => "Grupo", "icon" => "far fa-group" ),
-					array( "id" => "HH", "ds" => "Avaliações", "icon" => "far fa-thermometer-half" ),
-					array( "id" => "U", "ds" => "Unidade", "icon" => "far fa-universal-access" ),
-					array( "id" => "A", "ds" => "Áreas", "icon" => "far fa-bookmark" ),
+					array( "id" => "Z", "ds" => "Tipo", "icon" => "fas fa-check" ),
+					array( "id" => "X", "ds" => "Sexo", "icon" => "fas fa-venus-mars" ),
+					array( "id" => "C", "ds" => "Classe", "icon" => "fas fa-graduation-cap" ),
+					array( "id" => "G", "ds" => "Grupo", "icon" => "fas fa-object-group" ),
+					array( "id" => "HH", "ds" => "Avaliações", "icon" => "fas fa-thermometer-half" ),
+					array( "id" => "U", "ds" => "Unidade", "icon" => "fas fa-universal-access" ),
+					array( "id" => "A", "ds" => "Áreas", "icon" => "fas fa-bookmark" ),
 					array( "id" => "T", "ds" => "Membros Ativos", "icon" => "fas fa-toggle-on" ),
-					array( "id" => "E", "ds" => "Especialidade", "icon" => "far fa-check-circle-o" ),
-					array( "id" => "M", "ds" => "Mestrado", "icon" => "far fa-check-circle" )
+					array( "id" => "E", "ds" => "Especialidade", "icon" => "fas fa-check-circle" ),
+					array( "id" => "M", "ds" => "Mestrado", "icon" => "fas fa-check-circle" )
 				)
 		) 
 	);?>
@@ -43,7 +43,7 @@
 		<br/>
 	</div>
 	<div class="row">
-		<button class="btn btn-danger" id="btnDelHist"><i class="far fa-trash-o"></i>&nbsp;Excluir</button>
+		<button class="btn btn-danger" id="btnDelHist"><i class="fas fa-trash-o"></i>&nbsp;Excluir</button>
 	</div>
 </div>
 <script src="<?php echo $GLOBALS['pattern']->getVD();?>dashboard/js/cadastroAprendizadoHist.js<?php echo "?".microtime();?>"></script>
