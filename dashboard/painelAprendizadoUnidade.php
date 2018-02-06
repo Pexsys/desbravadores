@@ -44,7 +44,7 @@ $result = CONN::get()->Execute("
 if (!$result->EOF):
 	echo fItemAprendizado(array(
 		"classPanel" => "panel-green",
-		"leftIcon" => "far fa-child fa-4x", 
+		"leftIcon" => "fas fa-child fa-4x", 
 		"value" => $result->fields["QTD"], 
 		"strBL" => "Ativos", 
 		"strBR" => "Unidade"
@@ -59,7 +59,7 @@ $result = CONN::get()->Execute("
 if (!$result->EOF):
 	echo fItemAprendizado(array(
 		"classPanel" => "panel-primary",
-		"leftIcon" => "far fa-thumbs-up fa-4x", 
+		"leftIcon" => "fas fa-thumbs-up fa-4x", 
 		"value" => $result->fields["QTD"], 
 		"strBL" => "Batizados", 
 		"strBR" => "Unidade"

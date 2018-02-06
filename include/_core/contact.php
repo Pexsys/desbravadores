@@ -38,25 +38,25 @@ fHeaderPage();
                 <p>
                     3481 Melrose Place<br>Beverly Hills, CA 90210<br>
                 </p>
-                <p><i class="far fa-phone"></i> 
+                <p><i class="fas fa-phone"></i> 
                     <abbr title="Phone">P</abbr>: (123) 456-7890</p>
-                <p><i class="far fa-envelope-o"></i> 
+                <p><i class="fas fa-envelope-o"></i> 
                     <abbr title="Email">E</abbr>: <a href="mailto:name@example.com">name@example.com</a>
                 </p>
-                <p><i class="far fa-clock-o"></i> 
+                <p><i class="fas fa-clock-o"></i> 
                     <abbr title="Hours">H</abbr>: Monday - Friday: 9:00 AM to 5:00 PM</p>
                 <ul class="list-unstyled list-inline list-social-icons">
                     <li>
-                        <a href="#"><i class="far fa-facebook-square fa-2x"></i></a>
+                        <a href="#"><i class="fas fa-facebook-square fa-2x"></i></a>
                     </li>
                     <li>
-                        <a href="#"><i class="far fa-linkedin-square fa-2x"></i></a>
+                        <a href="#"><i class="fas fa-linkedin-square fa-2x"></i></a>
                     </li>
                     <li>
-                        <a href="#"><i class="far fa-twitter-square fa-2x"></i></a>
+                        <a href="#"><i class="fas fa-twitter-square fa-2x"></i></a>
                     </li>
                     <li>
-                        <a href="#"><i class="far fa-google-plus-square fa-2x"></i></a>
+                        <a href="#"><i class="fas fa-google-plus-square fa-2x"></i></a>
                     </li>
                 </ul>
             </div>

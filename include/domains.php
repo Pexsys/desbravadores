@@ -15,7 +15,7 @@ function getDomainMembrosAtivos(){
 			"id" => $f['ID_CAD_MEMBRO'],
 			"ds" => $f['NM'],
 			"sb" => fStrZero($f['ID_MEMBRO'], $qtdZeros),
-			"icon" => ($f['IDADE_HOJE'] < 18 ? "far fa-circle" : "far fa-circle-thin")
+			"icon" => ($f['IDADE_HOJE'] < 18 ? "fas fa-circle" : "far fa-circle")
 		);
 		if ($f['IDADE_HOJE'] < 18):
 			$a["icon-color"] = "text-danger";
@@ -41,7 +41,7 @@ function getDomainMembrosInativos(){
 			"id" => $f['ID'],
 			"ds" => $f['NM'],
 			"sb" => fStrZero($f['ID_MEMBRO'], $qtdZeros),
-			"icon" => ($f['IDADE_HOJE'] < 18 ? "far fa-circle" : "far fa-circle-thin")
+			"icon" => ($f['IDADE_HOJE'] < 18 ? "fas fa-circle" : "far fa-circle")
 		);
 		if ($f['IDADE_HOJE'] < 18):
 			$a["icon-color"] = "text-danger";
@@ -64,7 +64,7 @@ function getDomainEventos(){
 			"id"	=> $f['ID'],
 			"ds"	=> $f['DS'],
 			"sb"	=> strftime("%d/%m/%Y",strtotime($f["DH_S"])),
-			"icon" => "far fa-calendar-o"
+			"icon" => "far fa-calendar-alt"
 		);
 	endforeach;
 	return $arr;
@@ -92,7 +92,7 @@ function getDomainUnidades($fAtivo = false){
 			"id"	=> $f['ID'],
 			"ds"	=> $f['DS'],
 			"sb"  => $f['IDADE'],
-			"icon" => ($f['TP'] == "F" ? "far fa-female" : ( $f['TP'] == "M" ? "far fa-male" : "far fa-user-secret" ) )
+			"icon" => ($f['TP'] == "F" ? "fas fa-female" : ( $f['TP'] == "M" ? "fas fa-male" : "fas fa-user-secret" ) )
 		);
 	endforeach;
 	return $arr;
@@ -144,7 +144,7 @@ function getDomainClasses(){
 			"id"	=> $f['ID'],
 			"ds"	=> $f['DS_ITEM'],
 			"sb"	=> $f['CD_ITEM_INTERNO'],
-			"icon" => $f['CD_AREA_INTERNO'] == "REGULAR" ? "far fa-check-square" : "far fa-check-square-o"
+			"icon" => $f['CD_AREA_INTERNO'] == "REGULAR" ? "fas fa-check-square" : "far fa-check-square"
 		);
 	endforeach;
 	return $arr;
@@ -165,7 +165,7 @@ function getDomainMestrados(){
 			"id"	=> $f['ID'],
 			"ds"	=> $f['DS_ITEM'],
 			"sb"	=> $f['CD_ITEM_INTERNO'],
-			"icon" => "far fa-check-circle"
+			"icon" => "fas fa-check-circle"
 		);
 	endforeach;
 	return $arr;
@@ -186,7 +186,7 @@ function getDomainEspecialidades(){
 			"id"	=> $f['ID'],
 			"ds"	=> $f['DS_ITEM'],
 			"sb"	=> $f['CD_ITEM_INTERNO'],
-			"icon" => "far fa-check-circle-o"
+			"icon" => "fas fa-check-circle"
 		);
 	endforeach;
 	return $arr;
@@ -206,7 +206,7 @@ function getDomainAreasEspecialidades(){
 			"id"	=> $f['CD_AREA_INTERNO'],
 			"ds"	=> $f['DS_ITEM'],
 			"sb"	=> $f['CD_ITEM_INTERNO'],
-			"icon" => $f['CD_AREA_INTERNO'] == "ME" ? "far fa-check-circle" : "far fa-check-circle-o"
+			"icon" => $f['CD_AREA_INTERNO'] == "ME" ? "fas fa-check-circle" : "fas fa-check-circle"
 		);
 	endforeach;
 	return $arr;
@@ -223,7 +223,7 @@ function getMesAniversario(){
 			"id" => $f["MES"], 
 			"ds" => mb_strtoupper(fDescMes($f["MES"])),
 			"sb" => $f["MES"],
-			"icon" => "far fa-calendar"
+			"icon" => "far fa-calendar-alt"
 		);
 	endforeach;
 	return $arr;

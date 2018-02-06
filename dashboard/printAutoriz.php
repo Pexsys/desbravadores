@@ -52,7 +52,7 @@ if ( !$result->EOF ):
 			echo "  <div class=\"panel panel-success\" name=\"reprint\" cad-id=\"".$fields["ID_CAD_MEMBRO"]."\" aut-id=\"".$fields["ID"]."\">";
 			echo "	<div class=\"panel-heading\" style=\"cursor:pointer;\">";
 	        echo "	    <div class=\"row\">
-    					<div class=\"col-xs-3\"><i class=\"far fa-id-card-o fa-4x\"></i></div>
+    					<div class=\"col-xs-3\"><i class=\"fas fa-id-card-o fa-4x\"></i></div>
     					<div class=\"col-xs-9 text-right\">
     						<div class=\"huge\">".strftime("%Y",strtotime($fields["DH_S"]))."-".fStrZero($fields["ID"],3)."</div>
     					</div>

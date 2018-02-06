@@ -13,17 +13,17 @@
 			"filterTo" => "#aprHstTable",
 			"filters" => 
 				array( 
-					array( "id" => "Z", "ds" => "Tipo", "icon" => "far fa-check" ),
-					array( "id" => "X", "ds" => "Sexo","icon" => "far fa-venus-mars" ),
-					array( "id" => "C", "ds" => "Classe", "icon" => "far fa-graduation-cap" ),
-					array( "id" => "G", "ds" => "Grupo", "icon" => "far fa-group" ),
-					array( "id" => "HH", "ds" => "Avaliações", "icon" => "far fa-thermometer-half" ),
-					array( "id" => "U", "ds" => "Unidade", "icon" => "far fa-universal-access" ),
-					array( "id" => "A", "ds" => "Áreas", "icon" => "far fa-bookmark" ),
+					array( "id" => "Z", "ds" => "Tipo", "icon" => "fas fa-check" ),
+					array( "id" => "X", "ds" => "Sexo","icon" => "fas fa-venus-mars" ),
+					array( "id" => "C", "ds" => "Classe", "icon" => "fas fa-graduation-cap" ),
+					array( "id" => "G", "ds" => "Grupo", "icon" => "fas fa-object-group" ),
+					array( "id" => "HH", "ds" => "Avaliações", "icon" => "fas fa-thermometer-half" ),
+					array( "id" => "U", "ds" => "Unidade", "icon" => "fas fa-universal-access" ),
+					array( "id" => "A", "ds" => "Áreas", "icon" => "fas fa-bookmark" ),
 					array( "id" => "T", "ds" => "Membros Ativos", "icon" => "fas fa-toggle-on" ),
 					array( "id" => "I", "ds" => "Membros Inativos", "icon" => "fas fa-toggle-off" ),
-					array( "id" => "E", "ds" => "Especialidade", "icon" => "far fa-check-circle-o" ),
-					array( "id" => "M", "ds" => "Mestrado", "icon" => "far fa-check-circle" )
+					array( "id" => "E", "ds" => "Especialidade", "icon" => "fas fa-check-circle" ),
+					array( "id" => "M", "ds" => "Mestrado", "icon" => "fas fa-check-circle" )
 				)
 		) 
 	);?>

@@ -46,7 +46,7 @@ fHeaderPage();
                     <li><a href="https://www.instagram.com/pioneiros_cr/" target="_blank"><i class="fab fa-2x fa-instagram"></i></a></li>
                     <li><a href="https://www.twitter.com/PioneirosCapao" target="_blank"><i class="fab fa-2x fa-twitter-square"></i></a></li>
                     <li><a href="http://www.iasd-capaoredondo.com.br/desbravadores/"><i class="fas fa-2x fa-sitemap"></i></a></li>
-                    <li><a href="mailto:desbravadores@iasd-capaoredondo.com.br"><i class="far fa-2x fa-envelope"></i></a></li>
+                    <li><a href="mailto:desbravadores@iasd-capaoredondo.com.br"><i class="fas fa-2x fa-envelope"></i></a></li>
                 </ul>
             </div>
         </div>

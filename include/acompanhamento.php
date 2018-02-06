@@ -100,7 +100,7 @@ function fGetClassAcomp( $cap, $param ){
 	
 	$str = "<div class=\"row\">";
 	$str .= "<div class=\"well well-sm\" style=\"padding:4px;margin-bottom:0px;font-size:10px;color:". ($param["it"] > 10 ? "#000000" : "#ffffff") .";background-color:".$cap["cr"]."\">";
-	$str .= "<b>".$cap["nm"]."<br/>".titleCase($cap["ap"]). (empty($strC) ? "<i class=\"far fa-check pull-left\"></i> - CLASSE JÁ CONCLUÍDA" : "") ."</b></div>";
+	$str .= "<b>".$cap["nm"]."<br/>".titleCase($cap["ap"]). (empty($strC) ? "<i class=\"fas fa-check pull-left\"></i> - CLASSE JÁ CONCLUÍDA" : "") ."</b></div>";
 	$str .= (empty($strC) ? "" : $strC);
 	$str .= "</div>";
 	return $str;

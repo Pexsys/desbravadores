@@ -1,7 +1,6 @@
 <?php
 @require_once("../include/functions.php");
 @require_once("../include/responsavel.php");
-@require_once("../include/profile.php");
 @require_once("../include/compras.php");
 responseMethod();
 
@@ -133,8 +132,7 @@ function getQueryByFilter( $parameters ) {
 
 function getMembros( $parameters ) {
 	$arr = array();
-	
-	
+
 	$qtdZeros = zeroSizeID();
 	$result = getQueryByFilter( $parameters );
 	foreach ($result as $k => $f):
@@ -153,8 +151,6 @@ function getMembros( $parameters ) {
 function updateMember( $parameters ) {
 	$arr = array();
 	$arr["result"] = false;
-	
-	
 
 	$id = $parameters["id"];
 	$pessoaID = null;

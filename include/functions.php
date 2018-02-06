@@ -408,7 +408,7 @@ function fListFanfarra($relativePath,$title,$extentions){
 
 function fGetClassTipoEvento($strTipoEvento){
 	$eventClass = array(
-		"APS"		=> "far fa-building",	//VERMELHO
+		"APS"		=> "fas fa-building",	//VERMELHO
 		"IASD"		=> "fas fa-star",	//AZUL
 		"REGIAO"	=> "fas fa-building",	//VERDE
 		"DEFAULT"	=> "fas fa-child",	//PRETO
@@ -436,23 +436,23 @@ function getMacroArea( $tpItem, $areaInterno ){
 }
 
 function getIconAprendizado( $tpItem, $areaInterno, $sizeClass = "" ){
-    $retorno = "far fa-info";
+    $retorno = "fas fa-info";
 	if ($tpItem == "CL" && $areaInterno == "REGULAR"):
-		$retorno = "far fa-check-square";
+		$retorno = "fas fa-check-square";
 	elseif ($tpItem == "CL" && fStrStartWith($areaInterno, "AVAN")):
-		$retorno = "far fa-check-square-o";
+		$retorno = "far fa-check-square";
 	elseif ($tpItem == "ES"):
 		if ($areaInterno == "ME" ):
-			$retorno = "far fa-check-circle";
+			$retorno = "fas fa-check-circle";
 		else:
-			$retorno = "far fa-check-circle-o";
+			$retorno = "fas fa-check-circle";
 		endif;
 	elseif ($tpItem == "TRUNFO"):
-		$retorno = "far fa-picture-o";
+		$retorno = "fas fa-picture-o";
 	elseif ($tpItem == "MEDALHA"):
-		$retorno = "far fa-trophy";
+		$retorno = "fas fa-trophy";
 	elseif ($tpItem == "TIRA"):
-		$retorno = "far fa-square-o";
+		$retorno = "fas fa-square-o";
 	endif;
 	if (!empty($sizeClass)):
 		$retorno = "$retorno $sizeClass";

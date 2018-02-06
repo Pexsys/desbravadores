@@ -42,7 +42,7 @@ function fDashBoard( $panelClass, $iconLeft, $query, $showZero, $titulo, $urlDet
 			echo 	"<a href=\"$urlDetalhes\">
 						<div class=\"panel-footer\">
 							<span class=\"pull-left\">Detalhes</span>
-							<span class=\"pull-right\"><i class=\"far fa-arrow-circle-right\"></i></span>
+							<span class=\"pull-right\"><i class=\"fas fa-arrow-circle-right\"></i></span>
 							<div class=\"clearfix\"></div>
 						</div>
 					</a>";
@@ -61,7 +61,7 @@ function fDashBoard( $panelClass, $iconLeft, $query, $showZero, $titulo, $urlDet
 <div class="row">
 	<?php
 		insDocs();
-		fDashBoard( "panel-red", "far fa-thumbs-down fa-4x", 
+		fDashBoard( "panel-red", "fas fa-thumbs-down fa-4x", 
 			"SELECT COUNT(*) AS qtd FROM (
 				SELECT 'NOME COMPLETO' AS INCONSIST FROM CON_ATIVOS WHERE LENGTH(NM)<=5
 				UNION ALL 
@@ -97,15 +97,15 @@ function fDashBoard( $panelClass, $iconLeft, $query, $showZero, $titulo, $urlDet
 			"SELECT COUNT(*) AS qtd FROM CON_ATIVOS", 
 			true, "Ativos", $GLOBALS['pattern']->getVD()."dashboard/index.php?id=5" );
 
-		fDashBoard( "panel-yellow", "far fa-check-circle fa-4x", 
+		fDashBoard( "panel-yellow", "fas fa-check-circle fa-4x", 
 			"SELECT COUNT(*) AS qtd FROM CON_ATIVOS WHERE dt_bat IS NULL",
 			false, "N&atilde;o Batizados", $GLOBALS['pattern']->getVD()."dashboard/index.php?id=5&flt=B&op=N" );
 
-		fDashBoard( "panel-primary", "far fa-bath fa-4x", 
+		fDashBoard( "panel-primary", "fas fa-bath fa-4x", 
 			"SELECT COUNT(*) AS qtd FROM CON_ATIVOS WHERE dt_bat IS NOT NULL",
 			false, "Batizados", $GLOBALS['pattern']->getVD()."dashboard/index.php?id=5&flt=B&op=S" );
 			
-		fDashBoard( "panel-info", "far fa-info-circle fa-4x", 
+		fDashBoard( "panel-info", "fas fa-info-circle fa-4x", 
 			"SELECT COUNT(*) AS qtd FROM CAD_MEMBRO",
 			true, "Cadastrados", $GLOBALS['pattern']->getVD()."dashboard/index.php?id=5&flt=ALL" );
 	?>

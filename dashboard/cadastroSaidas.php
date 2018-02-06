@@ -1,6 +1,6 @@
 <?php
 @require_once("../include/filters.php");
-$autorizIcon = "far fa-circle text-danger";
+$autorizIcon = "fas fa-circle text-danger";
 ?>
 <div class="row">
 	<div class="col-lg-12">
@@ -24,9 +24,9 @@ $autorizIcon = "far fa-circle text-danger";
 		<br/>
 	</div>
 	<div class="row">
-		<a role="button" class="btn btn-warning pull-left" id="btnNovo"><i class="far fa-plus"></i>&nbsp;Novo</a>
-		<a role="button" class="btn btn-primary pull-right" name="filtro" id="btnAtivos" tp-filtro="Y"><i class="far fa-filter"></i>&nbsp;<?php echo date("Y");?></a>
-		<a role="button" class="btn btn-primary-outline pull-right" name="filtro" id="btnTodos" tp-filtro="T"><i class="far fa-globe"></i>&nbsp;Todos</a>
+		<a role="button" class="btn btn-warning pull-left" id="btnNovo"><i class="fas fa-plus"></i>&nbsp;Novo</a>
+		<a role="button" class="btn btn-primary pull-right" name="filtro" id="btnAtivos" tp-filtro="Y"><i class="fas fa-filter"></i>&nbsp;<?php echo date("Y");?></a>
+		<a role="button" class="btn btn-primary-outline pull-right" name="filtro" id="btnTodos" tp-filtro="T"><i class="fas fa-globe"></i>&nbsp;Todos</a>
 	</div>
 </div>
 <div class="modal fade" id="saidasModal" role="dialog" data-backdrop="static">
@@ -116,11 +116,11 @@ $autorizIcon = "far fa-circle text-danger";
 												"filterTo" => "#cbParticip",
 												"filters" =>
 													array(
-														array( "id" => "G", "ds" => "Grupo", "icon" => "far fa-group" ),
-														array( "id" => "X", "ds" => "Sexo", "icon" => "far fa-venus-mars" ),
-														array( "id" => "B", "ds" => "Batizado", "icon" => "far fa-bath" ),
-														array( "id" => "U", "ds" => "Unidade", "icon" => "far fa-universal-access" ),
-														array( "id" => "C", "ds" => "Classe", "icon" => "far fa-graduation-cap" )
+														array( "id" => "G", "ds" => "Grupo", "icon" => "fas fa-object-group" ),
+														array( "id" => "X", "ds" => "Sexo", "icon" => "fas fa-venus-mars" ),
+														array( "id" => "B", "ds" => "Batizado", "icon" => "fas fa-bath" ),
+														array( "id" => "U", "ds" => "Unidade", "icon" => "fas fa-universal-access" ),
+														array( "id" => "C", "ds" => "Classe", "icon" => "fas fa-graduation-cap" )
 													)
 											)
 										);
@@ -129,8 +129,8 @@ $autorizIcon = "far fa-circle text-danger";
 									</div>
 									<div class="row">
 										<div class="form-group col-xs-12">
-											<label for="cbParticip" class="control-label"><i class="<?echo $autorizIcon;?>" aria-hidden="true">&nbsp;</i>Autoriza&ccedil;&atilde;o&nbsp;&nbsp;|&nbsp;&nbsp;Participa&ccedil;&atilde;o<i class="far fa-check" aria-hidden="true"></i></label>
-											<select name="cbParticip" id="cbParticip" class="selectpicker form-control input-sm" opt-value="id" opt-label="nm" opt-subtext="sb" opt-selected="pt" opt-links="fg" opt-link-icons="S=<?echo $autorizIcon;?>;N=far fa-circle-thin text-muted" multiple data-live-search="true" field="particip" title="Escolha um ou mais nomes" data-selected-text-format="count > 2" data-width="100%" data-container="body" data-actions-box="true"></select>
+											<label for="cbParticip" class="control-label"><i class="<?echo $autorizIcon;?>" aria-hidden="true">&nbsp;</i>Autoriza&ccedil;&atilde;o&nbsp;&nbsp;|&nbsp;&nbsp;Participa&ccedil;&atilde;o<i class="fas fa-check" aria-hidden="true"></i></label>
+											<select name="cbParticip" id="cbParticip" class="selectpicker form-control input-sm" opt-value="id" opt-label="nm" opt-subtext="sb" opt-selected="pt" opt-links="fg" opt-link-icons="S=<?echo $autorizIcon;?>;N=far fa-circle text-muted" multiple data-live-search="true" field="particip" title="Escolha um ou mais nomes" data-selected-text-format="count > 2" data-width="100%" data-container="body" data-actions-box="true"></select>
 										</div>
 									</div>
 								</div>
@@ -146,16 +146,16 @@ $autorizIcon = "far fa-circle text-danger";
 						<div class="col-lg-6 form-group">
 							<?php if (true): //PODE GERAR?>
 							<div class="pull-left" id="divAttr" style="display:none">
-								<a data-toggle="dropdown" class="btn btn-default dropdown-toggle" aria-expanded="false"><i class="far fa-paperclip" aria-hidden="true"></i>&nbsp;Atribui&ccedil;&otilde;es&nbsp;|&nbsp;<span class="caret"></span></a>
+								<a data-toggle="dropdown" class="btn btn-default dropdown-toggle" aria-expanded="false"><i class="fas fa-paperclip" aria-hidden="true"></i>&nbsp;Atribui&ccedil;&otilde;es&nbsp;|&nbsp;<span class="caret"></span></a>
 								<ul class="dropdown-menu" contenteditable="true">
-									<li><a role="button" name="btnShowAttr" attr-rule="bus" attr-caption="&Ocirc;nibus"><i class="far fa-bus"></i>&nbsp;&Ocirc;nibus</a></li>
+									<li><a role="button" name="btnShowAttr" attr-rule="bus" attr-caption="&Ocirc;nibus"><i class="fas fa-bus"></i>&nbsp;&Ocirc;nibus</a></li>
 									<li><a role="button" name="btnShowAttr" attr-rule="tent" attr-caption="Barraca"><i class="glyphicon glyphicon-tent"></i>&nbsp;Barracas</a></li>
-									<li><a role="button" name="btnShowAttr" attr-rule="kitchen" attr-caption="Sacolinha"><i class="far fa-cutlery"></i>&nbsp;Sacolinhas</a></li>
+									<li><a role="button" name="btnShowAttr" attr-rule="kitchen" attr-caption="Sacolinha"><i class="fas fa-utensils"></i>&nbsp;Sacolinhas</a></li>
 								</ul>
 							</div>
 							<?php endif;?>
 							<?php if (true): //PODE GERAR?>
-							<a role="button" class="btn btn-info pull-right" id="btnPrint"><i class="far fa-print"></i>&nbsp;Imprimir</a>
+							<a role="button" class="btn btn-info pull-right" id="btnPrint"><i class="fas fa-print"></i>&nbsp;Imprimir</a>
 							<?php endif;?>
 						</div>
 						<div class="col-lg-3 form-group">
@@ -187,9 +187,9 @@ $autorizIcon = "far fa-circle text-danger";
 								<div class="row">
 									<div class="form-group col-xs-12">
 										<select name="cmLista" opt-value="cd" opt-label="ds" class="selectpicker form-control input-sm" data-container="body" data-width="100%">
-											<option data-icon="far fa-id-card-o" value="geraAutorizacao.php?">AUTORIZA&Ccedil;&Otilde;ES</option>
-											<option data-icon="far fa-users" show="divPartic">LISTAGEM DE PARTICIPANTES</option>
-											<option data-icon="far fa-paperclip" show="divAttrib">LISTAGEM DE ATRIBUI&Ccedil;&Otilde;ES</option>
+											<option data-icon="fas fa-id-card-o" value="geraAutorizacao.php?">AUTORIZA&Ccedil;&Otilde;ES</option>
+											<option data-icon="fas fa-users" show="divPartic">LISTAGEM DE PARTICIPANTES</option>
+											<option data-icon="fas fa-paperclip" show="divAttrib">LISTAGEM DE ATRIBUI&Ccedil;&Otilde;ES</option>
 										</select>
 									</div>
 								</div>
@@ -205,12 +205,12 @@ $autorizIcon = "far fa-circle text-danger";
 								<div class="row" name="rowFilter" id="divPartic" style="display:none">
 									<div class="form-group col-xs-12">
 										<select name="cmSubLista" opt-value="cd" opt-label="ds" class="selectpicker form-control input-sm" data-container="body" data-width="100%">
-											<option data-icon="far fa-sort-alpha-asc" value="geraListaEvento.php?">ALFAB&Eacute;TICA</option>
-											<option data-icon="far fa-leanpub" value="geraListaDispensaEscola.php?">DISPENSA ESCOLAR</option>
-											<option data-icon="far fa-list" value="geraListaEventoAutoriz.php?">CONTROLE DE AUTORIZA&Ccedil;&Otilde;ES - ALFAB&Eacute;TICA</option>
-											<option data-icon="far fa-venus-mars" value="geraListaEventoAutorizGen.php?">CONTROLE DE AUTORIZA&Ccedil;&Otilde;ES - POR GENERO</option>
-											<option data-icon="far fa-user" value="geraListaUniformes.php?filter=C">CONTROLE DE CAMISETAS - GERAL</option>
-											<option data-icon="far fa-male" value="geraListaUniformes.php?filter=A">CONTROLE DE AGASALHOS - GERAL</option>
+											<option data-icon="fas fa-sort-alpha-up" value="geraListaEvento.php?">ALFAB&Eacute;TICA</option>
+											<option data-icon="fab fa-leanpub" value="geraListaDispensaEscola.php?">DISPENSA ESCOLAR</option>
+											<option data-icon="fas fa-list" value="geraListaEventoAutoriz.php?">CONTROLE DE AUTORIZA&Ccedil;&Otilde;ES - ALFAB&Eacute;TICA</option>
+											<option data-icon="fas fa-venus-mars" value="geraListaEventoAutorizGen.php?">CONTROLE DE AUTORIZA&Ccedil;&Otilde;ES - POR GENERO</option>
+											<option data-icon="fas fa-user" value="geraListaUniformes.php?filter=C">CONTROLE DE CAMISETAS - GERAL</option>
+											<option data-icon="fas fa-male" value="geraListaUniformes.php?filter=A">CONTROLE DE AGASALHOS - GERAL</option>
 										</select>
 									</div>
 								</div>
@@ -218,8 +218,8 @@ $autorizIcon = "far fa-circle text-danger";
 									<div class="form-group col-xs-12">
 										<select name="cmSubLista" opt-value="cd" opt-label="ds" class="selectpicker form-control input-sm" data-container="body" data-width="100%">
 											<option data-icon="glyphicon glyphicon-tent" value="geraListaEventoTent.php?">LISTAGEM DE BARRACAS</option>
-											<option data-icon="far fa-cutlery" value="geraListaEventoKitchen.php?">LISTAGEM DE SACOLINHAS</option>
-											<option data-icon="far fa-bus" value="geraListaEventoBus.php?">LISTAGEM DE PASSAGEIROS/&Ocirc;NIBUS</option>
+											<option data-icon="fas fa-utensils" value="geraListaEventoKitchen.php?">LISTAGEM DE SACOLINHAS</option>
+											<option data-icon="fas fa-bus" value="geraListaEventoBus.php?">LISTAGEM DE PASSAGEIROS/&Ocirc;NIBUS</option>
 										</select>
 									</div>
 								</div>
@@ -230,7 +230,7 @@ $autorizIcon = "far fa-circle text-danger";
 				<div class="panel-footer">
 					<div class="row">
 						<div class="col-lg-12">
-							<button type="submit" class="btn btn-success pull-right"><i class="far fa-file-pdf-o"></i>&nbsp;Gerar PDF</button>
+							<button type="submit" class="btn btn-success pull-right"><i class="fas fa-file-pdf-o"></i>&nbsp;Gerar PDF</button>
 						</div>
 					</div>
 				</div>

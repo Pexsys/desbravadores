@@ -352,7 +352,7 @@ function getClasses( $parameters ) {
 		
 		foreach ($rs as $ks2 => $det):
 			$str .= "<i class=\"".getIconAprendizado( $det["TP_ITEM"], $det["CD_AREA_INTERNO"] )."\"></i>&nbsp;".titleCase($det["DS_ITEM"]);
-			$str .= "<i class=\"far ".($det["TP_BUY"] == "OK"?"fa-info-circle":"fa-question-circle")." pull-right\" title=\"".($det["TP_BUY"] == "OK"?"Item comprado":"Item ainda não comprado")."\" style=\"".($det["TP_BUY"] == "OK"?"color:green":"color:red")."\"></i>";
+			$str .= "<i class=\"fas ".($det["TP_BUY"] == "OK"?"fa-info-circle":"fa-question-circle")." pull-right\" title=\"".($det["TP_BUY"] == "OK"?"Item comprado":"Item ainda não comprado")."\" style=\"".($det["TP_BUY"] == "OK"?"color:green":"color:red")."\"></i>";
 			$str .= "<br/>";
 		endforeach;
 		$str .= "</div>";
@@ -412,7 +412,7 @@ function fGetDetailClass( $class, $titulo, $icon, $result ) {
 		$str .= "<div class=\"col-lg-12 col-xs-12 col-md-12 col-sm-12\">";
 		$str .= "<div class=\"row\">";
 		$str .= "<div class=\"panel $class\" style=\"margin-bottom:1px\">";
-		$str .= "<div class=\"panel-heading\" style=\"padding:3px 10px\"><i class=\"far $icon\" aria-hidden=\"true\"></i>&nbsp;$titulo</div>";
+		$str .= "<div class=\"panel-heading\" style=\"padding:3px 10px\"><i class=\"fas $icon\" aria-hidden=\"true\"></i>&nbsp;$titulo</div>";
 		$str .= "<div class=\"panel-body\" style=\"padding:5px 10px\">";
 		$areaAtu = "";
 		$first = true;
@@ -448,7 +448,7 @@ function fGetDetailEspClass( $class, $titulo, $result ) {
 			endif;
 			$str .= "&nbsp;<i class=\"".getIconAprendizado( $line["TP_ITEM"], $line["CD_AREA_INTERNO"] )."\"></i> ".titleCase($line["DS_ITEM"]);
 			if (isset($line["TP_BUY"])):
-				$str .= "&nbsp;&nbsp;<i class=\"far ".($line["TP_BUY"] == "OK"?"fa-info-circle":"fa-question-circle")."\" title=\"".($line["TP_BUY"] == "OK"?"Item comprado":"Item ainda não comprado")."\" style=\"".($line["TP_BUY"] == "OK"?"color:green":"color:red")."\"></i>";
+				$str .= "&nbsp;&nbsp;<i class=\"fas ".($line["TP_BUY"] == "OK"?"fa-info-circle":"fa-question-circle")."\" title=\"".($line["TP_BUY"] == "OK"?"Item comprado":"Item ainda não comprado")."\" style=\"".($line["TP_BUY"] == "OK"?"color:green":"color:red")."\"></i>";
 			endif;
 			$str .= "<br/>";
 		endforeach;

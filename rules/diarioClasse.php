@@ -370,7 +370,7 @@ function blocoItemReq($result, $class, $icon, $titulo){
 		$str .= "<div class=\"row\">";
 		$str .= "<div class=\"panel panel-$class\" style=\"margin-bottom:1px\">";
 		$str .= "<div class=\"panel-heading\" style=\"padding:3px 10px\">
-					<i class=\"far $icon\" aria-hidden=\"true\"></i>&nbsp;$titulo
+					<i class=\"fas $icon\" aria-hidden=\"true\"></i>&nbsp;$titulo
 					<span class=\"badge badge-pill progress-bar-$class pull-right\">{$result->RecordCount()}</span>
 				</div>";
 		$str .= "<div class=\"panel-body\" style=\"padding:5px 10px\">";
