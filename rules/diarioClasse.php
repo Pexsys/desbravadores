@@ -160,7 +160,7 @@ function fRegistro( $parameters ) {
 			$result = CONN::get()->Execute("
 				SELECT *
 				  FROM CAD_DIARIO cd
-			INNER JOIN CAD_USUARIO cu ON (cu.ID = cd.CAD_USUARIO)
+			INNER JOIN CAD_USUARIO cu ON (cu.ID = cd.ID_CAD_USUARIO)
 				 WHERE cd.ID = ?
 			", array( $parameters["id"] ) );
 			if (!$result->EOF):
