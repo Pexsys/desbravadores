@@ -521,7 +521,7 @@ function populateRefs(){
 
 function rulesRefs(cm){
 	$('#divReferencia').visible( false );
-	if (cm){
+	if (cm && cm.length > 0){
 		jsLIB.populateOptions( $("#cmRef"), cm );
 		if (cm.length == 1){
 			$("#cmRef").selectpicker('val',cm[0].id);
