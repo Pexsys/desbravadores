@@ -13,11 +13,10 @@ function getQueryByFilter( $parameters ) {
 	if ( !isset($parameters["filters"]) ):
 		$strQuery .= "
 			SELECT  p.NM,
-					p.ID_CAD_PESSOA,
-					esm.ID_CAD_MEMBRO,
-					esm.ID AS ID_EVE_MEMBRO,
-					esm.ID_EVE_SAIDA,
-					p.IDADE_HOJE,
+					m.ID AS ID_CAD_MEMBRO, 
+					esm.ID AS ID_EVE_MEMBRO, 
+					esm.ID_EVE_SAIDA, 
+					p.IDADE_HOJE, 
 					YEAR(es.DH_R)-YEAR(p.DT_NASC) - IF(DATE_FORMAT(p.DT_NASC,'%m%d')>DATE_FORMAT(es.DH_R,'%m%d'),1,0) AS IDADE_EVENTO_FIM,
 					esm.FG_AUTORIZ
 				FROM EVE_SAIDA es
@@ -44,17 +43,18 @@ function getQueryByFilter( $parameters ) {
 		endif;
 	endif;
 
-	$strQuery .= "SELECT  ca.NM,
+	$strQuery .= "
+		SELECT  ca.NM,
 				ca.ID_CAD_PESSOA,
 				ca.ID_CAD_MEMBRO,
 				esm.ID AS ID_EVE_MEMBRO,
 				es.ID AS ID_EVE_SAIDA,
 				ca.IDADE_HOJE,
 				YEAR(es.DH_R)-YEAR(ca.DT_NASC) - IF(DATE_FORMAT(ca.DT_NASC,'%m%d')>DATE_FORMAT(es.DH_R,'%m%d'),1,0) AS IDADE_EVENTO_FIM,
-				esm.FG_AUTORIZ
-		FROM CON_ATIVOS ca
-		LEFT JOIN EVE_SAIDA_MEMBRO esm ON (esm.ID_CAD_MEMBRO = ca.ID_CAD_MEMBRO AND esm.ID_EVE_SAIDA = ?)
-		LEFT JOIN EVE_SAIDA es ON (es.ID = esm.ID_EVE_SAIDA)
+				esm.FG_AUTORIZ 
+			FROM CON_ATIVOS ca 
+			LEFT JOIN EVE_SAIDA_MEMBRO esm ON (esm.ID_CAD_MEMBRO = ca.ID_CAD_MEMBRO AND esm.ID_EVE_SAIDA = ?)
+			LEFT JOIN EVE_SAIDA es ON (es.ID = esm.ID_EVE_SAIDA)
 		WHERE 1=1
 	";
 	if ($parameters["id"] == "Novo"):

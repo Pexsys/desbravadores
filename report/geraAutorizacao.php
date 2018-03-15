@@ -54,7 +54,7 @@ class ESPCR extends TCPDF {
 	public function setLine($line){
 	    $this->line = $line;
 	    $this->campori = ($this->line["TP_AUTORIZ"] == "OP-CAM");
-	    $arr = explode(' ',strtolower($this->line["DS_CARGO"]));
+	    $arr = explode(' ',mb_strtolower($this->line["DS_CARGO"], "UTF-8"));
 	    $this->dsCargo = (fStrStartWith($this->line["CD_CARGO"],"1") ? ($this->line["TP_SEXO"] == "F" ? "desbravadora" : "desbravador") : $arr[0]);
 	}
 
@@ -103,35 +103,12 @@ class ESPCR extends TCPDF {
 
 	public function Footer() {
  	    if ($this->campori):
-	 	    $dtS = strtotime($this->line["DH_S"]);
-			$dtR = strtotime($this->line["DH_R"]);
-
-			$barCODE = PATTERNS::getBars()->encode(array(
-				"id" => "F",
-				"fi" => $this->line["ID"],
-				"ni" => $this->line["ID_CAD_PESSOA"]
-			));
-
-	 	    $this->SetXY(5,-20);
-	    		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 11);
-	    		$this->SetTextColor(255,0,0);
-	    		$this->Cell(20, 3, strftime("%Y",$dtS)."-".fStrZero($this->line["ID"],3), 0, false, 'L', false, false, 1, false, 'C', 'C');
-
-	    		$this->SetXY(5,-16);
-	    		$this->SetTextColor(180,180,180);
-	    		$this->Cell(10, 3, fStrZero($this->SEQ[$this->line["ID"]."|".$this->line["ID_CAD_PESSOA"]],zeroSizeID()), 0, false, 'L', false, false, 1, false, 'C', 'C');
-
-	    		$this->setXY(62,-27);
-	    		$this->SetTextColor(0,0,0);
-	    		$this->write1DBarcode($barCODE, 'C39', '', '', '', 20, 0.5, $this->stLine, 'N');
-
-	    		$this->SetTextColor(0,0,0);
-	    		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 5);
-	    		$this->SetY(-9);
-	    		$this->Cell(205, 5, "Esta autorização perderá automaticamente o valor em caso de rasuras, dobras, ratificações, ressalvas ou adendos ao texto sem o prévio acordo com o DIRETOR.", 0, false, 'C');
-
-	    		$this->Image("img/logo.jpg", 183, 263, 20, 25, 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
-	    	endif;
+			$this->SetTextColor(0,0,0);
+			$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 5);
+			$this->SetY(-9);
+			$this->Cell(205, 5, "Esta autorização perderá automaticamente o valor em caso de rasuras, dobras, ratificações, ressalvas ou adendos ao texto sem o prévio acordo com o DIRETOR.", 0, false, 'C');
+			$this->Image("img/logo.jpg", 183, 263, 20, 25, 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+		endif;
 	}
 
 	public function newPage() {
@@ -150,7 +127,7 @@ class ESPCR extends TCPDF {
 		$barCODE = PATTERNS::getBars()->encode(array(
 			"id" => "D",
 			"fi" => $this->line["ID"],
-			"ni" => $this->line["ID_CAD_PESSOA"]
+			"ni" => $this->line["ID_MEMBRO"]
 		));
 
 		$lBase+=4;
@@ -166,7 +143,7 @@ class ESPCR extends TCPDF {
 
 		$this->SetX(195);
 		$this->SetTextColor(180,180,180);
-		$this->Cell(10, 0, fStrZero($this->SEQ[$this->line["ID"]."|".$this->line["ID_CAD_PESSOA"]],zeroSizeID()), 0, false, 'R', false, false, 1, false, 'C', 'C');
+		$this->Cell(10, 0, fStrZero($this->SEQ[$this->line["ID"]."|".$this->line["ID_CAD_MEMBRO"]],zeroSizeID()), 0, false, 'R', false, false, 1, false, 'C', 'C');
 
 		$this->SetY($lBase+6);
 		$this->SetTextColor(0,0,0);
@@ -176,11 +153,12 @@ class ESPCR extends TCPDF {
 			$this->line["NR_DOC"]." a participar juntamente com o ".PATTERNS::getClubeDS(array("cl","nm")).", dirigido e representado por ".trim($this->line["NOME_DIRETOR"]).", ".
 			$this->line["IDENT_DIRETOR"].", do evento: ".trim($this->line["DS"]). (!empty($this->line["DS_DEST"]) ? "/".trim($this->line["DS_DEST"]) : "").", ".
 			(strftime("%Y-%m-%d",$dtS) == strftime("%Y-%m-%d",$dtR)
-			? "no dia ". strftime("%e de %B de %Y",$dtS). ", saindo &agrave;s ". strftime("%Hh". (strftime("%M",$dtS)>0?"%M":""),$dtS). " e retornando &agrave;s ". strftime("%Hh". (strftime("%M",$dtR)>0?"%M":""),$dtR)
-			: ", com saída prevista para ". strftime("%e de %B de %Y &agrave;s %Hh". (strftime("%M",$dtS)>0?"%M":""),$dtS)." e com retorno previsto para ". strftime("%e de %B de %Y &agrave;s %Hh". (strftime("%M",$dtR)>0?"%M":""),$dtR)
-			).". Local de Saída/Retorno: ".trim($this->line["DS_ORIG"]). ". ".
-			"Consciente dos grandes benefícios recebidos através do ".PATTERNS::getClubeDS(array("cl","cj","db"))." acima descrito, abdico responsabilizar, ".
-			"em qualquer instância judicial, o(os) responsável(eis) do referido Clube em todos os níveis, bem como a ".
+				? "no dia ". utf8_encode(strftime("%e de %B de %Y",$dtS)). ", saindo &agrave;s ". strftime("%Hh". (strftime("%M",$dtS)>0?"%M":""),$dtS). " e retornando &agrave;s ". strftime("%Hh". (strftime("%M",$dtR)>0?"%M":""),$dtR) 
+				: ", com saída prevista para ". utf8_encode(strftime("%e de %B de %Y &agrave;s %Hh". (strftime("%M",$dtS)>0?"%M":""),$dtS))." e com retorno previsto para ". utf8_encode(strftime("%e de %B de %Y &agrave;s %Hh". (strftime("%M",$dtR)>0?"%M":""),$dtR)) 
+			). 
+			". Local de Saída/Retorno: ".trim($this->line["DS_ORIG"]). ". ". 
+			"Consciente dos grandes benefícios recebidos através do ".$GLOBALS['pattern']->getClubeDS(array("cl","cj","db")). 
+			" acima descrito, abdico responsabilizar, em qualquer instância judicial, o(os) responsável(eis) do referido Clube em todos os níveis, bem como a ". 
 			"Igreja Adventista do Sétimo Dia, por qualquer dano causado ou sofrido por meu dependente, devido a sua própria atuação, ".
 			"no percurso de ida e volta bem como no decurso do referido evento. Em caso de acidente, ou doença, autorizo o responsável do ".
 			"Referido Clube a tomar toda e qualquer decisão necessária para o restabelecimento da saúde do meu dependente, junto a todo e ".
@@ -212,9 +190,9 @@ class ESPCR extends TCPDF {
 		$html = "<p align=\"justify\">Eu, ". trim($this->line["NM_RESP"]) .", autorizo ".
 				($this->line["TP_SEXO"] == "F" ? "a " : "o "). $this->dsCargo ." <b><u>".trim($this->line["NM"])."</u></b>, ".
 				$this->line["NR_DOC"]." a se deslocar e participar juntamente com o ".PATTERNS::getClubeDS(array("cl","cj","db","nm"))." do ". trim($this->line["DS"]) .", \"". trim($this->line["DS_TEMA"]) ."\"".
-				", promovido pela ".trim($this->line["DS_ORG"]) .
-				" da Igreja Adventista do Sétimo Dia, que se realizará entre ".strftime("%e de %B de %Y &agrave;s %Hh". (strftime("%M",$dtS)>0?"%M":""),$dtS) .
-				" e com retorno em ". strftime("%e de %B de %Y &agrave;s %Hh". (strftime("%M",$dtR)>0?"%M":""),$dtR) .
+				", promovido pela ".trim($this->line["DS_ORG"]) . 
+				" da Igreja Adventista do Sétimo Dia, que se realizará entre ". utf8_encode(strftime("%e de %B de %Y &agrave;s %Hh". (strftime("%M",$dtS)>0?"%M":""),$dtS)) . 
+				" e com retorno em ". utf8_encode(strftime("%e de %B de %Y &agrave;s %Hh". (strftime("%M",$dtR)>0?"%M":""),$dtR)) . 
 				", no ".trim($this->line["DS_DEST"]) .".
 				<br/>
 				<br/>
@@ -240,7 +218,7 @@ class ESPCR extends TCPDF {
 		$this->writeHTML($html, true, true, true, true);
 
 		$this->SetXY(38,200);
-		$this->Cell(0, 0, "São Paulo, ".strftime("%e de %B de %Y",strtotime(date("Y-m-d"))), 0, false, 'L', false, false, 1, false, 'L', 'C');
+		$this->Cell(0, 0, "São Paulo, ".utf8_encode(strftime("%e de %B de %Y",strtotime(date("Y-m-d")))), 0, false, 'L', false, false, 1, false, 'L', 'C');
 
 		$this->Line(38, 230, 168, 230, $this->stLine3);
 		$this->SetY(233);
@@ -251,6 +229,25 @@ class ESPCR extends TCPDF {
 		$this->SetTextColor(255,0,0);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 6);
 		$this->Cell(0, 0, "OBRIGATÓRIO O RECONHECIMENTO DE FIRMA EM CARTÓRIO", 0, false, 'C', false, false, 1, false, 'L', 'C');
+
+		$barCODE = $GLOBALS['pattern']->getBars()->encode(array( 
+			"id" => "F", 
+			"fi" => $this->line["ID"], 
+			"ni" => $this->line["ID_MEMBRO"] 
+		)); 
+	   
+		$this->setXY(62,255); 
+		$this->SetTextColor(0,0,0); 
+		$this->write1DBarcode($barCODE, 'C39', '', '', '', 20, 0.5, $this->stLine, 'N'); 
+	   
+		$this->SetXY(5,265); 
+		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 11); 
+		$this->SetTextColor(255,0,0); 
+		$this->Cell(20, 3, strftime("%Y",$dtS)."-".fStrZero($this->line["ID"],3), 0, false, 'L', false, false, 1, false, 'C', 'C'); 
+	   
+		$this->SetXY(5,270); 
+		$this->SetTextColor(180,180,180); 
+		$this->Cell(10, 3, fStrZero($this->SEQ[$this->line["ID"]."|".$this->line["ID_CAD_MEMBRO"]],zeroSizeID()), 0, false, 'L', false, false, 1, false, 'C', 'C'); 
 	}
 
 	public function download() {
@@ -283,9 +280,9 @@ if ( (!isset($eventoID) || empty($eventoID)) && (isset($pID) || !empty($pID)) ):
    $result = CONN::get()->Execute("
         SELECT es.ID
     	  FROM EVE_SAIDA es
-    INNER JOIN EVE_SAIDA_PESSOA esp ON (esp.ID_EVE_SAIDA = es.ID AND esp.FG_AUTORIZ = 'S')
-         WHERE es.DH_R > NOW()
-    	   AND esp.ID_CAD_PESSOA IN ($pID)
+		INNER JOIN EVE_SAIDA_MEMBRO esp ON (esp.ID_EVE_SAIDA = es.ID AND esp.FG_AUTORIZ = 'S') 
+		WHERE es.DH_R > NOW() 
+		AND esp.ID_CAD_MEMBRO IN ($pID) 
       ORDER BY 1
     ");
     $eventoID = "";
@@ -305,9 +302,9 @@ $pdf = new ESPCR();
 
 //DEFINE SEQUENCIA POR ID PESSOA
 $query = "
-    	SELECT esp.ID_EVE_SAIDA, esp.ID_CAD_PESSOA, ca.NM
-    	  FROM EVE_SAIDA_PESSOA esp
-    INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = esp.ID_CAD_PESSOA)
+		SELECT esp.ID_EVE_SAIDA, esp.ID_CAD_MEMBRO, ca.NM 
+		FROM EVE_SAIDA_MEMBRO esp 
+		INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_MEMBRO = esp.ID_CAD_MEMBRO) 
          WHERE esp.FG_AUTORIZ = 'S'
     	   ".($list ? " AND esp.ID_EVE_SAIDA IN ($eventoID) " : "AND esp.ID_EVE_SAIDA = $eventoID")."
     	 ORDER BY esp.ID_EVE_SAIDA, ca.NM
@@ -320,24 +317,23 @@ foreach ($result as $k => $line):
         $ant = $line["ID_EVE_SAIDA"];
         $i = 0;
     endif;
-    $pdf->SEQ[ $line["ID_EVE_SAIDA"]."|".$line["ID_CAD_PESSOA"] ] = ++$i;
+    $pdf->SEQ[ $line["ID_EVE_SAIDA"]."|".$line["ID_CAD_MEMBRO"] ] = ++$i;
 endforeach;
 
 $aP = 0;
 $query = "
 	SELECT es.ID, es.DS, es.DH_S, es.DH_R, es.DS_TEMA, es.DS_ORG, es.DS_DEST, es.DS_ORIG, es.TP_AUTORIZ,
-	       esp.ID_CAD_PESSOA,
-	       ca.NM, ca.TP_SEXO, ca.NR_DOC, ca.NR_CPF, ca.TP_SEXO_RESP, ca.DS_TP, ca.NM_RESP, ca.NR_DOC_RESP, ca.NR_CPF_RESP, ca.FONE_CEL_RESP, ca.CD_CARGO, ca.DS_CARGO,
-	       cd.NOME_DIRETOR, cd.IDENT_DIRETOR
+	       ca.ID_MEMBRO, ca.ID_CAD_MEMBRO, ca.NM, ca.TP_SEXO, ca.NR_DOC, ca.NR_CPF, ca.TP_SEXO_RESP, ca.DS_TP, 
+		   ca.NM_RESP, ca.NR_DOC_RESP, ca.NR_CPF_RESP, ca.FONE_CEL_RESP, ca.CD_CARGO, ca.DS_CARGO, 
 	  FROM EVE_SAIDA es,
-	       EVE_SAIDA_PESSOA esp,
+	  	   EVE_SAIDA_MEMBRO esp,
 	       CON_ATIVOS ca,
 	       CON_DIRETOR cd
          WHERE esp.ID_EVE_SAIDA = es.ID
            AND esp.FG_AUTORIZ = 'S'
-           AND ca.ID_CAD_PESSOA = esp.ID_CAD_PESSOA
-	   ".($list ? " AND esp.ID_CAD_PESSOA IN ($pID) AND esp.ID_EVE_SAIDA IN ($eventoID) " : "AND es.ID = $eventoID")."
-	 ORDER BY ca.NM
+		   AND ca.ID_CAD_MEMBRO = esp.ID_CAD_MEMBRO 
+		   ".($list ? " AND esp.ID_CAD_MEMBRO IN ($pID) AND esp.ID_EVE_SAIDA IN ($eventoID) " : "AND es.ID = $eventoID")." 
+	ORDER BY ca.NM
 ";
 $result = CONN::get()->Execute($query);
 if (!$result->EOF):
