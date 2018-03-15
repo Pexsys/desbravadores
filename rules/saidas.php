@@ -272,7 +272,7 @@ function getNames(){
 	endforeach;
 
 	if (!empty($aQuery["query"])):
-		print_r($aQuery);
+		//print_r($aQuery);
 		$rs = CONN::get()->Execute( substr($aQuery["query"], 7)." ORDER BY 1", $aQuery["binds"] );
 		if (!$rs->EOF):
 			foreach ($rs as $k => $line):
