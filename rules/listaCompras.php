@@ -87,7 +87,7 @@ function getQueryByFilter( $parameters ) {
 //exit;
 
 	$query = "
-		SELECT
+		SELECT DISTINCT
 			ccp.ID,
 			ccp.COMPL AS CM,
 			ccp.TP AS TP_INCL,
