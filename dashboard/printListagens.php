@@ -23,6 +23,7 @@ $classes = getDomainFilter( array( "type" => "C" ) );
 			<option data-icon="fas fa-universal-access" show="divUnidades" value="geraListaUnidade.php?filter=">LISTAGEM DE MEMBROS - UNIDADE</option>
 			<option data-icon="fas fa-music" show="divFanfarra" value="geraListaFanfarra.php?filter=">LISTAGEM DE MEMBROS - FANFARRA</option>
 			<option data-icon="fas fa-user-circle" show="divUniformes" value="geraListaUniformes.php?filter=">LISTAGEM DE MEMBROS - UNIFORMES</option>
+			<option data-icon="fas fa-utensils" show="divVegetariano" value="geraListaVegetarianos.php?filter=">LISTAGEM DE MEMBROS - VEGETARIANOS</option>
 			<option data-divider="true"></option>
 			<option data-icon="far fa-hand-point-up" value="geraListaPresencaPais.php?">LISTAGEM DE PRESEN&Ccedil;A - REUNI&Atilde;O DE PAIS</option>
 			<option data-divider="true"></option>
@@ -42,6 +43,13 @@ $classes = getDomainFilter( array( "type" => "C" ) );
 </div>
 <br/>
 <div class="row">
+	<div class="col-lg-8" name="rowFilter" id="divVegetariano" style="display:none;">
+		<label for="cbVegetariano" class="control-label">Vegetariano:</label>
+		<select name="cbVegetariano" id="cbVegetariano" class="selectpicker form-control input-sm" title="Vegetariano?" data-width="100%" data-container="body" data-actions-box="false">
+			<option value="S">SIM</option>
+			<option value="N">NÃO</option>
+		</select>
+    </div>
 	<div class="col-lg-8" name="rowFilter" id="divUniformes" style="display:none;">
 	    	<label for="cbUniformes" class="control-label">Uniforme:</label>
 	    	<select name="cbUniformes" id="cbUniformes" class="selectpicker form-control input-sm" title="Escolha o tipo de Uniforme" data-width="100%" data-container="body" data-actions-box="false">
