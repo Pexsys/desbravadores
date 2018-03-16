@@ -53,6 +53,13 @@ function getDomainFilter( $parameters ) {
 			array( "id" => "M", "ds" => "MASCULINO", "icon" => "fas fa-mars" )
 		);
 
+	//VEGETARIANO
+	elseif ( $type == "V" ):
+		$domain = array(
+			array( "id" => "S", "ds" => "SIM", "icon" => "fas fa-thumbs-o-up" ),
+			array( "id" => "N", "ds" => "NÃO", "icon" => "fas fa-thumbs-o-down" )
+		);
+
 	//SITUACAO
 	elseif ( $type == "S" ):
 		$domain = array(
