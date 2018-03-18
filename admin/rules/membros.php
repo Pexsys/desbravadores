@@ -24,6 +24,8 @@ function getQueryByFilter( $parameters ) {
 				$where .= " AND a.id_unidade ".$notStr."IN";
 			elseif ( $key == "C" ):
 				$where .= " AND cap.TP_ITEM = 'CL' AND cap.ID_TAB_APREND ".$notStr."IN";
+			elseif ( $key == "V" ):
+			    $where .= " AND p.TP_REGIME ".$notStr."IN";
 			else:
 				$where .= " AND";
 			endif;
@@ -486,6 +488,7 @@ function getMember( $parameters ) {
 				p.CEP,
 				p.FONE_RES,
 				p.FONE_CEL,
+				p.TP_REGIME,
 				p.ID_PESSOA_RESP,
 				m.ID_CAD_PESSOA,
 				m.ID_MEMBRO,
@@ -537,6 +540,7 @@ function getMember( $parameters ) {
 			"cad_pessoa-cep"		    => $result->fields['CEP'],
 			"cad_pessoa-fone_res"		=> $result->fields['FONE_RES'],
 			"cad_pessoa-fone_cel"		=> $result->fields['FONE_CEL'],
+			"cad_pessoa-tp_regime"		=> $result->fields['TP_REGIME'],
 			"cad_membro-ano_dir"		=> $result->fields['ANO_DIR'],
 			"cad_membro-estr_devol"		=> $result->fields['ESTR_DEVOL'],
 			"cad_membro-qt_uniformes"	=> $result->fields['QT_UNIFORMES'],

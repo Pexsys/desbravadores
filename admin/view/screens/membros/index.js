@@ -257,6 +257,7 @@ $(document).ready(function(){
 				nrUltEstrela:	{validators: {}},
 				nrUniformes:	{validators: {}},
 				dsReligiao:		{validators: {}},
+				tpRegime:		{validators: {}}, 
 				cbAtivo:		{validators: {}}
 			}
 		})
