@@ -7,9 +7,7 @@ use MESSAGE;
 
 $md = date("m-d");
 
-
 //******* INICIO DA ROTINA DIARIA
-
 CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.00-Iniciando rotina...')");
 
 //******* LOG
