@@ -94,7 +94,7 @@ function getQueryByFilter( $parameters ) {
 					else:
 						$aWhere[] = $value;
 						$where .= (!$prim ? "," : "" )."?";
-					endif;				
+					endif;
 					$prim = false;
 				endforeach;
 			else:
@@ -103,7 +103,7 @@ function getQueryByFilter( $parameters ) {
 			endif;
 			$where .= ")";
 		endforeach;
-	endif;	
+	endif;
 	if ( isset($parameters["filtro"]) ):
 		if ( $parameters["filtro"] == "A" ):
 			$where .= " AND a.ID_CAD_PESSOA IS NOT NULL";
@@ -138,7 +138,7 @@ function getMembros( $parameters ) {
 	$qtdZeros = zeroSizeID();
 	$result = getQueryByFilter( $parameters );
 	foreach ($result as $k => $f):
-		$arr[] = array( 
+		$arr[] = array(
 			"id" => $f['ID'],
 			"ic" => fStrZero($f['ID_MEMBRO'], $qtdZeros),
 			"nm" => $f['NM'],
@@ -164,11 +164,11 @@ function updateMember( $parameters ) {
 
 	$vl = $parameters["value"];
 	$tf = explode("-",$parameters["field"]);
-	
+
 	//tratamento de field unico
 	if ( count($tf) == 1 ):
 		$field = mb_strtoupper($tf[0]);
-		
+
 		//tratamento para ativo/inativo
 		if ($field == "FG_ATIVO"):
 
@@ -176,15 +176,15 @@ function updateMember( $parameters ) {
 				UPDATE CAD_MEMBRO SET QT_UNIFORMES = NULL
 				WHERE ID_CAD_MEMBRO = ? AND NR_ANO = YEAR(NOW())"
 			, array( $id ) );
-		
+
 			if ( $vl == "N" ):
 				CONN::get()->Execute( "
-					DELETE FROM CAD_ATIVOS 
+					DELETE FROM CAD_ATIVOS
 					WHERE ID_CAD_MEMBRO = ? AND NR_ANO = YEAR(NOW())"
 				, array( $id ) );
 
 				PROFILE::deleteAllByPessoaID($pessoaID);
-		
+
 			else:
 				$unid	= null;
 				$cargo	= null;
@@ -209,7 +209,7 @@ function updateMember( $parameters ) {
 						WHERE a.ID_CAD_MEMBRO = ?
 						ORDER BY NR_ANO DESC
 				", array( $id ) );
-				
+
 				if (!$result->EOF):
 					if ($result->fields['ANO_ANT'] == $result->fields['NR_ANO']):
 						$unid	= $result->fields['ID_UNIDADE'];
@@ -221,7 +221,7 @@ function updateMember( $parameters ) {
 						$reun	= $result->fields['FG_REU_SEM'];
 					endif;
 				endif;
-				
+
 				CONN::get()->Execute( "
 					INSERT INTO CAD_ATIVOS (
 						NR_ANO,
@@ -248,7 +248,7 @@ function updateMember( $parameters ) {
 					)", array( $id, $unid, $cargo, $cargo2, $tpCami, $tpAgas, $instr, $reun ) );
 
 					PROFILE::applyCargos( $pessoaID, $cargo, $cargo2 );
-					
+
 				return getMember( array( "id" => $id ) );
 			endif;
 		endif;
@@ -259,10 +259,19 @@ function updateMember( $parameters ) {
 
 		$updateID = $id;
 
+		if ($table == "CAD_RESP_LEGAL"):
+			if ($field == "DS_TP"):
+				$updateID = $pessoaID;
+			else:
+				$table = "CAD_PESSOA";
+				$pessoaID = $parameters["rid"];
+			endif;
+		endif;
+
 		if ($table == "CAD_PESSOA"):
 			if ($field == "DT_NASC"):
 				$vl = fStrToDate($vl,"Y-m-d");
-				$arr["membro"] = array( 
+				$arr["membro"] = array(
 					"nr_idade"	=> fIdadeAtual($vl)
 				);
 			elseif ($field == "DT_BAT"):
@@ -272,15 +281,10 @@ function updateMember( $parameters ) {
 			endif;
 			$updateID = $pessoaID;
 
-		elseif ($table == "CAD_RESP_LEGAL"):
-			if ($field == "DS_TP"):
-				$updateID = $pessoaID;
-			endif;
-
 		endif;
-		
+
 		$aUpdate = array( fReturnStringNull( $vl ), $updateID );
-		
+
 		$str = "UPDATE $table SET $field = ? WHERE ";
 		if ($table == "CAD_RESP_LEGAL" && $field == "DS_TP"):
 			$str .= " ID_CAD_PESSOA = ? AND ID_PESSOA_RESP = ?";
@@ -291,19 +295,19 @@ function updateMember( $parameters ) {
 			$str .= " ID = ?";
 		endif;
 
-		$arr["query"] = array( $str, $vl, $id );
+		//$arr["query"] = array( $str, $aUpdate);
 		CONN::get()->Execute( $str, $aUpdate );
-		
+
 		//REGRA PARA CALCULO DA ESTRELA DE TEMPO DE SERVICO
 		if ( $field == "ANO_DIR" || $field == "ESTR_DEVOL" || $field == "QT_UNIFORMES"):
-		    
+
 		    //EXCLUI ESTRELAS DA LISTA DE COMPRAS
 		    CONN::get()->Execute( "DELETE FROM CAD_COMPRAS WHERE ID_CAD_MEMBRO = ? AND ID_TAB_MATERIAIS IN (SELECT ID FROM TAB_MATERIAIS WHERE TP = 'ESTRELA')", array( $id ) );
-		    
+
 		    //CALCULAR E INCLUIR ESTRELAS
 		    $rs = CONN::get()->Execute("
         		SELECT (YEAR(NOW())-ANO_DIR) AS CALC_ATUAL, ESTR_DEVOL, QT_UNIFORMES
-        		  FROM CON_ATIVOS 
+        		  FROM CON_ATIVOS
         		 WHERE ANO_DIR IS NOT NULL
         		   AND QT_UNIFORMES > 0
         		   AND ID_CAD_MEMBRO = ?
@@ -312,7 +316,7 @@ function updateMember( $parameters ) {
                 $calcAtual = $rs->fields["CALC_ATUAL"];
                 if ( $calcAtual > max( 1, $rs->fields["ESTR_DEVOL"]) ):
                     $compras = new COMPRAS();
-                    
+
                     $code = "03-01-".fStrZero($calcAtual+1, 2);
                     $qtItens = $rs->fields["QT_UNIFORMES"];
                     for ($qtd=1;$qtd<=$qtItens;$qtd++):
@@ -323,30 +327,28 @@ function updateMember( $parameters ) {
 					endfor;
                 endif;
 			endif;
-			
+
 		elseif ( $field == "CD_CARGO" || $field == "CD_CARGO2"):
 			if (!$rc->EOF):
 				PROFILE::applyCargos( $pessoaID, $rc->fields['CD_CARGO'], $rc->fields['CD_CARGO2'] );
 			endif;
-		    
+
 		endif;
-		
+
 		$arr["result"] = true;
 	endif;
-	
+
 	return $arr;
 }
 
 function verificaResp( $parameters ) {
 	$arr = array( "result" => true );
-		
+
 	$fields = null;
 	$id = NULL;
 
 	$membroID = $parameters["id"];
 	$cpf = fClearBN($parameters["cpf"]);
-		
-	
 
 	$rs = CONN::get()->Execute("SELECT * FROM CAD_MEMBRO WHERE ID = ?", array( $membroID ) );
 	if (!$rs->EOF && !empty($cpf)):
@@ -358,19 +360,14 @@ function verificaResp( $parameters ) {
 			$fields['NR_CPF'] = fCPF($cpf);
 		endif;
 		$rc = CONN::get()->Execute("
-			SELECT 1 FROM CAD_RESP_LEGAL 
-			WHERE ID_CAD_PESSOA = ? AND ID_PESSOA_RESP = ?
-		", array( $rs->fields["ID_CAD_PESSOA"], $fields["ID_CAD_PESSOA"] ) );
+			DELETE FROM CAD_RESP_LEGAL
+			WHERE ID_CAD_PESSOA = ?
+		", array( $rs->fields["ID_CAD_PESSOA"]) );
 		if ($rc->EOF):
 			CONN::get()->Execute("
-				INSERT INTO CAD_RESP_LEGAL( ID_CAD_PESSOA, ID_PESSOA_RESP ) 
+				INSERT INTO CAD_RESP_LEGAL( ID_CAD_PESSOA, ID_PESSOA_RESP )
 				VALUES (?,?)
 			", array( $rs->fields["ID_CAD_PESSOA"], $fields["ID_CAD_PESSOA"] ) );
-		else:
-			CONN::get()->Execute("
-				UPDATE CAD_RESP_LEGAL SET ID_PESSOA_RESP = ? 
-				WHERE ID_CAD_PESSOA = ?
-			", array( $fields["ID_CAD_PESSOA"], $rs->fields["ID_CAD_PESSOA"] ) );
 		endif;
 	endif;
 
@@ -403,11 +400,11 @@ function getMembroID(){
 function insertMember( $parameters ) {
 	$arr = array();
 	$arr["result"] = false;
-	
+
 	if ( isset($parameters["id"]) && $parameters["id"] == "Novo" ):
 		if (isset($parameters["nm"]) && isset($parameters["dt"]) && isset($parameters["sx"])):
 			$dc = $parameters["dc"];
-		
+
 			//PROCURA SE EXISTE A PESSOA
 			$result = CONN::get()->Execute("
 				SELECT ID
@@ -451,10 +448,10 @@ function insertMember( $parameters ) {
 						?,
 						?,
 						?
-					)", array( 
+					)", array(
 						$GLOBALS['pattern']->getBars()->getClubeID(),
-						$membroID, 
-						$pessoaID ) 
+						$membroID,
+						$pessoaID )
 					);
 				$cadMembroID = CONN::get()->Insert_ID();
 			else:
@@ -470,7 +467,7 @@ function insertMember( $parameters ) {
 function getMember( $parameters ) {
 	$arr = array();
 	$arr["result"] = false;
-	
+
 	$id = $parameters["id"];
 	$cargo2 = false;
 
@@ -516,13 +513,13 @@ function getMember( $parameters ) {
 		 WHERE m.ID = ?", Array( $id ) );
 	if (!$result->EOF):
 		$arr["result"] = true;
-		
+
 		$idadeAtual = fIdadeAtual($result->fields['DT_NASC']);
 
 		$barCODE = $GLOBALS['pattern']->getBars()->encode(array(
 			"ni" => $result->fields['ID_MEMBRO']
 		));
-		
+
 		$arr["membro"] = array(
 			"cad_membro-id"			    => $id,
 			"cad_membro-id_membro"	    => fStrZero($result->fields['ID_MEMBRO'], $qtdZeros),
@@ -560,7 +557,7 @@ function getMember( $parameters ) {
 			"nr_idade"			        => $idadeAtual,
 			"fg_ativo"                  => isset($result->fields['ID_ATIVO']) ? "S" : "N"
 		);
-		
+
 		if ($idadeAtual < 18):
 			$arr["membro"] = fMergeResp( $arr["membro"], verificaRespByID( $result->fields['ID_PESSOA_RESP'], $result->fields['ID_CAD_PESSOA'] ) );
 		else:
@@ -605,7 +602,7 @@ function getUnidades( $parameters ) {
 				$fd = ",'A'";
 			endif;
 		endif;
-		
+
 		$result = CONN::get()->Execute("
 			SELECT ID, CONCAT(DS,' (',IDADE,')') AS DS
 			  FROM TAB_UNIDADE
@@ -614,7 +611,7 @@ function getUnidades( $parameters ) {
 			   $fIdade
 		  ORDER BY IDADE DESC", array('S') );
 		foreach ($result as $k => $l):
-			$arr[] = array( 
+			$arr[] = array(
 				"id"	=> $l['ID'],
 				"ds"	=> $l['DS']
 			);
@@ -628,7 +625,7 @@ function getCargos( $parameters ) {
 
 	$result = CONN::get()->Execute("
 		SELECT ID_UNIDADE, TP_SEXO
-		  FROM CON_ATIVOS 
+		  FROM CON_ATIVOS
 		 WHERE ID_CAD_MEMBRO = ?
 		   AND NR_ANO = YEAR(NOW())
 	", Array( $parameters["id"] ) );
@@ -649,7 +646,7 @@ function getCargos( $parameters ) {
 		  ORDER BY 2
 		");
 		while (!$result->EOF):
-			$arr[] = array( 
+			$arr[] = array(
 				"id"	=> $result->fields['ID'],
 				"ds"	=> $result->fields['DS']
 			);
@@ -667,10 +664,10 @@ function getInstrumentos( $parameters ) {
 		FROM CAD_INSTRUMENTO i
 		INNER JOIN TAB_TP_INSTRUMENTO t ON (t.ID = i.ID_TP)
 		WHERE i.CD NOT IN (SELECT DISTINCT CD_FANFARRA FROM CAD_ATIVOS WHERE NR_ANO = YEAR(NOW()) AND ID_CAD_MEMBRO <> ? AND CD_FANFARRA IS NOT NULL)
-		ORDER BY i.CD	
+		ORDER BY i.CD
 	", Array( $parameters["id"] ) );
 	while (!$result->EOF):
-		$arr[] = array( 
+		$arr[] = array(
 			"id"	=> $result->fields['ID'],
 			"ds"	=> $result->fields['DS']
 		);
@@ -694,7 +691,7 @@ function getAnosDir( $parameters ) {
 		endif;
 		if (isset($ano)):
 			for ($idx = $ano+16; $idx<=$result->fields['HOJE']; $idx++):
-				$arr[] = array( 
+				$arr[] = array(
 					"id"	=> $idx,
 					"ds"	=> $idx
 				);
@@ -710,13 +707,13 @@ function getAniversariantes( $parameters ){
 	$result = getQueryByFilter( $parameters );
 	foreach ($result as $k => $f):
 		$dtNascimento = strtotime($f['DT_NASC']);
-	
+
 		$aniversario = mktime(0, 0, 0, strftime("%m",$dtNascimento), strftime("%d",$dtNascimento), date("Y") );
 		if ( $f['IDADE_ANO'] == $f['IDADE_HOJE'] && strftime("%Y%m",$aniversario) < date("Ym") ):
 			$aniversario = mktime(0, 0, 0, strftime("%m",$dtNascimento), strftime("%d",$dtNascimento), date("Y")+1 );
 		endif;
-		
-		$arr[] = array( 
+
+		$arr[] = array(
 			"nm" => $f['NM'],
 			"uni" => $f['DS_UNIDADE'],
 			"dm" => $aniversario,
