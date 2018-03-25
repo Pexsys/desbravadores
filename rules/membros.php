@@ -359,16 +359,14 @@ function verificaResp( $parameters ) {
 			$fields["ID_CAD_PESSOA"] = CONN::get()->Insert_ID();
 			$fields['NR_CPF'] = fCPF($cpf);
 		endif;
-		$rc = CONN::get()->Execute("
+		CONN::get()->Execute("
 			DELETE FROM CAD_RESP_LEGAL
 			WHERE ID_CAD_PESSOA = ?
 		", array( $rs->fields["ID_CAD_PESSOA"]) );
-		if ($rc->EOF):
-			CONN::get()->Execute("
-				INSERT INTO CAD_RESP_LEGAL( ID_CAD_PESSOA, ID_PESSOA_RESP )
-				VALUES (?,?)
-			", array( $rs->fields["ID_CAD_PESSOA"], $fields["ID_CAD_PESSOA"] ) );
-		endif;
+		CONN::get()->Execute("
+			INSERT INTO CAD_RESP_LEGAL( ID_CAD_PESSOA, ID_PESSOA_RESP )
+			VALUES (?,?)
+		", array( $rs->fields["ID_CAD_PESSOA"], $fields["ID_CAD_PESSOA"] ) );
 	endif;
 
 	return fMergeResp( $arr, $fields );
