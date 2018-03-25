@@ -256,6 +256,15 @@ function updateMember( $parameters ) {
 
 		$updateID = $id;
 
+		if ($table == "CAD_RESP_LEGAL"):
+			if ($field == "DS_TP"):
+				$updateID = $pessoaID;
+			else:
+				$table = "CAD_PESSOA";
+				$pessoaID = $parameters["rid"];
+			endif;
+	    endif;
+
 		if ($table == "CAD_PESSOA"):
 			if ($field == "DT_NASC"):
 				$vl = fStrToDate($vl,"Y-m-d");
@@ -268,11 +277,6 @@ function updateMember( $parameters ) {
 				$vl = fClearBN($vl);
 			endif;
 			$updateID = $pessoaID;
-
-		elseif ($table == "CAD_RESP_LEGAL"):
-			if ($field == "DS_TP"):
-				$updateID = $pessoaID;
-			endif;
 
 		endif;
 
@@ -288,7 +292,7 @@ function updateMember( $parameters ) {
 			$str .= " ID = ?";
 		endif;
 
-		$arr["query"] = array( $str, $vl, $id );
+		//$arr["query"] = array( $str, $aUpdate );
 		CONN::get()->Execute( $str, $aUpdate );
 
 		//REGRA PARA CALCULO DA ESTRELA DE TEMPO DE SERVICO
@@ -350,21 +354,14 @@ function verificaResp( $parameters ) {
 			$fields["ID_CAD_PESSOA"] = CONN::get()->Insert_ID();
 			$fields['NR_CPF'] = fCPF($cpf);
 		endif;
-		$rc = CONN::get()->Execute("
-			SELECT 1 FROM CAD_RESP_LEGAL
-			WHERE ID_CAD_PESSOA = ? AND ID_PESSOA_RESP = ?
+		CONN::get()->Execute("
+			DELETE FROM CAD_RESP_LEGAL
+	        WHERE ID_CAD_PESSOA = ?
+	    ", array( $rs->fields["ID_CAD_PESSOA"]) );
+		CONN::get()->Execute("
+			INSERT INTO CAD_RESP_LEGAL( ID_CAD_PESSOA, ID_PESSOA_RESP )
+			VALUES (?,?)
 		", array( $rs->fields["ID_CAD_PESSOA"], $fields["ID_CAD_PESSOA"] ) );
-		if ($rc->EOF):
-			CONN::get()->Execute("
-				INSERT INTO CAD_RESP_LEGAL( ID_CAD_PESSOA, ID_PESSOA_RESP )
-				VALUES (?,?)
-			", array( $rs->fields["ID_CAD_PESSOA"], $fields["ID_CAD_PESSOA"] ) );
-		else:
-			CONN::get()->Execute("
-				UPDATE CAD_RESP_LEGAL SET ID_PESSOA_RESP = ?
-				WHERE ID_CAD_PESSOA = ?
-			", array( $fields["ID_CAD_PESSOA"], $rs->fields["ID_CAD_PESSOA"] ) );
-		endif;
 	endif;
 
 	return fMergeResp( $arr, $fields );

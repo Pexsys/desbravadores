@@ -102,7 +102,7 @@ class LISTAEVENTOALFA extends TCPDF {
 			$this->SetFillColor(255,255,255);
 		endif;
 		$this->setXY(5, $this->posY);
-		$this->Cell(85, 5, $f["NM"], 0, false, 'L', true, false, 1);
+		$this->Cell(85, 5, ($f["TP_REGIME"] == 'S' ? "* " : "") . $f["NM"], 0, false, 'L', true, false, 1);
 		$this->setX(90);
 
 		$colorR = base_convert(substr($f["CD_COR_GENERO"],1,2),16,10);
@@ -122,14 +122,29 @@ class LISTAEVENTOALFA extends TCPDF {
 		$this->lineAlt = !$this->lineAlt;
 	}
 
-	public function addLineCount($result){
+	public function addLineCount($result,$eveID){
 		$this->posY+=2;
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 9);
 		$this->SetTextColor(255,255,255);
 		$this->SetFillColor(235,192,22);
 		$this->setCellPaddings(1,0,1,0);
 		$this->setXY(5, $this->posY);
-		$this->Cell(200, 6, "Total de Membros no Evento: ".$result->RecordCount(), 0, false, 'C', true);
+		$this->Cell(200, 6, "Total de Membros no Evento: ".$result->RecordCount(), 0, false, 'L', true);
+
+	    $this->SetFont(PDF_FONT_NAME_MAIN, 'N', 9);
+	    $result = CONN::get()->Execute("
+	      SELECT COUNT(*) AS QTD
+	      FROM EVE_SAIDA es
+	      INNER JOIN EVE_SAIDA_MEMBRO esp on (esp.ID_EVE_SAIDA = es.ID)
+	      INNER JOIN CAD_MEMBRO cm on (cm.ID = esp.ID_CAD_MEMBRO)
+	      INNER JOIN CON_PESSOA ca on (ca.ID_CAD_PESSOA = cm.ID_CAD_PESSOA)
+	        WHERE ca.TP_REGIME = 'S'
+	        AND es.ID = ?
+	    ", array($eveID) );
+	    if (!$result->EOF):
+			$this->setXY(150, $this->posY);
+			$this->Cell(55, 6, "* Vegetarianos: ".$result->fields["QTD"], 0, false, 'R', true);
+	    endif;
 	}
 
 	public function newPage() {
@@ -150,10 +165,10 @@ $pdf = new LISTAEVENTOALFA();
 
 $result = CONN::get()->Execute("
 	SELECT
-			es.DS, es.DS_TEMA, es.DS_ORG, es.DS_DEST,
+			es.ID, es.DS, es.DS_TEMA, es.DS_ORG, es.DS_DEST,
 			esp.ID AS ID_EVE_PESSOA,
-			ca.NM, at.CD_CARGO, IF(ca.TP_SEXO='F',cg.DSF,cg.DSM) AS DS_CARGO, ca.DT_NASC, ca.FONE_RES, ca.FONE_CEL, ca.IDADE_HOJE,
-			YEAR(es.DH_R)-YEAR(ca.DT_NASC) - IF(DATE_FORMAT(ca.DT_NASC,'%m%d')>DATE_FORMAT(es.DH_R,'%m%d'),1,0) AS IDADE_EVENTO_FIM,
+			ca.NM, at.CD_CARGO, IF(ca.TP_SEXO='F',cg.DSF,cg.DSM) AS DS_CARGO, ca.DT_NASC, ca.FONE_RES, ca.FONE_CEL, ca.IDADE_HOJE, ca.TP_REGIME,
+      		YEAR(es.DH_R)-YEAR(ca.DT_NASC) - IF(DATE_FORMAT(ca.DT_NASC,'%m%d')>DATE_FORMAT(es.DH_R,'%m%d'),1,0) AS IDADE_EVENTO_FIM,
 			esp.FG_AUTORIZ
 	FROM EVE_SAIDA es
 	INNER JOIN EVE_SAIDA_MEMBRO esp on (esp.ID_EVE_SAIDA = es.ID)
@@ -183,11 +198,11 @@ if (!$result->EOF):
 
 	$pdf->startTransaction();
 	$start_page = $pdf->getPage();
-	$pdf->addLineCount($result);
+	$pdf->addLineCount($result,$eveID);
 	if  ($pdf->getNumPages() != $start_page):
 		$pdf->rollbackTransaction(true);
 		$pdf->newPage();
-		$pdf->addLineCount($result);
+		$pdf->addLineCount($result,$eveID); 
 	else:
 		$pdf->commitTransaction();
 	endif;
