@@ -1,33 +1,23 @@
 <?php
 @require_once("include/functions.php");
 session_start();
+fHeaderPage( 
+	array(
+		$GLOBALS['pattern']->getVD()."include/_core/css/bootstrap-toggle.min.css",
+		$GLOBALS['pattern']->getVD()."include/_core/css/bootstrap-touchspin.min.css"
+	), 
+	array( 
+		$GLOBALS['pattern']->getVD()."include/_core/js/bootstrap-toggle.min.js",
+		$GLOBALS['pattern']->getVD()."include/_core/js/bootstrap-touchspin.min.js",
+		$GLOBALS['pattern']->getVD()."include/_core/js/moment.min.js",
+		$GLOBALS['pattern']->getVD()."include/_core/js/moment.pt-br.js",
+		$GLOBALS['pattern']->getVD()."include/_core/js/jstz.min.js",
+		$GLOBALS['pattern']->getVD()."include/_core/js/jquery.mask.min.js",
+		$GLOBALS['pattern']->getVD()."js/readdata.lib.js",
+		$GLOBALS['pattern']->getVD()."js/readdata.js?".microtime()
+	) 
+);
 ?>
-<html>
-<head><meta http-equiv="Content-Type" content="text/html">
-<title><?php echo $GLOBALS['pattern']->getClubeDS(array("cl","nm","sp","ibd"));?></title>
-<?php @require_once("include/_metaheader.php");?>
-<link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
-<link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css"/>
-<link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/css/bootstrap-toggle.min.css" rel="stylesheet" type="text/css"/>
-<link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/css/bootstrap-touchspin.min.css" rel="stylesheet" type="text/css"/>
-<link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/css/bootstrap-select.min.css" rel="stylesheet" type="text/css"/>
-<link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
-<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/jquery.min.js"></script>
-<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/bootstrap.min.js"></script>
-<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/bootstrap-dialog.min.js"></script>
-<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/bootstrap-toggle.min.js"></script>
-<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/bootstrap-touchspin.min.js"></script>
-<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/bootstrap-select.min.js"></script>
-<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/moment.min.js"></script>
-<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/moment.pt-br.js"></script>
-<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/jstz.min.js"></script>
-<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/jquery.mask.min.js"></script>
-<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/formValidation/formValidation.min.js"></script>
-<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/formValidation/bootstrap.min.js"></script>
-<script src="<?php echo $GLOBALS['pattern']->getVD();?>js/functions.lib.js"></script>
-<script src="<?php echo $GLOBALS['pattern']->getVD();?>js/readdata.lib.js"></script>
-<script src="<?php echo $GLOBALS['pattern']->getVD();?>js/readdata.js<?php echo "?".microtime();?>"></script>
-</head>
 <body>
 <?php
 $temPerfil = isset($_SESSION['USER']['id']);
