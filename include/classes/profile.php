@@ -150,23 +150,23 @@ class PROFILE {
 
 		//DIRETORIA
 		if ( fStrStartWith($cargoCD,"2-") || fStrStartWith($cargo2CD,"2-") ):
-			$arr[] = 4;
+			$arr[] = 10;
 
 			//DIRETOR
 			if ( $cargoCD == "2-01-00" || $cargo2CD == "2-01-00" ):
-				$arr[] = 1;
+				$arr[] = 3;
 
 			//DIRETORES ASSOCIADOS // ANCIAO/PASTORES
 			elseif ( $cargoCD == "2-01-01" || $cargo2CD == "2-01-01" || fStrStartWith($cargoCD,"2-05") || fStrStartWith($cargo2CD,"2-05") ):
-				$arr[] = 9;
+				$arr[] = 4;
 
 			//SECRETARIA
 			elseif ( $cargoCD == "2-02-00" || $cargo2CD == "2-02-00" ):
-				$arr[] = 2;
+				$arr[] = 5;
 
 			//SECRETARIA ASSOCIADA
 			elseif ( $cargoCD == "2-02-01" || $cargo2CD == "2-02-01" ):
-				$arr[] = 8;
+				$arr[] = 6;
 
 			//TESOURARIA
 			elseif ( fStrStartWith($cargoCD,"2-03") || fStrStartWith($cargo2CD,"2-03") ):
@@ -174,11 +174,11 @@ class PROFILE {
 
 			//INSTRUTORES
 			elseif ( fStrStartWith($cargoCD,"2-04") || fStrStartWith($cargo2CD,"2-04") ):
-				$arr[] = 5;
+				$arr[] = 8;
 
 			//CONSELHEIROS
 			elseif ( fStrStartWith($cargoCD,"2-07") || fStrStartWith($cargo2CD,"2-07") ):
-				$arr[] = 6;
+				$arr[] = 9;
 
 			endif;
 		endif;
