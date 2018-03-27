@@ -224,7 +224,7 @@ function checkUser($cdUser, $pag){
 		  FROM CAD_USUARIO cu
 		LEFT JOIN CAD_PESSOA cp ON (cp.ID = cu.ID_CAD_PESSOA OR cp.NR_CPF = ?)
 		LEFT JOIN CAD_MEMBRO cm ON (cm.ID_CAD_PESSOA = cp.ID)
-	". ($pag == "READDATA" ? " INNER JOIN CAD_USU_PERFIL cuf ON (cuf.ID_CAD_USUARIO = cu.ID AND cuf.ID_PERFIL = 2) " : "") ."
+	". ($pag == "READDATA" ? " INNER JOIN CAD_USU_PERFIL cuf ON (cuf.ID_CAD_USUARIO = cu.ID AND cuf.ID_PERFIL = 5) " : "") ."
 		 WHERE cu.CD_USUARIO = ?
 	", array( $cdUser, $cdUser ) );
 }
