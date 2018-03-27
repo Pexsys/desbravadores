@@ -78,7 +78,7 @@ function login( $parameters ) {
 				$resp = verificaRespByCPF($usr);			
 				if ( !is_null($resp) && existeMenorByRespID($resp["ID_CAD_PESSOA"]) ):
 					$psw = sha1(str_replace("-","",str_replace(".","",$usr)));
-					fInsertUserProfile( fInsertUser( $usr, $resp["NM"], $psw, null ), 10 );
+					fInsertUserProfile( fInsertUser( $usr, $resp["NM"], $psw, null ), 11 );
 					
 					return login( array(
 						"page"		=> $pag,
@@ -120,7 +120,7 @@ function login( $parameters ) {
 			else:
 				$resp = verificaRespByCPF($usr);
 				if (!is_null($resp) && !existeMenorByRespID($resp["ID_CAD_PESSOA"])):
-					fDeleteUserAndProfile( $result->fields["ID"], 10 );
+					fDeleteUserAndProfile( $result->fields["ID"], 11 );
 					return $arr;
 				endif;
 			endif;
