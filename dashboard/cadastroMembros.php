@@ -240,7 +240,7 @@
 										</select>
 									</div>
 									<div class="form-group col-xs-4">
-										<label for="nrUltEstrela" class="control-label"><i class="fas fa-star-o"></i> (&Uacute;ltima devolvida)</label>
+										<label for="nrUltEstrela" class="control-label"><i class="far fa-star"></i> (&Uacute;ltima devolvida)</label>
 										<input type="text" name="nrUltEstrela" id="nrUltEstrela" field="cad_membro-estr_devol" class="form-control" placeholder="&Uacute;ltima Estrela" data-min="2"/>
 									</div>
 									<div class="form-group col-xs-4">
