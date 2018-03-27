@@ -247,7 +247,10 @@ function updateMember( $parameters ) {
 						?
 					)", array( $id, $unid, $cargo, $cargo2, $tpCami, $tpAgas, $instr, $reun ) );
 
-					PROFILE::applyCargos( $pessoaID, $cargo, $cargo2 );
+					PROFILE::apply(
+						$pessoaID,
+						array( "cargo" => $cargo, "cargo2" => $cargo2 ) 
+					);
 
 				return getMember( array( "id" => $id ) );
 			endif;
@@ -330,7 +333,10 @@ function updateMember( $parameters ) {
 
 		elseif ( $field == "CD_CARGO" || $field == "CD_CARGO2"):
 			if (!$rc->EOF):
-				PROFILE::applyCargos( $pessoaID, $rc->fields['CD_CARGO'], $rc->fields['CD_CARGO2'] );
+				PROFILE::apply(
+					$pessoaID,
+					array( "cargo" => $rc->fields['CD_CARGO'], "cargo2" => $rc->fields['CD_CARGO2'] ) 
+				);
 			endif;
 
 		endif;

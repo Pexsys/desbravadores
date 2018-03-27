@@ -60,6 +60,7 @@ $(document).ready(function(){
 				};
 					
 				$.plot("#phGhaphC", data.cls, optionBar );
+				$("[name=graphicC]").show();
 			}
 		}
 	});

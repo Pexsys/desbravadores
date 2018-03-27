@@ -60,10 +60,9 @@ function login( $parameters ) {
 
 					fInsertUser( $usr, $result->fields['NM'], $psw, $result->fields['ID_CAD_PESSOA'] );
 
-					PROFILE::applyCargos(
-						$result->fields['ID_CAD_PESSOA'], 
-						$result->fields["CD_CARGO"], 
-						$result->fields["CD_CARGO2"]
+					PROFILE::apply(
+						$result->fields['ID_CAD_PESSOA'],
+						array( "cargo" => $result->fields["CD_CARGO"], "cargo2" => $result->fields["CD_CARGO2"] ) 
 					);
 				endif;
 
@@ -78,7 +77,11 @@ function login( $parameters ) {
 				$resp = verificaRespByCPF($usr);			
 				if ( !is_null($resp) && existeMenorByRespID($resp["ID_CAD_PESSOA"]) ):
 					$psw = sha1(str_replace("-","",str_replace(".","",$usr)));
-					fInsertUserProfile( fInsertUser( $usr, $resp["NM"], $psw, null ), 11 );
+
+					PROFILE::apply(
+						$resp["ID_CAD_PESSOA"],
+						array( "respLeg" => true ) 
+					);
 					
 					return login( array(
 						"page"		=> $pag,
@@ -96,7 +99,12 @@ function login( $parameters ) {
 			//VERIFICA SE ESTÁ ATIVO
 			$rsHA = CONN::get()->Execute("SELECT ID_CAD_PESSOA, NM FROM CON_ATIVOS WHERE ID_CLUBE = ? AND ID_MEMBRO = ?", array( $barDecode["ci"], $barDecode["ni"] ) );
 			if (!$rsHA->EOF):
-				fInsertUserProfile( fInsertUser( $usr, $rsHA->fields['NM'], $psw, $rsHA->fields['ID_CAD_PESSOA'] ), 0 );
+				fInsertUser( $usr, $rsHA->fields['NM'], $psw, $rsHA->fields['ID_CAD_PESSOA'] );
+
+				PROFILE::apply(
+					$rsHA->fields['ID_CAD_PESSOA'],
+					array() 
+				);
 			
 				return login( array( 
 					"page" =>		$pag, 
@@ -112,16 +120,24 @@ function login( $parameters ) {
 				if ($rsHA->EOF):
 					$psw = null;
 				endif;
-				PROFILE::applyCargos(
-					$result->fields['ID_CAD_PESSOA'], 
-					$rsHA->fields["CD_CARGO"], 
-					$rsHA->fields["CD_CARGO2"]
+
+				PROFILE::apply(
+					$result->fields['ID_CAD_PESSOA'],
+					array( "cargo" => $rsHA->fields["CD_CARGO"], "cargo2" => $rsHA->fields["CD_CARGO2"] ) 
 				);
+
 			else:
 				$resp = verificaRespByCPF($usr);
-				if (!is_null($resp) && !existeMenorByRespID($resp["ID_CAD_PESSOA"])):
-					fDeleteUserAndProfile( $result->fields["ID"], 11 );
-					return $arr;
+				if (!is_null($resp)):
+					if (!existeMenorByRespID($resp["ID_CAD_PESSOA"])):
+						fDeleteUserAndProfile( $result->fields["ID"], 11 );
+						return $arr;
+					else:
+						PROFILE::apply(
+							$resp["ID_CAD_PESSOA"],
+							array( "respLeg" => true ) 
+						);
+					endif;
 				endif;
 			endif;
 
