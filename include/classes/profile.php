@@ -59,6 +59,7 @@ class PROFILE {
 		CONN::get()->Execute("
 			DELETE FROM CAD_USU_PERFIL
 			 WHERE ID_CAD_USUARIO = ? 
+			   AND ID_PERFIL <> 1
 		", array( $userID ) );		
 	}
 
