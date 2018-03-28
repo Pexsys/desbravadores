@@ -77,14 +77,13 @@ $result = CONN::get()->Execute("
 	  GROUP BY ta.CD_AREA_INTERNO DESC
 ");
 if (!$result->EOF):
-	?>
-	<div class="row">
-		<div class="col-lg-12">
-			<h4 class="page-header">Painel de Aprendizado Geral - <?echo date("Y");?></h4>
+	echo "
+	<div class=\"row\">
+		<div class=\"col-lg-12\">
+			<h4 class=\"page-header\">Painel de Aprendizado Geral - ".date("Y")."</h4>
 		</div>
 	</div>
-	<div class="row">
-	<?php
+	<div class=\"row\">";
 	foreach ($result as $k => $line):
 		$icon = getIconAprendizado( $line["TP_ITEM"], $line["CD_AREA_INTERNO"], "fa-4x" );
 		$area = getMacroArea( $line["TP_ITEM"], $line["CD_AREA_INTERNO"] );
@@ -108,14 +107,13 @@ $result = CONN::get()->Execute("
 	  GROUP BY ta.ID, ta.TP_ITEM, ta.CD_ITEM_INTERNO, ta.CD_AREA_INTERNO, ta.CD_COR, ta.DS_ITEM
 ");
 if (!$result->EOF):
-	?>
-	<div class="row">
-		<div class="col-lg-12">
-			<h4 class="page-header">Painel de Aprendizado por Classe - <?echo date("Y");?></h4>
+	echo "
+	<div class=\"row\">
+		<div class=\"col-lg-12\">
+			<h4 class=\"page-header\">Painel de Aprendizado por Classe - ".date("Y")."</h4>
 		</div>
 	</div>
-	<div class="row">
-	<?php
+	<div class=\"row\">";
 	//ALUNOS DA CLASSE
 	foreach ($result as $k => $line):
 		$icon = getIconAprendizado( $line["TP_ITEM"], $line["CD_AREA_INTERNO"], "fa-4x" );
