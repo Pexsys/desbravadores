@@ -90,6 +90,8 @@ function fDashBoard( $panelClass, $iconLeft, $query, $showZero, $titulo, $urlDet
 				SELECT 'UNIDADE' AS INCONSIST FROM CON_ATIVOS WHERE ID_UNIDADE IS NULL OR ID_UNIDADE = 0
 				UNION ALL 
 				SELECT 'CARGO/FUNÇÃO' AS INCONSIST FROM CON_ATIVOS WHERE CD_CARGO IS NULL OR LENGTH(CD_CARGO)<=1
+				UNION ALL 
+				SELECT 'RESPONSAVEL' AS INCONSIST FROM CON_ATIVOS WHERE IDADE_ANO < 18 AND (ID_PESSOA_RESP IS NULL OR NR_DOC_RESP IS NULL OR NR_CPF_RESP IS NULL)
 			) c",
 			false, "Pend&ecirc;ncias", $GLOBALS['pattern']->getVD()."dashboard/index.php?id=5&flt=PC&op=ALL" );
 			
