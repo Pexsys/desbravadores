@@ -35,9 +35,6 @@ endif;
 $classGraphs = "col-md-12 col-sm-12 col-lg-12";
 if (!empty($like)):
 	$where .= " AND ta.CD_ITEM_INTERNO LIKE '$like%'";
-	if (fStrStartWith($cargo,"2-04")):
-	    $where .= " AND ca.CD_CARGO NOT LIKE '2-%'";
-	endif;
 	$classGraphs = "col-md-12 col-sm-12 col-lg-6";
 endif;
 $result = CONN::get()->Execute("
@@ -49,41 +46,37 @@ $result = CONN::get()->Execute("
 	  GROUP BY ah.ID_TAB_APREND, ta.TP_ITEM, ta.CD_ITEM_INTERNO, ta.CD_AREA_INTERNO, ta.CD_COR, ta.DS_ITEM
 ");
 if (!$result->EOF):
-	?>
-	<div class="row">
-		<?php
-		//ALUNOS DA CLASSE
-		foreach ($result as $k => $line):
-			$icon = getIconAprendizado( $line["TP_ITEM"], $line["CD_AREA_INTERNO"], "fa-4x" );
-			$area = getMacroArea( $line["TP_ITEM"], $line["CD_AREA_INTERNO"] );
+	echo "<div class=\"row\">"; 
+	//ALUNOS DA CLASSE
+	foreach ($result as $k => $line):
+		$icon = getIconAprendizado( $line["TP_ITEM"], $line["CD_AREA_INTERNO"], "fa-4x" );
+		$area = getMacroArea( $line["TP_ITEM"], $line["CD_AREA_INTERNO"] );
 
-			$style = null;
-			if ($line["TP_ITEM"] == "CL"):
-				$back = $line["CD_COR"];
-				$color = (fStrStartWith($line["CD_ITEM_INTERNO"],"01-06") ? "#000000" : "#FFFFFF");
-				$style = "color:$color;background-color:$back";
-			endif;
-			echo fItemAprendizado(array(
-				"classPanel" => "bg-light-blue",
-				"leftIcon" => $icon,
-				"value" => $line["QTD"],
-				"title" => titleCase( $line["DS_ITEM"] ),
-				"strBL" => titleCase( $area ),
-				"strBR" => "Inscritos",
-				"style" => $style
-			));
-		endforeach;
-		?>
-	</div>
-	<?php
+		$style = null;
+		if ($line["TP_ITEM"] == "CL"):
+			$back = $line["CD_COR"];
+			$color = (fStrStartWith($line["CD_ITEM_INTERNO"],"01-06") ? "#000000" : "#FFFFFF");
+			$style = "color:$color;background-color:$back";
+		endif;
+		echo fItemAprendizado(array(
+			"classPanel" => "bg-light-blue",
+			"leftIcon" => $icon,
+			"value" => $line["QTD"],
+			"title" => titleCase( $line["DS_ITEM"] ),
+			"strBL" => titleCase( $area ),
+			"strBR" => "Inscritos",
+			"style" => $style
+		));
+	endforeach;
+	echo "</div>";
 endif;
 ?>
-<div class="row">
+<div class="row" name="graphicC" style="display:none"> 
 	<div class="col-lg-12">
 		<h4 class="page-header">Análises Gr&aacute;ficas da classe</h4>
 	</div>
 </div>
-<div class="row">
+<div class="row" name="graphicC" style="display:none"> 
 	<div class="<?php echo $classGraphs;?>">
 		<center><h5>An&aacute;lise gr&aacute;fica consolidada</h5></center>
 		<div id="phGhaphC" style="width:100%;height:300px"></div>

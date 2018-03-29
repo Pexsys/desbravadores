@@ -58,7 +58,7 @@ $(document).ready(function(){
 						}
 					}
 				};
-					
+				$("[name=graphicC]").show();
 				$.plot("#phGhaphC", data.cls, optionBar );
 			}
 		}

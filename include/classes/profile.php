@@ -109,6 +109,7 @@ class PROFILE {
 		CONN::get()->Execute("
 			DELETE FROM CAD_USU_PERFIL
 			 WHERE ID_CAD_USUARIO = ?
+			   AND ID_PERFIL <> 1
 		", array( $userID ) );
 	}
 
@@ -172,8 +173,8 @@ class PROFILE {
 		endif;
 	}
 
-	public static function applyCargos( $pessoaID, $cargoCD, $cargo2CD ) {
-		$rules = PROFILE::rulesCargos( $pessoaID, $cargoCD, $cargo2CD );
+	public static function apply( $pessoaID, $param ) { 
+		$rules = PROFILE::rules( $pessoaID, $param );
 
 		PROFILE::deleteAllByPessoaID($pessoaID);
 		foreach ($rules as $k => $l):
@@ -181,57 +182,71 @@ class PROFILE {
 		endforeach;
 	}
 
-	public static function rulesCargos( $pessoaID, $cargoCD, $cargo2CD ) {
+	public static function rulesCargos( $pessoaID, $param["cargo"], $param["cargo2"] ) {
 		//0 TODOS - LOGIN
 		//1 ADMINISTRADOR
-		//2 SECRETARIA
-		//3 REGIONAL
-		//4 DIRETORIA
-		//5 INSTRUTOR
-		//6 CONSELHEIRO
+		//2 REGIONAL 
+		//3 DIRETOR 
+		//4 DIRETORES ASSOCIADOS 
+		//5 SECRETARIA 
+		//6 SECRETARIA ASSOCIADA 
 		//7 TESOURARIA
-		//8 SECRETARIA ASSOCIADA
-		//9 DIRETORES ASSOCIADOS
-		//10 RESPONSAVEL LEGAL
-		//11 RESPONSAVEL FINANCEIRO
-		//12 GUEST
+		//8 INSTRUTORES 
+		//9 CONSELHEIROS 
+		//10 DIRETORIA 
+		//11 RESPONSAVEL LEGAL 
+		//12 RESPONSAVEL FINANCEIRO 
+		//13 GUEST 
 
 		$arr = array( 0 );
 
 		//DIRETORIA
-		if ( fStrStartWith($cargoCD,"2-") || fStrStartWith($cargo2CD,"2-") ):
-			$arr[] = 4;
+		if ( fStrStartWith($param["cargo"],"2-") || fStrStartWith($param["cargo2"],"2-") ):
+			$arr[] = 10;
 
 			//DIRETOR
-			if ( $cargoCD == "2-01-00" || $cargo2CD == "2-01-00" ):
-				$arr[] = 1;
+			if ( $param["cargo"] == "2-01-00" || $param["cargo2"] == "2-01-00" ):
+				$arr[] = 3;
 
 			//DIRETORES ASSOCIADOS // ANCIAO/PASTORES
-			elseif ( $cargoCD == "2-01-01" || $cargo2CD == "2-01-01" || fStrStartWith($cargoCD,"2-05") || fStrStartWith($cargo2CD,"2-05") ):
-				$arr[] = 9;
+			elseif ( $param["cargo"] == "2-01-01" || $param["cargo2"] == "2-01-01" || fStrStartWith($param["cargo"],"2-05") || fStrStartWith($param["cargo2"],"2-05") ):
+				$arr[] = 4;
 
 			//SECRETARIA
-			elseif ( $cargoCD == "2-02-00" || $cargo2CD == "2-02-00" ):
-				$arr[] = 2;
+			elseif ( $param["cargo"] == "2-02-00" || $param["cargo2"] == "2-02-00" ):
+				$arr[] = 5;
 
 			//SECRETARIA ASSOCIADA
-			elseif ( $cargoCD == "2-02-01" || $cargo2CD == "2-02-01" ):
-				$arr[] = 8;
+			elseif ( $param["cargo"] == "2-02-01" || $param["cargo2"] == "2-02-01" ):
+				$arr[] = 6;
 
 			//TESOURARIA
-			elseif ( fStrStartWith($cargoCD,"2-03") || fStrStartWith($cargo2CD,"2-03") ):
+			elseif ( fStrStartWith($param["cargo"],"2-03") || fStrStartWith($param["cargo2"],"2-03") ):
 				$arr[] = 7;
 
 			//INSTRUTORES
-			elseif ( fStrStartWith($cargoCD,"2-04") || fStrStartWith($cargo2CD,"2-04") ):
-				$arr[] = 5;
-
-			//CONSELHEIROS
-			elseif ( fStrStartWith($cargoCD,"2-07") || fStrStartWith($cargo2CD,"2-07") ):
-				$arr[] = 6;
+			elseif ( fStrStartWith($param["cargo"],"2-04") || fStrStartWith($param["cargo2"],"2-04") ):
+				$arr[] = 8;
 
 			endif;
+
+			//CONSELHEIROS
+			if ( fStrStartWith($param["cargo"],"2-07") || fStrStartWith($param["cargo2"],"2-07") ):
+				$arr[] = 9;
+
+			endif;
+
+		elseif ($param["respLeg"]): 
+			$arr[0] = 11;
+		
+		elseif ($param["respFin"]): 
+			$arr[0] = 12;
+		
+		elseif ($param["guest"]): 
+			$arr[0] = 13;
+
 		endif;
+
 		return $arr;
 	 }
 }

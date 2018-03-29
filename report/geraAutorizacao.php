@@ -306,8 +306,34 @@ $query = "
 		FROM EVE_SAIDA_MEMBRO esp 
 		INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_MEMBRO = esp.ID_CAD_MEMBRO) 
          WHERE esp.FG_AUTORIZ = 'S'
-    	   ".($list ? " AND esp.ID_EVE_SAIDA IN ($eventoID) " : "AND esp.ID_EVE_SAIDA = $eventoID")."
-    	 ORDER BY esp.ID_EVE_SAIDA, ca.NM
+		 ".($list ? " AND esp.ID_EVE_SAIDA IN ($eventoID) " : "AND esp.ID_EVE_SAIDA = $eventoID")." 
+ 
+		 AND esp.ID_CAD_MEMBRO NOT IN ( 
+		  SELECT m.ID 
+		  FROM CAD_MEMBRO m 
+		  INNER JOIN CON_PESSOA p ON (p.ID_CAD_PESSOA = m.ID_CAD_PESSOA) 
+		  INNER JOIN CON_ATIVOS a ON (a.ID_CAD_PESSOA = p.ID_CAD_PESSOA) 
+		  WHERE 
+			( 
+			  LENGTH(p.NM)<=5 
+			  OR p.TP_SEXO NOT IN ('M','F') 
+			  OR (p.DT_NASC IS NULL OR LENGTH(p.DT_NASC) = 0) 
+			  OR (p.NR_DOC IS NULL OR LENGTH(p.NR_DOC) < 7 OR INSTR(TRIM(p.NR_DOC),' ') < 3) 
+			  OR ((p.NR_CPF IS NULL OR LENGTH(p.NR_CPF)=0) AND p.NR_CPF_RESP IS NULL) 
+			  OR (p.LOGRADOURO IS NULL OR LENGTH(p.LOGRADOURO) = 0) 
+			  OR (p.NR_LOGR IS NULL OR LENGTH(p.NR_LOGR) = 0) 
+			  OR (p.BAIRRO IS NULL OR LENGTH(p.BAIRRO) = 0) 
+			  OR (p.CIDADE IS NULL OR LENGTH(p.CIDADE) = 0) 
+			  OR (p.UF IS NULL OR LENGTH(p.UF) = 0) 
+			  OR (p.CEP IS NULL OR LENGTH(p.CEP) = 0) 
+			  OR ((p.FONE_RES IS NULL AND p.FONE_CEL IS NULL) OR LENGTH(CONCAT(p.FONE_RES,p.FONE_CEL)) = 0) 
+			  OR (p.IDADE_ANO < 18 AND (p.ID_PESSOA_RESP IS NULL OR (p.NR_DOC_RESP IS NULL OR LENGTH(p.NR_DOC_RESP) < 7 OR INSTR(TRIM(p.NR_DOC_RESP),' ') < 3) OR (p.NR_CPF_RESP IS NULL OR LENGTH(p.NR_CPF_RESP)=0))) 
+			  OR (a.ID_UNIDADE IS NULL OR a.ID_UNIDADE = 0) 
+			  OR (a.CD_CARGO IS NULL OR LENGTH(a.CD_CARGO)<=1) 
+			) 
+		  ) 
+		
+    	ORDER BY esp.ID_EVE_SAIDA, ca.NM
 ";
 $result = CONN::get()->Execute($query);
 $i = 0;
@@ -333,6 +359,32 @@ $query = "
            AND esp.FG_AUTORIZ = 'S'
 		   AND ca.ID_CAD_MEMBRO = esp.ID_CAD_MEMBRO 
 		   ".($list ? " AND esp.ID_CAD_MEMBRO IN ($pID) AND esp.ID_EVE_SAIDA IN ($eventoID) " : "AND es.ID = $eventoID")." 
+		   
+		   AND esp.ID_CAD_MEMBRO NOT IN ( 
+			SELECT m.ID 
+			FROM CAD_MEMBRO m 
+			INNER JOIN CON_PESSOA p ON (p.ID_CAD_PESSOA = m.ID_CAD_PESSOA) 
+			INNER JOIN CON_ATIVOS a ON (a.ID_CAD_PESSOA = p.ID_CAD_PESSOA) 
+			WHERE 
+			  ( 
+				LENGTH(p.NM)<=5 
+				OR p.TP_SEXO NOT IN ('M','F') 
+				OR (p.DT_NASC IS NULL OR LENGTH(p.DT_NASC) = 0) 
+				OR (p.NR_DOC IS NULL OR LENGTH(p.NR_DOC) < 7 OR INSTR(TRIM(p.NR_DOC),' ') < 3) 
+				OR ((p.NR_CPF IS NULL OR LENGTH(p.NR_CPF)=0) AND p.NR_CPF_RESP IS NULL) 
+				OR (p.LOGRADOURO IS NULL OR LENGTH(p.LOGRADOURO) = 0) 
+				OR (p.NR_LOGR IS NULL OR LENGTH(p.NR_LOGR) = 0) 
+				OR (p.BAIRRO IS NULL OR LENGTH(p.BAIRRO) = 0) 
+				OR (p.CIDADE IS NULL OR LENGTH(p.CIDADE) = 0) 
+				OR (p.UF IS NULL OR LENGTH(p.UF) = 0) 
+				OR (p.CEP IS NULL OR LENGTH(p.CEP) = 0) 
+				OR ((p.FONE_RES IS NULL AND p.FONE_CEL IS NULL) OR LENGTH(CONCAT(p.FONE_RES,p.FONE_CEL)) = 0) 
+				OR (p.IDADE_ANO < 18 AND (p.ID_PESSOA_RESP IS NULL OR (p.NR_DOC_RESP IS NULL OR LENGTH(p.NR_DOC_RESP) < 7 OR INSTR(TRIM(p.NR_DOC_RESP),' ') < 3) OR (p.NR_CPF_RESP IS NULL OR LENGTH(p.NR_CPF_RESP)=0))) 
+				OR (a.ID_UNIDADE IS NULL OR a.ID_UNIDADE = 0) 
+				OR (a.CD_CARGO IS NULL OR LENGTH(a.CD_CARGO)<=1) 
+			  ) 
+			) 
+
 	ORDER BY ca.NM
 ";
 $result = CONN::get()->Execute($query);

@@ -73,6 +73,8 @@ function getQueryByFilter( $parameters ) {
 							$where .= (!$prim ? " OR " : "") ."(a.ID_UNIDADE IS NULL OR a.ID_UNIDADE = 0)";
 						elseif ( $value == "CAR" ):
 							$where .= (!$prim ? " OR " : "") ."(a.CD_CARGO IS NULL OR LENGTH(a.CD_CARGO)<=1)";
+						elseif ( $value == "RSP" ):
+							$where .= (!$prim ? " OR " : "") ."(p.IDADE_ANO < 18 AND (p.ID_PESSOA_RESP IS NULL OR (p.NR_DOC_RESP IS NULL OR LENGTH(p.NR_DOC_RESP) < 7 OR INSTR(TRIM(p.NR_DOC_RESP),' ') < 3) OR (p.NR_CPF_RESP IS NULL OR LENGTH(p.NR_CPF_RESP)=0)))";				  
 						endif;
 					elseif ( $key == "G" ):
 						if ( $value == "3" ):
@@ -123,9 +125,9 @@ function getQueryByFilter( $parameters ) {
 			a.IDADE_HOJE,
 			a.IDADE_ANO
 		FROM CAD_MEMBRO m
-		INNER JOIN CAD_PESSOA p ON (p.ID = m.ID_CAD_PESSOA)
-		LEFT JOIN CON_ATIVOS a ON (a.ID_CAD_PESSOA = p.ID)
-		LEFT JOIN CON_APR_PESSOA cap ON (cap.ID_CAD_PESSOA = p.ID AND cap.DT_CONCLUSAO IS NULL)
+		INNER JOIN CON_PESSOA p ON (p.ID_CAD_PESSOA = m.ID_CAD_PESSOA) 
+    LEFT JOIN CON_ATIVOS a ON (a.ID_CAD_PESSOA = p.ID_CAD_PESSOA) 
+    LEFT JOIN CON_APR_PESSOA cap ON (cap.ID_CAD_PESSOA = p.ID_CAD_PESSOA AND cap.DT_CONCLUSAO IS NULL) 
 		WHERE 1=1 $where ORDER BY p.NM"
 	,$aWhere);
 }
@@ -244,7 +246,10 @@ function updateMember( $parameters ) {
 						?
 					)", array( $id, $unid, $cargo, $cargo2, $tpCami, $tpAgas, $instr, $reun ) );
 
-					PROFILE::applyCargos( $pessoaID, $cargo, $cargo2 );
+					PROFILE::apply( 
+						$pessoaID, 
+						array( "cargo" => $cargo, "cargo2" => $cargo2 )  
+					);
 
 				return getMember( array( "id" => $id ) );
 			endif;
@@ -325,7 +330,10 @@ function updateMember( $parameters ) {
 
 		elseif ( $field == "CD_CARGO" || $field == "CD_CARGO2"):
 			if (!$rc->EOF):
-				PROFILE::applyCargos( $pessoaID, $rc->fields['CD_CARGO'], $rc->fields['CD_CARGO2'] );
+				PROFILE::apply( 
+					$pessoaID, 
+					array( "cargo" => $rc->fields['CD_CARGO'], "cargo2" => $rc->fields['CD_CARGO2'] )  
+				);
 			endif;
 
 		endif;

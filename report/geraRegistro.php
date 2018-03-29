@@ -260,12 +260,16 @@ class ESPCR extends TCPDF {
     		$this->SetTextColor(255,255,255);
     		$this->RoundedRect(10, $this->top, 190, 6, 1, '1001', 'FD', $this->stLine);
     		$this->setXY(11, $this->top+1);
-    		$this->Cell(50, 5, "ANO: ".$f["YEAR_INDEX"], '', 1, 'L', 1, '', 0, false, 'T', 'C');
-    		$this->setXY(80, $this->top+1);
-    		$this->Cell(50, 5, "UNIDADE: ".$o->fields["DS"], '', 1, 'C', 1, '', 0, false, 'T', 'C');
-    		$this->setXY(149, $this->top+1);
-    		$this->Cell(50, 5, "CARGO: ".$o->fields["DS_CARGO"], '', 1, 'R', 1, '', 0, false, 'T', 'C');
-    		$this->top += 5;
+    		$this->Cell(50, 5, "ANO: ".$f["YEAR_INDEX"], '', 1, 'L', 1, '', 0, false, 'T', 'C'); 
+			if (!empty($o->fields["DS"])): 
+				$this->setXY(80, $this->top+1); 
+				$this->Cell(50, 5, "UNIDADE: ".$o->fields["DS"], '', 1, 'C', 1, '', 0, false, 'T', 'C'); 
+			endif; 
+			if (!empty($o->fields["DS_CARGO"])): 
+				$this->setXY(149, $this->top+1); 
+				$this->Cell(50, 5, "CARGO: ".$o->fields["DS_CARGO"], '', 1, 'R', 1, '', 0, false, 'T', 'C'); 
+			endif; 
+			$this->top += 5; 
 
     		$aprend = CONN::get()->Execute("
                 SELECT ta.TP_ITEM, ta.DS_ITEM, ta.CD_ITEM_INTERNO, ta.CD_AREA_INTERNO,

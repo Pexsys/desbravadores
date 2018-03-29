@@ -129,8 +129,39 @@ CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.02-An
     	endforeach;
 	endforeach;
 
+//*******  SECRETARIA - INATIVACAO DE MEMBROS COM PENDENCIAS CADASTRAIS
+CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('EMAILS','01.02.03-nalisando membros com pendências cadastrais...')");
+CONN::get()->Execute("
+  DELETE FROM CAD_ATIVOS
+  WHERE NR_ANO = YEAR(NOW()) AND
+  ID_CAD_MEMBRO IN (
+    SELECT m.ID
+    FROM CAD_MEMBRO m
+    INNER JOIN CON_PESSOA p ON (p.ID_CAD_PESSOA = m.ID_CAD_PESSOA)
+    INNER JOIN CON_ATIVOS a ON (a.ID_CAD_PESSOA = p.ID_CAD_PESSOA)
+    WHERE
+      (
+        LENGTH(p.NM)<=5
+        OR p.TP_SEXO NOT IN ('M','F')
+        OR (p.DT_NASC IS NULL OR LENGTH(p.DT_NASC) = 0)
+        OR (p.NR_DOC IS NULL OR LENGTH(p.NR_DOC) < 7 OR INSTR(TRIM(p.NR_DOC),' ') < 3)
+        OR ((p.NR_CPF IS NULL OR LENGTH(p.NR_CPF)=0) AND p.NR_CPF_RESP IS NULL)
+        OR (p.LOGRADOURO IS NULL OR LENGTH(p.LOGRADOURO) = 0)
+        OR (p.NR_LOGR IS NULL OR LENGTH(p.NR_LOGR) = 0)
+        OR (p.BAIRRO IS NULL OR LENGTH(p.BAIRRO) = 0)
+        OR (p.CIDADE IS NULL OR LENGTH(p.CIDADE) = 0)
+        OR (p.UF IS NULL OR LENGTH(p.UF) = 0)
+        OR (p.CEP IS NULL OR LENGTH(p.CEP) = 0)
+        OR ((p.FONE_RES IS NULL AND p.FONE_CEL IS NULL) OR LENGTH(CONCAT(p.FONE_RES,p.FONE_CEL)) = 0)
+        OR (p.IDADE_ANO < 18 AND (p.ID_PESSOA_RESP IS NULL OR (p.NR_DOC_RESP IS NULL OR LENGTH(p.NR_DOC_RESP) < 7 OR INSTR(TRIM(p.NR_DOC_RESP),' ') < 3) OR (p.NR_CPF_RESP IS NULL OR LENGTH(p.NR_CPF_RESP)=0)))
+        OR (a.ID_UNIDADE IS NULL OR a.ID_UNIDADE = 0)
+        OR (a.CD_CARGO IS NULL OR LENGTH(a.CD_CARGO)<=1)
+      )
+    )"
+);
+
 //*******  SECRETARIA - EXCLUSAO DE ACESSOS/PERFIS DE MEMBROS INATIVOS
-CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.03-Excluindo Perfis de Membros Inativos...')");
+CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.04-Excluindo Perfis de Membros Inativos...')");
 $result = CONN::get()->Execute("
 	  SELECT DISTINCT cu.ID
 		FROM CAD_PESSOA cp
@@ -151,7 +182,7 @@ endforeach;
 if ($md == "01-01"):
 
 	//BASE DE COMPRAS
-	CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.04-Reorganizando base de compras...')");
+	CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.05-Reorganizando base de compras...')");
 	$result = CONN::get()->Execute("
 		SELECT *
 		  FROM CAD_COMPRAS
@@ -182,7 +213,7 @@ if ($md == "01-01"):
 	endforeach;
 
 	//REQUISITOS ASSINADOS DE ITENS AINDA NÃO CONCLUÍDOS
-	CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.05-Reorganizando base de requisitos assinados...')");
+	CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.06-Reorganizando base de requisitos assinados...')");
 	CONN::get()->Execute("DELETE FROM APR_PESSOA_REQ WHERE ID_HISTORICO IN (SELECT ID FROM APR_HISTORICO WHERE DT_CONCLUSAO IS NOT NULL)");
 	$result = CONN::get()->Execute("SELECT * FROM APR_PESSOA_REQ ORDER BY ID_HISTORICO, ID_TAB_APR_ITEM");
 	CONN::get()->Execute("TRUNCATE APR_PESSOA_REQ");
@@ -201,7 +232,7 @@ if ($md == "01-01"):
 	endforeach;
 
 	//MENSAGEM DE FELIZ ANO NOVO
-	CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.06-Felicitando pelo novo ano...')");
+	CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.07-Felicitando pelo novo ano...')");
 	$rA = CONN::get()->Execute("
 		SELECT NM, TP_SEXO, EMAIL
 		  FROM CAD_PESSOA
@@ -229,7 +260,7 @@ if ($md == "01-01"):
 //MENSAGEM DE FELIZ NATAL
 elseif ($md == "12-25"):
 
-	CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.07-Felicitando pelo natal...')");
+	CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.08-Felicitando pelo natal...')");
 	$rA = CONN::get()->Execute("
 		SELECT cp.NM, cp.TP_SEXO, EMAIL
 			FROM CAD_PESSOA cp

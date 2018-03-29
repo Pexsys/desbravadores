@@ -105,7 +105,7 @@ class FILTERS {
 				array( "id" => "NC5", "ds" => "NOME COMPLETO INV&Aacute;LIDO", "icon" => "fa fa-address-book" ),
 				array( "id" => "SEX", "ds" => "SEXO INVÁLIDO", "icon" => "fa fa-venus-mars" ),
 				array( "id" => "DTN", "ds" => "DATA DE NASCIMENTO INVÁLIDA", "icon" => "fa fa-calendar" ),
-				array( "id" => "DOC", "ds" => "DOCUMENTO INVÁLIDO", "icon" => "fa fa-id-card-o" ),
+				array( "id" => "DOC", "ds" => "DOCUMENTO INVÁLIDO", "icon" => "fas fa-address-card" ),
 				array( "id" => "CPF", "ds" => "CPF INVÁLIDO", "icon" => "fa fa-id-card" ),
 				array( "id" => "LOG", "ds" => "LOGRADOURO INVÁLIDO", "icon" => "fa fa-road" ),
 				array( "id" => "NLG", "ds" => "NUMERO LOGRADOURO INVÁLIDO", "icon" => "fa fa-map-marker" ),
@@ -115,7 +115,8 @@ class FILTERS {
 				array( "id" => "CEP", "ds" => "CEP INVÁLIDO", "icon" => "fa fa-map-signs" ),
 				array( "id" => "TEL", "ds" => "TELEFONES INVÁLIDOS", "icon" => "fa fa-phone" ),
 				array( "id" => "UNI", "ds" => "UNIDADE INVÁLIDA", "icon" => "fa fa-universal-access" ),
-				array( "id" => "CAR", "ds" => "CARGO/FUNÇÃO INVÁLIDA", "icon" => "fa fa-user-md" )
+				array( "id" => "CAR", "ds" => "CARGO/FUNÇÃO INVÁLIDA", "icon" => "fas fa-user-md" ),
+      			array( "id" => "RSP", "ds" => "DADOS/RESPONSÁVEL INVÁLIDO", "icon" => "fas fa-child" )
 			);
 
 		//ITENS COMPRADOS

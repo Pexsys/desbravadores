@@ -54,7 +54,7 @@ $result = CONN::get()->Execute("
 	SELECT COUNT(*) as QTD
 	  FROM CON_ATIVOS ca
 	 WHERE ($where)
-	   AND at.DT_BAT IS NOT NULL
+	   AND ca.DT_BAT IS NOT NULL
 ");
 if (!$result->EOF):
 	echo fItemAprendizado(array(
@@ -67,12 +67,6 @@ if (!$result->EOF):
 endif;
 ?>
 </div>
-<div class="row">
-	<div class="col-lg-12">
-		<h4 class="page-header">Painel de Aprendizado Geral - <?echo date("Y");?></h4>
-	</div>
-</div>
-<div class="row">
 <?php
 $result = CONN::get()->Execute("
 	SELECT ta.TP_ITEM, ta.CD_AREA_INTERNO, COUNT(*) as QTD
@@ -83,6 +77,13 @@ $result = CONN::get()->Execute("
 	  GROUP BY ta.CD_AREA_INTERNO DESC
 ");
 if (!$result->EOF):
+	echo " 
+	<div class=\"row\"> 
+		<div class=\"col-lg-12\"> 
+		<h4 class=\"page-header\">Painel de Aprendizado Geral - ".date("Y")."</h4> 
+		</div> 
+	</div>
+	<div class=\"row\">";
 	foreach ($result as $k => $line):
 		$icon = getIconAprendizado( $line["TP_ITEM"], $line["CD_AREA_INTERNO"], "fa-4x" );
 		$area = getMacroArea( $line["TP_ITEM"], $line["CD_AREA_INTERNO"] );
@@ -94,15 +95,10 @@ if (!$result->EOF):
 			"strBR" => "Inscritos"
 		));
 	endforeach;
+	echo "</div>";
 endif;
 ?>
 </div>
-<div class="row">
-	<div class="col-lg-12">
-		<h4 class="page-header">Painel de Aprendizado por Classe - <?echo date("Y");?></h4>
-	</div>
-</div>
-<div class="row">
 <?php
 $result = CONN::get()->Execute("
 	SELECT ta.ID, ta.TP_ITEM, ta.CD_ITEM_INTERNO, ta.CD_AREA_INTERNO, ta.CD_COR, ta.DS_ITEM, COUNT(*) as QTD
@@ -113,7 +109,13 @@ $result = CONN::get()->Execute("
 	  GROUP BY ta.ID, ta.TP_ITEM, ta.CD_ITEM_INTERNO, ta.CD_AREA_INTERNO, ta.CD_COR, ta.DS_ITEM
 ");
 if (!$result->EOF):
-	//ALUNOS DA CLASSE
+	echo " 
+	<div class=\"row\"> 
+		<div class=\"col-lg-12\"> 
+		<h4 class=\"page-header\">Painel de Aprendizado por Classe - ".date("Y")."</h4> 
+		</div> 
+	</div>
+	<div class=\"row\">";
 	foreach ($result as $k => $line):
 		$icon = getIconAprendizado( $line["TP_ITEM"], $line["CD_AREA_INTERNO"], "fa-4x" );
 		$area = getMacroArea( $line["TP_ITEM"], $line["CD_AREA_INTERNO"] );
@@ -135,15 +137,16 @@ if (!$result->EOF):
 			"style" => $style
 		));
 	endforeach;
+	echo "</div>";
 endif;
 ?>
 </div>
-<div class="row">
+<div class="row" name="graphicC" style="display:none">
 	<div class="col-lg-12">
 		<h4 class="page-header">Análises Gr&aacute;ficas da unidade</h4>
 	</div>
 </div>
-<div class="row">
+<div class="row" name="graphicC" style="display:none">
 	<div class="<?php echo $classGraphs;?>">
 		<center><h5>An&aacute;lise gr&aacute;fica consolidada</h5></center>
 		<div id="phGhaphC" style="width:100%;height:300px"></div>
