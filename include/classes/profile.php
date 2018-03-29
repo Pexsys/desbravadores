@@ -182,7 +182,7 @@ class PROFILE {
 		endforeach;
 	}
 
-	public static function rulesCargos( $pessoaID, $param["cargo"], $param["cargo2"] ) {
+	public static function rules( $pessoaID, $param ) {
 		//0 TODOS - LOGIN
 		//1 ADMINISTRADOR
 		//2 REGIONAL 
@@ -248,6 +248,6 @@ class PROFILE {
 		endif;
 
 		return $arr;
-	 }
+	}
 }
 ?>

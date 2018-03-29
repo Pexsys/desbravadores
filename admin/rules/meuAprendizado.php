@@ -135,10 +135,10 @@ function getClassPainelMestrado( $pct ){
 		return array( "panel" => "bg-grey", "title" => "type-default" );
 	//2
 	elseif ($pct < 30):
-		return array( "panel" => "bg-blue", "title" => "type-info" );
+		return array( "panel" => "bg-cyan", "title" => "type-warning" );
 	//3
 	elseif ($pct < 45):
-		return array( "panel" => "bg-cyan", "title" => "type-warning" );
+		return array( "panel" => "bg-blue", "title" => "type-info" );
 	//4
 	elseif ($pct < 60):
 		return array( "panel" => "bg-orange", "title" => "type-danger" );
