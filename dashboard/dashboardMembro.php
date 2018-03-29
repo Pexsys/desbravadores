@@ -141,36 +141,36 @@ if (!$result->EOF):
 	</div>
 	<?php
 endif;
-?>
-<div class="row">
-	<div class="col-md-12 col-xs-12 col-sm-12 col-lg-12 col-xl-6">
-		<h4 class="page-header">Ranking</h4>
-	</div>
-	<?php
-	echo fItemAprendizado(array(
-		"classPanel" => "panel-default",
-		"classSize" => "col-md-12 col-xs-12 col-sm-12 col-lg-4 col-xl-4",
-		"leftIcon" => "fas fa-chart-line fa-4x", 
-		"value" => "0", 
-		"title" => "Semanal"
-	));
-	echo fItemAprendizado(array(
-		"classPanel" => "panel-default",
-		"classSize" => "col-md-12 col-xs-12 col-sm-12 col-lg-4 col-xl-4",
-		"leftIcon" => "fas fa-chart-line fa-4x", 
-		"value" => "0", 
-		"title" => "Mensal"
-	));
-	echo fItemAprendizado(array(
-		"classPanel" => "panel-default",
-		"classSize" => "col-md-12 col-xs-12 col-sm-12 col-lg-4 col-xl-4",
-		"leftIcon" => "fas fa-chart-line fa-4x", 
-		"value" => "0", 
-		"title" => "Anual"
-	));
-	?>
-</div>
-<?php
+
+/*
+echo "<div class=\"row\">
+<div class=\"col-md-12 col-xs-12 col-sm-12 col-lg-12 col-xl-6\">
+	<h4 class=\"page-header\">Ranking</h4>
+</div>";
+echo fItemAprendizado(array(
+	"classPanel" => "panel-default",
+	"classSize" => "col-md-12 col-xs-12 col-sm-12 col-lg-4 col-xl-4",
+	"leftIcon" => "fas fa-chart-line fa-4x", 
+	"value" => "0", 
+	"title" => "Semanal"
+));
+echo fItemAprendizado(array(
+	"classPanel" => "panel-default",
+	"classSize" => "col-md-12 col-xs-12 col-sm-12 col-lg-4 col-xl-4",
+	"leftIcon" => "fas fa-chart-line fa-4x", 
+	"value" => "0", 
+	"title" => "Mensal"
+));
+echo fItemAprendizado(array(
+	"classPanel" => "panel-default",
+	"classSize" => "col-md-12 col-xs-12 col-sm-12 col-lg-4 col-xl-4",
+	"leftIcon" => "fas fa-chart-line fa-4x", 
+	"value" => "0", 
+	"title" => "Anual"
+));
+echo "</div>";
+*/
+
 $result = CONN::get()->Execute("
 	SELECT ID_CAD_PESSOA, ID_TAB_APREND, TP_ITEM, CD_AREA_INTERNO, CD_ITEM_INTERNO, DS_ITEM, DT_INICIO, COUNT(*) AS QT_REQ
 	FROM CON_APR_PESSOA
