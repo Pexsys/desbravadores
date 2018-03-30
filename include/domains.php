@@ -1,6 +1,4 @@
 <?php
-
-
 function getDomainMembrosAtivos(){
 	$arr = array();
 	
