@@ -26,7 +26,7 @@ function nextEvents(){
 			$MES_ANT = "";
 			while (!$result->EOF):
 				?>
-					<p class="divider"><i class="fa fa-fw fa-hand-o-right"></i>
+					<p class="divider"><i class="fas fa-hand-point-right fa-fw"></i>
 						<?php 
 						echo "<b>".fDtHoraEvento($result->fields['DTHORA_EVENTO_INI'],$result->fields['DTHORA_EVENTO_FIM'])."</b>" ; 
 						
