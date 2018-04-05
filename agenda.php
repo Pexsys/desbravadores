@@ -53,7 +53,7 @@ fHeaderPage();
 		<div class="row media col-lg-12">
 			<div class="pull-left">
 				<span class="fa-stack fa-2x">
-					  <i class="far fa-circle fa-stack-2x text-primary"></i>
+					  <i class="fas fa-circle fa-stack-2x text-primary"></i>
 					  <i class="<?php echo fGetClassTipoEvento($result->fields['TIPO_EVENTO']);?> fa-stack-1x fa-inverse"></i>
 				</span> 
 			</div>
