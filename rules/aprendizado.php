@@ -81,7 +81,7 @@ function getQueryByFilter( $parameters ) {
 					else:
 						$aWhere[] = $value;
 						$where .= (!$prim ? "," : "" )."?";
-					endif;				
+					endif;
 					$prim = false;
 				endforeach;
 			else:
@@ -90,7 +90,7 @@ function getQueryByFilter( $parameters ) {
 			endif;
 			$where .= ")";
 		endforeach;
-	endif;	
+	endif;
 
 //echo $where;
 //exit;
@@ -119,11 +119,11 @@ function getQueryByFilter( $parameters ) {
 
 function getAprendizado( $parameters ) {
 	$arr = array();
-	
-	
+
+
 	$result = getQueryByFilter( $parameters );
 	foreach ($result as $k => $fields):
-		$arr[] = array( 
+		$arr[] = array(
 			"id" => $fields['ID'],
 			"ip" => $fields['ID_CAD_PESSOA'],
 			"nm" => ($fields['NM']),
@@ -131,23 +131,22 @@ function getAprendizado( $parameters ) {
 			"dsitm" => ($fields['DS_ITEM']) . ($fields['TP_ITEM'] == "ES" ? " - ".$fields['CD_ITEM_INTERNO'] : "")
 		);
 	endforeach;
-	
+
 	return array( "result" => true, "aprendizado" => $arr );
 }
 
 function delete( $parameters ) {
 	$ids = $parameters["ids"];
 	$compras = new COMPRAS();
-	
-	
+
 	foreach ($ids as $k => $id):
 		$rs = CONN::get()->Execute("SELECT ID_CAD_PESSOA, ID_TAB_APREND FROM APR_HISTORICO WHERE ID = ?", array($id) );
 		if (!$rs->EOF):
 			$compras->deleteByPessoa($rs->fields["ID_CAD_PESSOA"]);
-			
+
             //REMOVE NOTIFICACOES, SE EXISTIREM.
             CONN::get()->Execute("
-    		    DELETE FROM LOG_MENSAGEM 
+    		    DELETE FROM LOG_MENSAGEM
     		    WHERE ID_ORIGEM = ? AND TP = ? AND ID_CAD_USUARIO = (SELECT ID FROM CAD_USUARIO WHERE ID_CAD_PESSOA = ?)
     		", array( $rs->fields["ID_TAB_APREND"], "M", $rs->fields["ID_CAD_PESSOA"] ) );
 		endif;
@@ -167,7 +166,7 @@ function delete( $parameters ) {
 
 		CONN::get()->Execute("DELETE FROM APR_PESSOA_REQ WHERE ID_HISTORICO = ?", array($id) );
 		CONN::get()->Execute("DELETE FROM APR_HISTORICO WHERE ID = ?", array($id) );
-		
+
 	endforeach;
 	return array( "result" => true );
 }
@@ -175,18 +174,17 @@ function delete( $parameters ) {
 function setAprendizado( $parameters ) {
 	$tags = new TAGS();
 	$compras = new COMPRAS();
-	
+
 	$arr = array();
-	
+
 	$frm = $parameters["frm"];
 
 	//ATRIBUTOS PARA INCLUSAO/ATUALIZACAO
 	$paramDates = getParamDates( $frm );
-	
-	
+
 	//UNIFICACAO DE ITENS DE APRENDIZADO.
 	$arrItens = array();
-	
+
 	//SE TEM CLASSES PARA ADICIONAR/ATUALIZAR
 	if (isset($frm["cd_classe"]) && is_array($frm["cd_classe"]) ):
 		$arrItens = array_merge($arrItens, $frm["cd_classe"]);
@@ -205,8 +203,8 @@ function setAprendizado( $parameters ) {
 	//SE TEM MESTRADO PARA ADICIONAR/ATUALIZAR
 	if (isset($frm["cd_mest"]) && is_array($frm["cd_mest"]) ):
 		$arrItens = array_merge($arrItens, $frm["cd_mest"]);
-	endif;	
-	
+	endif;
+
 	if ( $paramDates["dt_inicio"] != "N" || $paramDates["dt_conclusao"] != "N" || $paramDates["dt_avaliacao"] != "N" || $paramDates["dt_investidura"] != "N" ):
 
 		//VERIFICA SE TEM IDS SELECIONADOS PARA ATUALIZAR ATRIBUTOS.
@@ -226,17 +224,17 @@ function setAprendizado( $parameters ) {
 						$paramDates["dt_investidura"] = null;
 						$prepare = updateHistoricoQuery( $paramDates, "ID = ?" );
 					endif;
-					
+
 					$tmp = $prepare["bind"];
 					$tmp[] = $id;
-					CONN::get()->Execute( $prepare["query"], $tmp );		
+					CONN::get()->Execute( $prepare["query"], $tmp );
 
 					if (!is_null($paramDates["dt_investidura"])):
 						$compras->deleteItemPessoaEntregue( $rh->fields["ID_CAD_PESSOA"], $rh->fields["ID_TAB_APREND"] );
 					endif;
 				endif;
 			endforeach;
-			
+
 		//VERIFICA SE TEM MEMBROS ESPECIFICOS PARA ATUALIZAR ATRIBUTOS,
 		//DESDE QUE NAO TENHA ITENS DE APRENDIZADO A INSERIR/ALTERAR ESPECIFICOS
 		elseif ( isset($frm["id_pessoa"]) && is_array($frm["id_pessoa"]) && count($arrItens) == 0 ):
@@ -249,33 +247,33 @@ function setAprendizado( $parameters ) {
 						if ( !podeAtualizarDtInvestidura($id, $ln["ID_TAB_APREND"]) ):
 							$paramDates["dt_investidura"] = null;
 						endif;
-						
+
 						$prepare = updateHistoricoQuery( $paramDates, "ID_CAD_PESSOA = ?" );
 						$tmp = $prepare["bind"];
 						$tmp[] = $id;
 						CONN::get()->Execute( $prepare["query"], $tmp );
-						
+
 						if (!is_null($paramDates["dt_investidura"])):
 							$compras->deleteItemPessoaEntregue( $id, $ln["ID_TAB_APREND"] );
 						endif;
-						
+
 					endforeach;
 				endif;
 			endforeach;
 		endif;
 	endif;
-	
+
 	$arr["result"] = true;
 	$arr["msg"] = "";
 
 	//INCLUI/ATUALIZA ITENS
 	foreach ($arrItens as $id):
 		foreach ($frm["id_pessoa"] as $idPessoa):
-		    
+
 		    $deixa = true;
 		    //VERIFICA SE ITEM É UM MESTRADO E SE COMPLETOU TODOS AS ESPECIALIDADES DA REGRA.
 		    if ( isset($frm["cd_mest"]) && is_array($frm["cd_mest"]) && in_array($id, is_array($frm["cd_mest"])) ):
-		        
+
 		        //LE REGRAS
             	$rg = CONN::get()->Execute("
             	    SELECT DISTINCT car.ID, car.CD_ITEM_INTERNO, car.CD_AREA_INTERNO, car.DS_ITEM, car.TP_ITEM, car.MIN_AREA
@@ -284,7 +282,7 @@ function setAprendizado( $parameters ) {
             	", array($id) );
             	foreach ($rg as $lg => $fg):
                     $min = $fg["MIN_AREA"];
-            
+
                     $feitas = 0;
                     //LE PARAMETRO MINIMO E HISTORICO PARA A REGRA
             	    $rR = CONN::get()->Execute("
@@ -298,9 +296,9 @@ function setAprendizado( $parameters ) {
             	    foreach($rR as $lR => $fR):
                         $feitas += min( $fR["QT_MIN"], $fR["QT_FEITAS"] );
                     endforeach;
-            	    
+
             		$pct = floor( ( $feitas / $min ) * 100 );
-            		
+
             		//VERIFICA SE AINDA NÃO CONCLUIDO
             		if ( $pct < 100 ):
                         $arr["result"] = false;
@@ -309,24 +307,32 @@ function setAprendizado( $parameters ) {
             		endif;
             	endforeach;
             endif;
-		    
+
 		    if ($deixa):
 				updateHistorico( $idPessoa, $id, $paramDates, $compras );
 				analiseHistoricoPessoa($idPessoa);
 			endif;
-			
+
 			//INCLUI ITENS DE IDENTIFICACAO
 			if ($id >= 1 && $id <= 12):
 				if (isset($frm["tp_tag"]) && is_array($frm["tp_tag"]) ):
-					foreach ($frm["tp_tag"] as $tp):
-						$tags->insertItemTag( $tp, $idPessoa, $id );
-					endforeach;
+					$rp = CONN::get()->Execute("
+							SELECT ID
+							  FROM CAD_MEMBRO
+							 WHERE ID_CAD_PESSOA = ?
+							   AND ID_CLUBE = ?
+					", array( $idPessoa, $GLOBALS['pattern']->getBars()->getClubeID() ) );
+					if (!$rp->EOF):
+						foreach ($frm["tp_tag"] as $tp):
+							$tags->insertItemTag( $tp, $rp->fields["ID"], $id );
+						endforeach;
+					endif;
 				endif;
 			endif;
-		    
+
 		endforeach;
 	endforeach;
-	
+
 	return $arr;
 }
 
@@ -334,25 +340,24 @@ function getData(){
 	$arr = array();
 	$arr["result"] = false;
 	$arr["nomes"] = array();
-	
-	
+
 	$qtdZeros = zeroSizeID();
 	$result = CONN::get()->Execute("SELECT ID_CAD_PESSOA, ID_MEMBRO, NM FROM CON_ATIVOS ORDER BY NM");
 	while (!$result->EOF):
-		$arr["nomes"][] = array( 
+		$arr["nomes"][] = array(
 			"id" => $result->fields['ID_CAD_PESSOA'],
 			"ds" => $result->fields['NM'],
 			"sb" => fStrZero($result->fields['ID_MEMBRO'], $qtdZeros)
 		);
 		$result->MoveNext();
 	endwhile;
-	
+
 	$arr["classe"] = getClasse();
 	$arr["especialidade"] = getEspecialidade();
 	$arr["mestrado"] = getMestrado();
 	$arr["merito"] = getMerito();
 	$arr["tags"] = $GLOBALS['pattern']->getBars()->getTagsTipo("tg","S");
-	
+
 	return $arr;
 }
 
@@ -360,11 +365,11 @@ function getMerito(){
 	$arr = array();
 	$result = CONN::get()->Execute("
 		SELECT ID, CD_ITEM_INTERNO, DS_ITEM
-		  FROM TAB_APRENDIZADO 
+		  FROM TAB_APRENDIZADO
 		 WHERE TP_ITEM = ?
 	  ORDER BY CD_ITEM_INTERNO", array( "MT" ) );
 	foreach ($result as $k => $line):
-		$arr[] = array( 
+		$arr[] = array(
 			"id"	=> $line['ID'],
 			"ds"	=> $line['DS_ITEM']
 		);
@@ -376,11 +381,11 @@ function getClasse(){
 	$arr = array();
 	$result = CONN::get()->Execute("
 		SELECT ID, CD_ITEM_INTERNO, DS_ITEM
-		  FROM TAB_APRENDIZADO 
+		  FROM TAB_APRENDIZADO
 		 WHERE TP_ITEM = 'CL'
 	  ORDER BY CD_ITEM_INTERNO" );
 	foreach ($result as $k => $line):
-		$arr[] = array( 
+		$arr[] = array(
 			"id"	=> $line['ID'],
 			"ds"	=> $line['DS_ITEM']
 		);
@@ -392,13 +397,13 @@ function getMestrado(){
 	$arr = array();
 	$result = CONN::get()->Execute("
 		SELECT ID, CD_ITEM_INTERNO, DS_ITEM
-		  FROM TAB_APRENDIZADO 
+		  FROM TAB_APRENDIZADO
 		 WHERE TP_ITEM = 'ES'
 		   AND CD_AREA_INTERNO = 'ME'
 		   AND CD_ITEM_INTERNO IS NOT NULL
 	  ORDER BY DS_ITEM");
 	foreach ($result as $k => $line):
-		$arr[] = array( 
+		$arr[] = array(
 			"id"	=> $line['ID'],
 			"ds"	=> $line['DS_ITEM'],
 			"sb"	=> $line['CD_ITEM_INTERNO']
@@ -411,13 +416,13 @@ function getEspecialidade(){
 	$arr = array();
 	$result = CONN::get()->Execute("
 		SELECT ID, CD_ITEM_INTERNO, DS_ITEM
-		  FROM TAB_APRENDIZADO 
+		  FROM TAB_APRENDIZADO
 		 WHERE TP_ITEM = 'ES'
 		   AND CD_AREA_INTERNO <> 'ME'
 		   AND CD_ITEM_INTERNO IS NOT NULL
 	  ORDER BY DS_ITEM" );
 	foreach ($result as $k => $line):
-		$arr[] = array( 
+		$arr[] = array(
 			"id"	=> $line['ID'],
 			"ds"	=> $line['DS_ITEM'],
 			"sb"	=> $line['CD_ITEM_INTERNO']
