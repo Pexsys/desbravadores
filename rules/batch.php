@@ -2,7 +2,7 @@
 @require_once("../include/functions.php");
 @require_once("../include/sendmail.php");
 
-$md = date("m-d");
+$today = getdate();
 
 //******* INICIO DA ROTINA DIARIA
 CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.00-Iniciando rotina...')");
@@ -179,7 +179,7 @@ foreach($result as $l => $fields):
 endforeach;
 
 //*******  SECRETARIA - REORGANIZACAO DA BASE EM 01/JANEIRO
-if ($md == "01-01"):
+if ($today["month"] == 1 && $today["mday"] == 1):
 
 	//BASE DE COMPRAS
 	CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.05-Reorganizando base de compras...')");
@@ -258,7 +258,7 @@ if ($md == "01-01"):
 	endforeach;
 
 //MENSAGEM DE FELIZ NATAL
-elseif ($md == "12-25"):
+elseif ($today["month"] == 12 && $today["mday"] == 25):
 
 	CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.08-Felicitando pelo natal...')");
 	$rA = CONN::get()->Execute("
