@@ -85,7 +85,6 @@ $(document).ready(function(){
 		})
 		.submit( function(event) {
 			updateAprendizado();
-			closeAndRefresh();
 		})
 	;
 
@@ -268,8 +267,11 @@ function updateAprendizado(){
 	getFunctions( parameter, "quem" );
 	jsLIB.ajaxCall({
 		waiting : true,
-		url: jsLIB.rootDir+"admin/rules/aprendizado.php",
-		data: { MethodName : 'setAprendizado', data : parameter }
+		url: jsLIB.rootDir+"rules/aprendizado.php",
+		data: { MethodName : 'setAprendizado', data : parameter },
+		success: function(){
+			closeAndRefresh();
+		}
 	});
 }
 
