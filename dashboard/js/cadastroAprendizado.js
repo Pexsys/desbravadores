@@ -313,10 +313,10 @@ function fPrepareForm(){
 
 function closeAndRefresh(){
 	dataTable.ajax.reload( function(){
-		ruleBtnDelete( false );
 		updateNotifications();
+		ruleBtnDelete( false );
+		$("#aprendModal").modal('hide');
 	});
-	$("#aprendModal").modal('hide');
 }
 
 function populateData(){
