@@ -23,12 +23,16 @@ class MESSAGE {
 
         if ($this->_personGender == "F" ):
             $this->_oa = "a";
+            $this->_ea = "ela";
+            $this->_da = "dela";
             $this->_mm = "inha";
             $this->_ii = "irmã";
             $this->_uu = "uma";
             $this->_bb = "a";
         else:
             $this->_oa = "o";
+            $this->_ea = "ele";
+            $this->_da = "dele";
             $this->_mm = "eu";
             $this->_ii = "irmão";
             $this->_uu = "um";
@@ -241,6 +245,42 @@ class MESSAGE {
                 Na paz de Cristo. Feliz Aniversário ".$this->_np."!<br/>
                 Que Deus lhe dê saúde, paz e<br/>
                 Mais anos de vida abençoados." 
+            )
+            ,array(
+                "sub" => "O que desejo pra você?",
+                "msg" => "Todos os anos, absolutamente todos eles<br/>
+                Neste dia, a gratidão pelas bençãos de Deus deve se refletir em nossa existência.<br/>
+                Agradeça por tudo, pois o Senhor<br/>
+                É seu maior amigo e jamais abandonará você.<br/>
+                <br/>
+                Hoje, meu sincero desejo e minha oração por você é:<br/>
+                <br/>
+                <i>\"Senhor, abençoe ".$this->_oa." ".$this->_np.",<br/>
+                Abra os caminhos, barreitas e fronteiras que ".$this->_ea." está enfrentando,<br/>
+                Que Sua mão esteja sempre sobre ".$this->_ea." em todas as coisas,<br/>
+                E que o Senhor ".$this->_oa." preserves do mal.<br/>
+                Amém!\"</i>
+                "
+            )
+            ,array(
+                "sub" => "Um ano mais...",
+                "msg" => "Neste seu dia especial seja grato.<br/>
+                Agradeça pela vida,<br/>
+                Agradeça pelas oportunidades,<br/>
+                Agradeça pelo amor,<br/>
+                Agradeça pelo Salvador.<br/>
+                <br/>
+                Hoje, meu sincero desejo e minha oração por você é:<br/>
+                <br/>
+                <i>\"Que tua vida amig".$this->_oa." ".$this->_np.",<br/>
+                Seja sempre para o melhor.<br/>
+                Que o Sol aqueça teu viver.<br/>
+                Que a chuva caia suave no teu lar, até nos reencontrarmos outra vez.<br/>
+                Que Deus te segure nas suas mãos.<br/>
+                Que o Senhor te abençoe e guarde,<br/>
+                Que o Senhor sobre ti levante o rosto e te dê Paz.<br/>
+                Amém!\"</i>
+                "
             )
         );
     
