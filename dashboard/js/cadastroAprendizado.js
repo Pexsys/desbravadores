@@ -85,7 +85,6 @@ $(document).ready(function(){
 		})
 		.submit( function(event) {
 			updateAprendizado();
-			closeAndRefresh();
 		})
 	;
 	
@@ -269,7 +268,10 @@ function updateAprendizado(){
 	jsLIB.ajaxCall({
 		waiting : true,
 		url: jsLIB.rootDir+"rules/aprendizado.php",
-		data: { MethodName : 'setAprendizado', data : parameter }
+		data: { MethodName : 'setAprendizado', data : parameter },
+		success: function(){
+			closeAndRefresh();
+		}
 	});
 }
 
