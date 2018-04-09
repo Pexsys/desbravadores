@@ -305,14 +305,22 @@ function setAprendizado( $parameters ) {
 				HISTORICO::analisePessoa($idPessoa);
 			endif;
 
-			//INCLUI ITENS DE IDENTIFICACAO
-			if ($id >= 1 && $id <= 12):
-				if (isset($frm["tp_tag"]) && is_array($frm["tp_tag"]) ):
-					foreach ($frm["tp_tag"] as $tp):
-						TAGS::insertItemTag( $tp, $idPessoa, $id );
-					endforeach;
+			//INCLUI ITENS DE IDENTIFICACAO 
+			if ($id >= 1 && $id <= 12): 
+				if (isset($frm["tp_tag"]) && is_array($frm["tp_tag"]) ): 
+					$rp = CONN::get()->Execute(" 
+						SELECT ID 
+							FROM CAD_MEMBRO 
+						WHERE ID_CAD_PESSOA = ? 
+							AND ID_CLUBE = ? 
+					", array( $idPessoa, $GLOBALS['pattern']->getBars()->getClubeID() ) ); 
+					if (!$rp->EOF): 
+						foreach ($frm["tp_tag"] as $tp): 
+						$tags->insertItemTag( $tp, $rp->fields["ID"], $id ); 
+						endforeach; 
+					endif;
 				endif;
-			endif;
+			endif; 
 
 		endforeach;
 	endforeach;
