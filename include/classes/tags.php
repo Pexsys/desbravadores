@@ -9,10 +9,6 @@ class TAGS {
 		CONN::get()->Execute("DELETE FROM TMP_PRINT_TAGS WHERE ID IN ($ids)");
 	}
 
-	public static function deleteByID( $id ) {
-		 CONN::get()->Execute("DELETE FROM CAD_COMPRAS WHERE ID = ?", array($id) );
-	}
-
 	public static function forceInsert( $arr ){
 		CONN::get()->Execute("
 			INSERT INTO TMP_PRINT_TAGS (

@@ -9,10 +9,6 @@ class MATERIAIS {
 		", array( $pessoaID, $tabMateriaisID ) );
 	}
 
-	public static function deleteByID( $id ) {
-		 CONN::get()->Execute("DELETE FROM MAT_HISTORICO WHERE ID = ?", array($id) );
-	}
-
 	public static function forceInsert( $arr ){
 		CONN::get()->Execute("
 			INSERT INTO MAT_HISTORICO(
