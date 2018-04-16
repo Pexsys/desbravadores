@@ -115,8 +115,6 @@ function getQueryByFilter( $parameters ) {
 
 function getLista( $parameters ) {
 	$arr = array();
-
-	
 	$result = getQueryByFilter( $parameters );
 
 	foreach ($result as $k => $fields):
@@ -149,8 +147,6 @@ function getLista( $parameters ) {
 }
 
 function process(){
-	
-
 	$compras = new COMPRAS();
 
 	//SELECIONA PESSOAS POR ORDEM ALFABETICA
@@ -176,7 +172,6 @@ function gerarPDF(){
 function getData( $parameters ) {
 	$arr = array();
 
-	
 	foreach ($parameters["domains"] as $y => $f):
 		if ( $f == "tipos" ):
 			$arr["tipos"] = array();
@@ -292,11 +287,10 @@ function getData( $parameters ) {
 
 function delete( $parameters ) {
 	$ids = $parameters["ids"];
-
 	
 	$compras = new COMPRAS();
 	foreach ($ids as $k => $id):
-		$compras->deleteByID($id);
+		$compras->deleteByID( $id );
 	endforeach;
 	return array( "result" => true );
 }
@@ -362,7 +356,6 @@ function batchInsert($compras, $qtItens, $cmpl, $cadMembroID, $id){
 function getAttrPerm( $parameters ) {
 	$id = $parameters["id"];
 
-	
 	$result = CONN::get()->Execute("
 		SELECT 1
 		FROM CON_COMPRAS
@@ -381,7 +374,6 @@ function getAttr( $parameters ) {
 		"fg_entregue" => "N"
 	);
 
-	
 	$result = CONN::get()->Execute("
 		SELECT FG_COMPRA, FG_ENTREGUE, QT_EST
 		FROM CON_COMPRAS
@@ -402,7 +394,6 @@ function setAttr( $parameters ) {
 	$vl = $parameters["vl"];
 	$qt = array( "qt" => 0 );
 
-	
 	$result = CONN::get()->Execute("
 		SELECT *
 		  FROM CON_COMPRAS
@@ -485,8 +476,6 @@ function updateCADCompras($fd, $arr){
 }
 
 function distribuirEstoque(){
-	
-
 	//MOVIMENTAR ITENS COMPRADOS E NAO ENTREGUES PARA O ESTOQUE
 	$result = CONN::get()->Execute("
 		SELECT ID_TAB_MATERIAIS, COUNT(*) AS QT_ATTR
