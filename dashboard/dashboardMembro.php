@@ -88,7 +88,7 @@ if (!$result->EOF):
 				"classPanel" => "panel-red",
 				"leftIcon" => $icon, 
 				"value" => $area, 
-				"title" => titleCase( $ds, array(" "), array("OU", "COU", "APS") )
+				"title" => titleCase( $ds, array(" "), array("OU", "COU", "APS", "P", "PP", "G", "GG", "M", "GGX", "3G") )
 			));
 		endforeach;
 		?>
@@ -134,7 +134,7 @@ if (!$result->EOF):
 				"classPanel" => "panel-warning",
 				"leftIcon" => $icon, 
 				"value" => $area, 
-				"title" => titleCase( $ds, array(" "), array("OU", "COU", "APS") )
+				"title" => titleCase( $ds, array(" "), array("OU", "COU", "APS", "P", "PP", "G", "GG", "M", "GGX", "3G") )
 			));
 		endforeach;
 		?>
