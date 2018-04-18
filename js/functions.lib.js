@@ -213,7 +213,7 @@ var jsLIB = {
 
 	getURIFields : function( frm ) {
 		var retorno = "";
-		frm.find( $('[field]') ).each( function() {
+		frm.find( $('[field]:visible') ).each( function() {
 			var value = jsLIB.getValueFromField($(this));
 			if (value){
 				retorno += (retorno.length == 0?"":"&") + $(this).attr("field") +"="+ value;
