@@ -241,7 +241,16 @@ $(document).ready(function(){
 
 	$('#btnListagens').click(function(){
 		jsLIB.resetForm( $('#printForm') );
-		$("#printModal").modal();
+		jsLIB.ajaxCall({
+			type: "GET",
+			async: false,
+			url: jsLIB.rootDir+"rules/listaCompras.php",
+			data: { MethodName : 'getData', data : { domains : [ "tipos" ] } },
+			success: function(data){
+				jsLIB.populateOptions( $("#cmTIPOS"), data.tipos );
+				$("#printModal").modal();
+			}
+		});
 	});
 	
 	$('#btnAdd').click(function(){

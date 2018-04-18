@@ -99,6 +99,7 @@ function filtroDatasAvaliacao(){
 									<div class="form-group col-xs-12">
 										<select name="cmLista" id="cmLista" opt-value="cd" opt-label="ds" class="selectpicker form-control input-sm" data-container="body" data-width="100%">
 										    <option value=""></option>
+											<option value="geraListaComprasMaterial.php?" show="divMaterial">LISTA DE COMPRAS - POR TIPO DE MATERIAL</option>
 											<option value="geraListaComprasAlmArea.php?fc=N" show="divLista">LISTA DE COMPRAS - ALMOXARIFADO DA ASSOCIA&Ccedil;&Atilde;O - POR &Aacute;REA</option>
 											<option value="geraListaComprasAlmGaveta.php" show="divLista">LISTA DE COMPRAS - ALMOXARIFADO DA ASSOCIA&Ccedil;&Atilde;O - POR GAVETA</option>
 											<option value="geraListaComprasAlmArea.php?fc=S">LISTA DE COMPRAS - ITENS COMPRADOS - POR &Aacute;REA</option>
@@ -169,6 +170,21 @@ function filtroDatasAvaliacao(){
 											<option value="P">SOMENTE OS PREVISTOS</option>
 											<option value="A">SOMENTE OS AVALIADOS</option>
 										</select>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="panel panel-warning" name="rowFilter" id="divMaterial" style="display:none">
+						<div class="panel-heading" style="padding:4px 10px 0px">
+							<label>Filtros</label>
+						</div>
+						<div class="panel-body" style="padding:4px 10px 0px">
+							<div>
+								<div class="row">
+									<div class="form-group col-xs-12">
+										<label class="control-label">Tipos</label>
+										<select field="cmTIPOS" id="cmTIPOS" opt-value="id" opt-label="ds" class="selectpicker form-control input-sm" data-container="body" data-width="100%" title="(NENHUM)" multiple data-actions-box="true" data-selected-text-format="count > 3"></select>
 									</div>
 								</div>
 							</div>

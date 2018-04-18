@@ -200,7 +200,7 @@ class PATTERNS {
 		$str .= in_array("ibd",$p) ? "IASD Capão Redondo " : "";
         $str .= in_array("sp",$p) && in_array("dst",$p) && !empty($str) ? "- " : "";
 		$str .= in_array("dst",$p) ? "Capão Redondo " : "";
-        $str .= in_array("sp",$p) && in_array("ibd",$p) && !empty($str) ? "- " : "";
+        $str .= in_array("sp",$p) && in_array("ig",$p) && !empty($str) ? "- " : "";
 		$str .= in_array("ig",$p) ? "Igreja Adventista do Sétimo Dia " : "";
         $str .= in_array("sp",$p) && in_array("add",$p) && !empty($str) ? "- " : "";
 		$str .= in_array("add",$p) ? "Av. Ellis Maas, 520 " : "";
