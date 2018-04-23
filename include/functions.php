@@ -408,11 +408,11 @@ function fListFanfarra($relativePath,$title,$extentions){
 
 function fGetClassTipoEvento($strTipoEvento){
 	$eventClass = array(
-		"APS"		=> "fas fa-building",	//VERMELHO
-		"IASD"		=> "fas fa-star",	//AZUL
+		"CAMPO"		=> "fas fa-building",	//VERMELHO
+		"DISTRITO"	=> "fas fa-star",	//AZUL
 		"REGIAO"	=> "fas fa-building",	//VERDE
 		"DEFAULT"	=> "fas fa-child",	//PRETO
-		"EGW"		=> "fas fa-graduation-cap",	//AMARELO
+		"COLEGIO"	=> "fas fa-graduation-cap",	//AMARELO
 		"SPECIAL"	=> "fas fa-exclamation-triangle"	//VINHO
 	);
 	if (array_key_exists($strTipoEvento,$eventClass)):

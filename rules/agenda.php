@@ -229,11 +229,11 @@ function fDeleteRegraChamada($idEvento){
 
 function fGetClass($strTipoEvento){
 	$eventClass = array(
-		"APS"		=> "event-important",	//VERMELHO
+		"CAMPO"		=> "event-important",	//VERMELHO
 		"IASD"		=> "event-info",	//AZUL
 		"REGIAO"	=> "event-success",	//VERDE
 		"DEFAULT"	=> "event-inverse",	//PRETO
-		"EGW"		=> "event-warning",	//AMARELO
+		"COLEGIO"	=> "event-warning",	//AMARELO
 		"SPECIAL"	=> "event-special"	//VINHO
 	);
 	if (array_key_exists($strTipoEvento,$eventClass)):
