@@ -71,7 +71,7 @@
 														<textarea field="ds_info" name="dsInfo" id="dsInfo" rows="2" class="form-control input-sm" placeholder="Informa&ccedil;&otilde;es adicionais do evento" default-value="Reuni&atilde;o"></textarea>
 													</div>
 													<div class="form-group">
-														<input type="text" name="dsLocal" id="dsLocal" field="ds_local" class="form-control input-sm" placeholder="Local do evento" default-value="IASD Cap&atilde;o Redondo"/>
+														<input type="text" name="dsLocal" id="dsLocal" field="ds_local" class="form-control input-sm" placeholder="Local do evento" default-value="<?php echo PATTERNS::getClubeDS(array("ibd"))?>"/>
 													</div>
 
 													<div class="panel panel-default" aria-expanded="false">
@@ -201,11 +201,11 @@
 											</div>
 											<div class="form-group col-xs-7" style="padding-right:0px">
 												<select field="tp_eve" name="cmTPEve" id="cmTPEve" class="form-control input-sm" placeholder="Tipo do Evento" default-value="DEFAULT">
-													<option value="REGIAO">6&ordf; REGI&Atilde;O</option>
-													<option value="APS">APS</option>
-													<option value="EGW">COL&Eacute;GIO EGW</option>
+													<option value="REGIAO"><?php echo mb_strtoupper(PATTERNS::getClubeDS(array("rg")));?></option>
+													<option value="CAMPO"><?php echo PATTERNS::getClubeDS(array("ab"));?></option>
+													<option value="COLEGIO">COL&Eacute;GIO</option>
 													<option value="DEFAULT">CLUBE</option>
-													<option value="IASD">IASD Cap&atilde;o Redondo</option>
+													<option value="DISTRITO"><?php echo PATTERNS::getClubeDS(array("ibd"));?></option>
 													<option value="SPECIAL">OUTROS</option>
 												</select>
 											</div>
