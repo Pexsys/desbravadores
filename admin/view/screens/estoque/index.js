@@ -113,9 +113,10 @@ $(document).ready(function(){
 		populateTipos();
 
 		$('#divItem').visible(false);
-		jsLIB.resetForm( $('#cadListaForm') );
-		$("#qtItens").val(1);
-		$("#listaModal").modal();
+		jsLIB.resetForm( $('#cadListaForm'), () => {
+			$("#qtItens").val(1);
+			$("#listaModal").modal();
+		});
 	});
 
 	$('#cmTipo').change(function(){
@@ -139,28 +140,32 @@ $(document).ready(function(){
 			type: "GET",
 			url: jsLIB.rootDir+"admin/rules/cadastroEstoque.php",
 			data: { MethodName : 'getItem', data : { id: matID } },
-			success: function(es){
+			success: (es) => {
 				if (es){
 					save = "edit";
 
-					jsLIB.resetForm( $('#cadListaForm') );
-					$('#divItem').visible(false);
+					jsLIB.resetForm( $('#cadListaForm'), () => {
+						$('#divItem').visible(false);
 
-					populateTipos();
-					$("#cmTipo").prop('disabled', true).val(es.tp).change();
-
-					$("#qtItens").val(es.qt_est);
-
-					populateItens(es.tp);
-					$("#cmItem").prop('disabled', true).val(matID).change();
-					$("#listaModal").modal();
+						populateTipos( () => { 
+							$("#cmTipo").prop('disabled', true).selectpicker('val',es.tp); 
+							$('#divItem').visible(true); 
+							$("#qtItens").val(es.qt_est); 
+			   
+							populateItens(es.tp, () => { 
+								$("#cmItem").prop('disabled', true).selectpicker('val',matID); 
+								$("#listaModal").modal(); 
+							}); 
+			   
+						}); 
+					});
 				}
 			}
 		});
 	});
 });
 
-function populateTipos(){
+function populateTipos(callback){
 	var parameter = {
 		domains : [ "tiposEst" ]
 	};
@@ -169,12 +174,12 @@ function populateTipos(){
 		url: jsLIB.rootDir+"admin/rules/listaCompras.php",
 		data: { MethodName : 'getData', data : parameter },
 		success: function(cg){
-			jsLIB.populateOptions( $("#cmTipo"), cg.tipos );
+			jsLIB.populateOptions( $("#cmTipo"), cg.tipos, callback );
 		}
 	});
 }
 
-function populateItens(tp){
+function populateItens(tp, callback){
 	var parameter = {
 		key : tp,
 		domains : [ "itensEst" ]
@@ -184,7 +189,7 @@ function populateItens(tp){
 		url: jsLIB.rootDir+"admin/rules/listaCompras.php",
 		data: { MethodName : 'getData', data : parameter },
 		success: function(cg){
-			jsLIB.populateOptions( $("#cmItem"), cg.itens );
+			jsLIB.populateOptions( $("#cmItem"), cg.itens, callback );
 		}
 	});
 }

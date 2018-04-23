@@ -85,10 +85,7 @@ Number.prototype.toPadString = function( size, pad, side ) {
  */
 Date.prototype.toFormattedDate = function() {
 	var month = this.getMonth() + 1;
-
-	return this.getDate().toPadString(2) + "/" +
-		   month.toPadString(2) + "/" +
-		   this.getFullYear();
+	return [ this.getDate().toPadString(2), month.toPadString(2), this.getFullYear() ].join('/');
 };
 
 /**
@@ -170,7 +167,7 @@ var jsLIB = {
 		}
 	},
 
-	ajaxCall : function( objParam ) {
+	ajaxCall : function( objParam, callback ) {
 		var retorno = undefined;
 		if (objParam.waiting === true){
 			jsLIB.modalWaiting(true);
@@ -200,6 +197,9 @@ var jsLIB = {
 				}
 			}
 		});
+		if (callback){
+			callback();
+		}
 		return retorno;
 	},
 
@@ -242,7 +242,7 @@ var jsLIB = {
 		return value;
 	},
 
-	resetForm : function( frm ) {
+	resetForm : function( frm, callback ) {
 		frm.find( $('[field]') ).each( function() {
 			$(this).parents('.form-group').removeClass('has-success');
 			var value = '';
@@ -273,9 +273,12 @@ var jsLIB = {
 					break;
 			}
 		});
+		if (callback){
+			callback();
+		}
 	},
 
-	populateForm : function( frm, data ) {
+	populateForm : function( frm, data, callback ) {
 		jsLIB.resetForm(frm);
 		$.each( data, function( key, value ) {
 			var ctrl = $('[field='+key+']', frm.id );
@@ -305,9 +308,12 @@ var jsLIB = {
 					}
 			}
 		});
+		if (callback){
+			callback();
+		}
 	},
 
-	populateOptions : function( objSelect, source ) {
+	populateOptions : function( objSelect, source, callback ) {
 		var value = ( objSelect.hasAttr("opt-value") ? objSelect.attr("opt-value") : "id" );
 		var label = ( objSelect.hasAttr("opt-label") ? objSelect.attr("opt-label") : "ds" );
 		var search = ( objSelect.hasAttr("opt-search") ? objSelect.attr("opt-search") : label );
@@ -370,6 +376,9 @@ var jsLIB = {
 			} else {
 				objSelect.selectpicker('refresh');
 			}
+		}
+		if (callback){
+			callback();
 		}
 	}
 };
