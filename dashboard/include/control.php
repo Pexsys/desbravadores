@@ -15,7 +15,6 @@ require_once("../include/_metaheader.php");
 <link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/css/bootstrap-toggle.min.css" rel="stylesheet" type="text/css"/>
 <link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/css/bootstrap-touchspin.min.css" rel="stylesheet" type="text/css"/>
 <link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/css/bootstrap-select.min.css" rel="stylesheet" type="text/css"/>
-<link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/css/acc-wizard.min.css" rel="stylesheet" type="text/css"/>
 <link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/font-awesome/css/fontawesome-all.min.css" rel="stylesheet" type="text/css"/>
 <link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/css/metisMenu.min.css" rel="stylesheet"/>
 <link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/css/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
@@ -51,7 +50,6 @@ function fFooterDashboardScript(){
 <script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/bootstrap-touchspin.min.js"></script>
 <script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/bootstrap-select.min.js"></script>
 <script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/bootstrap-notify.min.js"></script>
-<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/acc-wizard.min.js"></script>
 <script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/calendar.min.js"></script>
 <script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/calendar.lang.pt-BR.js"></script>
 <script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/underscore-min.js"></script>
