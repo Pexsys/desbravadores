@@ -179,7 +179,7 @@ foreach($result as $l => $fields):
 endforeach;
 
 //*******  SECRETARIA - REORGANIZACAO DA BASE EM 01/JANEIRO
-if ($today["month"] == 1 && $today["mday"] == 1):
+if ($today["mon"] == 1 && $today["mday"] == 1):
 
 	//BASE DE COMPRAS
 	CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.05-Reorganizando base de compras...')");
@@ -258,7 +258,7 @@ if ($today["month"] == 1 && $today["mday"] == 1):
 	endforeach;
 
 //MENSAGEM DE FELIZ NATAL
-elseif ($today["month"] == 12 && $today["mday"] == 25):
+elseif ($today["mon"] == 12 && $today["mday"] == 25):
 
 	CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.08-Felicitando pelo natal...')");
 	$rA = CONN::get()->Execute("
