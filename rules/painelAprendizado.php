@@ -267,8 +267,8 @@ function getClasses( $parameters ) {
 		$str .= "<div class=\"panel-body\" style=\"padding:5px 10px\">";
 				
 		foreach ($rs as $ks2 => $det):
-			$qtdReq =  $rs->fields["QT_REQ"];
-			$tabAprID =  $rs->fields["ID_TAB_APREND"];
+			$qtdReq = $det["QT_REQ"];
+			$tabAprID = $det["ID_TAB_APREND"];
 			$pct = 0;
 			$qtd = 0;
 			$rc = CONN::get()->Execute("
