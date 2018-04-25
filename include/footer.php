@@ -1,6 +1,8 @@
 <footer>
 	<div class="row">
 		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 center">
+			<?php
+			/*
 			<hr/>
 			<center>
 				<!-- INICIO FORMULARIO BOTAO PAGSEGURO -->
@@ -12,6 +14,8 @@
 				</form>
 				<!-- FINAL FORMULARIO BOTAO PAGSEGURO -->
 			</center>
+			*/
+			?>
 			<hr>
 			<p class="text-center">Copyright &copy; <?php echo date("Y");?> - <?php echo PATTERNS::getClubeDS(array("cl","cj","db","nm","sp","af")) ."<br/>". PATTERNS::getClubeDS(array("rg","sp","ibd","ab","un","dv"));?></p>
 		</div>
