@@ -33,7 +33,7 @@
 				$pctP = floor( 100 - $pctC);
 				$qtdP = ($qtdReq-$qtd);
 
-				echo "<li><a href=\"".$GLOBALS['pattern']->getVD()."dashboard/index.php?id=14\">";
+				echo "<li><a href=\"".$GLOBALS['pattern']->getVD()."dashboard/index.php?id=16\">";
 				echo "<div class=\"col-lg-12\" style=\"margin-bottom:-15px\">";
 				echo "<label class=\"control-label\"><i class=\"".getIconAprendizado( $det["TP_ITEM"], $det["CD_AREA_INTERNO"] )."\"></i>&nbsp;".titleCase($det["DS_ITEM"])."</label>";
 				echo "<div class=\"progress\" style=\"margin-bottom:0px;cursor:pointer\">";
