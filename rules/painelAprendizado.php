@@ -228,9 +228,9 @@ function getGraphData() {
 				"Aprend" => PATTERNS::toConvert($f['ID']),
 				"color" => $f['CD_COR'],
 				"freq"	=> array(
-						"low" => ($f['QT_1'] * 1),
-						"mid" => ($f['QT_2'] * 1),
-						"full" => ($f['QT_3'] * 1)
+					"low" => ($f['QT_1'] * 1),
+					"mid" => ($f['QT_2'] * 1),
+					"full" => ($f['QT_3'] * 1)
 				)
 			);
 		endif;

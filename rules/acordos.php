@@ -63,7 +63,6 @@ function getQueryByFilter( $parameters ) {
 function getAcordos( $parameters ) {
 	$arr = array();
 
-	
 	$result = getQueryByFilter( $parameters );
 	foreach ($result as $k => $f):
 		$arr[] = array(
