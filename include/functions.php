@@ -12,6 +12,7 @@ global $pattern;
 @require_once("classes/_patterns.php");
 @require_once("classes/profile.php");
 @require_once("classes/entity.php");
+@require_once("classes/tesouraria.php");
 
 function zeroSizeID(){
 	if (!isset($_SESSION['USER']['sizeID'])):
