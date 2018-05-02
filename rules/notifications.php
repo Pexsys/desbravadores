@@ -7,9 +7,9 @@ function getNotifications(){
 	
 	
 	$arr = array();
-	$arr = getItemNotify( $arr, "C", "fas fa-bullhorn", "Comunicados", $GLOBALS['pattern']->getVD()."dashboard/index.php?id=41" );
-	$arr = getItemNotify( $arr, "O", "fas fa-exclamation-triangle", "Ocorr&ecirc;ncias", $GLOBALS['pattern']->getVD()."dashboard/index.php?id=51" );
-	$arr = getItemNotify( $arr, "M", "fas fa-check-circle", "Mestrado Conclu&iacute;do", $GLOBALS['pattern']->getVD()."dashboard/index.php?id=16#mestrados" );
+	$arr = getItemNotify( $arr, "C", "fas fa-bullhorn", "Comunicados", PATTERNS::getVD()."dashboard/index.php?id=41" );
+	$arr = getItemNotify( $arr, "O", "fas fa-exclamation-triangle", "Ocorr&ecirc;ncias", PATTERNS::getVD()."dashboard/index.php?id=51" );
+	$arr = getItemNotify( $arr, "M", "fas fa-check-circle", "Mestrado Conclu&iacute;do", PATTERNS::getVD()."dashboard/index.php?id=16#mestrados" );
 	
 	$html = "";
 	$qt = 0;

@@ -63,4 +63,4 @@
 		</div>
 	</div>
 </div>
-<script src="<?php echo $GLOBALS['pattern']->getVD();?>dashboard/js/tabelaUnidade.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo PATTERNS::getVD();?>dashboard/js/tabelaUnidade.js<?php echo "?".microtime();?>"></script>

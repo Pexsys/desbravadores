@@ -176,6 +176,6 @@ td.details-control {
 		</div>
 	</form>
 </div>
-<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/tinymce/tinymce.min.js"></script>
-<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/tinymce/jquery.tinymce.min.js"></script>
-<script src="<?php echo $GLOBALS['pattern']->getVD();?>dashboard/js/cadastroDiarioClasse.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo PATTERNS::getVD();?>include/_core/js/tinymce/tinymce.min.js"></script>
+<script src="<?php echo PATTERNS::getVD();?>include/_core/js/tinymce/jquery.tinymce.min.js"></script>
+<script src="<?php echo PATTERNS::getVD();?>dashboard/js/cadastroDiarioClasse.js<?php echo "?".microtime();?>"></script>

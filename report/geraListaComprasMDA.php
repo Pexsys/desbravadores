@@ -42,8 +42,8 @@ class LISTAINVESTIDURAMDA extends TCPDF {
 		$this->SetCreator(PDF_CREATOR);
 		
 		$this->SetTitle('Listagem de Investidura - MDA');
-		$this->SetSubject($GLOBALS['pattern']->getClubeDS(array("cl","nm")));
-		$this->SetKeywords('Compras, ' . str_replace(" ", ", ", $GLOBALS['pattern']->getClubeDS( array("db","nm","ibd") ) ));
+		$this->SetSubject(PATTERNS::getClubeDS(array("cl","nm")));
+		$this->SetKeywords('Compras, ' . str_replace(" ", ", ", PATTERNS::getClubeDS( array("db","nm","ibd") ) ));
 		$this->setImageScale(PDF_IMAGE_SCALE_RATIO);
 		$this->heightHeader = 25;
 		$this->SetMargins(5, $this->heightHeader, 5);
@@ -78,7 +78,7 @@ class LISTAINVESTIDURAMDA extends TCPDF {
 		$this->setXY(20,15);
 		$this->SetTextColor(80,80,80);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 9);
-		$this->Cell(185, 5, $GLOBALS['pattern']->getCDS(), 0, false, 'C', false, false, false, false, false, false, 'T', 'M');
+		$this->Cell(185, 5, PATTERNS::getCDS(), 0, false, 'C', false, false, false, false, false, false, 'T', 'M');
 	}
 	
 	public function add($str){

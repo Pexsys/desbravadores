@@ -4,16 +4,16 @@
 
 fHeaderPage(
 	array(  
-		$GLOBALS['pattern']->getVD()."include/_core/css/datatable/dataTables.bootstrap.min.css",
-		$GLOBALS['pattern']->getVD()."include/_core/css/datatable/jquery.dataTables.min.css"
+		PATTERNS::getVD()."include/_core/css/datatable/dataTables.bootstrap.min.css",
+		PATTERNS::getVD()."include/_core/css/datatable/jquery.dataTables.min.css"
 	),
 	array( 
-		$GLOBALS['pattern']->getVD()."include/_core/js/slimscroll/jquery.slimscroll.min.js",
-		$GLOBALS['pattern']->getVD()."include/_core/js/datatable/jquery.dataTables.min.js",
-		$GLOBALS['pattern']->getVD()."include/_core/js/datatable/ZeroClipboard.js",
-		$GLOBALS['pattern']->getVD()."include/_core/js/datatable/dataTables.tableTools.min.js",
-		$GLOBALS['pattern']->getVD()."include/_core/js/datatable/dataTables.bootstrap.min.js",
-		$GLOBALS['pattern']->getVD()."js/capas.js?".microtime()
+		PATTERNS::getVD()."include/_core/js/slimscroll/jquery.slimscroll.min.js",
+		PATTERNS::getVD()."include/_core/js/datatable/jquery.dataTables.min.js",
+		PATTERNS::getVD()."include/_core/js/datatable/ZeroClipboard.js",
+		PATTERNS::getVD()."include/_core/js/datatable/dataTables.tableTools.min.js",
+		PATTERNS::getVD()."include/_core/js/datatable/dataTables.bootstrap.min.js",
+		PATTERNS::getVD()."js/capas.js?".microtime()
 	)
 );
 ?>
@@ -53,8 +53,8 @@ fHeaderPage(
 								<div class="input-group">
 									<div class="input-group-addon"><i class="fas fa-barcode form-group-sm"></i></div>
 									<input type="text" id="cdMembro" name="cdMembro" field="cd_membro" class="form-control" placeholder="Pasta/Caderno/Cart&atilde;o" style="text-transform: uppercase"
-										maxlength="<?php echo $GLOBALS['pattern']->getBars()->getLength();?>" 
-										pattern="<?php echo $GLOBALS['pattern']->getBars()->getPattern(".");?>"
+										maxlength="<?php echo PATTERNS::getBars()->getLength();?>" 
+										pattern="<?php echo PATTERNS::getBars()->getPattern(".");?>"
 										data-fv-regexp-message="C&oacute;digo inv&aacute;lido"
 									/>
 								</div>

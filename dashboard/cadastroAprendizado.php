@@ -256,8 +256,8 @@
 								<div class="input-group">
 									<div class="input-group-addon"><i class="fas fa-barcode fa-2x"></i></div>
 									<input type="text" id="cdBar" name="cdBar" field="cd_bar" class="form-control input-lg" placeholder="C&oacute;digo" style="text-transform: uppercase"
-										maxlength="<?php echo $GLOBALS['pattern']->getBars()->getLength();?>" 
-										pattern="<?php echo $GLOBALS['pattern']->getBars()->getPattern("AE");?>"
+										maxlength="<?php echo PATTERNS::getBars()->getLength();?>" 
+										pattern="<?php echo PATTERNS::getBars()->getPattern("AE");?>"
 										data-fv-regexp-message="C&oacute;digo inv&aacute;lido"
 									/>
 								</div>
@@ -275,5 +275,5 @@
 		</div>
 	</div>
 </div>	
-<script src="<?php echo $GLOBALS['pattern']->getVD();?>js/readdata.lib.js"></script>
-<script src="<?php echo $GLOBALS['pattern']->getVD();?>dashboard/js/cadastroAprendizado.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo PATTERNS::getVD();?>js/readdata.lib.js"></script>
+<script src="<?php echo PATTERNS::getVD();?>dashboard/js/cadastroAprendizado.js<?php echo "?".microtime();?>"></script>

@@ -9,14 +9,15 @@ mb_http_input('UTF-8');
 
 global $pattern;
 @require_once("_core/lib/adodb5/adodb.inc.php");
-@require_once("classes/_patterns.php");
+@require_once("classes/patterns.php");
 @require_once("classes/profile.php");
 @require_once("classes/entity.php");
+@require_once("classes/tesouraria.php");
 
 function zeroSizeID(){
 	if (!isset($_SESSION['USER']['sizeID'])):
 		session_start();
-		$rs = CONN::get()->Execute("SELECT COUNT(*) AS qtd FROM CAD_MEMBRO WHERE ID_CLUBE = ?", array( $GLOBALS['pattern']->getBars()->getClubeID() ) );
+		$rs = CONN::get()->Execute("SELECT COUNT(*) AS qtd FROM CAD_MEMBRO WHERE ID_CLUBE = ?", array( PATTERNS::getBars()->getClubeID() ) );
 		if (!$rs->EOF):
 			$_SESSION['USER']['sizeID'] = strlen($rs->fields['qtd']);
 		endif;
@@ -73,15 +74,15 @@ function fHeaderPage( $aCssFiles = NULL, $aJsFiles = NULL ){
 <!DOCTYPE html>
 <html>
 <head>
-<title><?php echo $GLOBALS['pattern']->getClubeDS(array("cl","nm","sp","ibd"));?></title>
+<title><?php echo PATTERNS::getClubeDS(array("cl","nm","sp","ibd"));?></title>
 <?php @require_once("_metaheader.php");?>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
-<link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css"/>
-<link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/css/bootstrap-select.min.css" rel="stylesheet" type="text/css"/>
-<link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/css/modern-business.css" rel="stylesheet" type="text/css"/>
-<link href="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/font-awesome/css/fontawesome-all.min.css" rel="stylesheet" type="text/css"/>
+<link href="<?php echo PATTERNS::getVD();?>include/_core/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+<link href="<?php echo PATTERNS::getVD();?>include/_core/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css"/>
+<link href="<?php echo PATTERNS::getVD();?>include/_core/css/bootstrap-select.min.css" rel="stylesheet" type="text/css"/>
+<link href="<?php echo PATTERNS::getVD();?>include/_core/css/modern-business.css" rel="stylesheet" type="text/css"/>
+<link href="<?php echo PATTERNS::getVD();?>include/_core/font-awesome/css/fontawesome-all.min.css" rel="stylesheet" type="text/css"/>
 <?php
 if (isset($aCssFiles)):
 	foreach ($aCssFiles as &$file):
@@ -89,14 +90,14 @@ if (isset($aCssFiles)):
 	endforeach;
 endif;
 ?>
-<script type="text/javascript" src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/jquery.min.js"></script>
-<script type="text/javascript" src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/bootstrap-select.min.js"></script>
-<script type="text/javascript" src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/formValidation/formValidation.min.js"></script>
-<script type="text/javascript" src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/formValidation/bootstrap.min.js"></script>
-<script type="text/javascript" src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/bootstrap-dialog.min.js"></script>
-<script type="text/javascript" src="<?php echo $GLOBALS['pattern']->getVD();?>js/functions.lib.js<?php echo "?".microtime();?>"></script>
-<script>jsLIB.rootDir = '<?php echo $GLOBALS['pattern']->getVD();?>';</script>
+<script type="text/javascript" src="<?php echo PATTERNS::getVD();?>include/_core/js/jquery.min.js"></script>
+<script type="text/javascript" src="<?php echo PATTERNS::getVD();?>include/_core/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="<?php echo PATTERNS::getVD();?>include/_core/js/bootstrap-select.min.js"></script>
+<script type="text/javascript" src="<?php echo PATTERNS::getVD();?>include/_core/js/formValidation/formValidation.min.js"></script>
+<script type="text/javascript" src="<?php echo PATTERNS::getVD();?>include/_core/js/formValidation/bootstrap.min.js"></script>
+<script type="text/javascript" src="<?php echo PATTERNS::getVD();?>include/_core/js/bootstrap-dialog.min.js"></script>
+<script type="text/javascript" src="<?php echo PATTERNS::getVD();?>js/functions.lib.js<?php echo "?".microtime();?>"></script>
+<script>jsLIB.rootDir = '<?php echo PATTERNS::getVD();?>';</script>
 <?php
 if (isset($aJsFiles)):
 	foreach ($aJsFiles as &$file):
@@ -147,7 +148,7 @@ function getDateNull($vl){
 }
 
 function fMontaCarrousel($relativePath,$extentions){
-	$capa = $GLOBALS['pattern']->getVD() . $relativePath;
+	$capa = PATTERNS::getVD() . $relativePath;
 
 	$document_root = $_SERVER['DOCUMENT_ROOT'];
 	$fisico_capas = $aDocumentos[$nLocais][0];
@@ -234,8 +235,8 @@ function insDocs(){
 }
 
 function fListDocumentos($relativePath,$title,$extentions,$classPanel,$tagItem){
-	$capa = $GLOBALS['pattern']->getVD() . $relativePath;
-	$capa_img = $GLOBALS['pattern']->getVD() ."img/";
+	$capa = PATTERNS::getVD() . $relativePath;
+	$capa_img = PATTERNS::getVD() ."img/";
 
 	$strRetorno = "";
 
@@ -323,8 +324,8 @@ function fListDocumentos($relativePath,$title,$extentions,$classPanel,$tagItem){
 }
 
 function fListFanfarra($relativePath,$title,$extentions){
-	$capa = $GLOBALS['pattern']->getVD() . $relativePath;
-	$capa_img = $GLOBALS['pattern']->getVD() . "img/";
+	$capa = PATTERNS::getVD() . $relativePath;
+	$capa_img = PATTERNS::getVD() . "img/";
 
 	$document_root = $_SERVER['DOCUMENT_ROOT'];
 	$fisico_repertorio = $relativePath;

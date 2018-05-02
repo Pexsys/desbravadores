@@ -35,8 +35,8 @@ class LISTAESTRELAS extends TCPDF {
 		$this->SetCreator(PDF_CREATOR);
 		
 		$this->SetTitle('Listagem de Requisição de Estrelas');
-		$this->SetSubject($GLOBALS['pattern']->getClubeDS(array("cl","nm")));
-		$this->SetKeywords('Estrelas, ' . str_replace(" ", ", ", $GLOBALS['pattern']->getClubeDS( array("db","nm","ibd") ) ) );
+		$this->SetSubject(PATTERNS::getClubeDS(array("cl","nm")));
+		$this->SetKeywords('Estrelas, ' . str_replace(" ", ", ", PATTERNS::getClubeDS( array("db","nm","ibd") ) ) );
 		$this->setImageScale(PDF_IMAGE_SCALE_RATIO);
 	}
 
@@ -58,21 +58,21 @@ class LISTAESTRELAS extends TCPDF {
 
  		$this->setXY(163,7);
  		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 9);
- 		$this->Cell(44, 5, "Distrito de ".$GLOBALS['pattern']->getClubeDS( array("dst") ), 0, false, 'L', false, false, false, false, 'T', 'M');
+ 		$this->Cell(44, 5, "Distrito de ".PATTERNS::getClubeDS( array("dst") ), 0, false, 'L', false, false, false, false, 'T', 'M');
  		$this->setXY(163,12);
- 		$this->Cell(44, 5, $GLOBALS['pattern']->getClubeDS( array("add") ), 0, false, 'L', false, false, false, false, 'T', 'M');
+ 		$this->Cell(44, 5, PATTERNS::getClubeDS( array("add") ), 0, false, 'L', false, false, false, false, 'T', 'M');
  		$this->setXY(163,17);
- 		$this->Cell(44, 5, $GLOBALS['pattern']->getClubeDS( array("dst") ), 0, false, 'L', false, false, false, false, 'T', 'M');
+ 		$this->Cell(44, 5, PATTERNS::getClubeDS( array("dst") ), 0, false, 'L', false, false, false, false, 'T', 'M');
  		$this->setXY(163,22);
- 		$this->Cell(44, 5, $GLOBALS['pattern']->getClubeDS( array("cid") ), 0, false, 'L', false, false, false, false, 'T', 'M');
+ 		$this->Cell(44, 5, PATTERNS::getClubeDS( array("cid") ), 0, false, 'L', false, false, false, false, 'T', 'M');
  		$this->setXY(163,27);
- 		$this->Cell(44, 5, $GLOBALS['pattern']->getClubeDS( array("cep") ), 0, false, 'L', false, false, false, false, 'T', 'M');
+ 		$this->Cell(44, 5, PATTERNS::getClubeDS( array("cep") ), 0, false, 'L', false, false, false, false, 'T', 'M');
  		$this->setXY(163,32);
- 		$this->Cell(44, 5, $GLOBALS['pattern']->getClubeDS( array("cnpj") ), 0, false, 'L', false, false, false, false, 'T', 'M');
+ 		$this->Cell(44, 5, PATTERNS::getClubeDS( array("cnpj") ), 0, false, 'L', false, false, false, false, 'T', 'M');
  		$this->setXY(163,37);
  		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 10);
  		$this->SetTextColor(0,128,128);
- 		$this->Cell(44, 5, $GLOBALS['pattern']->getClubeDS( array("as") ), 0, false, 'L', false, false, false, false, 'T', 'M');
+ 		$this->Cell(44, 5, PATTERNS::getClubeDS( array("as") ), 0, false, 'L', false, false, false, false, 'T', 'M');
  		$this->SetTextColor(0,0,0);
  		$this->posY = 43;
  	}
@@ -109,9 +109,9 @@ $pdf->SetTextColor(0,0,0);
 $pdf->SetFont(PDF_FONT_NAME_MAIN, '', 13);
 
 $html = "<p align=\"justify\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			Eu, $nmPastor, pastor do Distrito de ".$GLOBALS['pattern']->getClubeDS(array("ibd")).",
+			Eu, $nmPastor, pastor do Distrito de ".PATTERNS::getClubeDS(array("ibd")).",
 			venho através desta, recomendar a <b>Estrela de Tempo de Serviço</b> aos 
-			membros da direção do ".$GLOBALS['pattern']->getClubeDS(array("cl","nm"))." listados abaixo, em reconhecimento 
+			membros da direção do ".PATTERNS::getClubeDS(array("cl","nm"))." listados abaixo, em reconhecimento 
 			de sua dedicação no trabalho de liderar o clube para Salvação e Serviço.		
 		</p>";
 $pdf->setCellHeightRatio(2);

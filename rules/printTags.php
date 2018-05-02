@@ -100,7 +100,7 @@ function getQueryByFilter( $parameters ) {
 }
 
 function getTags( $parameters ) {
-	$tags = $GLOBALS['pattern']->getBars()->getTagsTipo("tg","S");
+	$tags = PATTERNS::getBars()->getTagsTipo("tg","S");
 	$arr = array();
 
 
@@ -121,7 +121,7 @@ function getTags( $parameters ) {
 	 ORDER BY pt.BC, ap.CD_ITEM_INTERNO, ca.NM
 	");
 	foreach ($result as $k => $fields):
-		$option = $GLOBALS['pattern']->getBars()->getTagByID($fields['TP']);
+		$option = PATTERNS::getBars()->getTagByID($fields['TP']);
 		$ds = substr($option["ds"],2);
 
 		if ($option["cl"] == "S" || !is_null($fields['DS_ITEM'])):
@@ -141,7 +141,7 @@ function getTags( $parameters ) {
 function getData( $parameters ){
 	return array(	"result"	=> true,
 					"membros"	=> getMembros( $parameters ),
-					"tags"		=> $GLOBALS['pattern']->getBars()->getTagsTipo("tg","S"),
+					"tags"		=> PATTERNS::getBars()->getTagsTipo("tg","S"),
 					"forms"		=> getFormsTipo()
 	) ;
 }

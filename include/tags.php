@@ -24,7 +24,7 @@ class TAGS {
 	}
 	
 	public function insertItemTag( $tp, $cadMembroID, $aprendID = null ) {
-		$option = $GLOBALS['pattern']->getBars()->getTagByID($tp);
+		$option = PATTERNS::getBars()->getTagByID($tp);
 
 		//SE NAO APONTADO APRENDIZADO, PROCURA MAIOR APRENDIZADO AVALIADO
 		if (empty($aprendID) || is_null($aprendID)):
@@ -75,7 +75,7 @@ class TAGS {
 		if ($r->EOF):
 			$r = CONN::get()->Execute("SELECT ID_MEMBRO FROM CAD_MEMBRO WHERE ID = ?", $cadMembroID );
 
-			$barCODE = $GLOBALS['pattern']->getBars()->encode(array(
+			$barCODE = PATTERNS::getBars()->encode(array(
 				"id" => $tp,
 				"fi" => $aprendID,
 				"ni" => $r->fields["ID_MEMBRO"]

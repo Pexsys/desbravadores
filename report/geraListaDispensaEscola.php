@@ -35,8 +35,8 @@ class LISTADISPENSAESCOLAR extends TCPDF {
 		$this->SetCreator(PDF_CREATOR);
 		
 		$this->SetTitle('Listagem de Dispensa Escolar');
-		$this->SetSubject($GLOBALS['pattern']->getClubeDS(array("cl","nm")));
-		$this->SetKeywords('Dispensa, ' . str_replace(" ", ", ", $GLOBALS['pattern']->getClubeDS( array("db","nm","ibd") ) ));
+		$this->SetSubject(PATTERNS::getClubeDS(array("cl","nm")));
+		$this->SetKeywords('Dispensa, ' . str_replace(" ", ", ", PATTERNS::getClubeDS( array("db","nm","ibd") ) ));
 		$this->setImageScale(PDF_IMAGE_SCALE_RATIO);
 	}
 
@@ -58,21 +58,21 @@ class LISTADISPENSAESCOLAR extends TCPDF {
 
  		$this->setXY(163,7);
  		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 8);
- 		$this->Cell(44, 5, "Distrito de ".$GLOBALS['pattern']->getClubeDS( array("dst") ), 0, false, 'L', false, false, false, false, 'T', 'M');
+ 		$this->Cell(44, 5, "Distrito de ".PATTERNS::getClubeDS( array("dst") ), 0, false, 'L', false, false, false, false, 'T', 'M');
  		$this->setXY(163,12);
- 		$this->Cell(44, 5, $GLOBALS['pattern']->getClubeDS( array("add") ), 0, false, 'L', false, false, false, false, 'T', 'M');
+ 		$this->Cell(44, 5, PATTERNS::getClubeDS( array("add") ), 0, false, 'L', false, false, false, false, 'T', 'M');
  		$this->setXY(163,17);
- 		$this->Cell(44, 5, $GLOBALS['pattern']->getClubeDS( array("dst") ), 0, false, 'L', false, false, false, false, 'T', 'M');
+ 		$this->Cell(44, 5, PATTERNS::getClubeDS( array("dst") ), 0, false, 'L', false, false, false, false, 'T', 'M');
  		$this->setXY(163,22);
- 		$this->Cell(44, 5, $GLOBALS['pattern']->getClubeDS( array("cid") ), 0, false, 'L', false, false, false, false, 'T', 'M');
+ 		$this->Cell(44, 5, PATTERNS::getClubeDS( array("cid") ), 0, false, 'L', false, false, false, false, 'T', 'M');
  		$this->setXY(163,27);
- 		$this->Cell(44, 5, $GLOBALS['pattern']->getClubeDS( array("cep") ), 0, false, 'L', false, false, false, false, 'T', 'M');
+ 		$this->Cell(44, 5, PATTERNS::getClubeDS( array("cep") ), 0, false, 'L', false, false, false, false, 'T', 'M');
  		$this->setXY(163,32);
- 		$this->Cell(44, 5, $GLOBALS['pattern']->getClubeDS( array("cnpj") ), 0, false, 'L', false, false, false, false, 'T', 'M');
+ 		$this->Cell(44, 5, PATTERNS::getClubeDS( array("cnpj") ), 0, false, 'L', false, false, false, false, 'T', 'M');
  		$this->setXY(163,37);
  		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 10);
  		$this->SetTextColor(0,128,128);
- 		$this->Cell(44, 5, $GLOBALS['pattern']->getClubeDS( array("as") ), 0, false, 'L', false, false, false, false, 'T', 'M');
+ 		$this->Cell(44, 5, PATTERNS::getClubeDS( array("as") ), 0, false, 'L', false, false, false, false, 'T', 'M');
  		$this->SetTextColor(0,0,0);
  		$this->posY = 48;
  	}
@@ -200,7 +200,7 @@ if (!$result->EOF):
             $html = "
                 <p align=\"justify\">Prezados Senhores,<br/>
                     <br/>
-                    Pertencemos ao ".$GLOBALS['pattern']->getClubeDS(array("cl","cj","db")).", órgão pertencente à Igreja Adventista do 7º Dia, que tem por finalidade auxiliar os pais na formação do caráter de seus filhos, na faixa etária de 10 a 15 anos. O trabalho que realizamos compreende atividades, tais como:
+                    Pertencemos ao ".PATTERNS::getClubeDS(array("cl","cj","db")).", órgão pertencente à Igreja Adventista do 7º Dia, que tem por finalidade auxiliar os pais na formação do caráter de seus filhos, na faixa etária de 10 a 15 anos. O trabalho que realizamos compreende atividades, tais como:
                     Projetos Comunitários: limpeza de praças, plantio de árvores, pintura de meio fio, desfiles anti-fumo e álcool, desfiles cívicos, visitas a asilos e orfanatos, auxílio em campanhas de vacinação, entre outros, que promovem a conscientização de preservação do meio onde vivemos, respeitando a vida e os semelhantes, além de orientá-los para um viver mais saudável;&nbsp;
                     Aulas teóricas e práticas de especializações nas mais diversas áreas: dando-os a oportunidade de identificarem-se com áreas para futura profissão;&nbsp;
                     Desenvolvimento de atividades físicas: condicionamento físico e modalidades esportivas;&nbsp;

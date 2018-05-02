@@ -93,22 +93,22 @@ function fDashBoard( $panelClass, $iconLeft, $query, $showZero, $titulo, $urlDet
 				UNION ALL 
 				SELECT 'RESPONSAVEL' AS INCONSIST FROM CON_ATIVOS WHERE IDADE_ANO < 18 AND (ID_PESSOA_RESP IS NULL OR NR_DOC_RESP IS NULL OR NR_CPF_RESP IS NULL)
 			) c",
-			false, "Pend&ecirc;ncias", $GLOBALS['pattern']->getVD()."dashboard/index.php?id=5&flt=PC&op=ALL" );
+			false, "Pend&ecirc;ncias", PATTERNS::getVD()."dashboard/index.php?id=5&flt=PC&op=ALL" );
 			
 		fDashBoard( "panel-green", "fas fa-toggle-on fa-4x", 
 			"SELECT COUNT(*) AS qtd FROM CON_ATIVOS", 
-			true, "Ativos", $GLOBALS['pattern']->getVD()."dashboard/index.php?id=5" );
+			true, "Ativos", PATTERNS::getVD()."dashboard/index.php?id=5" );
 
 		fDashBoard( "panel-yellow", "fas fa-check-circle fa-4x", 
 			"SELECT COUNT(*) AS qtd FROM CON_ATIVOS WHERE dt_bat IS NULL",
-			false, "N&atilde;o Batizados", $GLOBALS['pattern']->getVD()."dashboard/index.php?id=5&flt=B&op=N" );
+			false, "N&atilde;o Batizados", PATTERNS::getVD()."dashboard/index.php?id=5&flt=B&op=N" );
 
 		fDashBoard( "panel-primary", "fas fa-bath fa-4x", 
 			"SELECT COUNT(*) AS qtd FROM CON_ATIVOS WHERE dt_bat IS NOT NULL",
-			false, "Batizados", $GLOBALS['pattern']->getVD()."dashboard/index.php?id=5&flt=B&op=S" );
+			false, "Batizados", PATTERNS::getVD()."dashboard/index.php?id=5&flt=B&op=S" );
 			
 		fDashBoard( "panel-info", "fas fa-info-circle fa-4x", 
 			"SELECT COUNT(*) AS qtd FROM CAD_MEMBRO",
-			true, "Cadastrados", $GLOBALS['pattern']->getVD()."dashboard/index.php?id=5&flt=ALL" );
+			true, "Cadastrados", PATTERNS::getVD()."dashboard/index.php?id=5&flt=ALL" );
 	?>
 </div>

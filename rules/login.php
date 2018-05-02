@@ -19,10 +19,10 @@ function login( $parameters ) {
 
 	//Verificacao de Usuario/Senha
 	if ( isset($usr) && !empty($usr) ):
-		$barDecode	= $GLOBALS['pattern']->getBars()->decode($usr);
-		$usrClube	= ($barDecode["lg"] == $GLOBALS['pattern']->getBars()->getLength() && 
-					   $barDecode["cp"] == $GLOBALS['pattern']->getBars()->getClubePrefix() && 
-					   $GLOBALS['pattern']->getBars()->has("id",$barDecode["split"]["id"])
+		$barDecode	= PATTERNS::getBars()->decode($usr);
+		$usrClube	= ($barDecode["lg"] == PATTERNS::getBars()->getLength() && 
+					   $barDecode["cp"] == PATTERNS::getBars()->getClubePrefix() && 
+					   PATTERNS::getBars()->has("id",$barDecode["split"]["id"])
 					);
 
 		
@@ -32,7 +32,7 @@ function login( $parameters ) {
 		if ($result->EOF && $usrClube):
 			$usrClube = (sha1(strtolower($usr)) == $psw);
 		
-			$usr = $GLOBALS['pattern']->getBars()->encode(array(
+			$usr = PATTERNS::getBars()->encode(array(
 				"ni" => $barDecode["ni"]
 			));
 			if ($usrClube):
@@ -53,7 +53,7 @@ function login( $parameters ) {
 				if (is_null($usuarioID) && 
 				   (!is_null($result->fields["CD_CARGO"]) || !is_null($result->fields["CD_CARGO2"])) ):
 
-					$usr = $GLOBALS['pattern']->getBars()->encode(array(
+					$usr = PATTERNS::getBars()->encode(array(
 						"ni" => $result->fields["ID_MEMBRO"]
 					));
 					$psw = sha1(strtolower($usr));
@@ -153,9 +153,9 @@ function login( $parameters ) {
 				", array( $result->fields['ID'] ) );
 
 				if ( $pag == "READDATA" ):
-					$arr['page'] = $GLOBALS['pattern']->getVD()."readdata.php";
+					$arr['page'] = PATTERNS::getVD()."readdata.php";
 				else:
-					$arr['page'] = $GLOBALS['pattern']->getVD()."dashboard/index.php";
+					$arr['page'] = PATTERNS::getVD()."dashboard/index.php";
 				endif;
 				$arr['login'] = true;
 			endif;

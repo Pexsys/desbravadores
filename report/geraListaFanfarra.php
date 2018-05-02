@@ -36,8 +36,8 @@ class LISTAFANFARRA extends TCPDF {
 		$this->SetCreator(PDF_CREATOR);
 		
 		$this->SetTitle('Listagem de Membros da Fanfarra');
-		$this->SetSubject($GLOBALS['pattern']->getClubeDS(array("cl","nm")));
-		$this->SetKeywords('Fanfarra, ' . str_replace(" ", ", ", $GLOBALS['pattern']->getClubeDS( array("db","nm","ibd") ) ));
+		$this->SetSubject(PATTERNS::getClubeDS(array("cl","nm")));
+		$this->SetKeywords('Fanfarra, ' . str_replace(" ", ", ", PATTERNS::getClubeDS( array("db","nm","ibd") ) ));
 		$this->setImageScale(PDF_IMAGE_SCALE_RATIO);
 	}
 	
@@ -67,7 +67,7 @@ class LISTAFANFARRA extends TCPDF {
 		$this->setXY(20,15);
 		$this->SetTextColor(80,80,80);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 7);
-		$this->Cell(185, 5, $GLOBALS['pattern']->getCDS(), 0, false, 'C', false, false, false, false, false, false, 'T', 'M');
+		$this->Cell(185, 5, PATTERNS::getCDS(), 0, false, 'C', false, false, false, false, false, false, 'T', 'M');
 
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 10);
 		$this->SetTextColor(255,255,255);

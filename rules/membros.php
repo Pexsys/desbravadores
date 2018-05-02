@@ -399,7 +399,7 @@ function getMembroID(){
 		SELECT MAX(ID_MEMBRO) + 1 AS ID_MEMBRO
 		FROM CAD_MEMBRO
 		WHERE ID_CLUBE = ?
-	", array( $GLOBALS['pattern']->getBars()->getClubeID() ) );
+	", array( PATTERNS::getBars()->getClubeID() ) );
 	return $result->fields["ID_MEMBRO"];
 }
 
@@ -441,7 +441,7 @@ function insertMember( $parameters ) {
 				FROM CAD_MEMBRO
 				WHERE ID_CAD_PESSOA = ?
 					AND ID_CLUBE = ?
-				", array( $pessoaID, $GLOBALS['pattern']->getBars()->getClubeID() ) );
+				", array( $pessoaID, PATTERNS::getBars()->getClubeID() ) );
 			if ($result->EOF):
 				$membroID = getMembroID();
 
@@ -455,7 +455,7 @@ function insertMember( $parameters ) {
 						?,
 						?
 					)", array(
-						$GLOBALS['pattern']->getBars()->getClubeID(),
+						PATTERNS::getBars()->getClubeID(),
 						$membroID,
 						$pessoaID )
 					);
@@ -522,7 +522,7 @@ function getMember( $parameters ) {
 
 		$idadeAtual = fIdadeAtual($result->fields['DT_NASC']);
 
-		$barCODE = $GLOBALS['pattern']->getBars()->encode(array(
+		$barCODE = PATTERNS::getBars()->encode(array(
 			"ni" => $result->fields['ID_MEMBRO']
 		));
 

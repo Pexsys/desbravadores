@@ -321,7 +321,7 @@ function setAprendizado( $parameters ) {
 							  FROM CAD_MEMBRO
 							 WHERE ID_CAD_PESSOA = ?
 							   AND ID_CLUBE = ?
-					", array( $idPessoa, $GLOBALS['pattern']->getBars()->getClubeID() ) );
+					", array( $idPessoa, PATTERNS::getBars()->getClubeID() ) );
 					if (!$rp->EOF):
 						foreach ($frm["tp_tag"] as $tp):
 							$tags->insertItemTag( $tp, $rp->fields["ID"], $id );
@@ -356,7 +356,7 @@ function getData(){
 	$arr["especialidade"] = getEspecialidade();
 	$arr["mestrado"] = getMestrado();
 	$arr["merito"] = getMerito();
-	$arr["tags"] = $GLOBALS['pattern']->getBars()->getTagsTipo("tg","S");
+	$arr["tags"] = PATTERNS::getBars()->getTagsTipo("tg","S");
 
 	return $arr;
 }

@@ -172,7 +172,7 @@ if (!$result->EOF):
 	foreach ($result as $k => $line):
 		$id = $line["ID_CAD_PESSOA"];
 
-		$barCODE = $GLOBALS['pattern']->getBars()->encode(array(
+		$barCODE = PATTERNS::getBars()->encode(array(
 			"ni" => $line["ID_MEMBRO"]
 		));
 
@@ -192,9 +192,9 @@ if (!$result->EOF):
 	echo "</div>";
 endif;
 ?>
-<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/flot/jquery.flot.min.js"></script>
-<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/flot/jquery.flot.resize.min.js"></script>
-<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/flot/jquery.flot.axislabels.js"></script>
-<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/flot/jquery.flot.labels.js"></script>
-<script src="<?php echo $GLOBALS['pattern']->getVD();?>dashboard/js/aprendizadoFunctions.js<?php echo "?".microtime();?>"></script>
-<script src="<?php echo $GLOBALS['pattern']->getVD();?>dashboard/js/painelAprendizadoUnidade.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo PATTERNS::getVD();?>include/_core/js/flot/jquery.flot.min.js"></script>
+<script src="<?php echo PATTERNS::getVD();?>include/_core/js/flot/jquery.flot.resize.min.js"></script>
+<script src="<?php echo PATTERNS::getVD();?>include/_core/js/flot/jquery.flot.axislabels.js"></script>
+<script src="<?php echo PATTERNS::getVD();?>include/_core/js/flot/jquery.flot.labels.js"></script>
+<script src="<?php echo PATTERNS::getVD();?>dashboard/js/aprendizadoFunctions.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo PATTERNS::getVD();?>dashboard/js/painelAprendizadoUnidade.js<?php echo "?".microtime();?>"></script>

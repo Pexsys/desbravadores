@@ -7,14 +7,14 @@ $activeLogin = ($showLogin && !$temPerfil);
 		<div class="row">
 			<div class="col-md-4 col-sm-5">
 				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-					<span class="sr-only"><?php echo $GLOBALS['pattern']->getClubeDS(array("nm"));?></span>
+					<span class="sr-only"><?php echo PATTERNS::getClubeDS(array("nm"));?></span>
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
 				<a class="active" href="index.php">
 					<!-- Logo area -->
-					<div class="logo"><img class="img-responsive" width="110" src="<?php echo $GLOBALS['pattern']->getVD();?>img/d1-lg-tr-fb.svg" alt="<?php echo $GLOBALS['pattern']->getClubeDS(array("cl","db","nm"));?>"></div>
+					<div class="logo"><img class="img-responsive" width="110" src="<?php echo PATTERNS::getVD();?>img/d1-lg-tr-fb.svg" alt="<?php echo PATTERNS::getClubeDS(array("cl","db","nm"));?>"></div>
 				</a>
 			</div>
 			<div class="col-md-8 col-sm-7">

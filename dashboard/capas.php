@@ -31,4 +31,4 @@
 		</div>
 	</div>
 </form>
-<script src="<?php echo $GLOBALS['pattern']->getVD();?>dashboard/js/capas.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo PATTERNS::getVD();?>dashboard/js/capas.js<?php echo "?".microtime();?>"></script>

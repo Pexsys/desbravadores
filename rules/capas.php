@@ -6,7 +6,7 @@ responseMethod();
  * Methods defined for use. *
  ****************************/
 function getName( $parameters ) {
-	$barDecode	= $GLOBALS['pattern']->getBars()->decode($parameters["codigo"]);
+	$barDecode	= PATTERNS::getBars()->decode($parameters["codigo"]);
 	$arr = array();
 	$arr['ok'] = false;
 

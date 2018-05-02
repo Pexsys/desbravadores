@@ -60,7 +60,7 @@ while (!$result->EOF):
 	$req			= str_replace("--","-",$result->fields['REQ']);
 	$dtAssinat		= $result->fields['DT_ASSINAT'];
 
-	$barDecode	= $GLOBALS['pattern']->getBars()->decode($result->fields['BAR']);
+	$barDecode	= PATTERNS::getBars()->decode($result->fields['BAR']);
 	
 	$mr = marcaRequisito( $barDecode["ni"], $barDecode["fi"], $req, $dtAssinat );
 	if (!is_null($mr["idreq"])):
