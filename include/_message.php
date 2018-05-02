@@ -54,10 +54,10 @@ class MESSAGE {
         ". $this->_directorName ."
         <br/>
         <small>".
-        $GLOBALS['pattern']->getClubeDS( array( "cl", "db", "nm" ) ).
+        PATTERNS::getClubeDS( array( "cl", "db", "nm" ) ).
         "<br/>"
         .
-        $GLOBALS['pattern']->getClubeDS( array( "ibd" ) ).
+        PATTERNS::getClubeDS( array( "ibd" ) ).
         "</small>";
     }
 
@@ -69,12 +69,12 @@ class MESSAGE {
                 <p>Olá ".$this->_np.",<br/>
                 <br/>
                 Em nome do ".
-                $GLOBALS['pattern']->getClubeDS( array( "cl", "nm" ) )
+                PATTERNS::getClubeDS( array( "cl", "nm" ) )
                 .", quero lhe agradecer pelo seu esforço e por mais esta etapa concluída.<br/>
                 <br/>
                 No intuito de melhorar cada dia mais os registros da secretaria, nosso sistema detectou automaticamente que você concluiu o <b>".$this->_nm."</b>.<br/>
                 <br/>
-                Entre no sistema do clube (".$_SERVER['HTTP_HOST']."/".$GLOBALS['pattern']->getVD().") e confira na opção <i>Minha Página / Meu Aprendizado</i>. Caso não consiga ou não tenha acesso, procure seu conselheiro(a), instrutor(a) ou a secretaria do clube.<br/>
+                Entre no sistema do clube (".$_SERVER['HTTP_HOST']."/".PATTERNS::getVD().") e confira na opção <i>Minha Página / Meu Aprendizado</i>. Caso não consiga ou não tenha acesso, procure seu conselheiro(a), instrutor(a) ou a secretaria do clube.<br/>
                 <br/>
                 Fiquei orgulhoso ao saber que se tornou um".($this->_personGender == "F"?"a":"")." especialista nessa área. Isso é bom pra você e também para o clube. Meus Parabéns!"
                 .$this->getAssinatura("Com carinho").
@@ -298,7 +298,7 @@ class MESSAGE {
                 "msg" => "<p>Querid".$this->_oa." amig".$this->_oa." ".$this->_np.",<br/>
                 <br/>
                 Dentro, fora, perto ou longe do nosso ".
-                $GLOBALS['pattern']->getClubeDS( array( "cl" => true, "nm" => true ) )
+                PATTERNS::getClubeDS( array( "cl" => true, "nm" => true ) )
                 .", que seus dias deste novo ano possam ser mais alegres, e suas conquistas mais plenas e belas, juntamente com a bênção de Deus.<br/>
                 <br/>
                 Ano novo, novas metas, desafios e conquistas, e meu desejo é que você e eu possamos realizar cada um deles com muito amor e entrega.<br/>

@@ -33,7 +33,7 @@
 				$pctP = floor( 100 - $pctC);
 				$qtdP = ($qtdReq-$qtd);
 
-				echo "<li><a href=\"".$GLOBALS['pattern']->getVD()."dashboard/index.php?id=16\">";
+				echo "<li><a href=\"".PATTERNS::getVD()."dashboard/index.php?id=16\">";
 				echo "<div class=\"col-lg-12\" style=\"margin-bottom:-15px\">";
 				echo "<label class=\"control-label\"><i class=\"".getIconAprendizado( $det["TP_ITEM"], $det["CD_AREA_INTERNO"] )."\"></i>&nbsp;".titleCase($det["DS_ITEM"])."</label>";
 				echo "<div class=\"progress\" style=\"margin-bottom:0px;cursor:pointer\">";
@@ -76,7 +76,7 @@
 				<span class="icon-bar"></span>
 			</button>
 			<a class="navbar-brand" href="index.php" style="margin:0">
-				<img class="img-responsive" src="<?php echo $GLOBALS['pattern']->getVD();?>img/d1-lg-tr-fb.svg" width="60" height="5" alt="<?php echo $GLOBALS['pattern']->getClubeDS(array("cl","db","nm"));?>">
+				<img class="img-responsive" src="<?php echo PATTERNS::getVD();?>img/d1-lg-tr-fb.svg" width="60" height="5" alt="<?php echo PATTERNS::getClubeDS(array("cl","db","nm"));?>">
 			</a>
 		</div>
 	<?php @include_once("menu.php");?>

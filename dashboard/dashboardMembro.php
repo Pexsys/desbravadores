@@ -386,5 +386,5 @@ if (!$matAnteriores->EOF || !$matAno->EOF):
 <?php
 endif;
 ?>
-<script src="<?php echo $GLOBALS['pattern']->getVD();?>dashboard/js/aprendizadoFunctions.js<?php echo "?".microtime();?>"></script>
-<script src="<?php echo $GLOBALS['pattern']->getVD();?>dashboard/js/dashboardMembro.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo PATTERNS::getVD();?>dashboard/js/aprendizadoFunctions.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo PATTERNS::getVD();?>dashboard/js/dashboardMembro.js<?php echo "?".microtime();?>"></script>

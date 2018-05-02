@@ -19,4 +19,4 @@
 		<button class="btn btn-warning" id="btnAdd"><i class="fas fa-plus"></i>&nbsp;Adicionar</button>
 	</div>
 </div>
-<script src="<?php echo $GLOBALS['pattern']->getVD();?>dashboard/js/tabelaFuncoes.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo PATTERNS::getVD();?>dashboard/js/tabelaFuncoes.js<?php echo "?".microtime();?>"></script>

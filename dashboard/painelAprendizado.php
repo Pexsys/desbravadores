@@ -107,6 +107,6 @@ if (!$result->EOF):
 	<?php
 endif;
 ?>
-<script src="<?php echo $GLOBALS['pattern']->getVD();?>include/_core/js/d3.min.js"></script>
-<script src="<?php echo $GLOBALS['pattern']->getVD();?>dashboard/js/aprendizadoFunctions.js<?php echo "?".microtime();?>"></script>
-<script src="<?php echo $GLOBALS['pattern']->getVD();?>dashboard/js/painelAprendizado.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo PATTERNS::getVD();?>include/_core/js/d3.min.js"></script>
+<script src="<?php echo PATTERNS::getVD();?>dashboard/js/aprendizadoFunctions.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo PATTERNS::getVD();?>dashboard/js/painelAprendizado.js<?php echo "?".microtime();?>"></script>

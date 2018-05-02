@@ -41,8 +41,8 @@ class CHAMADA extends TCPDF {
 		$this->SetCreator(PDF_CREATOR);
 		
 		$this->SetTitle('Geração das fichas de chamada');
-		$this->SetSubject($GLOBALS['pattern']->getClubeDS(array("cl","nm")));
-		$this->SetKeywords('Chamada, ' . str_replace(" ", ", ", $GLOBALS['pattern']->getClubeDS( array("db","nm","ibd") ) ));
+		$this->SetSubject(PATTERNS::getClubeDS(array("cl","nm")));
+		$this->SetKeywords('Chamada, ' . str_replace(" ", ", ", PATTERNS::getClubeDS( array("db","nm","ibd") ) ));
 		$this->setImageScale(PDF_IMAGE_SCALE_RATIO);
 	}
 
@@ -92,7 +92,7 @@ class CHAMADA extends TCPDF {
 		
 		$this->setXY(20,15);
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 7);
-		$this->Cell(185, 5, $GLOBALS['pattern']->getCDS(), 0, false, 'C', false, false, false, false, false, false, 'T', 'M');
+		$this->Cell(185, 5, PATTERNS::getCDS(), 0, false, 'C', false, false, false, false, false, false, 'T', 'M');
 		
 		$this->cdates = $this->mesAno->RecordCount();
 		$this->leftMin = 205-max($this->cdates*$this->xq, 40);

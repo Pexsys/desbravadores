@@ -3,18 +3,18 @@
 session_start();
 fHeaderPage( 
 	array(
-		$GLOBALS['pattern']->getVD()."include/_core/css/bootstrap-toggle.min.css",
-		$GLOBALS['pattern']->getVD()."include/_core/css/bootstrap-touchspin.min.css"
+		PATTERNS::getVD()."include/_core/css/bootstrap-toggle.min.css",
+		PATTERNS::getVD()."include/_core/css/bootstrap-touchspin.min.css"
 	), 
 	array( 
-		$GLOBALS['pattern']->getVD()."include/_core/js/bootstrap-toggle.min.js",
-		$GLOBALS['pattern']->getVD()."include/_core/js/bootstrap-touchspin.min.js",
-		$GLOBALS['pattern']->getVD()."include/_core/js/moment.min.js",
-		$GLOBALS['pattern']->getVD()."include/_core/js/moment.pt-br.js",
-		$GLOBALS['pattern']->getVD()."include/_core/js/jstz.min.js",
-		$GLOBALS['pattern']->getVD()."include/_core/js/jquery.mask.min.js",
-		$GLOBALS['pattern']->getVD()."js/readdata.lib.js",
-		$GLOBALS['pattern']->getVD()."js/readdata.js?".microtime()
+		PATTERNS::getVD()."include/_core/js/bootstrap-toggle.min.js",
+		PATTERNS::getVD()."include/_core/js/bootstrap-touchspin.min.js",
+		PATTERNS::getVD()."include/_core/js/moment.min.js",
+		PATTERNS::getVD()."include/_core/js/moment.pt-br.js",
+		PATTERNS::getVD()."include/_core/js/jstz.min.js",
+		PATTERNS::getVD()."include/_core/js/jquery.mask.min.js",
+		PATTERNS::getVD()."js/readdata.lib.js",
+		PATTERNS::getVD()."js/readdata.js?".microtime()
 	) 
 );
 ?>

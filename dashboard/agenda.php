@@ -71,7 +71,7 @@
 														<textarea field="ds_info" name="dsInfo" id="dsInfo" rows="2" class="form-control input-sm" placeholder="Informa&ccedil;&otilde;es adicionais do evento" default-value="Reuni&atilde;o"></textarea>
 													</div>
 													<div class="form-group">
-														<input type="text" name="dsLocal" id="dsLocal" field="ds_local" class="form-control input-sm" placeholder="Local do evento" default-value="<?php echo $GLOBALS['pattern']->getClubeDS(array("ibd"));?>"/>
+														<input type="text" name="dsLocal" id="dsLocal" field="ds_local" class="form-control input-sm" placeholder="Local do evento" default-value="<?php echo PATTERNS::getClubeDS(array("ibd"));?>"/>
 													</div>
 
 													<div class="panel panel-default" aria-expanded="false">
@@ -202,11 +202,11 @@
 											</div>
 											<div class="form-group col-xs-7" style="padding-right:0px">
 												<select field="tp_eve" name="cmTPEve" id="cmTPEve" class="form-control input-sm" placeholder="Tipo do Evento" default-value="DEFAULT">
-													<option value="REGIAO"><?php echo mb_strtoupper($GLOBALS['pattern']->getClubeDS(array("rg")));?></option>
-													<option value="CAMPO"><?php echo $GLOBALS['pattern']->getClubeDS(array("ab"));?></option>
+													<option value="REGIAO"><?php echo mb_strtoupper(PATTERNS::getClubeDS(array("rg")));?></option>
+													<option value="CAMPO"><?php echo PATTERNS::getClubeDS(array("ab"));?></option>
 													<option value="COLEGIO">COL&Eacute;GIO</option>
 													<option value="DEFAULT">CLUBE</option>
-													<option value="DISTRITO"><?php echo $GLOBALS['pattern']->getClubeDS(array("ibd"));?></option>
+													<option value="DISTRITO"><?php echo PATTERNS::getClubeDS(array("ibd"));?></option>
 													<option value="SPECIAL">OUTROS</option>
 												</select>
 											</div>
@@ -232,4 +232,4 @@
 		</div>
 	</div>
 </div>
-<script src="<?php echo $GLOBALS['pattern']->getVD();?>dashboard/js/agenda.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo PATTERNS::getVD();?>dashboard/js/agenda.js<?php echo "?".microtime();?>"></script>

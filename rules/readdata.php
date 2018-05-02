@@ -28,12 +28,12 @@ function barcode( $parameters ) {
 		$frm		= $parameters["frm"];
 		$op			= $frm["op"];
 
-		$barDecode	= $GLOBALS['pattern']->getBars()->decode($brdt);
+		$barDecode	= PATTERNS::getBars()->decode($brdt);
 		
 		
-		if ( $barDecode["cp"] !== $GLOBALS['pattern']->getBars()->getClubePrefix() || 
-			$barDecode["lg"] <> $GLOBALS['pattern']->getBars()->getLength() ):
-			$arr['result'] = "Código não pertence ao ".$GLOBALS['pattern']->getClubeDS(array("cl","nm"));
+		if ( $barDecode["cp"] !== PATTERNS::getBars()->getClubePrefix() || 
+			$barDecode["lg"] <> PATTERNS::getBars()->getLength() ):
+			$arr['result'] = "Código não pertence ao ".PATTERNS::getClubeDS(array("cl","nm"));
 
 		//CHAMADA
 		elseif ( $op == "CHAMADA" ):
@@ -90,7 +90,7 @@ function setAprendizado( $parm ){
 					 WHERE CD_ITEM_INTERNO = '". substr($arrRetorno["cd"],0,-3) ."-01'
 				");
 				if (!$rs->EOF):
-					$barCODE = $GLOBALS['pattern']->getBars()->encode(array(
+					$barCODE = PATTERNS::getBars()->encode(array(
 						"id" => "A",
 						"fi" => $rs->fields["ID"],
 						"ni" => $parm["ni"]

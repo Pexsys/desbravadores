@@ -1,7 +1,7 @@
 <?php
 @include_once("include/functions.php");
-fHeaderPage( array( $GLOBALS['pattern']->getVD()."include/_core/css/index.css" )
-		   , array( $GLOBALS['pattern']->getVD()."js/index.js") );
+fHeaderPage( array( PATTERNS::getVD()."include/_core/css/index.css" )
+		   , array( PATTERNS::getVD()."js/index.js") );
 
 
 function nextEvents(){
@@ -131,7 +131,7 @@ function about(){
 		<div class="panel panel-info">
 			<div class="panel-heading"><h4><i class="fas fa-fw fa-history"></i>&nbsp;Voltando no tempo...</h4></div>
 			<div class="panel-body">
-				<p>Quem são os <?php echo $GLOBALS['pattern']->getClubeDS(array("nm"));?>? Quer saber como tudo começou? A história real contada em detalhes.</p>
+				<p>Quem são os <?php echo PATTERNS::getClubeDS(array("nm"));?>? Quer saber como tudo começou? A história real contada em detalhes.</p>
 				<p><a class="btn btn-info pull-right" href="about.php" role="button">Saiba mais... &raquo;</a></p>
 			</div>
 		</div>
@@ -154,7 +154,7 @@ function about(){
         <div class="row">
             <div class="col-lg-12">
                 <h3 class="page-header">
-                    Bem vindo ao <?php echo $GLOBALS['pattern']->getClubeDS(array("cl","nm"));?>!
+                    Bem vindo ao <?php echo PATTERNS::getClubeDS(array("cl","nm"));?>!
                 </h3>
             </div>
             <?php

@@ -16,7 +16,7 @@ function fMontaMenu( $perfil ) {
 		endif;
 		echo "<li$class>";
 		if ( !$urlEmpty ):
-			echo "<a href=\"".$GLOBALS['pattern']->getVD()."dashboard/index.php?id=$key\"$class>";
+			echo "<a href=\"".PATTERNS::getVD()."dashboard/index.php?id=$key\"$class>";
 		else:
 			echo "<a href=\"#\">";
 		endif;

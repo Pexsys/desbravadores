@@ -38,8 +38,8 @@ class ESPCR extends TCPDF {
 		$this->SetCreator(PDF_CREATOR);
 
 		$this->SetTitle('Geração automática de autorização de Saída');
-		$this->SetSubject($GLOBALS['pattern']->getClubeDS(array("cl","nm")));
-		$this->SetKeywords('Autorizações, ' . str_replace(" ", ", ", $GLOBALS['pattern']->getClubeDS( array("db","nm","ibd") ) ) );
+		$this->SetSubject(PATTERNS::getClubeDS(array("cl","nm")));
+		$this->SetKeywords('Autorizações, ' . str_replace(" ", ", ", PATTERNS::getClubeDS( array("db","nm","ibd") ) ) );
 		$this->setImageScale(PDF_IMAGE_SCALE_RATIO);
 		$this->SetTopMargin(4);
 		$this->SetFooterMargin(0);
@@ -69,21 +69,21 @@ class ESPCR extends TCPDF {
 
      		$this->setXY(172,7);
      		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 7);
-     		$this->Cell(44, 4, "Distrito de ".$GLOBALS['pattern']->getClubeDS( array("dst") ), 0, false, 'L', false, false, false, false, 'T', 'M');
+     		$this->Cell(44, 4, "Distrito de ".PATTERNS::getClubeDS( array("dst") ), 0, false, 'L', false, false, false, false, 'T', 'M');
      		$this->setXY(172,11);
-     		$this->Cell(44, 4, $GLOBALS['pattern']->getClubeDS( array("add") ), 0, false, 'L', false, false, false, false, 'T', 'M');
+     		$this->Cell(44, 4, PATTERNS::getClubeDS( array("add") ), 0, false, 'L', false, false, false, false, 'T', 'M');
      		$this->setXY(172,15);
-     		$this->Cell(44, 4, $GLOBALS['pattern']->getClubeDS( array("dst") ), 0, false, 'L', false, false, false, false, 'T', 'M');
+     		$this->Cell(44, 4, PATTERNS::getClubeDS( array("dst") ), 0, false, 'L', false, false, false, false, 'T', 'M');
      		$this->setXY(172,19);
-     		$this->Cell(44, 4, $GLOBALS['pattern']->getClubeDS( array("cid") ), 0, false, 'L', false, false, false, false, 'T', 'M');
+     		$this->Cell(44, 4, PATTERNS::getClubeDS( array("cid") ), 0, false, 'L', false, false, false, false, 'T', 'M');
      		$this->setXY(172,23);
-     		$this->Cell(44, 4, $GLOBALS['pattern']->getClubeDS( array("cep") ), 0, false, 'L', false, false, false, false, 'T', 'M');
+     		$this->Cell(44, 4, PATTERNS::getClubeDS( array("cep") ), 0, false, 'L', false, false, false, false, 'T', 'M');
      		$this->setXY(172,27);
-     		$this->Cell(44, 4, $GLOBALS['pattern']->getClubeDS( array("cnpj") ), 0, false, 'L', false, false, false, false, 'T', 'M');
+     		$this->Cell(44, 4, PATTERNS::getClubeDS( array("cnpj") ), 0, false, 'L', false, false, false, false, 'T', 'M');
      		$this->setXY(172,31);
      		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 8);
      		$this->SetTextColor(0,128,128);
-     		$this->Cell(44, 4, $GLOBALS['pattern']->getClubeDS( array("as") ), 0, false, 'L', false, false, false, false, 'T', 'M');
+     		$this->Cell(44, 4, PATTERNS::getClubeDS( array("as") ), 0, false, 'L', false, false, false, false, 'T', 'M');
 
      		$this->setXY(5,35);
      		$this->SetTextColor(0,0,0);
@@ -126,7 +126,7 @@ class ESPCR extends TCPDF {
 		$dtS = strtotime($this->line["DH_S"]);
 		$dtR = strtotime($this->line["DH_R"]);
 		$linhaASS = trim($this->line["NM_RESP"]).", ".$this->line["NR_DOC_RESP"].", CPF ".fCPF($this->line["NR_CPF_RESP"]). (!empty($this->line["FONE_CEL_RESP"]) ? ", Fone ".$this->line["FONE_CEL_RESP"] : "");
-		$barCODE = $GLOBALS['pattern']->getBars()->encode(array(
+		$barCODE = PATTERNS::getBars()->encode(array(
 			"id" => "D",
 			"fi" => $this->line["ID"],
 			"ni" => $this->line["ID_MEMBRO"]
@@ -153,14 +153,14 @@ class ESPCR extends TCPDF {
 
 		$html = "<p align=\"justify\">Através dos poderes legais a mim atribuídos, autorizo ".
 			($this->line["TP_SEXO"] == "F" ? "a " : "o "). $this->dsCargo ." <b><u>".trim($this->line["NM"])."</u></b>, ".
-			$this->line["NR_DOC"]." a participar juntamente com o ".$GLOBALS['pattern']->getClubeDS(array("cl","nm")).", dirigido e representado por ".trim($this->line["NOME_DIRETOR"]).", ".
+			$this->line["NR_DOC"]." a participar juntamente com o ".PATTERNS::getClubeDS(array("cl","nm")).", dirigido e representado por ".trim($this->line["NOME_DIRETOR"]).", ".
 			$this->line["IDENT_DIRETOR"].", do evento: ".trim($this->line["DS"]). (!empty($this->line["DS_DEST"]) ? "/".trim($this->line["DS_DEST"]) : "").", ".
 			(strftime("%Y-%m-%d",$dtS) == strftime("%Y-%m-%d",$dtR)
 				? "no dia ". utf8_encode(strftime("%e de %B de %Y",$dtS)). ", saindo &agrave;s ". strftime("%Hh". (strftime("%M",$dtS)>0?"%M":""),$dtS). " e retornando &agrave;s ". strftime("%Hh". (strftime("%M",$dtR)>0?"%M":""),$dtR)
 				: ", com saída prevista para ". utf8_encode(strftime("%e de %B de %Y &agrave;s %Hh". (strftime("%M",$dtS)>0?"%M":""),$dtS))." e com retorno previsto para ". utf8_encode(strftime("%e de %B de %Y &agrave;s %Hh". (strftime("%M",$dtR)>0?"%M":""),$dtR))
 			).
 			". Local de Saída/Retorno: ".trim($this->line["DS_ORIG"]). ". ".
-			"Consciente dos grandes benefícios recebidos através do ".$GLOBALS['pattern']->getClubeDS(array("cl","cj","db")).
+			"Consciente dos grandes benefícios recebidos através do ".PATTERNS::getClubeDS(array("cl","cj","db")).
 			" acima descrito, abdico responsabilizar, em qualquer instância judicial, o(os) responsável(eis) do referido Clube em todos os níveis, bem como a ".
 			"Igreja Adventista do Sétimo Dia, por qualquer dano causado ou sofrido por meu dependente, devido a sua própria atuação, ".
 			"no percurso de ida e volta bem como no decurso do referido evento. Em caso de acidente, ou doença, autorizo o responsável do ".
@@ -192,7 +192,7 @@ class ESPCR extends TCPDF {
 		$this->SetFont(PDF_FONT_NAME_MAIN, '', 10);
 		$html = "<p align=\"justify\">Eu, ". trim($this->line["NM_RESP"]) .", autorizo ".
 				($this->line["TP_SEXO"] == "F" ? "a " : "o "). $this->dsCargo ." <b><u>".trim($this->line["NM"])."</u></b>, ".
-				$this->line["NR_DOC"]." a se deslocar e participar juntamente com o ".$GLOBALS['pattern']->getClubeDS(array("cl","cj","db","nm"))." do ". trim($this->line["DS"]) .", \"". trim($this->line["DS_TEMA"]) ."\"".
+				$this->line["NR_DOC"]." a se deslocar e participar juntamente com o ".PATTERNS::getClubeDS(array("cl","cj","db","nm"))." do ". trim($this->line["DS"]) .", \"". trim($this->line["DS_TEMA"]) ."\"".
 				", promovido pela ".trim($this->line["DS_ORG"]) .
 				" da Igreja Adventista do Sétimo Dia, que se realizará entre ". utf8_encode(strftime("%e de %B de %Y &agrave;s %Hh". (strftime("%M",$dtS)>0?"%M":""),$dtS)) .
 				" e com retorno em ". utf8_encode(strftime("%e de %B de %Y &agrave;s %Hh". (strftime("%M",$dtR)>0?"%M":""),$dtR)) .
@@ -200,10 +200,10 @@ class ESPCR extends TCPDF {
 				<br/>
 				<br/>
 				Através dos poderes legais a mim atribuídos, nomeio através desta para o período do evento, como responsável pelo menor acima descrito".
-				" o DIRETOR e responsável pelo ".$GLOBALS['pattern']->getClubeDS(array("cl","cj","db","nm")).", identificado nesta como ".trim($this->line["NOME_DIRETOR"]).", ".$this->line["IDENT_DIRETOR"].".
+				" o DIRETOR e responsável pelo ".PATTERNS::getClubeDS(array("cl","cj","db","nm")).", identificado nesta como ".trim($this->line["NOME_DIRETOR"]).", ".$this->line["IDENT_DIRETOR"].".
 				<br/>
 				<br/>
-				Consciente dos grandes benefícios recebidos através do ".$GLOBALS['pattern']->getClubeDS(array("cl","cj","db"))." acima descrito, abdico responsabilizar,
+				Consciente dos grandes benefícios recebidos através do ".PATTERNS::getClubeDS(array("cl","cj","db"))." acima descrito, abdico responsabilizar,
 				em qualquer instância judicial, o(os) responsável(eis) do referido Clube em todos os níveis, bem como a
 				Igreja Adventista do Sétimo Dia, por qualquer dano causado ou sofrido por meu dependente, devido a sua própria atuação,
 				no percurso de ida e volta bem como no decurso do referido evento.
@@ -233,7 +233,7 @@ class ESPCR extends TCPDF {
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 6);
 		$this->Cell(0, 0, "OBRIGATÓRIO O RECONHECIMENTO DE FIRMA EM CARTÓRIO", 0, false, 'C', false, false, 1, false, 'L', 'C');
 
-		$barCODE = $GLOBALS['pattern']->getBars()->encode(array(
+		$barCODE = PATTERNS::getBars()->encode(array(
 			"id" => "F",
 			"fi" => $this->line["ID"],
 			"ni" => $this->line["ID_MEMBRO"]

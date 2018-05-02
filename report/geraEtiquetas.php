@@ -59,8 +59,8 @@ class ETIQUETAS extends TCPDF {
 		$this->SetCreator(PDF_CREATOR);
 		
 		$this->SetTitle('Geração automática de identificação');
-		$this->SetSubject($GLOBALS['pattern']->getClubeDS(array("cl","nm")));
-		$this->SetKeywords('Etiquetas, ' . str_replace(" ", ", ", $GLOBALS['pattern']->getClubeDS( array("db","nm","ibd") ) ));
+		$this->SetSubject(PATTERNS::getClubeDS(array("cl","nm")));
+		$this->SetKeywords('Etiquetas, ' . str_replace(" ", ", ", PATTERNS::getClubeDS( array("db","nm","ibd") ) ));
 		$this->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
 		$this->SetMargins(0, 0, 0);
@@ -285,9 +285,9 @@ class ETIQUETAS extends TCPDF {
 			$this->SetTextColor(180,180,180);
 			$this->SetFont(PDF_FONT_NAME_MAIN, 'I', 7);
 			$this->MultiCell(126, 6, 
-				$GLOBALS['pattern']->getClubeDS( array("cl","nm") ) ." - desde ".
-				$GLOBALS['pattern']->getClubeDS( array("af") )."\n".
-				$GLOBALS['pattern']->getClubeDS( array("ibd","rg","ab","un","dv","sp") ), false, 'C', false, 2, "", "", true, 0, false, true, 0, "M", false );
+				PATTERNS::getClubeDS( array("cl","nm") ) ." - desde ".
+				PATTERNS::getClubeDS( array("af") )."\n".
+				PATTERNS::getClubeDS( array("ibd","rg","ab","un","dv","sp") ), false, 'C', false, 2, "", "", true, 0, false, true, 0, "M", false );
 			
 		//TIPO E - CARTAO DE ESPECIALIDADE
 		elseif ($ln["TP"] == "E"):

@@ -1,7 +1,8 @@
 <?php
 class BARS {
+
 	private $bars;
-	
+
 	function __construct() {
 		$this->bars = array(
 			//CLUBE ID
@@ -9,7 +10,7 @@ class BARS {
 
 			//CLUBE PREFIX
 			"CP" => "P",
-			
+
 			//FUNCTION ID
 			"ID" => array(
 				"length" => 1,
@@ -26,24 +27,24 @@ class BARS {
 					array(  "id" => "F",	"fn" => "AT_ES",    "tg" => "N",    "cl" => "N",                    "ds" => "F-AUTORIZAÇÃO ESPECIAL" )
 				)
 			),
-			
+
 			//FUNCTION ID PARAM
 			"FI" => 2,
-			
+
 			//PEOPLE ID - FROM PARAM
 			"NI" => 3
 		);
 	}
-	
+
 	public function getPattern($ids){
-		
+
 		//GRUPO 1 - CI
 		$pattern = "(";
 		foreach (str_split($this->getClubePrefix()) as $s):
 			$pattern .= "[".strtoupper($s).strtolower($s)."]{1}";
 		endforeach;
 		$pattern .= ")";
-		
+
 		//GRUPO 2 - ID
 		$colchetes = array_filter( str_split($ids), function($e){
 			return $this->has("id",$e);
@@ -53,16 +54,16 @@ class BARS {
 			$pattern .= (count($colchetes) > 0 ? strtoupper($s).strtolower($s) : $s);
 		endforeach;
 		$pattern .= (strlen($ids) > 1 || count($colchetes) > 0 ? "]" : "") . "{".$this->getIDLength()."})";
-		
+
 		//GRUPO 3 - FI
 		$pattern .= "([a-zA-Z0-9]{". $this->getFILength()."})";
-		
+
 		//GRUPO 4 - NI
 		$pattern .= "([a-zA-Z0-9]{". $this->getNILength()."})";
 
 		return "^$pattern$";
 	}
-	
+
 	public function getLength(){
 		return
 		strlen($this->getClubePrefix()) +
@@ -71,23 +72,23 @@ class BARS {
 		$this->getNILength()
 		;
 	}
-	
+
 	private function getNILength(){
 		return $this->bars["NI"];
 	}
-	
+
 	private function getFILength(){
 		return $this->bars["FI"];
 	}
-	
+
 	private function getIDLength(){
 		return $this->bars["ID"]["length"];
 	}
-	
+
 	public function getClubePrefix(){
 		return $this->bars["CP"];
 	}
-	
+
 	public function getClubeID(){
 		return $this->bars["CI"];
 	}
@@ -99,7 +100,7 @@ class BARS {
 			"(.{".$this->getFILength()."})".
 			"(.{".$this->getNILength()."})"
 		;
-				
+
 		$a = preg_split("/$patternCode/i", $s, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE );
 		return array(
 				"ci" => $this->getClubeID(),
@@ -109,7 +110,7 @@ class BARS {
 				"ni" => $a[3]
 		);
     }
-	
+
 	public function decode($s){
 		$a = $this->split($s);
 		return array(
@@ -122,7 +123,7 @@ class BARS {
 				"ni" => PATTERNS::fromConvert($a["ni"]),
 		);
     }
-	
+
 	public function encode($a){
 		$fn = "0";
 		if (isset($a["id"])):
@@ -131,40 +132,40 @@ class BARS {
 			$aux = $this->getFirstTag("fn",$a["fn"]);
 			$fn = $aux["id"];
 		endif;
-		
+
 		$fi = fStrZero(0,$this->getFILength());
 		if (isset($a["fi"])):
 			$fi = fStrZero(PATTERNS::toConvert($a["fi"]),$this->getFILength());
 		endif;
-		
+
 		$ni = fStrZero(0,$this->getNILength());
 		if (isset($a["ni"])):
 			$ni = fStrZero(PATTERNS::toConvert($a["ni"]),$this->getNILength());
 		endif;
-		
+
 		return mb_strtoupper($this->getClubePrefix() . $fn . $fi . $ni);
 	}
-	
+
 	public function getAllTags(){
 		return $this->bars["ID"]["types"];
 	}
-	
+
 	public function getTagsTipo($tg,$vl){
 		return array_filter( $this->getAllTags(), function($e) use($tg,$vl){
 			return $e[$tg] == $vl;
 		});
 	}
-	
+
 	public function getFirstTag($tg,$vl){
 		$arr = $this->getTagsTipo($tg,$vl);
 		reset($arr);
 		return current($arr);
 	}
-	
+
 	public function getTagByID($id){
 		return $this->getFirstTag("id",$id);
 	}
-	
+
 	public function has($tg,$vl){
 		$arr = $this->getTagsTipo($tg,$vl);
 		return (count($arr) > 0);
@@ -173,23 +174,7 @@ class BARS {
 
 class PATTERNS {
 
-    private $virtualDir;
-    private $bars;
-    private $email;
-
-    function __construct() {
-
-        //VIRTUALDIR
-        $this->virtualDir = "/desbravadores/";
-
-        //EMAIL
-        $this->email = "desbravadores@iasd-capaoredondo.com.br";
-        
-        //DEFINICOES DO BARCODE
-        $this->bars = new BARS();
-    }
-
-    public function getClubeDS($p){
+    public static function getClubeDS($p){
         $str  = in_array("cl",$p) ? "Clube " : "";
         $str .= in_array("cj",$p) && in_array("db",$p) && !empty($str) ? "de " : "";
         $str .= in_array("db",$p) ? "Desbravadores " : "";
@@ -224,23 +209,23 @@ class PATTERNS {
     }
 
     //RETORNA DESCRICAO DO CLUBE
-    public function getCDS(){
-        return $this->getClubeDS( array( "cl", "cj", "db", "nm", "sp", "ibd", "rg", "ab", "un", "dv" ) );
+    public static function getCDS(){
+        return PATTERNS::getClubeDS( array( "cl", "cj", "db", "nm", "sp", "ibd", "rg", "ab", "un", "dv" ) );
     }
 
-    public function getMail(){
-        return $this->email;
+    public static function getMail(){
+        return "desbravadores@iasd-capaoredondo.com.br";
     }
 
-    public function getBars(){
-        return $this->bars;
+    public static function getBars(){
+        return new BARS();
     }
 
     //RETORNA VIRTUAL DIR
-    public function getVD(){
-        return $this->virtualDir;
+    public static function getVD(){
+        return "/desbravadores/";
 	}
-	
+
 	public static function toConvert($n){
         return base_convert($n,10,36);
     }
@@ -249,5 +234,4 @@ class PATTERNS {
         return base_convert($s,36,10);
     }
 }
-$GLOBALS['pattern'] = new PATTERNS();
 ?>

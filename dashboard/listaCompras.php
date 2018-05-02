@@ -291,4 +291,4 @@ function filtroDatasAvaliacao(){
 		</div>
 	</form>
 </div>
-<script src="<?php echo $GLOBALS['pattern']->getVD();?>dashboard/js/listaCompras.js<?php echo "?".microtime();?>"></script>
+<script src="<?php echo PATTERNS::getVD();?>dashboard/js/listaCompras.js<?php echo "?".microtime();?>"></script>

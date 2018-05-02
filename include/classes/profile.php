@@ -37,7 +37,7 @@ class PROFILE {
 		$temPerfil = isset($_SESSION['USER']['ssid']);
 		if (!$temPerfil):
 			session_destroy();
-			header("Location: ".$GLOBALS['pattern']->getVD()."index.php");
+			header("Location: ".PATTERNS::getVD()."index.php");
 			exit;
 		endif;
 	}

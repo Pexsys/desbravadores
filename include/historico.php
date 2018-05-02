@@ -315,7 +315,7 @@ function regraRequisitoEspecialidade($barfnid, $barpessoaid, $dtInicio, $dtConcl
 					
 						$GLOBALS['mail']->ClearAllRecipients();
 						$GLOBALS['mail']->AddAddress( $rA->fields["EMAIL"] );
-						$GLOBALS['mail']->Subject = utf8_decode($GLOBALS['pattern']->getClubeDS( array("cl","nm") ) . " - Aviso de Conclusão");
+						$GLOBALS['mail']->Subject = utf8_decode(PATTERNS::getClubeDS( array("cl","nm") ) . " - Aviso de Conclusão");
 						$GLOBALS['mail']->MsgHTML( $message->getConclusao() );
 							
 						if ( $GLOBALS['mail']->Send() ):
