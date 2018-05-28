@@ -48,19 +48,19 @@ if ( !$result->EOF ):
     </div>
 	<?php
 	foreach ($result as $k => $fields):
-	    	echo "<div class=\"col-md-8 col-xs-12 col-sm-12 col-lg-4\">";
-			echo "  <div class=\"panel panel-success\" name=\"reprint\" cad-id=\"".$fields["ID_CAD_MEMBRO"]."\" aut-id=\"".$fields["ID"]."\">";
-			echo "	<div class=\"panel-heading\" style=\"cursor:pointer;\">";
-	        echo "	    <div class=\"row\">
-    					<div class=\"col-xs-3\"><i class=\"fas fa-id-card-o fa-4x\"></i></div>
-    					<div class=\"col-xs-9 text-right\">
-    						<div class=\"huge\">".strftime("%Y",strtotime($fields["DH_S"]))."-".fStrZero($fields["ID"],3)."</div>
-    					</div>
-    					<div class=\"col-xs-12 text-right\">".strtoupper($fields["DS"])."</div>
-    				</div>
-			    </div>	
-	    		</div>
-	    	</div>";
+		echo "<div class=\"col-md-8 col-xs-12 col-sm-12 col-lg-4\">";
+		echo "  <div class=\"panel panel-success\" name=\"reprint\" cad-id=\"".$fields["ID_CAD_MEMBRO"]."\" aut-id=\"".$fields["ID"]."\">";
+		echo "	<div class=\"panel-heading\" style=\"cursor:pointer;\">";
+		echo "	    <div class=\"row\">
+					<div class=\"col-xs-2\"><i class=\"fas fa-id-card fa-3x\"></i></div>
+					<div class=\"col-xs-10 text-right\">
+						<div class=\"huge\" style=\"font-size:30px\">".strftime("%Y",strtotime($fields["DH_S"]))."-".fStrZero($fields["ID"],3)."</div>
+					</div>
+					<div class=\"col-xs-12 text-right\" style=\"font-size:12px\">".strtoupper($fields["DS"])."</div>
+				</div>
+			</div>	
+			</div>
+		</div>";
 	endforeach;
 endif;
 ?>
