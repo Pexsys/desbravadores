@@ -64,7 +64,6 @@
 					<div class="row">
 						<div class="form-group col-xs-2">
 							<input type="hidden" name="membroID" id="membroID" field="cad_membro-id"/>
-
 							<label for="id_membro" class="control-label">C&oacute;digo</label>
 							<input type="text" name="id_membro" id="id_membro" field="cad_membro-id_membro" class="form-control input-sm" placeholder="ID" disabled="disabled" style="text-align:center"/>
 						</div>

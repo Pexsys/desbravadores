@@ -47,13 +47,16 @@ function getQueryByFilter( $parameters ) {
 //exit;
 
 	$query = "
-		SELECT
+		SELECT DISTINCT
 			fa.ID,
 			fa.CD,
 			fa.TP,
-			cp.NM
+			cp.NM AS NM_PATR,
+			caa.NM AS NM_BENE
 		FROM FIN_ACORDO fa
-  INNER JOIN CON_PESSOA cp ON (cp.ID_CAD_PESSOA = fa.ID_PESS_PATR)
+  INNER JOIN CON_PESSOA cp ON (cp.ID_CAD_PESSOA = fa.ID_CAD_PES_PATR)
+   LEFT JOIN FIN_ACO_PESSOA fap ON (fap.ID_FIN_ACORDO = fa.ID)
+  INNER JOIN CON_PESSOA caa ON (caa.ID_CAD_PESSOA = fap.ID_CAD_PESSOA)
 		WHERE fa.NR_ANO = YEAR(NOW()) $where
 	 ORDER BY fa.TP
 	";
@@ -68,8 +71,8 @@ function getAcordos( $parameters ) {
 		$arr[] = array(
 			"id" => $f['ID'],
 			"cd" => $f['CD'],
-			"pt" => $f['NM'],
-			"bn" => $f['NM'],
+			"pt" => $f['NM_PATR'],
+			"bn" => $f['NM_BENE'],
 			"tp" => $f['TP']
 		);
 	endforeach;
