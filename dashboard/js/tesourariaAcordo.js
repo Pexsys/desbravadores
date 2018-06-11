@@ -80,14 +80,14 @@ $(document).ready(function(){
 		})
 		.on('err.field.fv', function(e, data) {
 			$($(this).parents(".panel").get(0)).removeClass("panel-success").addClass("panel-danger");
-			//$("#divAcordoMembros").visible(false);
+			$("#divAcordoMembros").visible(false);
 		})
 		.on('success.field.fv', function(e, data) {
 			let valid = (data.fv.getInvalidFields().length == 0);
 			if (valid) {
 				$($(this).parents(".panel").get(0)).removeClass("panel-danger").addClass("panel-success");
 			}
-			//$("#divAcordoMembros").visible(valid);
+			$("#divAcordoMembros").visible(valid);
 		})
 		.formValidation({
 			framework: 'bootstrap',
@@ -166,21 +166,41 @@ $(document).ready(function(){
 			}
 		}
 	},
-	mbIndex = 0;
+	mbIndex = 0,
+	typeahead = {
+		hint: true,
+		highlight: true,
+		minLength: 3,
+		source: function(query,callback) {
+			let element = $(this.$element);
+			jsLIB.ajaxCall({
+				async: false,
+				type: "GET",
+				url: jsLIB.rootDir+"rules/acordos.php",
+				data: { MethodName : 'getPatrocinadores', data : { query } },
+				success: function(data){
+					callback(data.source);
+				}
+			})
+		},
+		displayText: item => item.nm,
+		afterSelect: item => populateBenef(item),
+		autoSelect: true
+	};
 	$("#mbForm")
 		.on('success.form.fv', function(e) {
 			e.preventDefault();
 		})
 		.on('err.field.fv', function(e, data) {
 			$($(this).parents(".panel").get(0)).removeClass("panel-success").addClass("panel-danger");
-			//$("#divAcordoFinanceiro").visible(false);
+			$("#divAcordoFinanceiro").visible(false);
 		})
 		.on('success.field.fv', function(e, data) {
 			let valid = (data.fv.getInvalidFields().length == 0);
 			if (valid) {
 				$($(this).parents(".panel").get(0)).removeClass("panel-danger").addClass("panel-success");
 			}
-			//$("#divAcordoFinanceiro").visible(valid);
+			$("#divAcordoFinanceiro").visible(valid);
 		})
 		.formValidation({
 			framework: 'bootstrap',
@@ -201,7 +221,7 @@ $(document).ready(function(){
                                 .insertBefore($template);
             $clone
                 .find('[field="cad_pessoa-nr_cpf"]').attr('name', `mb[${mbIndex}].cpf`).attr('id', `mb${mbIndex}cpf`).end()
-                .find('[field="cad_pessoa-nm"]').attr('name', `mb[${mbIndex}].name`).attr('id', `mb${mbIndex}name`).end()
+                .find('[field="cad_pessoa-nm"]').attr('name', `mb[${mbIndex}].name`).attr('id', `mb${mbIndex}name`).typeahead(typeahead).end()
                 .find('[field="cad_pessoa-dt_nasc"]').attr('name', `mb[${mbIndex}].date`).attr('id', `mb${mbIndex}date`).end();
             $('#mbForm')
                 .formValidation('addField', `mb[${mbIndex}].cpf`, cpfValidators)
@@ -220,12 +240,31 @@ $(document).ready(function(){
             $row.remove();
         })
 		.on("change", "[field]", function(e) {
-			$("#patrForm").formValidation('revalidateField', this.id);
+			$("#mbForm").formValidation('revalidateField', this.id);
+		})
+	;
+
+	$("#mbFinanc")
+		.formValidation({
+			framework: 'bootstrap'
+		})
+		.on("change", "[field]", function(e) {
+			$("#mbFinanc").formValidation('revalidateField', this.id);
 		})
 	;
  
-    $("#btnNovo").on("click", function(event){ 
-        alternaFormularios(true); 
+    $("#btnNovo").on("click", function(event){
+		alternaFormularios(true);
+		$("#accAcordo .panel-collapse:first").collapse('show');
+		$("#accAcordo .panel:not(:first)").hide();
+		$("#accAcordo .panel").each( (i,panel) => {
+			$(panel)
+				.removeClass("panel-success")
+				.addClass("panel-danger");
+			const form = $(panel).find("form");
+			form.data('formValidation').resetForm(true);
+			jsLIB.resetForm(form);
+		});
     }); 
  
     $("#btnFechar").on("click", function(event){ 
@@ -245,41 +284,42 @@ $(document).ready(function(){
 		e.stopImmediatePropagation();
 		validateformFields( $(this).find("form") );
 	});
+
+	$("#nmCompletoPatr").typeahead({
+		hint: true,
+		highlight: true,
+		minLength: 3,
+		source: (query,callback) => jsLIB.ajaxCall({
+			async: false,
+			type: "GET",
+			url: jsLIB.rootDir+"rules/acordos.php",
+			data: { MethodName : 'getPatrocinadores', data : { query } },
+			success: function(data){
+				callback(data.source);
+			}
+		}),
+		displayText: item => item.nm,
+		afterSelect: item => populatePatr(item),
+		autoSelect: true
+	});
+	
+	$("[comum='lista']").typeahead(typeahead);
 });
 
-var $input = $(".typeahead");
-$input.typeahead({
-	hint: true,
-	highlight: true,
-	minLength: 1,
-	source: [
-		{id: "4", name: "RICARDO JONADABS CÉSAR"},
-		{id: "5", name: "HULDA ANDRADE JONADABS CÉSAR"}
-	],
-	autoSelect: true
-})
-.on('typeahead:selected', function(e, suggestion, dataSetName) {
-	/* Revalidate the state field */
-	$('#typeheadForm').formValidation('revalidateField', this.id);
-})
-.on('typeahead:closed', function(e) {
-	/* Revalidate the state field */
-	$('#typeheadForm').formValidation('revalidateField', this.id);
-});
-$input.change(function() {
-  var current = $input.typeahead("getActive");
-  if (current) {
-    // Some item from your model is active!
-    if (current.name == $input.val()) {
-      // This means the exact match is found. Use toLowerCase() if you want case insensitive match.
-    } else {
-      // This means it is only a partial match, you can either add a new item
-      // or take the active if you don't want new items
-    }
-  } else {
-    // Nothing is active so it is a new value (or maybe empty value)
-  }
-});
+function populatePatr(f){
+	jsLIB.populateForm( $("#patrForm"), {
+		"cad_pessoa-id_cad_pessoa": f.id || '',
+		"cad_pessoa-nr_cpf": f.cp || '',
+		"cad_pessoa-nm": f.nm || '',
+		"cad_pessoa-dt_nasc": f.dt || '',
+		"cad_pessoa-tp_sexo": f.sx || '',
+		"cad_pessoa-email": f.em || '',
+		"cad_pessoa-fone_cel": f.fn || '',
+	});
+}
+
+function populateBenef(f){
+}
 
 function validateformFields(form){
 	if (form.length){
@@ -294,7 +334,6 @@ function validateformFields(form){
 function telaInicial(){
 	refreshDataTable();
 	alternaFormularios(false);
-	
 }
  
 function alternaFormularios(exibe){ 
