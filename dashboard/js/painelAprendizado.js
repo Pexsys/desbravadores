@@ -32,11 +32,11 @@ $(document).ready(function(){
 
 function dashboard(id, fData){
     var duration = 1000;
-    function segColor(c){ return {low:"#ff0000", mid:"#eeee00",full:"#41ab5d"}[c]; }
-    function segLegend(c){ return {low:"Até 50%", mid:"Até 85%",full:"Concluídas"}[c]; }
+    function segColor(c){ return {low:"#ff0000", mid:"#eeee00",alm:"#42e2f4",full:"#41ab5d"}[c]; }
+    function segLegend(c){ return {low:"Até 50%", mid:"Até 85%",alm:"Até 99%",full:"Concluídas"}[c]; }
     
     // compute total for each state.
-    fData.forEach(function(d){d.total=d.freq.low+d.freq.mid+d.freq.full;});
+    fData.forEach(function(d){d.total=d.freq.low+d.freq.mid+d.freq.alm+d.freq.full;});
     
     // function to handle histogram.
     function histoGram(fD){
@@ -232,7 +232,7 @@ function dashboard(id, fData){
     }
     
     // calculate total frequency by segment for all state.
-    var tF = ['low','mid','full'].map(function(d){ 
+    var tF = ['low','mid','alm','full'].map(function(d){ 
         return {type:d, freq: d3.sum(fData.map(function(t){ return t.freq[d];}))}; 
     });    
     
