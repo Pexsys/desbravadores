@@ -161,6 +161,7 @@ function getGraphData() {
 
 	$a1 = 50;
 	$a2 = 85;
+	$a3 = 99;
 
 	$result = CONN::get()->Execute("
 		SELECT ta.ID, ta.CD_COR,
@@ -210,27 +211,50 @@ function getGraphData() {
 				AND y.ID_TAB_APREND = ta.ID) AS QT_2,
 
 				(SELECT COUNT(*)
+				FROM (
+					SELECT ID_TAB_APREND, FLOOR((QTD/QT_TOTAL)*100) AS PCT_CMPL
+					FROM (
+						SELECT 
+							ah.ID_TAB_APREND,
+							cai.QTD AS QT_TOTAL,
+							(SELECT COUNT(*) 
+								FROM CON_APR_PESSOA 
+								WHERE ID_TAB_APREND = ah.ID_TAB_APREND 
+								AND ID_CAD_PESSOA = ah.ID_CAD_PESSOA
+								AND DT_ASSINATURA IS NOT NULL) AS QTD
+						FROM APR_HISTORICO ah
+						INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = ah.ID_CAD_PESSOA)
+						INNER JOIN CON_APR_ITEM cai ON (cai.ID = ah.ID_TAB_APREND)
+						WHERE ah.DT_INVESTIDURA IS NULL 
+						AND cai.CD_ITEM_INTERNO LIKE '01%'
+					) AS x
+				) AS y
+				WHERE (y.PCT_CMPL > ? AND y.PCT_CMPL <= ?)
+				AND y.ID_TAB_APREND = ta.ID) AS QT_3,
+
+				(SELECT COUNT(*)
 					FROM APR_HISTORICO 
 					WHERE ID_TAB_APREND = ta.ID
 					AND (
 							(YEAR(DT_INICIO) = YEAR(NOW()) AND YEAR(DT_CONCLUSAO) = YEAR(NOW()))
 							OR
 							( YEAR(DT_INICIO) < YEAR(NOW()) AND YEAR(DT_CONCLUSAO) = YEAR(NOW()) AND YEAR(DT_INVESTIDURA) = YEAR(NOW()) )
-						) ) AS QT_3
+						) ) AS QT_OK
 
 			FROM TAB_APRENDIZADO ta
 			WHERE ta.CD_ITEM_INTERNO LIKE '01%'
 		ORDER BY ta.CD_ITEM_INTERNO
-	", array( $a1, $a1, $a2 ) );
+	", array( $a1, $a1, $a2, $a2, $a3 ) );
 	foreach ($result as $k => $f):
-		if ( ($f['QT_1'] + $f['QT_2'] + $f['QT_3']) > 0):
+		if ( ($f['QT_1'] + $f['QT_2'] + $f['QT_3'] + $f['QT_OK']) > 0):
 			$arr[] = array(
 				"Aprend" => PATTERNS::toConvert($f['ID']),
 				"color" => $f['CD_COR'],
 				"freq"	=> array(
 					"low" => ($f['QT_1'] * 1),
 					"mid" => ($f['QT_2'] * 1),
-					"full" => ($f['QT_3'] * 1)
+					"alm" => ($f['QT_3'] * 1),
+					"full" => ($f['QT_OK'] * 1)
 				)
 			);
 		endif;
