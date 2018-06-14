@@ -41,7 +41,7 @@
       <a role="button" class="btn btn-primary pull-left" id="btnNovo"><i class="fa fa-plus"></i>&nbsp;Novo</a> 
   </div>
 </div>
-<div class="row" id="divAcordo"> <!--style="display:none"-->
+<div class="row" id="divAcordo" style="display:none">
   <div class="panel-body">
     <div class="panel-group" id="accAcordo" role="tabpanel" aria-multiselectable="true">
       <div class="panel panel-danger">
@@ -53,7 +53,7 @@
         <div id="patrocinador" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingAcordo">
           <div class="panel-body">
             <form method="post" id="patrForm">
-              <input type="hidden" id="idPessoa" field="cad_pessoa-id_cad_pessoa" value=""/>
+              <input type="hidden" field="cad_pessoa-id_cad_pessoa" value=""/>
               <div class="row">
                 <div class="form-group col-lg-2">
                   <label for="nrCPFPatr" class="control-label">CPF</label>
@@ -113,6 +113,7 @@
                   </div>
                 </div>
                 <div class="row">
+                  <input type="hidden" field="cad_pessoa-id_cad_pessoa" value=""/>
                   <div class="form-group col-lg-2">
                     <input type="text" name="mb[0].cpf" id="mb0cpf" field="cad_pessoa-nr_cpf" class="form-control input-sm cpf" placeholder="CPF" style="padding-right:0px"/>
                   </div>
@@ -127,6 +128,7 @@
                   </div>
                 </div>
                 <div class="row hide" id="benefitTemplate">
+                  <input type="hidden" field="cad_pessoa-id_cad_pessoa" value=""/>
                   <div class="form-group col-lg-2">
                     <input type="text" field="cad_pessoa-nr_cpf" class="form-control input-sm cpf" placeholder="CPF" style="padding-right:0px"/>
                   </div>

@@ -303,7 +303,6 @@ var jsLIB = {
 						ctrl.parent().data("DateTimePicker").setDate( new Date(value.toInt()) );
 						break;
 					}
-				case "hidden":
 				default:
 					if (ctrl.hasClass("selectpicker")){
 						ctrl.selectpicker('val',value).trigger('change');

@@ -3,6 +3,10 @@ var rowSelected = undefined;
  
 $(document).ready(function(){ 
  
+	$('.date').mask('00/00/0000');
+	$('.cpf').mask('000.000.000-00');
+	$('.sp_celphones').mask(SPMaskBehavior, spOptions);
+	
 	comDataTable = $('#comDataTable').DataTable({
 		lengthChange: false,
 		ordering: true,
@@ -131,7 +135,7 @@ $(document).ready(function(){
 			}
 		})
 		.on("change", "[field]", function(e) {
-			$("#patrForm").formValidation('revalidateField', this.id);
+			$("#patrForm").formValidation('revalidateField', $(this));
 		})
 	;
 
@@ -166,25 +170,25 @@ $(document).ready(function(){
 			}
 		}
 	},
+ 	inputTyped = undefined,
 	mbIndex = 0,
 	typeahead = {
 		hint: true,
-		highlight: true,
 		minLength: 3,
 		source: function(query,callback) {
-			let element = $(this.$element);
+			inputTyped = $(this.$element);
 			jsLIB.ajaxCall({
 				async: false,
 				type: "GET",
 				url: jsLIB.rootDir+"rules/acordos.php",
-				data: { MethodName : 'getPatrocinadores', data : { query } },
+				data: { MethodName : 'getBeneficiados', data : { query } },
 				success: function(data){
 					callback(data.source);
 				}
 			})
 		},
 		displayText: item => item.nm,
-		afterSelect: item => populateBenef(item),
+		afterSelect: item => populateBenef({item,inputTyped}),
 		autoSelect: true
 	};
 	$("#mbForm")
@@ -212,14 +216,15 @@ $(document).ready(function(){
 		})
 		.on('click', '.addButton', function() {
             mbIndex++;
-            var $template = $('#benefitTemplate'),
+            let $template = $('#benefitTemplate'),
                 $clone    = $template
                                 .clone()
                                 .removeClass('hide')
                                 .removeAttr('id')
                                 .attr('data-mb-index', mbIndex)
                                 .insertBefore($template);
-            $clone
+			$clone
+				.find('[field="cad_pessoa-id_cad_pessoa"]').attr('name', `mb[${mbIndex}].id`).attr('id', `mb${mbIndex}id`).end()
                 .find('[field="cad_pessoa-nr_cpf"]').attr('name', `mb[${mbIndex}].cpf`).attr('id', `mb${mbIndex}cpf`).end()
                 .find('[field="cad_pessoa-nm"]').attr('name', `mb[${mbIndex}].name`).attr('id', `mb${mbIndex}name`).typeahead(typeahead).end()
                 .find('[field="cad_pessoa-dt_nasc"]').attr('name', `mb[${mbIndex}].date`).attr('id', `mb${mbIndex}date`).end();
@@ -231,7 +236,7 @@ $(document).ready(function(){
 			validateformFields($('#mbForm'));
 		})
 		.on('click', '.removeButton', function() {
-            var $row  = $(this).parents(".row").first(),
+            let $row  = $(this).parents(".row").first(),
 				index = $row.attr('data-mb-index');
             $('#mbForm')
                 .formValidation('removeField', $row.find(`[name="mb[${mbIndex}].cpf"]`))
@@ -240,7 +245,7 @@ $(document).ready(function(){
             $row.remove();
         })
 		.on("change", "[field]", function(e) {
-			$("#mbForm").formValidation('revalidateField', this.id);
+			$("#mbForm").formValidation('revalidateField', $(this));
 		})
 	;
 
@@ -275,19 +280,14 @@ $(document).ready(function(){
         telaInicial();
 	});
 
-	$('.date').mask('00/00/0000');
-	$('.cpf').mask('000.000.000-00');
-	$('.sp_celphones').mask(SPMaskBehavior, spOptions);
-
 	$('.panel').on('shown.bs.collapse', function (e) {
 		e.preventDefault();
 		e.stopImmediatePropagation();
-		validateformFields( $(this).find("form") );
+		validateformFields( $(this).find("form:first") );
 	});
 
 	$("#nmCompletoPatr").typeahead({
 		hint: true,
-		highlight: true,
 		minLength: 3,
 		source: (query,callback) => jsLIB.ajaxCall({
 			async: false,
@@ -314,11 +314,18 @@ function populatePatr(f){
 		"cad_pessoa-dt_nasc": f.dt || '',
 		"cad_pessoa-tp_sexo": f.sx || '',
 		"cad_pessoa-email": f.em || '',
-		"cad_pessoa-fone_cel": f.fn || '',
+		"cad_pessoa-fone_cel": f.fn || ''
 	});
 }
 
-function populateBenef(f){
+function populateBenef({item, inputTyped}){
+	const row = inputTyped.parents(".row:first");
+	jsLIB.populateForm( row, {
+		"cad_pessoa-id_cad_pessoa": item.id || '',
+		"cad_pessoa-nr_cpf": item.cp || '',
+		"cad_pessoa-nm": item.nm || '',
+		"cad_pessoa-dt_nasc": item.dt || ''
+	});
 }
 
 function validateformFields(form){
