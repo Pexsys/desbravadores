@@ -1,6 +1,7 @@
-var comDataTable = undefined; 
-var rowSelected = undefined;
-var formPopulated = false;
+let comDataTable = undefined; 
+let rowSelected = undefined;
+let formPopulated = false;
+let custos = undefined;
  
 $(document).ready(function(){ 
  
@@ -154,14 +155,8 @@ $(document).ready(function(){
 
 				if (field && input.attr('valid') == 'ok'){
 					if (field == "cad_pessoa-nr_cpf"){
-						jsLIB.ajaxCall({
-							async: false,
-							type: "GET",
-							url: jsLIB.rootDir+"rules/acordos.php",
-							data: { MethodName : 'personByCPF', data : { cpf : value } },
-							success: function(data){
-								populateScope($("#patrForm"),data.source[0]);
-							}
+						personByCPF(value, data => {
+							populateScope($("#patrForm"),data.source[0]);
 						});
 					}
 				}
@@ -215,7 +210,7 @@ $(document).ready(function(){
 				success: function(data){
 					callback(data.source);
 				}
-			})
+			});
 		},
 		displayText: item => item.nm,
 		afterSelect: item => {
@@ -296,14 +291,8 @@ $(document).ready(function(){
 
 				if (field && input.attr('valid') == 'ok'){
 					if (field == "cad_pessoa-nr_cpf"){
-						jsLIB.ajaxCall({
-							async: false,
-							type: "GET",
-							url: jsLIB.rootDir+"rules/acordos.php",
-							data: { MethodName : 'personByCPF', data : { cpf : value } },
-							success: function(data){
-								populateScope(input.parents(".row:first"),data.source[0]);
-							}
+						personByCPF(value, data => {
+							populateScope(input.parents(".row:first"),data.source[0]);
 						});
 					}
 				}
@@ -349,6 +338,18 @@ $(document).ready(function(){
 		e.preventDefault();
 		e.stopImmediatePropagation();
 		validateformFields( $(this).find("form:first") );
+
+		if (!custos && $(this).attr('id') == 'divAcordoFinanceiro'){
+			jsLIB.ajaxCall({
+				async: false,
+				type: "GET",
+				url: jsLIB.rootDir+"rules/acordos.php",
+				data: { MethodName : 'custos' },
+				success: function(data){
+					custos = data;
+				}
+			});
+		}
 		formPopulated = true;
 	});
 
@@ -372,14 +373,14 @@ $(document).ready(function(){
 	$("[comum='lista']").typeahead(typeahead);
 });
 
-function getPersonByCPF(cpf,form){
+function personByCPF(cpf,callback){
 	jsLIB.ajaxCall({
 		async: false,
 		type: "GET",
 		url: jsLIB.rootDir+"rules/acordos.php",
-		data: { MethodName : 'personByCPF', data : { cpf: input.val() } },
+		data: { MethodName : 'personByCPF', data : { cpf } },
 		success: function(data){
-			console.log(data);
+			callback(data);
 		}
 	})
 }

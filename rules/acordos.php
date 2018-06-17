@@ -80,6 +80,33 @@ function acordos( $parameters ) {
 	return array( "result" => true, "source" => $arr );
 }
 
+function custos(){
+	$arr = array();
+
+	$result = CONN::get()->Execute("
+	SELECT fc.ID AS ID_CUSTO, fc.DS as DS_CUSTO, fc.TP, fc.GRP, 
+		fci.ID AS ID_CUSTO_ITEM, fci.DS as DS_CUSTO_ITEM, fci.ID_FIN_CST_ITM_PAI, fci.VL
+	FROM FIN_CUSTO fc
+	LEFT JOIN FIN_CUSTO_ITEM fci ON (fci.ID_FIN_CUSTO = fc.ID)
+	WHERE fc.ANO = YEAR(NOW())
+	ORDER BY fc.SQ, fci.ID_FIN_CST_ITM_PAI, fci.SQ
+	");
+	foreach ($result as $k => $f):
+		$arr[] = array(
+			"id_custo" => $f["ID_CUSTO"] * 1,
+			"ds_custo" => $f["DS_CUSTO"],
+			"tp" => $f["TP"],
+			"grp" => $f["TP"],
+			"id_item" => $f["ID_CUSTO_ITEM"] * 1,
+			"ds_item" => $f["DS_CUSTO_ITEM"],
+			"id_item_pai" => $f["ID_FIN_CST_ITM_PAI"] * 1,
+			"vl" => $f["VL"] * 1,
+		);
+	endforeach;
+
+	return $arr;
+}
+
 function getObjectResult($f){
 	return array(
 		"id" => $f['ID_CAD_PESSOA'],
