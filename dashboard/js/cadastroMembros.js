@@ -262,8 +262,7 @@ $(document).ready(function(){
 			}
 		})
 		.on("change", "[field]", function(e) {
-			$("#cadMembrosForm")
-				.formValidation('revalidateField', this.id);
+			$("#cadMembrosForm").formValidation('revalidateField', $(this));
 
 			if (formPopulated) {
 				var membroID = $("#membroID").val();

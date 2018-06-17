@@ -63,7 +63,7 @@ function getQueryByFilter( $parameters ) {
 	return CONN::get()->Execute( $query, $aWhere );
 }
 
-function getAcordos( $parameters ) {
+function acordos( $parameters ) {
 	$arr = array();
 
 	$result = getQueryByFilter( $parameters );
@@ -92,7 +92,7 @@ function getObjectResult($f){
 	);
 }
 
-function getPessoas($query,$aWhere){
+function pessoas($query,$aWhere){
 	$arr = array();
 
 	$result = CONN::get()->Execute($query,$aWhere);
@@ -102,17 +102,17 @@ function getPessoas($query,$aWhere){
 	return array( "result" => true, "source" => $arr );
 }
 
-function getPersonByCPF( $parameters ){
+function personByCPF( $parameters ){
 	$arr = array();
 
-	return getPessoas("
+	return pessoas("
 		SELECT cp.ID_CAD_PESSOA, cp.NM, cp.DT_NASC, cp.NR_CPF, cp.FONE_CEL, cp.EMAIL, cp.TP_SEXO 
 		FROM CON_PESSOA cp
 		WHERE cp.NR_CPF = ?
-	",array($parameters["cpf"]));
+	",array(fClearBN($parameters["cpf"])));
 }
 
-function getBeneficiados($parameters){
+function beneficiados($parameters){
 	$arr = array();
 
 	$where = "";
@@ -123,7 +123,7 @@ function getBeneficiados($parameters){
 		$where .= "cp.NM LIKE '%$nome%'";
 	endif;
 
-	return getPessoas("
+	return pessoas("
 			SELECT DISTINCT cp.ID_CAD_PESSOA, cp.NM, cp.DT_NASC, cp.NR_CPF, cp.FONE_CEL, cp.EMAIL, cp.TP_SEXO
 			FROM CON_PESSOA cp
 		LEFT JOIN CAD_MEMBRO cm ON (cm.ID_CAD_PESSOA = cp.ID_CAD_PESSOA AND cm.ID_CLUBE = ?)
@@ -133,7 +133,7 @@ function getBeneficiados($parameters){
 		",$aWhere);
 }
 
-function getPatrocinadores($parameters){
+function patrocinadores($parameters){
 	$arr = array();
 
 	$where = "(cp.DT_NASC IS NULL OR cp.IDADE_HOJE > ?)";
@@ -144,7 +144,7 @@ function getPatrocinadores($parameters){
 		$where .= " AND cp.NM LIKE '%$nome%'";
 	endif;
 
-	return getPessoas("
+	return pessoas("
 			SELECT DISTINCT cp.ID_CAD_PESSOA, cp.NM, cp.DT_NASC, cp.NR_CPF, cp.FONE_CEL, cp.EMAIL, cp.TP_SEXO
 			FROM CON_PESSOA cp
 		LEFT JOIN CAD_MEMBRO cm ON (cm.ID_CAD_PESSOA = cp.ID_CAD_PESSOA AND cm.ID_CLUBE = ?)

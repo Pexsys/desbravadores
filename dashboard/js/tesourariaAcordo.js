@@ -1,5 +1,6 @@
 var comDataTable = undefined; 
-var rowSelected = undefined; 
+var rowSelected = undefined;
+var formPopulated = false;
  
 $(document).ready(function(){ 
  
@@ -27,7 +28,7 @@ $(document).ready(function(){
 			type  : "GET",
 			url  : jsLIB.rootDir+"rules/acordos.php",
 			data  : function (d) {
-				d.MethodName = "getAcordos",
+				d.MethodName = "acordos",
 					d.data = {
 						filtro: 'T',
 						filters: jsFilter.jSON()
@@ -79,14 +80,23 @@ $(document).ready(function(){
 	}).order( [ 4, 'asc' ] );
 
 	$("#patrForm")
+		.on('init.field.fv', function(e, data) {
+			if (data.element.attr('type') == 'checkbox' ) {
+				data.element.attr('valid','ok');
+			} else {
+				data.element.attr('valid','not-ok');
+			}
+		})
 		.on('success.form.fv', function(e) {
 			e.preventDefault();
 		})
 		.on('err.field.fv', function(e, data) {
+			data.element.attr('valid','not-ok');
 			$($(this).parents(".panel").get(0)).removeClass("panel-success").addClass("panel-danger");
 			$("#divAcordoMembros").visible(false);
 		})
 		.on('success.field.fv', function(e, data) {
+			data.element.attr('valid','ok');
 			let valid = (data.fv.getInvalidFields().length == 0);
 			if (valid) {
 				$($(this).parents(".panel").get(0)).removeClass("panel-danger").addClass("panel-success");
@@ -136,6 +146,26 @@ $(document).ready(function(){
 		})
 		.on("change", "[field]", function(e) {
 			$("#patrForm").formValidation('revalidateField', $(this));
+
+			if (formPopulated) {
+				var input = $(this);
+				var field = input.attr('field');
+				var value = jsLIB.getValueFromField(input);
+
+				if (field && input.attr('valid') == 'ok'){
+					if (field == "cad_pessoa-nr_cpf"){
+						jsLIB.ajaxCall({
+							async: false,
+							type: "GET",
+							url: jsLIB.rootDir+"rules/acordos.php",
+							data: { MethodName : 'personByCPF', data : { cpf : value } },
+							success: function(data){
+								populateScope($("#patrForm"),data.source[0]);
+							}
+						});
+					}
+				}
+			}
 		})
 	;
 
@@ -181,25 +211,37 @@ $(document).ready(function(){
 				async: false,
 				type: "GET",
 				url: jsLIB.rootDir+"rules/acordos.php",
-				data: { MethodName : 'getBeneficiados', data : { query } },
+				data: { MethodName : 'beneficiados', data : { query } },
 				success: function(data){
 					callback(data.source);
 				}
 			})
 		},
 		displayText: item => item.nm,
-		afterSelect: item => populateBenef({item,inputTyped}),
+		afterSelect: item => {
+			const row = inputTyped.parents(".row:first");
+			return populateScope(row,item);
+		},
 		autoSelect: true
 	};
 	$("#mbForm")
+		.on('init.field.fv', function(e, data) {
+			if (data.element.attr('type') == 'checkbox' ) {
+				data.element.attr('valid','ok');
+			} else {
+				data.element.attr('valid','not-ok');
+			}
+		})
 		.on('success.form.fv', function(e) {
 			e.preventDefault();
 		})
 		.on('err.field.fv', function(e, data) {
+			data.element.attr('valid','not-ok');
 			$($(this).parents(".panel").get(0)).removeClass("panel-success").addClass("panel-danger");
 			$("#divAcordoFinanceiro").visible(false);
 		})
 		.on('success.field.fv', function(e, data) {
+			data.element.attr('valid','ok');
 			let valid = (data.fv.getInvalidFields().length == 0);
 			if (valid) {
 				$($(this).parents(".panel").get(0)).removeClass("panel-danger").addClass("panel-success");
@@ -232,20 +274,40 @@ $(document).ready(function(){
                 .formValidation('addField', `mb[${mbIndex}].cpf`, cpfValidators)
                 .formValidation('addField', `mb[${mbIndex}].name`, nameValidators)
 				.formValidation('addField', `mb[${mbIndex}].date`, dateValidators);
-				
 			validateformFields($('#mbForm'));
 		})
 		.on('click', '.removeButton', function() {
-            let $row  = $(this).parents(".row").first(),
+            let $row  = $(this).parents(".row:first"),
 				index = $row.attr('data-mb-index');
             $('#mbForm')
-                .formValidation('removeField', $row.find(`[name="mb[${mbIndex}].cpf"]`))
-                .formValidation('removeField', $row.find(`[name="mb[${mbIndex}].name"]`))
-                .formValidation('removeField', $row.find(`[name="mb[${mbIndex}].date"]`));
-            $row.remove();
+                .formValidation('removeField', $row.find(`[name="mb[${index}].cpf"]`))
+                .formValidation('removeField', $row.find(`[name="mb[${index}].name"]`))
+                .formValidation('removeField', $row.find(`[name="mb[${index}].date"]`));
+			$row.remove();
+			validateformFields($('#mbForm'));
         })
 		.on("change", "[field]", function(e) {
 			$("#mbForm").formValidation('revalidateField', $(this));
+
+			if (formPopulated) {
+				var input = $(this);
+				var field = input.attr('field');
+				var value = jsLIB.getValueFromField(input);
+
+				if (field && input.attr('valid') == 'ok'){
+					if (field == "cad_pessoa-nr_cpf"){
+						jsLIB.ajaxCall({
+							async: false,
+							type: "GET",
+							url: jsLIB.rootDir+"rules/acordos.php",
+							data: { MethodName : 'personByCPF', data : { cpf : value } },
+							success: function(data){
+								populateScope(input.parents(".row:first"),data.source[0]);
+							}
+						});
+					}
+				}
+			}
 		})
 	;
 
@@ -260,6 +322,7 @@ $(document).ready(function(){
  
     $("#btnNovo").on("click", function(event){
 		alternaFormularios(true);
+		formPopulated = false;
 		$("#accAcordo .panel-collapse:first").collapse('show');
 		$("#accAcordo .panel:not(:first)").hide();
 		$("#accAcordo .panel").each( (i,panel) => {
@@ -270,6 +333,7 @@ $(document).ready(function(){
 			form.data('formValidation').resetForm(true);
 			jsLIB.resetForm(form);
 		});
+		formPopulated = true;
     }); 
  
     $("#btnFechar").on("click", function(event){ 
@@ -281,9 +345,11 @@ $(document).ready(function(){
 	});
 
 	$('.panel').on('shown.bs.collapse', function (e) {
+		formPopulated = false;
 		e.preventDefault();
 		e.stopImmediatePropagation();
 		validateformFields( $(this).find("form:first") );
+		formPopulated = true;
 	});
 
 	$("#nmCompletoPatr").typeahead({
@@ -293,21 +359,35 @@ $(document).ready(function(){
 			async: false,
 			type: "GET",
 			url: jsLIB.rootDir+"rules/acordos.php",
-			data: { MethodName : 'getPatrocinadores', data : { query } },
+			data: { MethodName : 'patrocinadores', data : { query } },
 			success: function(data){
 				callback(data.source);
 			}
 		}),
 		displayText: item => item.nm,
-		afterSelect: item => populatePatr(item),
+		afterSelect: item => populateScope( $("#patrForm"), item),
 		autoSelect: true
 	});
 	
 	$("[comum='lista']").typeahead(typeahead);
 });
 
-function populatePatr(f){
-	jsLIB.populateForm( $("#patrForm"), {
+function getPersonByCPF(cpf,form){
+	jsLIB.ajaxCall({
+		async: false,
+		type: "GET",
+		url: jsLIB.rootDir+"rules/acordos.php",
+		data: { MethodName : 'personByCPF', data : { cpf: input.val() } },
+		success: function(data){
+			console.log(data);
+		}
+	})
+}
+
+function populateScope(scope,f){
+	if (!(scope&&f)) return;
+	formPopulated = false;
+	jsLIB.populateForm(scope,{
 		"cad_pessoa-id_cad_pessoa": f.id || '',
 		"cad_pessoa-nr_cpf": f.cp || '',
 		"cad_pessoa-nm": f.nm || '',
@@ -316,16 +396,7 @@ function populatePatr(f){
 		"cad_pessoa-email": f.em || '',
 		"cad_pessoa-fone_cel": f.fn || ''
 	});
-}
-
-function populateBenef({item, inputTyped}){
-	const row = inputTyped.parents(".row:first");
-	jsLIB.populateForm( row, {
-		"cad_pessoa-id_cad_pessoa": item.id || '',
-		"cad_pessoa-nr_cpf": item.cp || '',
-		"cad_pessoa-nm": item.nm || '',
-		"cad_pessoa-dt_nasc": item.dt || ''
-	});
+	formPopulated = true;
 }
 
 function validateformFields(form){

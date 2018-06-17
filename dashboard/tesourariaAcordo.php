@@ -47,10 +47,10 @@
       <div class="panel panel-danger">
         <div class="panel-heading" role="tab" id="headingAcordo">
           <h4 class="panel-title">
-            <a role="button" data-toggle="collapse" data-parent="#accAcordo" href="#patrocinador" aria-expanded="true" aria-controls="patrocinador">Responsável Financeiro / Patrocinador</a>
+            <a role="button" data-toggle="collapse" href="#patrocinador" aria-expanded="true" aria-controls="patrocinador">Responsável Financeiro / Patrocinador</a>
           </h4>
         </div>
-        <div id="patrocinador" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingAcordo">
+        <div id="patrocinador" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingAcordo" data-parent="#accAcordo">
           <div class="panel-body">
             <form method="post" id="patrForm">
               <input type="hidden" field="cad_pessoa-id_cad_pessoa" value=""/>
@@ -88,13 +88,13 @@
           </div>
         </div>
       </div>
-      <div class="panel panel-danger" id="divAcordoMembros" style="display:none"> <!---->
+      <div class="panel panel-danger" id="divAcordoMembros" style="display:none">
         <div class="panel-heading" role="tab" id="headingMembros">
           <h4 class="panel-title">
-            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accAcordo" href="#accAcordoMembros" aria-expanded="false" aria-controls="accAcordoMembros">Membros / Beneficiados</a>
+            <a class="collapsed" role="button" data-toggle="collapse" href="#accAcordoMembros" aria-expanded="false" aria-controls="accAcordoMembros">Membros / Beneficiados</a>
           </h4>
         </div>
-        <div id="accAcordoMembros" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingMembros">
+        <div id="accAcordoMembros" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingMembros" data-parent="#accAcordo">
           <div class="panel-body">
             <form method="post" id="mbForm">
               <div class="col-lg-12">
@@ -147,13 +147,13 @@
           </div>
         </div>
       </div>
-      <div class="panel panel-danger" id="divAcordoFinanceiro" style="display:none"> <!---->
+      <div class="panel panel-danger" id="divAcordoFinanceiro" style="display:none">
         <div class="panel-heading" role="tab" id="headingFinanceiro">
           <h4 class="panel-title">
-            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accAcordo" href="#accAcordoFinanceiro" aria-expanded="false" aria-controls="accAcordoFinanceiro">Financeiro</a>
+            <a class="collapsed" role="button" data-toggle="collapse" href="#accAcordoFinanceiro" aria-expanded="false" aria-controls="accAcordoFinanceiro">Financeiro</a>
           </h4>
         </div>
-        <div id="accAcordoFinanceiro" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFinanceiro">
+        <div id="accAcordoFinanceiro" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFinanceiro" data-parent="#accAcordo">
           <div class="panel-body">
             <form method="post" id="mbFinanc">
             </form>
