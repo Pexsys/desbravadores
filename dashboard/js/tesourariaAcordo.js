@@ -94,7 +94,8 @@ $(document).ready(function(){
 		.on('err.field.fv', function(e, data) {
 			data.element.attr('valid','not-ok');
 			$($(this).parents(".panel").get(0)).removeClass("panel-success").addClass("panel-danger");
-			$("#divAcordoMembros").visible(false);
+			$("#divMembros").visible(false);
+			$("[name=accAcordoFinanceiro]").visible(false);
 		})
 		.on('success.field.fv', function(e, data) {
 			data.element.attr('valid','ok');
@@ -102,7 +103,7 @@ $(document).ready(function(){
 			if (valid) {
 				$($(this).parents(".panel").get(0)).removeClass("panel-danger").addClass("panel-success");
 			}
-			$("#divAcordoMembros").visible(valid);
+			$("#divMembros").visible(valid);
 		})
 		.formValidation({
 			framework: 'bootstrap',
@@ -155,16 +156,44 @@ $(document).ready(function(){
 
 				if (field && input.attr('valid') == 'ok'){
 					if (field == "cad_pessoa-nr_cpf"){
-						personByCPF(value, data => {
-							populateScope($("#patrForm"),data.source[0]);
-						});
+						personByCPF(value, data => populatePersonScope($("#patrForm"),data.source[0]));
 					}
 				}
 			}
 		})
 	;
 
-	let cpfValidators = {
+	const recuperaFinanceiro = (data) => {
+		$("[name=accAcordoFinanceiro]").each( (i,element) => {
+			let panel = $(element);
+			let grupo = panel.attr('panel-grp');
+			let id = panel.attr('panel-id');
+			let body = panel.find(".panel-body tbody");
+
+			jsLIB.ajaxCall({
+				type: "GET",
+				url: jsLIB.rootDir+"rules/acordos.php",
+				data: { MethodName : 'financeiroPessoa', data : { panel: id, pessoa: data.id } },
+				success: function(res){
+					let membro = body.find("[name=name]:contains('"+data.nm+"')");
+					if (membro.length){
+						console.log('achei, atualizar valor',{membro, res, data, panel, grupo, id});
+					} else {
+						console.log('nao achei, criar',{membro, res, data, panel, grupo, id});
+						let template = `
+						<tr>
+							<td name=\"name\">${data.nm}</td>
+							<td name=\"vl\">1.000,00</td>
+							<td><input type=\"checkbox\" ${(grupo == 'DB' || grupo == 'IN' || grupo == 'AN' ? "checked disabled" : "")}/></td>
+						</tr>
+						`;
+						body.append( $(template) );
+					}
+				}
+			});
+		});
+	}
+	const cpfValidators = {
 		validators: {
 			id: {
 				country: 'BR',
@@ -195,8 +224,6 @@ $(document).ready(function(){
 			}
 		}
 	},
- 	inputTyped = undefined,
-	mbIndex = 0,
 	typeahead = {
 		hint: true,
 		minLength: 3,
@@ -215,10 +242,12 @@ $(document).ready(function(){
 		displayText: item => item.nm,
 		afterSelect: item => {
 			const row = inputTyped.parents(".row:first");
-			return populateScope(row,item);
+			return populatePersonScope(row,item,recuperaFinanceiro);
 		},
 		autoSelect: true
 	};
+ 	let inputTyped = undefined,
+	mbIndex = 0;
 	$("#mbForm")
 		.on('init.field.fv', function(e, data) {
 			if (data.element.attr('type') == 'checkbox' ) {
@@ -233,7 +262,7 @@ $(document).ready(function(){
 		.on('err.field.fv', function(e, data) {
 			data.element.attr('valid','not-ok');
 			$($(this).parents(".panel").get(0)).removeClass("panel-success").addClass("panel-danger");
-			$("#divAcordoFinanceiro").visible(false);
+			$("[name=accAcordoFinanceiro]").visible(false);
 		})
 		.on('success.field.fv', function(e, data) {
 			data.element.attr('valid','ok');
@@ -241,7 +270,7 @@ $(document).ready(function(){
 			if (valid) {
 				$($(this).parents(".panel").get(0)).removeClass("panel-danger").addClass("panel-success");
 			}
-			$("#divAcordoFinanceiro").visible(valid);
+			$("[name=accAcordoFinanceiro]").visible(valid);
 		})
 		.formValidation({
 			framework: 'bootstrap',
@@ -291,21 +320,10 @@ $(document).ready(function(){
 
 				if (field && input.attr('valid') == 'ok'){
 					if (field == "cad_pessoa-nr_cpf"){
-						personByCPF(value, data => {
-							populateScope(input.parents(".row:first"),data.source[0]);
-						});
+						personByCPF(value, data => populatePersonScope(input.parents(".row:first"),data.source[0],recuperaFinanceiro));
 					}
 				}
 			}
-		})
-	;
-
-	$("#mbFinanc")
-		.formValidation({
-			framework: 'bootstrap'
-		})
-		.on("change", "[field]", function(e) {
-			$("#mbFinanc").formValidation('revalidateField', this.id);
 		})
 	;
  
@@ -313,17 +331,19 @@ $(document).ready(function(){
 		alternaFormularios(true);
 		formPopulated = false;
 		$("#accAcordo .panel-collapse:first").collapse('show');
-		$("#accAcordo .panel:not(:first)").hide();
 		$("#accAcordo .panel").each( (i,panel) => {
 			$(panel)
-				.removeClass("panel-success")
-				.addClass("panel-danger");
+					.removeClass("panel-success")
+					.addClass("panel-danger");
 			const form = $(panel).find("form");
-			form.data('formValidation').resetForm(true);
-			jsLIB.resetForm(form);
+			if (form.length) {
+				form.data('formValidation').resetForm(true);
+				jsLIB.resetForm(form);
+			}
 		});
+		$("#divMembros, [name=accAcordoFinanceiro]").hide();
 		formPopulated = true;
-    }); 
+    });
  
     $("#btnFechar").on("click", function(event){ 
         telaInicial();
@@ -339,16 +359,10 @@ $(document).ready(function(){
 		e.stopImmediatePropagation();
 		validateformFields( $(this).find("form:first") );
 
-		if (!custos && $(this).attr('id') == 'divAcordoFinanceiro'){
-			jsLIB.ajaxCall({
-				async: false,
-				type: "GET",
-				url: jsLIB.rootDir+"rules/acordos.php",
-				data: { MethodName : 'custos' },
-				success: function(data){
-					custos = data;
-				}
-			});
+		let panel = $(this);
+		if (panel.attr('name') == 'accAcordoFinanceiro'){
+			let grupo = panel.attr('panel-grp');
+			let id = panel.attr('panel-id');
 		}
 		formPopulated = true;
 	});
@@ -366,7 +380,7 @@ $(document).ready(function(){
 			}
 		}),
 		displayText: item => item.nm,
-		afterSelect: item => populateScope( $("#patrForm"), item),
+		afterSelect: item => populatePersonScope( $("#patrForm"), item),
 		autoSelect: true
 	});
 	
@@ -385,7 +399,7 @@ function personByCPF(cpf,callback){
 	})
 }
 
-function populateScope(scope,f){
+function populatePersonScope(scope,f,callback){
 	if (!(scope&&f)) return;
 	formPopulated = false;
 	jsLIB.populateForm(scope,{
@@ -396,7 +410,7 @@ function populateScope(scope,f){
 		"cad_pessoa-tp_sexo": f.sx || '',
 		"cad_pessoa-email": f.em || '',
 		"cad_pessoa-fone_cel": f.fn || ''
-	});
+	},callback ? callback(f) : undefined);
 	formPopulated = true;
 }
 

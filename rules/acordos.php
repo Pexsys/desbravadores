@@ -94,13 +94,11 @@ function custos(){
 	foreach ($result as $k => $f):
 		$arr[] = array(
 			"id_custo" => $f["ID_CUSTO"] * 1,
-			"ds_custo" => $f["DS_CUSTO"],
 			"tp" => $f["TP"],
-			"grp" => $f["TP"],
+			"grp" => $f["GRP"],
 			"id_item" => $f["ID_CUSTO_ITEM"] * 1,
-			"ds_item" => $f["DS_CUSTO_ITEM"],
 			"id_item_pai" => $f["ID_FIN_CST_ITM_PAI"] * 1,
-			"vl" => $f["VL"] * 1,
+			"vl" => $f["VL"] * 1
 		);
 	endforeach;
 
@@ -181,5 +179,9 @@ function patrocinadores($parameters){
 		",$aWhere);
 }
 
-
+function financeiroPessoa($parameters){
+	$arr = array();
+	
+	return array( "result" => true, "source" => "RICARDO JONADABS CÉSAR" );
+}
 ?>
