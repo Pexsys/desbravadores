@@ -30,40 +30,47 @@ function barcode( $parameters ) {
 
 		$barDecode	= PATTERNS::getBars()->decode($brdt);
 		
-		
 		if ( $barDecode["cp"] !== PATTERNS::getBars()->getClubePrefix() || 
 			$barDecode["lg"] <> PATTERNS::getBars()->getLength() ):
 			$arr['result'] = "Código não pertence ao ".PATTERNS::getClubeDS(array("cl","nm"));
+		
+		else:
 
-		//CHAMADA
-		elseif ( $op == "CHAMADA" ):
-			$arr = setChamada($barDecode);
-			
-		//APRENDIZADO
-		elseif ( $op == "APRENDIZADO" ):
-			$arr = setAprendizado(array(
-				"frm" => $frm,
-				"id" => $barDecode["id"],
-				"fi" => $barDecode["fi"],
-				"ni" => $barDecode["ni"]
-			));
-			
-		//ACOMPANHAMENTO
-		elseif ( $op == "ACOMPANHAMENTO" ):
-			$arr = getAcompanhamento(array(
-				"it" => $barDecode["fi"],
-				"ip" => $barDecode["ni"]
-			));
-			
-		//READ BARCODE ONLY
-		elseif ( $op == "READBC" ):
-			$arr = array(
-				"bf" => $barDecode["id"],
-				"ia" => $barDecode["fi"],
-				"ip" => $barDecode["ni"],
-				"logged" => true
-			);
-			
+			$rp = CONN::get()->Execute("SELECT * FROM CON_ATIVOS WHERE ID_MEMBRO = ?", array( $barDecode["ni"] ) );
+			$ip = $rp->fields["ID_CAD_PESSOA"];		
+		
+			if ( $op == "CHAMADA" ):
+				$arr = setChamada($barDecode);
+				
+			//APRENDIZADO
+			elseif ( $op == "APRENDIZADO" ):
+				$arr = setAprendizado(array(
+					"frm" => $frm,
+					"id" => $barDecode["id"],
+					"fi" => $barDecode["fi"],
+					"ni" => $barDecode["ni"],
+					"ip" => $ip
+				));
+				
+			//ACOMPANHAMENTO
+			elseif ( $op == "ACOMPANHAMENTO" ):
+				$arr = getAcompanhamento(array(
+					"it" => $barDecode["fi"],
+					"ni" => $barDecode["ni"],
+					"ip" => $ip
+				));
+				
+			//READ BARCODE ONLY
+			elseif ( $op == "READBC" ):
+				$arr = array(
+					"id" => $barDecode["id"],
+					"fi" => $barDecode["fi"],
+					"ni" => $barDecode["ni"],
+					"ip" => $ip,
+					"logged" => true
+				);
+				
+			endif;
 		endif;
 		
 	endif;
@@ -80,7 +87,7 @@ function setAprendizado( $parm ){
 		
 		//A-CARTAO
 		if ($parm["id"] == 10):
-			$arrRetorno = updateHistorico( $parm["ni"], $parm["fi"], $paramDates );
+			$arrRetorno = updateHistorico( $parm["ip"], $parm["fi"], $paramDates );
 			$str = $arrRetorno["ap"] ."<br/>". $arrRetorno["nm"];
 			
 			if ($arrRetorno["ar"] == "REGULAR"):
@@ -103,7 +110,7 @@ function setAprendizado( $parm ){
 		
 		//ESPECIALIDADE
 		elseif ($parm["id"] == 14):
-			$arrRetorno = updateHistorico( $parm["ni"], $parm["fi"], $paramDates );
+			$arrRetorno = updateHistorico( $ip, $parm["fi"], $paramDates );
 			$arr['result'] =  $arrRetorno["ap"]." - ".$arrRetorno["cd"]." - #".$arrRetorno["pg"]."<br/>". $arrRetorno["nm"];
 			$arr['logged'] = true;
 		endif;
@@ -164,7 +171,7 @@ function setChamada( $parm ) {
 			  FROM LOG_CHAMADA l 
 		INNER JOIN CAD_USUARIO u ON (u.ID = l.ID_CAD_USUARIO) 
 			 WHERE l.id_rgr_chamada = ? 
-			   AND l.id_cad_pessoa = ?", Array( $idRegra, $parm["ni"] ) );
+			   AND l.id_cad_pessoa = ?", Array( $idRegra, $parm["ip"] ) );
 			   
 		if (!$rs->EOF):
 			$arr['result'] = ("Apontamento j&aacute; realizado por ".mb_strtoupper($rs->fields['cd_usuario'])." em ".strftime("%d/%m/%Y &agrave;s %H:%M:%S", strtotime($rs->fields['dh'])));
@@ -176,7 +183,7 @@ function setChamada( $parm ) {
 				) VALUES (
 					?,?,?,?
 				)", 
-			array( $parm["ni"], $idRegra, $dhApontamento, $_SESSION['USER']['id'] ) );
+			array( $parm["ip"], $idRegra, $dhApontamento, $_SESSION['USER']['id'] ) );
 			
 			$strRetorno = "";
 			if ( !empty($nmPessoa) ):

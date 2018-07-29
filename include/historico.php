@@ -331,7 +331,7 @@ function regraRequisitoEspecialidade($barfnid, $barpessoaid, $dtInicio, $dtConcl
 function consultaAprendizadoPessoa( $tabAprendID, $pessoaID ){
 	$arr = array( "ap" => "", "ar" => "", "cd" => "", "nm" => "" );
 	$rs = CONN::get()->Execute("
-		SELECT ta.CD_COR, ta.DS_ITEM, ta.CD_AREA_INTERNO, ta.CD_ITEM_INTERNO, tm.NR_PG_ASS
+		SELECT DISTINCT ta.CD_COR, ta.DS_ITEM, ta.CD_AREA_INTERNO, ta.CD_ITEM_INTERNO, tm.NR_PG_ASS
 		  FROM TAB_APRENDIZADO ta
 	 LEFT JOIN TAB_MATERIAIS tm ON (tm.ID_TAB_APREND = ta.ID)
 		 WHERE ta.ID = ?
@@ -344,11 +344,7 @@ function consultaAprendizadoPessoa( $tabAprendID, $pessoaID ){
 		$arr["pg"] = $rs->fields["NR_PG_ASS"];
 	endif;
 	
-	$rp = CONN::get()->Execute("
-		SELECT *
-		  FROM CON_ATIVOS
-		 WHERE ID_CAD_PESSOA = ?
-	", array( $pessoaID ) );
+	$rp = CONN::get()->Execute("SELECT * FROM CAD_PESSOA WHERE ID = ?", array( $pessoaID ) );
 	if (!$rp->EOF):
 		$arr["nm"] = ($rp->fields["NM"]);
 	endif;
