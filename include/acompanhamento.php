@@ -48,14 +48,20 @@ function getAcompanhamento( $param ) {
 	$str = "<input type=\"hidden\" field=\"id_cad_pessoa\" value=\"".$param["ip"]."\"/>";
 	
 	$cap = consultaAprendizadoPessoa( $param["it"], $param["ip"] );
-	$str .= fGetClassAcomp( $cap, $param );
-	
-	if ($cap["ar"] == "REGULAR"):
-		$param["it"]++;
-		$cap = consultaAprendizadoPessoa( $param["it"], $param["ip"] );
+	if (empty($cap["nm"]) || empty($cap["ap"])):
+		$str = "<div class=\"row\">";
+		$str .= "<div class=\"panel panel-red\">";
+		$str .= "<div class=\"panel-heading\" style=\"padding:3px 10px\">CÓDIGO INVÁLIDO!</div>";
+		$str .= "</div>";
+	else:
 		$str .= fGetClassAcomp( $cap, $param );
+		
+		if ($cap["ar"] == "REGULAR"):
+			$param["it"]++;
+			$cap = consultaAprendizadoPessoa( $param["it"], $param["ip"] );
+			$str .= fGetClassAcomp( $cap, $param );
+		endif;
 	endif;
-
 	return array( "logged" => true, "result" => $str );
 }
 
