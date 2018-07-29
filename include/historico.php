@@ -216,7 +216,7 @@ function updateHistorico( $barpessoaid, $barfnid, $paramDates, $compras = null )
 			ORDER BY car.CD_ITEM_INTERNO
 		", array($barpessoaid, $barfnid) );
 		foreach($rs as $ks => $fS):
-			regraRequisitoEspecialidade($fS["ID_RQ"], $barpessoaid, $fS["DT_INICIO"], $fS["DT_CONCLUSAO"] );
+			regraRequisitoEspecialidade($fS["ID_RQ"], $barpessoaid, $fS["DT_INICIO"], $fS["DT_CONCLUSAO"]);
 		endforeach;
     endif;
 	
@@ -232,8 +232,13 @@ function updateHistorico( $barpessoaid, $barfnid, $paramDates, $compras = null )
 	);
 }
 
-function regraRequisitoEspecialidade($barfnid, $barpessoaid, $dtInicio, $dtConclusao ){
-	$rg = CONN::get()->Execute("SELECT ID, ID_TAB_APR_ITEM, TP_ITEM, MIN_AREA, DS_ITEM FROM CON_APR_REQ WHERE ID_RQ = ? ORDER BY CD_ITEM_INTERNO", array($barfnid) );
+function regraRequisitoEspecialidade($barfnid, $barpessoaid, $dtInicio, $dtConclusao){
+	$rg = CONN::get()->Execute("
+		SELECT ID, ID_TAB_APR_ITEM, TP_ITEM, MIN_AREA, DS_ITEM, FG_OBR
+		  FROM CON_APR_REQ 
+		 WHERE ID_RQ = ? 
+	  ORDER BY CD_ITEM_INTERNO
+	", array($barfnid) );
 	foreach ($rg as $lg => $fg):
 
 		//NOT EXISTS (SELECT 1 FROM CON_APR_REQ WHERE ID_RQ = car.ID_RQ AND ID = car.ID AND ID_TAB_APR_ITEM != car.ID_TAB_APR_ITEM)
@@ -275,7 +280,7 @@ function regraRequisitoEspecialidade($barfnid, $barpessoaid, $dtInicio, $dtConcl
 
 			//SE COMPLETOU ALGUMA ESPECIADADE DE CLASSE
 			if ($fg["TP_ITEM"] == "CL"):
-				if ($dtConclusao >= $rI->fields["DT_INICIO"]):
+				if ($dtConclusao >= $rI->fields["DT_INICIO"] || $fg["FG_OBR"] == "S"):
 					marcaRequisitoID( $dtConclusao, $rI->fields["ID"], $fg["ID_TAB_APR_ITEM"] );
 				endif;
 
