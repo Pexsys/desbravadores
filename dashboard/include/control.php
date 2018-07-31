@@ -35,6 +35,7 @@ require_once("../include/_metaheader.php");
   background: #ffff00 !important;
   font-weight: bolder;
 }
+.typeahead { z-index: 1051; }
 </style>
 </head>
 <body>
@@ -50,6 +51,7 @@ function fFooterDashboardScript(){
 <script src="<?php echo PATTERNS::getVD();?>include/_core/js/bootstrap-touchspin.min.js"></script>
 <script src="<?php echo PATTERNS::getVD();?>include/_core/js/bootstrap-select.min.js"></script>
 <script src="<?php echo PATTERNS::getVD();?>include/_core/js/bootstrap-notify.min.js"></script>
+<script src="<?php echo PATTERNS::getVD();?>include/_core/js/bootstrap3-typeahead.min.js"></script>
 <script src="<?php echo PATTERNS::getVD();?>include/_core/js/calendar.min.js"></script>
 <script src="<?php echo PATTERNS::getVD();?>include/_core/js/calendar.lang.pt-BR.js"></script>
 <script src="<?php echo PATTERNS::getVD();?>include/_core/js/underscore-min.js"></script>
