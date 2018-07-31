@@ -258,7 +258,7 @@ var jsLIB = {
 			switch ( $(this).attr("type") ) {
 				case "radio":
 				case "checkbox":
-					$(this).prop('checked', false).change();
+					$(this).prop('checked', false).trigger('change');
 					break;
 				case "wysiwyg":
 					tinymce.get($(this).get(0).id).setContent('');
@@ -266,13 +266,11 @@ var jsLIB = {
 				case "text":
 					if ( $(this).parent().attr("datatype") == 'datetimepicker' ) {
 						$(this).parent().data("DateTimePicker").setDate( null );
-						$(this).val(value);
-						$(this).change();
+						$(this).val(value).trigger('change');
 						break;
 					}
 				default:
-					$(this).val(value);
-					$(this).change();
+					$(this).val(value).trigger('change');
 					if ( $(this).hasClass("selectpicker") ) {
 						$(this).selectpicker('refresh');
 					}
@@ -287,14 +285,14 @@ var jsLIB = {
 	populateForm : function( frm, data, callback ) {
 		jsLIB.resetForm(frm);
 		$.each( data, function( key, value ) {
-			var ctrl = $('[field='+key+']', frm.id );
+			var ctrl = $('[field='+key+']', frm );
 			switch ( ctrl.attr("type") ) {
 				case "radio":
 				case "checkbox":
 					if ( ctrl.attr("value-on") == value ) {
-						ctrl.prop('checked', true).change();
+						ctrl.prop('checked', true).trigger('change');
 					} else {
-						ctrl.prop('checked', false).change();
+						ctrl.prop('checked', false).trigger('change');
 					}
 					break;
 				case "wysiwyg":
@@ -305,12 +303,11 @@ var jsLIB = {
 						ctrl.parent().data("DateTimePicker").setDate( new Date(value.toInt()) );
 						break;
 					}
-				case "hidden":
 				default:
 					if (ctrl.hasClass("selectpicker")){
-						ctrl.selectpicker('val',value).change();
+						ctrl.selectpicker('val',value).trigger('change');
 					} else {
-						ctrl.val(value).change();
+						ctrl.val(value).trigger('change');
 					}
 			}  
 		});

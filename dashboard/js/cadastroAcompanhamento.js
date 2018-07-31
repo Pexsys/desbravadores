@@ -118,6 +118,7 @@ $(document).ready(function(){
 						});
 						checkbox.bootstrapToggle();
 						$("#divResultado").find('[name=dt_assinatura]').datetimepicker({
+							container: '#divResultado',
 							locale: 'pt-br',
 							language: 'pt-BR',
 							format: 'DD/MM/YYYY',
