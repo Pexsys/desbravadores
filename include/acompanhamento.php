@@ -52,10 +52,9 @@ function getAcompanhamento( $param ) {
 		$str = "<div class=\"row\">";
 		$str .= "<div class=\"panel panel-red\">";
 		$str .= "<div class=\"panel-heading\" style=\"padding:3px 10px\">CÓDIGO INVÁLIDO!</div>";
-		$str .= "</div>";
+		$str .= "</div></div>";
 	else:
 		$str .= fGetClassAcomp( $cap, $param );
-		
 		if ($cap["ar"] == "REGULAR"):
 			$param["it"]++;
 			$cap = consultaAprendizadoPessoa( $param["it"], $param["ip"] );
@@ -141,10 +140,10 @@ function fGetDetailAcomp($class, $titulo, $icon, $result){
 			$disabledOpt = (!is_null($qtMin) ? " disabled" : "");
 			
 			$str .= "<div class=\"row\">";
-			$str .= "<div class=\"col-sm-6\" style=\"padding:1px 0px 2px 15px\" title=\"$hint\">";
-			$str .= "<label>$rTela</label>&nbsp;<input type=\"checkbox\"$disabledOpt for=\"dt-req-$taiID\"". ($checked?" checked":"")." value-on=\"S\" value-off=\"N\" data-on=\"Conclu&iacute;do\" data-off=\"Pendente\" data-onstyle=\"success\" data-offstyle=\"danger\" data-toggle=\"toggle\" data-width=\"85\" data-size=\"small\" data-style=\"quick\"/>";
-			$str .= "</div>";
-			$str .= "<div class=\"col-sm-6\" style=\"padding:1px 30px 2px 10px\">";
+			$str .= "  <div class=\"col-sm-6\" style=\"padding:1px 0px 2px 15px\" title=\"$hint\">";
+			$str .= "    <label>$rTela</label>&nbsp;<input type=\"checkbox\"$disabledOpt for=\"dt-req-$taiID\"". ($checked?" checked":"")." value-on=\"S\" value-off=\"N\" data-on=\"Conclu&iacute;do\" data-off=\"Pendente\" data-onstyle=\"success\" data-offstyle=\"danger\" data-toggle=\"toggle\" data-width=\"85\" data-size=\"small\" data-style=\"quick\"/>";
+			$str .= "  </div>";
+			$str .= "  <div class=\"col-sm-6\" style=\"padding:1px 30px 2px 10px\">";
 			
 			$dateValue = "";
 			$styleDate = "";
@@ -154,8 +153,8 @@ function fGetDetailAcomp($class, $titulo, $icon, $result){
 				$styleDate = " style=\"display:none\"";
 			endif;
 			
-			$str .= "<input type=\"text\"$disabledOpt name=\"dt_assinatura\" field=\"dt-req-$taiID\" class=\"form-control input-sm date\" value=\"$dateValue\" placeholder=\"Assinatura\"$styleDate/>";
-			$str .= "</div>";
+			$str .= "    <input type=\"text\"$disabledOpt name=\"dt_assinatura\" field=\"dt-req-$taiID\" class=\"form-control input-sm date\" value=\"$dateValue\" placeholder=\"Assinatura\"$styleDate/>";
+			$str .= "  </div>";
 			$str .= "</div>";
 			$first = false;
 		endforeach;
