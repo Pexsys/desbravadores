@@ -69,7 +69,7 @@
 										<input type="text" id="cdBar" name="cdBar" field="cd_bar" class="form-control input-sm" placeholder="C&oacute;digo" style="text-transform: uppercase"
 											maxlength="<?php echo PATTERNS::getBars()->getLength();?>" 
 											pattern="<?php echo PATTERNS::getBars()->getPattern("A");?>"
-											data-fv-regexp-message="C&oacute;digo inv&aacute;lido"										
+											data-fv-regexp-message="C&oacute;digo inv&aacute;lido"
 										/>
 									</div>
 								</div>
