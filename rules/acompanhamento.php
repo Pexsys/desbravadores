@@ -128,9 +128,9 @@ function getData( $parameters ) {
 		
 		if ($perc < 51):
 			$cl = 'danger';
-		elseif ($perc < 80):
+		elseif ($perc < 100):
 			$cl = 'warning';
-		elseif ($perc == 100):
+		else:
 			$cl = 'success';
 		endif;
 
