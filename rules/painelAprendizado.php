@@ -160,7 +160,7 @@ function getGraphData() {
 	*/
 
 	$a1 = 50;
-	$a2 = 85;
+	$a2 = 80;
 	$a3 = 99;
 
 	$result = CONN::get()->Execute("

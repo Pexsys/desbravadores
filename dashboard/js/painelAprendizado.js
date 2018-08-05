@@ -20,20 +20,13 @@ $(document).ready(function(){
 
 			var area = $(this).attr("cd-area");
 			showDetailEspec( $(this).find("#"+area ), { cdArea : area } );
-			
-			$('[it-int]')
-				.on('click', function (ex) {
-					ex.stopPropagation();
-					showDetailEspecPeople( $(this).find("#detalhes"), { item: $(this).attr("it-int") } );
-					 $(this).find("#detalhes").addClass('in');
-				});
 		});
 });
 
 function dashboard(id, fData){
     var duration = 1000;
     function segColor(c){ return {low:"#ff0000", mid:"#eeee00",alm:"#42e2f4",full:"#41ab5d"}[c]; }
-    function segLegend(c){ return {low:"Até 50%", mid:"Até 85%",alm:"Até 99%",full:"Concluídas"}[c]; }
+    function segLegend(c){ return {low:"Até 50%", mid:"Até 80%",alm:"Até 99%",full:"Concluídas"}[c]; }
     
     // compute total for each state.
     fData.forEach(function(d){d.total=d.freq.low+d.freq.mid+d.freq.alm+d.freq.full;});
