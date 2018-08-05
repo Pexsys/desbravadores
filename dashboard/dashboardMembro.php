@@ -5,7 +5,7 @@ $pessoaID = $_SESSION['USER']['id_cad_pessoa'];
 function getClass( $pct ){
 	if ($pct < 51):
 		return "panel-danger";
-	elseif ($pct < 85):
+	elseif ($pct < 80):
 		return "panel-warning";
 	elseif ($pct < 100):
 		return "panel-primary";

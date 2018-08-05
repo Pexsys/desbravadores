@@ -6,6 +6,13 @@ function showDetailEspec( objDetail, parameters ){
 		success: function(espec){
 			if (espec.detail){
 				$(objDetail).html(espec.detail);
+
+				$('[it-int]')
+				.on('click', function (ex) {
+					ex.stopPropagation();
+					showDetailEspecPeople( $(this).find("#detalhes"), { item: $(this).attr("it-int") } );
+					 $(this).find("#detalhes").addClass('in');
+				});
 			}
 		}
 	});
