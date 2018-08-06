@@ -1,4 +1,13 @@
 <?php
+function responsavelAtivo($pessoaRespID) {
+	$result = CONN::get()->Execute("
+		SELECT 1
+		  FROM CON_ATIVOS 
+		 WHERE ID_CAD_PESSOA = ?
+	", array( $pessoaRespID ) );
+	return (!$result->EOF);
+}
+
 function verificaRespByCPF( $cpf ) {
 	$result = CONN::get()->Execute("
 		SELECT DISTINCT cp.*, rl.DS_TP
