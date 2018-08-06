@@ -590,9 +590,9 @@ function getUnidades( $parameters ) {
 	$arr = array();
 
 	$result = CONN::get()->Execute("
-		SELECT cp.TP_SEXO, cp.DT_NASC
-		  FROM CAD_MEMBRO cm
-		INNER JOIN CAD_PESSOA cp ON (cp.ID = cm.ID_CAD_PESSOA)
+		SELECT cp.TP_SEXO, cp.DT_NASC, cp.IDADE_ANO, cp.ID_PESSOA_RESP
+		FROM CAD_MEMBRO cm
+		INNER JOIN CON_PESSOA cp ON (cp.ID_CAD_PESSOA = cm.ID_CAD_PESSOA)
 		 WHERE cm.ID = ?", Array( $parameters["id"] ) );
 	if (!$result->EOF):
 		$fd = "";
@@ -604,8 +604,12 @@ function getUnidades( $parameters ) {
 			if ( $anos > 15 ):
 				$fd = ",'A'";
 			elseif ( $anos < 10 ):
-				$fIdade = " AND IDADE > 15";
-				$fd = ",'A'";
+				if ( $result->fields['IDADE_ANO'] == 10 && responsavelAtivo($result->fields['ID_PESSOA_RESP']) ):
+					$fIdade = " AND IDADE = 10";
+				else:
+					$fIdade = " AND IDADE > 15";
+					$fd = ",'A'";
+				endif;
 			endif;
 		endif;
 
