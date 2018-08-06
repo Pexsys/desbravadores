@@ -25,8 +25,8 @@ function barcode( $parameters ) {
 	
 	//Verificacao de Usuario/Senha
 	if ( isset($brdt) && !empty($brdt) ):
-		$frm		= $parameters["frm"];
-		$op			= $frm["op"];
+		$frm	= $parameters["frm"];
+		$op		= $frm["op"];
 
 		$barDecode	= PATTERNS::getBars()->decode($brdt);
 		
@@ -37,7 +37,7 @@ function barcode( $parameters ) {
 		else:
 
 			$rp = CONN::get()->Execute("SELECT * FROM CON_ATIVOS WHERE ID_MEMBRO = ?", array( $barDecode["ni"] ) );
-			$ip = $rp->fields["ID_CAD_PESSOA"];		
+			$ip = $rp->fields["ID_CAD_PESSOA"];
 		
 			if ( $op == "CHAMADA" ):
 				$arr = setChamada($barDecode);
@@ -110,7 +110,7 @@ function setAprendizado( $parm ){
 		
 		//ESPECIALIDADE
 		elseif ($parm["id"] == 14):
-			$arrRetorno = updateHistorico( $ip, $parm["fi"], $paramDates );
+			$arrRetorno = updateHistorico( $parm["ip"], $parm["fi"], $paramDates );
 			$arr['result'] =  $arrRetorno["ap"]." - ".$arrRetorno["cd"]." - #".$arrRetorno["pg"]."<br/>". $arrRetorno["nm"];
 			$arr['logged'] = true;
 		endif;
@@ -143,11 +143,9 @@ function setChamada( $parm ) {
 		$dsEvento = mb_strtoupper($result->fields['info_adic']);
 		$idRegra  = $result->fields['id'];
 		
-		$nmPessoa = "";
-		$rs = CONN::get()->Execute("SELECT nm FROM CAD_PESSOA WHERE id = ?", Array( $parm["ni"] ) );
-		if (!$rs->EOF):
-			$nmPessoa = mb_strtoupper($rs->fields['nm']);
-		endif;
+		$rp = CONN::get()->Execute("SELECT * FROM CON_ATIVOS WHERE ID_MEMBRO = ?", array( $barDecode["ni"] ) );
+		$ip = $rp->fields["ID_CAD_PESSOA"];
+		$nmPessoa = mb_strtoupper($rs->fields['NM']);
 		
 		$dsItem = "";
 		//A-CARTAO, B-CADERNO, C-PASTA
@@ -171,7 +169,7 @@ function setChamada( $parm ) {
 			  FROM LOG_CHAMADA l 
 		INNER JOIN CAD_USUARIO u ON (u.ID = l.ID_CAD_USUARIO) 
 			 WHERE l.id_rgr_chamada = ? 
-			   AND l.id_cad_pessoa = ?", Array( $idRegra, $parm["ip"] ) );
+			   AND l.id_cad_pessoa = ?", Array( $idRegra, $ip ) );
 			   
 		if (!$rs->EOF):
 			$arr['result'] = ("Apontamento j&aacute; realizado por ".mb_strtoupper($rs->fields['cd_usuario'])." em ".strftime("%d/%m/%Y &agrave;s %H:%M:%S", strtotime($rs->fields['dh'])));
@@ -183,7 +181,7 @@ function setChamada( $parm ) {
 				) VALUES (
 					?,?,?,?
 				)", 
-			array( $parm["ip"], $idRegra, $dhApontamento, $_SESSION['USER']['id'] ) );
+			array( $ip, $idRegra, $dhApontamento, $_SESSION['USER']['id'] ) );
 			
 			$strRetorno = "";
 			if ( !empty($nmPessoa) ):

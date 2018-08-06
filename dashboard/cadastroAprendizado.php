@@ -267,7 +267,7 @@
 									<div class="panel-heading"><b>Resultado</b></div>
 									<div class="panel-body" id="strResultado"></div>
 								</div>
-							</div>								
+							</div>
 						</div>
 					</div>
 				</form>
