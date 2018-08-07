@@ -1,5 +1,4 @@
 <?php
-$microtime = microtime();
 function fHeaderDashboard(){
 require_once("../include/_metaheader.php");
 ?>
@@ -18,7 +17,7 @@ require_once("../include/_metaheader.php");
 <link href="<?php echo PATTERNS::getVD();?>include/_core/css/bootstrap-select.min.css" rel="stylesheet" type="text/css"/>
 <link href="<?php echo PATTERNS::getVD();?>include/_core/font-awesome/css/fontawesome-all.min.css" rel="stylesheet" type="text/css"/>
 <link href="<?php echo PATTERNS::getVD();?>include/_core/css/metisMenu.min.css" rel="stylesheet"/>
-<link href="<?php echo PATTERNS::getVD();?>include/_core/css/bootstrap-datetimepicker.min.css?<?php echo $microtime;?>" rel="stylesheet"/>
+<link href="<?php echo PATTERNS::getVD();?>include/_core/css/bootstrap-datetimepicker.min.css?<?php echo microtime();?>" rel="stylesheet"/>
 <link href="<?php echo PATTERNS::getVD();?>include/_core/css/timeline.css" rel="stylesheet"/>
 <link href="<?php echo PATTERNS::getVD();?>include/_core/css/sb-admin-2.css" rel="stylesheet"/>
 <link href="<?php echo PATTERNS::getVD();?>include/_core/css/morris.css" rel="stylesheet"/>
@@ -58,7 +57,7 @@ function fFooterDashboardScript(){
 <script src="<?php echo PATTERNS::getVD();?>include/_core/js/underscore-min.js"></script>
 <script src="<?php echo PATTERNS::getVD();?>include/_core/js/moment.min.js"></script>
 <script src="<?php echo PATTERNS::getVD();?>include/_core/js/moment.pt-br.js"></script>
-<script src="<?php echo PATTERNS::getVD();?>include/_core/js/bootstrap-datetimepicker.min.js?<?php echo $microtime;?>"></script>
+<script src="<?php echo PATTERNS::getVD();?>include/_core/js/bootstrap-datetimepicker.min.js?<?php echo microtime();?>"></script>
 <script src="<?php echo PATTERNS::getVD();?>include/_core/js/jstz.min.js"></script>
 <script src="<?php echo PATTERNS::getVD();?>include/_core/js/formValidation/formValidation.min.js"></script>
 <script src="<?php echo PATTERNS::getVD();?>include/_core/js/formValidation/bootstrap.min.js"></script>
@@ -74,7 +73,7 @@ function fFooterDashboardScript(){
 <script src="<?php echo PATTERNS::getVD();?>include/_core/js/metisMenu.min.js"></script>
 <script src="<?php echo PATTERNS::getVD();?>js/functions.lib.js"></script>
 <script>jsLIB.rootDir = '<?php echo PATTERNS::getVD();?>';</script>
-<script src="<?php echo PATTERNS::getVD();?>js/notifications.lib.js"></script>
+<script src="<?php echo PATTERNS::getVD();?>js/notifications.lib.js?<?php echo microtime();?>"></script>
 <script src="<?php echo PATTERNS::getVD();?>dashboard/js/index.js?>"></script>
 <?php
 }
