@@ -9,8 +9,6 @@ function getGraphData() {
 	session_start();
 
 	$arr = array();
-	
-	
 	/*
 	$qtdRegulares = 0;
 	$result = CONN::get()->Execute("
@@ -264,8 +262,6 @@ function getGraphData() {
 
 function getClasses( $parameters ) {
 	$arr = array();
-	
-	
 	$id = $parameters["id"];
 	
 	$where = "";
@@ -485,8 +481,6 @@ function fGetDetailEspClass( $class, $titulo, $result ) {
 
 function getPendentes( $parameters ) {
 	$arr = array();
-	
-	
 	$str = "";
 
 	$result = CONN::get()->Execute("
@@ -518,8 +512,7 @@ function getPendentes( $parameters ) {
 
 function getEspec( $parameters ) {
 	$arr = array();
-	
-	
+
 	$str = "";
 	$rs = CONN::get()->Execute("
 		SELECT ta.CD_ITEM_INTERNO, ta.DS_ITEM, COUNT(*) AS QTD
@@ -554,8 +547,7 @@ function getEspec( $parameters ) {
 
 function getEspecPeople( $parameters ) {
 	$arr = array();
-	
-	
+
 	$str = "";
 	$rs = CONN::get()->Execute("
 		SELECT a.NM
