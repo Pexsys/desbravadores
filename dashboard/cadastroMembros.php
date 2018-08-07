@@ -55,10 +55,10 @@
 				<form method="post" id="cadMembrosForm">
 					<ul class="nav nav-pills">
 						<li><a data-toggle="tab" href="#Pessoal">Pessoal</a></li>
-						<li id="abaAtribuicoes"><a data-toggle="tab" href="#Atrib">Atribui&ccedil;&otilde;es</a></li>
 						<li id="abaEndereco"><a data-toggle="tab" href="#Ender">Endere&ccedil;o e Telefones</a></li>
 						<li><a data-toggle="tab" href="#Outros">Outros</a></li>
 						<li id="abaResponsavel" style="display:none"><a data-toggle="tab" href="#Resp">Respons&aacute;vel</a></li>
+						<li id="abaAtribuicoes"><a data-toggle="tab" href="#Atrib">Atribui&ccedil;&otilde;es</a></li>
 					</ul>
 					<hr style="margin:10px"/>
 					<div class="row">
