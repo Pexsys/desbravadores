@@ -122,6 +122,7 @@ function getDomainFilter( $parameters ) {
 		$domain = array(
 			array( "id" => "0", "ds" => "ITENS COMPRADOS", "icon" => "fas fa-shopping-bag" ),
 			array( "id" => "1", "ds" => "ITENS A COMPRAR", "icon" => "fas fa-shopping-basket" ),
+			array( "id" => "5", "ds" => "ITENS A COMPRAR (S/ PREVISTOS)", "icon" => "fas fa-shopping-basket" ),
 			array( "id" => "4", "ds" => "ITENS PREVISTOS", "icon" => "fas fa-cart-plus" ),
 			array( "id" => "2", "ds" => "ITENS ENTREGUES", "icon" => "fas fa-cart-arrow-down" ),
 			array( "id" => "3", "ds" => "ITENS A ENTREGAR", "icon" => "fas fa-truck" )

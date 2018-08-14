@@ -32,6 +32,8 @@ function getQueryByFilter( $parameters ) {
 				$where .= " AND ap.TP_ITEM = 'ES' AND ap.CD_AREA_INTERNO = 'ME' AND ap.ID ".$notStr."IN";
 			elseif ( $key == "A" ):
 				$where .= " AND ap.CD_AREA_INTERNO ".$notStr."IN";
+			elseif ( $key == "HT" ):
+				$where .= " AND tm.TP ".$notStr."IN";
 			else:
 				$where .= " AND";
 			endif;
@@ -63,6 +65,8 @@ function getQueryByFilter( $parameters ) {
 							$where .= (!$prim ? " OR " : "") ."ccp.FG_ENTREGUE = 'N'";
 						elseif ( $value == "4" ):
 							$where .= (!$prim ? " OR " : "") ."ccp.FG_PREVISAO = 'S'";
+						elseif ( $value == "5" ):
+							$where .= (!$prim ? " OR " : "") ."(ccp.FG_COMPRA = 'N' AND ccp.FG_PREVISAO = 'N')";
 						endif;
 					elseif ( $key == "Z" ):
 						$where .= (!$prim ? " OR " : "") ."ap.TP_ITEM ". ( empty($value) ? "IS ".$notStr."NULL" : $notStr."LIKE '$value%'");
