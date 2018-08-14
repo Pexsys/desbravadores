@@ -43,7 +43,8 @@ function filtroDatasAvaliacao(){
 					array( "id" => "IC", "ds" => "Compras", "icon" => "fas fa-shopping-cart" ),
 					array( "id" => "T", "ds" => "Membros Ativos", "icon" => "fas fa-toggle-on" ),
 					array( "id" => "E", "ds" => "Especialidade", "icon" => "fas fa-check-circle" ),
-					array( "id" => "M", "ds" => "Mestrado", "icon" => "fas fa-check-circle" )
+					array( "id" => "M", "ds" => "Mestrado", "icon" => "fas fa-check-circle" ),
+					array( "id" => "HT", "ds" => "Tipo de Material", "icon" => "fas fa-shopping-basket" )
 				)
 		) 
 	);?>
