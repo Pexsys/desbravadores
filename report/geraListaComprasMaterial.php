@@ -205,6 +205,17 @@ class LISTACOMPRASMATERIAL extends TCPDF {
 		$this->posY+=6;
 		$this->lineAlt = !$this->lineAlt;
 	}
+
+	public function addLineTotGrp($tp, $sum){
+		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 9);
+		$this->SetTextColor(255,255,255);
+		$this->SetFillColor(127,163,195);
+		$this->setCellPaddings(1,0,1,0);
+		$this->setXY(5, $this->posY);
+		$this->Cell(200, 6, "Quantidade [ $tp ]: $sum", 0, false, 'C', true);
+		$this->posY+=8;
+		$this->SetTextColor(0,0,0);
+	}
 	
 	public function newPage($col=true) {
 		$this->AddPage();
@@ -236,6 +247,21 @@ class LISTACOMPRASMATERIAL extends TCPDF {
 	}
 }
 
+function linhaGrupo($pdf,$ant,$sum){
+	if (!empty($ant)):
+		$pdf->startTransaction();
+		$start_page = $pdf->getPage();
+		$pdf->addLineTotGrp($ant, $sum);
+		if  ($pdf->getNumPages() != $start_page):
+			$pdf->rollbackTransaction(true);
+			$pdf->newPage(false);
+			$pdf->addLineTotGrp($ant, $sum);
+		else:
+			$pdf->commitTransaction();
+		endif;
+	endif;
+}
+
 $pdf = new LISTACOMPRASMATERIAL();
 $pdf->newPage();
 
@@ -252,7 +278,6 @@ $result = CONN::get()->Execute("
 	  AND cc.FG_PREVISAO = 'N'
 	  $innerJoinDA
     GROUP BY cc.NM, cc.TP_ITEM, cc.CD, cc.DS_ITEM, cc.TP, cc.DS, cc.FUNDO, cc.FG_IM, cc.CD_AREA_INTERNO, cc.CD_ITEM_INTERNO
-    
     ORDER BY 1, 2, 9, 3, 4
 ");
 foreach ( $result as $ra => $f ):
@@ -263,17 +288,24 @@ $pdf->writeGroupTable();
 //QUERY RESUMO
 $pdf->newPage(false);
 $result = CONN::get()->Execute("
-    SELECT cc.TP_ITEM, cc.CD, cc.DS_ITEM, cc.TP, cc.DS, cc.FUNDO, cc.FG_IM, cc.CD_AREA_INTERNO, cc.CD_ITEM_INTERNO, COUNT(*) AS QT_ITENS
+	SELECT cc.TP_ITEM, cc.CD, cc.DS_ITEM, cc.TP, cc.DS, cc.FUNDO, cc.FG_IM, cc.CD_AREA_INTERNO, cc.CD_ITEM_INTERNO, COUNT(*) AS QT_ITENS
     FROM CON_COMPRAS cc
     WHERE cc.FG_COMPRA = 'N'
       AND cc.FG_ENTREGUE = 'N'
 	  AND cc.FG_PREVISAO = 'N'
 	  $innerJoinDA
     GROUP BY cc.TP_ITEM, cc.CD, cc.DS_ITEM, cc.TP, cc.DS, cc.FUNDO, cc.FG_IM, cc.CD_AREA_INTERNO, cc.CD_ITEM_INTERNO
-    
     ORDER BY 1, 8, 2, 3
 ");
+$ant = "";
+$sum = 0;
+
 foreach ( $result as $ra => $f ):
+	if ($ant != $f["TP"]):
+		linhaGrupo($pdf,$ant,$sum);
+		$sum = 0;
+		$ant = $f["TP"];
+	endif;
 	$pdf->startTransaction();
 	$start_page = $pdf->getPage();
 	$pdf->addLineSum($f);
@@ -282,9 +314,11 @@ foreach ( $result as $ra => $f ):
 		$pdf->newPage(false);
 		$pdf->addLineSum($f);
 	else:
-		$pdf->commitTransaction();     
+		$pdf->commitTransaction();
 	endif;
+	$sum += $f["QT_ITENS"];
 endforeach;
+linhaGrupo($pdf,$ant,$sum);
 $pdf->download();
 exit;
 ?>
