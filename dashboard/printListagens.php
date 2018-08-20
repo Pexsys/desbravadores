@@ -33,6 +33,7 @@ $classes = getDomainFilter( array( "type" => "C" ) );
 			<option data-icon="fas fa-list" show="divEventos" value="geraListaEventoAutoriz.php?eve=">LISTAGEM DE SA&Iacute;DA - CONTROLE DE AUTORIZA&Ccedil;&Otilde;ES - GERAL</option>
 			<option data-icon="fas fa-venus-mars" show="divEventos" value="geraListaEventoAutorizGen.php?eve=">LISTAGEM DE SA&Iacute;DA - CONTROLE DE AUTORIZA&Ccedil;&Otilde;ES - G&Ecirc;NERO</option>
 			<option data-icon="fab fa-leanpub" show="divEventos" value="geraListaDispensaEscola.php?eve=">LISTAGEM DE SA&Iacute;DA - DISPENSA ESCOLAR</option>
+			<option data-icon="fas fa-syringe"show="divRegistroMenor" value="geraInfoRespVacina.php?filter=">TERMO DE RESPONSABILIDADE - NÃO IMUNIZAÇÃO DE MENOR</option>
 			<option data-icon="glyphicon glyphicon-tent" show="divEventos" value="geraListaEventoTent.php?eve=">LISTAGEM DE SA&Iacute;DA - BARRACAS</option>
 			<option data-icon="fas fa-utensils" show="divEventos" value="geraListaEventoKitchen.php?eve=">LISTAGEM DE SA&Iacute;DA - COZINHA</option>
 			<option data-icon="fas fa-bus" show="divEventos" value="geraListaEventoBus.php?eve=">LISTAGEM DE SA&Iacute;DA - PASSAGEIROS</option>
@@ -126,6 +127,24 @@ $classes = getDomainFilter( array( "type" => "C" ) );
         		$id = fStrZero($fields['ID'], $qtdZeros);
         		echo "<option value=\"". $fields['ID'] ."\" data-subtext=\"$id\">".$fields['NM']."</option>";
         	endforeach;
+		?>
+		</select>
+    </div>
+	<div class="col-lg-8" name="rowFilter" id="divRegistroMenor" style="display:none;">
+		<label for="cmMenor" class="control-label">Menor:</label>
+		<select name="cmMenor" id="cmMenor" class="selectpicker form-control input-sm" title="Escolha um ou mais membros" data-live-search="true" multiple data-selected-text-format="count > 2" data-width="100%" data-container="body" data-actions-box="true">
+		<?php
+		$qtdZeros = zeroSizeID();
+		$result = CONN::get()->Execute("
+			SELECT ca.ID_MEMBRO AS ID, ca.NM
+			FROM CON_ATIVOS ca
+		WHERE ca.IDADE_HOJE < 18
+		ORDER BY ca.NM
+		");
+		foreach($result as $l => $fields):
+			$id = fStrZero($fields['ID'], $qtdZeros);
+			echo "<option value=\"". $fields['ID'] ."\" data-subtext=\"$id\">".$fields['NM']."</option>";
+		endforeach;
 		?>
 		</select>
     </div>
