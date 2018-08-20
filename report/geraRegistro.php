@@ -365,7 +365,6 @@ if ( !isset($filter) || empty($filter) || strlen($filter) == 0 ):
 	exit("PESSOA N&Atilde;O ENCONTRADA!");
 endif;
 
-
 $pdf = new ESPCR();
 $result = CONN::get()->Execute("
 	SELECT cm.ID, cm.ID_CAD_PESSOA, cp.NM, cp.DT_NASC

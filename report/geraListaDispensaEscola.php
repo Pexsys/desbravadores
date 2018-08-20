@@ -141,7 +141,6 @@ class LISTADISPENSAESCOLAR extends TCPDF {
 
 $eveID = fRequest("eve");
 
-
 $result = CONN::get()->Execute("SELECT NOME_DIRETOR, NOW() AS DH FROM CON_DIRETOR");
 $nmDiretor = titleCase($result->fields["NOME_DIRETOR"]);
 $dh = $result->fields["DH"];
@@ -239,15 +238,5 @@ if (!$result->EOF):
     $pdf->finishSchool($nmDiretor);
     $pdf->download();
 endif;
-
-
-/*
-
-FABIANO MESSIAS DA SILVA
-
-
-
-
-*/
 exit;
 ?>
