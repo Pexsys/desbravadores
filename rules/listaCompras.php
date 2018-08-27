@@ -320,6 +320,7 @@ function addCompras( $parameters ) {
 
 	//SETAR ITENS ENTREGUES POR PESSOA
 	elseif ( $act == "SET" && isset($frm["id_cad_membro"]) ):
+		$quando = getDateNull($frm["dt_quando"]);
 		
 		foreach ($frm["id_cad_membro"] as $k => $cadMembroID):
 			$result = CONN::get()->Execute("
@@ -330,7 +331,7 @@ function addCompras( $parameters ) {
 				AND ID_CAD_MEMBRO = ?
 			", array($cadMembroID) );
 			foreach ($result as $k => $ln):
-				updateEstoque( $ln, "fg_entregue", "S" );
+				updateEstoque( $ln, "fg_entregue", "S", $quando );
 			endforeach;
 		endforeach;
 	endif;
@@ -411,7 +412,8 @@ function setAttr( $parameters ) {
 	return array( "result" => true, "est" => $qt );
 }
 
-function updateEstoque( $ln, $fd, $vl ){
+function updateEstoque( $ln, $fd, $vl, $date = null ){
+	$date = getDateDefault( $date, date("Y-m-d") );
 	$arr = array( "qt" => $ln["QT_EST"] );
 
 	$update = true;
@@ -460,7 +462,7 @@ function updateEstoque( $ln, $fd, $vl ){
 			//INSERE LOG DE ENTREGA DE MATERIAIS
 			if ($ln["FG_LOG_MATERIAL"] == "S"):
 				$materiais = new MATERIAIS();
-				$materiais->forceInsert( array( $ln["ID_CAD_MEMBRO"], $ln["ID_TAB_MATERIAIS"], date("Y-m-d") ) );
+				$materiais->forceInsert( array( $ln["ID_CAD_MEMBRO"], $ln["ID_TAB_MATERIAIS"], $date, $ln["CM"] ) );
 				$arr["close"] = "S";
 			endif;
 

@@ -1,4 +1,6 @@
 <?php
+$microtime = microtime();
+
 function fHeaderDashboard(){
 require_once("../include/_metaheader.php");
 ?>
@@ -57,7 +59,7 @@ function fFooterDashboardScript(){
 <script src="<?php echo PATTERNS::getVD();?>include/_core/js/underscore-min.js"></script>
 <script src="<?php echo PATTERNS::getVD();?>include/_core/js/moment.min.js"></script>
 <script src="<?php echo PATTERNS::getVD();?>include/_core/js/moment.pt-br.js"></script>
-<script src="<?php echo PATTERNS::getVD();?>include/_core/js/bootstrap-datetimepicker.min.js?<?php echo microtime();?>"></script>
+<script src="<?php echo PATTERNS::getVD();?>include/_core/js/bootstrap-datetimepicker.min.js<?php echo "?$microtime";?>"></script>
 <script src="<?php echo PATTERNS::getVD();?>include/_core/js/jstz.min.js"></script>
 <script src="<?php echo PATTERNS::getVD();?>include/_core/js/formValidation/formValidation.min.js"></script>
 <script src="<?php echo PATTERNS::getVD();?>include/_core/js/formValidation/bootstrap.min.js"></script>
@@ -71,10 +73,10 @@ function fFooterDashboardScript(){
 <script src="<?php echo PATTERNS::getVD();?>include/_core/js/datatable/datetime-moment.js"></script>
 <script src="<?php echo PATTERNS::getVD();?>include/_core/js/datatable/plugins.js"></script>
 <script src="<?php echo PATTERNS::getVD();?>include/_core/js/metisMenu.min.js"></script>
-<script src="<?php echo PATTERNS::getVD();?>js/functions.lib.js"></script>
+<script src="<?php echo PATTERNS::getVD();?>js/functions.lib.js<?php echo "?$microtime";?>"></script>
 <script>jsLIB.rootDir = '<?php echo PATTERNS::getVD();?>';</script>
-<script src="<?php echo PATTERNS::getVD();?>js/notifications.lib.js?<?php echo microtime();?>"></script>
-<script src="<?php echo PATTERNS::getVD();?>dashboard/js/index.js?>"></script>
+<script src="<?php echo PATTERNS::getVD();?>js/notifications.lib.js<?php echo "?$microtime";?>"></script>
+<script src="<?php echo PATTERNS::getVD();?>dashboard/js/index.js<?php echo "?$microtime";?>>"></script>
 <?php
 }
 ?>
