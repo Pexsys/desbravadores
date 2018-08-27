@@ -140,6 +140,10 @@ function fReturnNumberNull($n,$default = null){
 	return $default;
 }
 
+function getDateDefault($date, $default){
+	return ( is_null($date) ? $default : $date );
+}
+
 function getDateNull($vl){
 	if ( !isset($vl) || empty($vl) || is_null($vl) ):
 		return null;
@@ -449,9 +453,9 @@ function getIconAprendizado( $tpItem, $areaInterno, $sizeClass = "" ){
 			$retorno = "fas fa-check-circle";
 		endif;
 	elseif ($tpItem == "TRUNFO"):
-		$retorno = "fas fa-picture-o";
+		$retorno = "fas fa-award";
 	elseif ($tpItem == "MEDALHA"):
-		$retorno = "fas fa-trophy";
+		$retorno = "fas fa-medal";
 	elseif ($tpItem == "TIRA"):
 		$retorno = "fas fa-square-o";
 	endif;

@@ -271,6 +271,7 @@ $(document).ready(function(){
 		$('#divItem').visible(false);
 		$('#divOQue').visible(true);
 		$('#divParaQuem').visible(true);
+		$('#divDataQuando').visible(false);
 		jsLIB.resetForm( $('#cadListaForm') );
 		$("#qtItens").val(1);
 		$("#listaModal").attr('action','ADD').modal();
@@ -293,7 +294,9 @@ $(document).ready(function(){
 		$('#divItem').visible(false);
 		$('#divOQue').visible(false);
 		$('#divParaQuem').visible(true);
+		$('#divDataQuando').visible(true);
 		jsLIB.resetForm( $('#cadListaForm') );
+		$('[field=dt_quando]').val( new Date().toFormattedDate() );
 		$("#listaModal").attr('action','SET').modal();
 	});
 	
@@ -471,6 +474,19 @@ $(document).ready(function(){
 	});	
 	ruleBtnDelete(false);
 	ruleBtnEdit(false);
+
+	$('#divDataQuando').datetimepicker({
+		locale: 'pt-br',
+		language: 'pt-BR',
+		format: 'DD/MM/YYYY',
+		maskInput: true,
+		pickDate: true,
+		pickTime: false,
+		pickSeconds: false,
+		useCurrent: true
+	});
+
+	$(".date").mask('00/00/0000');
 });
 
 function rulesGeracao( obj ){

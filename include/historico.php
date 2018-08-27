@@ -4,7 +4,7 @@
 @require_once("compras.php");
 
 function dateDefaultInicio($date = null){
-	return ( is_null($date) ? date( "Y-m-d", mktime( 0, 0, 0, 0, 1, date("Y") ) ) : $date );
+	return getDateDefault($date, date( "Y-m-d", mktime( 0, 0, 0, 0, 1, date("Y") ) ) );
 }
 
 function getParamDates( $frm ) {
