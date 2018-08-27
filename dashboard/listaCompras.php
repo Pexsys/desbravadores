@@ -280,6 +280,18 @@ function filtroDatasAvaliacao(){
 							</div>
 						</div>
 					</div>
+					<div class="panel panel-warning"  id="divDataQuando" style="display:none">
+						<div class="panel-heading" style="padding:4px 10px 0px">
+							<label>Data da Entrega</label>
+						</div>
+						<div class="panel-body" style="padding:4px 10px 0px">
+							<div class="row">
+								<div class="form-group col-xs-3">
+									<input type="text" name="dtQuando" id="dtQuando" field="dt_quando" class="form-control input-sm date" placeholder="Quando?"/>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 				<div class="panel-footer">
 					<div class="row">
