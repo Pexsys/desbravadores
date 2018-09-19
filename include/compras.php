@@ -100,11 +100,7 @@ class COMPRAS {
 				  ORDER BY ta.CD_ITEM_INTERNO
 		", array($pessoaID) );
 		foreach ($r1 as $k1 => $l1):
-
-			$aprendID = $l1["ID_TAB_APREND"];
-
-			//ainda nao alterei o select acima... - testar quando implementar
-			$previsao = (is_null($l1["DT_AVALIACAO"]) ? "S" : "N");
+			$previsao = empty($l1["DT_AVALIACAO"]) ? "S" : "N";
 
 			//SE O ITEM CLASSE
 			if ( $l1["TP_ITEM"] == "CL" ):
@@ -147,7 +143,6 @@ class COMPRAS {
 					//***************************************************************
 					if ($qtd == 6):
 						$materialCD = "04-02-01-07";
-						$aprendID = $idMax;
 					else:
 						$materialCD = "04-02-01-".$a[1];
 					endif;
@@ -159,23 +154,17 @@ class COMPRAS {
 					$materialCD = "";
 					if ($qtd == 6):
 						$materialCD = ($fundo == "BR" ? "06-04-06" : "06-02-06");
-						$aprendID = $idMax;
 					elseif ($concat == "01-01-00|01-02-00|01-03-00|01-04-00|01-05-00"):
 						$materialCD = ($fundo == "BR" ? "06-04-05" : "06-02-05");
-						$aprendID = $idMax;
 					elseif ($concat == "01-01-00|01-02-00|01-03-00|01-04-00"):
 						$materialCD = ($fundo == "BR" ? "06-04-04" : "06-02-04");
-						$aprendID = $idMax;
 					elseif ($concat == "01-01-00|01-02-00|01-03-00"):
 						$materialCD = ($fundo == "BR" ? "06-04-03" : "06-02-03");
-						$aprendID = $idMax;
 					elseif ($concat == "01-01-00|01-02-00"):
 						$materialCD = ($fundo == "BR" ? "06-04-02" : "06-02-02");
-						$aprendID = $idMax;
-					elseif (empty($dtMax)):
+					elseif (empty($dtMax) && $cdMax == $l1["CD_ITEM_INTERNO"]):
 						$a = explode("-", $cdMax);
 						$materialCD = ($fundo == "BR" ? "06-03-" : "06-01-").$a[1];
-						$aprendID = $idMax;
 					endif;
 					if ( !empty($materialCD) ):
 						$compl = null;
@@ -212,7 +201,6 @@ class COMPRAS {
 							", array($pessoaID) );
 							if (!$r3->EOF && $r3->RecordCount() == 6):
 								$materialCD = "04-02-02-07";
-								$aprendID = 14;
 							endif;
 
 						else:

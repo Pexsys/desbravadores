@@ -448,7 +448,7 @@ function updateEstoque( $ln, $fd, $vl, $date = null ){
 
 	if ($update):
 
-	    //SE MATERIAL FOI ENTREGUE
+	  //SE MATERIAL FOI ENTREGUE
 		if ( $fd == "fg_entregue" && $vl == "S"):
 
 			//EXCLUI SE INCLUSAO MANUAL.
@@ -464,11 +464,10 @@ function updateEstoque( $ln, $fd, $vl, $date = null ){
 				$materiais = new MATERIAIS();
 				$materiais->forceInsert( array( $ln["ID_CAD_MEMBRO"], $ln["ID_TAB_MATERIAIS"], $date, $ln["CM"] ) );
 				$arr["close"] = "S";
-			endif;
-
+			endif; 
 		else:
 			updateCADCompras( $fd, array( $vl, $ln["ID"] ) );
-    	endif;
+    endif;
 	endif;
 	return $arr;
 }
@@ -477,6 +476,7 @@ function updateCADCompras($fd, $arr){
 	CONN::get()->Execute("
 		UPDATE CAD_COMPRAS
 		SET $fd = ?
+		". ($fd == "fg_compra" && $arr[0] == "S") ? ", FG_PREVISAO = 'N'" : "" ."
 		WHERE ID = ?
 	", $arr );
 }
