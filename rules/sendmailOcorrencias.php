@@ -1,6 +1,5 @@
 <?php
-@require_once("../include/sendmail.php");
-
+$mail = MAIL::get();
 function sendOcorrenciaByID($ocorrenciaID){
 	$rs = CONN::get()->Execute("
 			SELECT DISTINCT co.ID, co.CD, co.DH, co.TXT
@@ -13,8 +12,9 @@ function sendOcorrenciaByID($ocorrenciaID){
 		  ORDER BY 1
 	", array($ocorrenciaID) );
 	if (!$rs->EOF):
-		$GLOBALS['mail']->Subject = PATTERNS::getClubeDS( array("cl","nm") ) . " - Ocorrencia #".$l["CD"]." [".strftime("%d/%m/%Y",strtotime($l["DH"])) ."]";
-		
+    $mail = MAIL::get();
+    $mail->Subject = PATTERNS::getClubeDS( array("cl","nm") ) . " - Ocorrencia #".$l["CD"]." [".strftime("%d/%m/%Y",strtotime($l["DH"])) ."]";
+    
 		$rs1 = CONN::get()->Execute("
 			SELECT *
 			  FROM LOG_MENSAGEM
@@ -27,13 +27,12 @@ function sendOcorrenciaByID($ocorrenciaID){
 		
 		if ( !$rs1->EOF ):
 			foreach($rs1 as $l1):
-				$GLOBALS['mail']->ClearAllRecipients();
-				$GLOBALS['mail']->AddAddress( $l1["EMAIL"] );
-				$GLOBALS['mail']->MsgHTML($l["TXT"]);
+				$mail->ClearAllRecipients();
+				$mail->AddAddress( $l1["EMAIL"] );
+				$mail->MsgHTML($l["TXT"]);
 					
-				if ( $GLOBALS['mail']->Send() ):
+				if ( $mail->Send() ):
 					$nrEnviados++;
-					//ATUALIZA ENVIO
 					CONN::get()->Execute("
 						UPDATE LOG_MENSAGEM
 						   SET DH_SEND = NOW()
