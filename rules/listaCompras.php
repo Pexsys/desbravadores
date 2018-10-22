@@ -502,8 +502,7 @@ function updateEstoque( $ln, $fd, $vl, $date = null ){
 function updateCADCompras($fd, $arr){
 	CONN::get()->Execute("
 		UPDATE CAD_COMPRAS
-		SET $fd = ?
-		". ($fd == "fg_compra" && $arr[0] == "S") ? ", FG_PREVISAO = 'N'" : "" ."
+		SET $fd = ?". ($fd == "fg_compra" && $arr[0] == "S" ? ", FG_PREVISAO = 'N'" : "") ."
 		WHERE ID = ?
 	", $arr );
 }
