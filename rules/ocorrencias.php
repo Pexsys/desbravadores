@@ -92,7 +92,6 @@ function fGetMembros(){
 function fOcorrencia( $parameters ) {
 	session_start();
 	
-	
 	$userID = $_SESSION['USER']['id'];
 	$membroID = $_SESSION['USER']['id_cad_pessoa'];
 	$out = array();
@@ -189,7 +188,7 @@ function fOcorrencia( $parameters ) {
 				WHERE ca.ID_CAD_PESSOA = ? 
 			", array( $frm["id_pessoa"], $frm["id_pessoa"] ) );
 		
-			sendOcorrenciaByID($id);	
+			sendOcorrenciaByID($id);
 		endif;
 		
 		$out["id"] = $id;

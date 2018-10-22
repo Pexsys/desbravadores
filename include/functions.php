@@ -7,12 +7,14 @@ mb_internal_encoding('UTF-8');
 mb_http_output('UTF-8');
 mb_http_input('UTF-8');
 
-global $pattern;
 @require_once("_core/lib/adodb5/adodb.inc.php");
+@require_once("_core/lib/phpmailer/PHPMailerAutoload.php");
+
 @require_once("classes/patterns.php");
 @require_once("classes/profile.php");
 @require_once("classes/entity.php");
 @require_once("classes/tesouraria.php");
+@require_once("classes/sendmail.php");
 
 function zeroSizeID(){
 	if (!isset($_SESSION['USER']['sizeID'])):

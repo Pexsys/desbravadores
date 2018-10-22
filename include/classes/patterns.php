@@ -175,37 +175,37 @@ class BARS {
 class PATTERNS {
 
     public static function getClubeDS($p){
-        $str  = in_array("cl",$p) ? "Clube " : "";
-        $str .= in_array("cj",$p) && in_array("db",$p) && !empty($str) ? "de " : "";
-        $str .= in_array("db",$p) ? "Desbravadores " : "";
-        $str .= in_array("nm",$p) ? "Pioneiros " : "";
-        $str .= in_array("sp",$p) && in_array("af",$p) && !empty($str) ? "- " : "";
-        $str .= in_array("af",$p) ? "1959 " : "";
-        $str .= in_array("sp",$p) && in_array("ibd",$p) && !empty($str) ? "- " : "";
-		$str .= in_array("ibd",$p) ? "IASD Capão Redondo " : "";
-        $str .= in_array("sp",$p) && in_array("dst",$p) && !empty($str) ? "- " : "";
-		$str .= in_array("dst",$p) ? "Capão Redondo " : "";
-        $str .= in_array("sp",$p) && in_array("ig",$p) && !empty($str) ? "- " : "";
-		$str .= in_array("ig",$p) ? "Igreja Adventista do Sétimo Dia " : "";
-        $str .= in_array("sp",$p) && in_array("add",$p) && !empty($str) ? "- " : "";
-		$str .= in_array("add",$p) ? "Av. Ellis Maas, 520 " : "";
-        $str .= in_array("sp",$p) && in_array("cid",$p) && !empty($str) ? "- " : "";
-		$str .= in_array("cid",$p) ? "São Paulo - SP " : "";
-		$str .= in_array("sp",$p) && in_array("cep",$p) && !empty($str) ? "- " : "";
-		$str .= in_array("cep",$p) ? "CEP 05859-000 " : "";
-        $str .= in_array("sp",$p) && in_array("cnpj",$p) && !empty($str) ? "- " : "";
-		$str .= in_array("cnpj",$p) ? "CNPJ 43.586.122/0121-20 " : "";
-        $str .= in_array("sp",$p) && in_array("rg",$p) && !empty($str) ? "- " : "";
-		$str .= in_array("rg",$p) ? "6ª Região " : "";
-		$str .= in_array("sp",$p) && in_array("as",$p) && !empty($str) ? "- " : "";
-        $str .= in_array("as",$p) ? "Associação Paulista Sul " : "";
-        $str .= in_array("sp",$p) && in_array("ab",$p) && !empty($str) ? "- " : "";
-        $str .= in_array("ab",$p) ? "APS " : "";
-        $str .= in_array("sp",$p) && in_array("un",$p) && !empty($str) ? "- " : "";
-        $str .= in_array("un",$p) ? "UCB " : "";
-        $str .= in_array("sp",$p) && in_array("dv",$p) && !empty($str) ? "- " : "";
-        $str .= in_array("dv",$p) ? "DSA" : "";
-        return trim($str);
+      $str  = in_array("cl",$p) ? "Clube " : "";
+      $str .= in_array("cj",$p) && in_array("db",$p) && !empty($str) ? "de " : "";
+      $str .= in_array("db",$p) ? "Desbravadores " : "";
+      $str .= in_array("nm",$p) ? "Pioneiros " : "";
+      $str .= in_array("sp",$p) && in_array("af",$p) && !empty($str) ? "- " : "";
+      $str .= in_array("af",$p) ? "1959 " : "";
+      $str .= in_array("sp",$p) && in_array("ibd",$p) && !empty($str) ? "- " : "";
+      $str .= in_array("ibd",$p) ? "IASD Capão Redondo " : "";
+      $str .= in_array("sp",$p) && in_array("dst",$p) && !empty($str) ? "- " : "";
+      $str .= in_array("dst",$p) ? "Capão Redondo " : "";
+      $str .= in_array("sp",$p) && in_array("ig",$p) && !empty($str) ? "- " : "";
+      $str .= in_array("ig",$p) ? "Igreja Adventista do Sétimo Dia " : "";
+      $str .= in_array("sp",$p) && in_array("add",$p) && !empty($str) ? "- " : "";
+      $str .= in_array("add",$p) ? "Av. Ellis Maas, 520 " : "";
+      $str .= in_array("sp",$p) && in_array("cid",$p) && !empty($str) ? "- " : "";
+      $str .= in_array("cid",$p) ? "São Paulo - SP " : "";
+      $str .= in_array("sp",$p) && in_array("cep",$p) && !empty($str) ? "- " : "";
+      $str .= in_array("cep",$p) ? "CEP 05859-000 " : "";
+      $str .= in_array("sp",$p) && in_array("cnpj",$p) && !empty($str) ? "- " : "";
+      $str .= in_array("cnpj",$p) ? "CNPJ 43.586.122/0121-20 " : "";  
+      $str .= in_array("sp",$p) && in_array("rg",$p) && !empty($str) ? "- " : "";
+      $str .= in_array("rg",$p) ? "6ª Região " : "";
+      $str .= in_array("sp",$p) && in_array("as",$p) && !empty($str) ? "- " : "";
+      $str .= in_array("as",$p) ? "Associação Paulista Sul " : "";
+      $str .= in_array("sp",$p) && in_array("ab",$p) && !empty($str) ? "- " : "";
+      $str .= in_array("ab",$p) ? "APS " : "";
+      $str .= in_array("sp",$p) && in_array("un",$p) && !empty($str) ? "- " : "";
+      $str .= in_array("un",$p) ? "UCB " : "";
+      $str .= in_array("sp",$p) && in_array("dv",$p) && !empty($str) ? "- " : "";
+      $str .= in_array("dv",$p) ? "DSA" : "";
+      return trim($str);
     }
 
     //RETORNA DESCRICAO DO CLUBE
@@ -224,9 +224,9 @@ class PATTERNS {
     //RETORNA VIRTUAL DIR
     public static function getVD(){
         return "/desbravadores/";
-	}
+    }
 
-	public static function toConvert($n){
+    public static function toConvert($n){
         return base_convert($n,10,36);
     }
 

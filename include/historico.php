@@ -1,5 +1,4 @@
 <?php
-@require_once("sendmail.php");
 @require_once("_message.php");
 @require_once("compras.php");
 
@@ -312,18 +311,19 @@ function regraRequisitoEspecialidade($barfnid, $barpessoaid, $dtInicio, $dtConcl
 					$rA = CONN::get()->Execute("SELECT * FROM CON_ATIVOS WHERE ID_CAD_PESSOA = ?",array($barpessoaid));
 					$a = explode(" ",titleCase($rA->fields["NM"]));
 						
-					if (!empty($rA->fields["EMAIL"])):
+          if (!empty($rA->fields["EMAIL"])):
+            $mail = MAIL::get();
 						$rD = CONN::get()->Execute("SELECT * FROM CON_DIRETOR");
 						$nomeDiretor = titleCase($rD->fields["NOME_DIRETOR"]);
 
 						$message = new MESSAGE( array( "np" => $a[0], "nm" => $fg["DS_ITEM"], "sx" => $rA->fields["SEXO"], "nd" => $nomeDiretor ) );
 					
-						$GLOBALS['mail']->ClearAllRecipients();
-						$GLOBALS['mail']->AddAddress( $rA->fields["EMAIL"] );
-						$GLOBALS['mail']->Subject = utf8_decode(PATTERNS::getClubeDS( array("cl","nm") ) . " - Aviso de Conclusão");
-						$GLOBALS['mail']->MsgHTML( $message->getConclusao() );
+						$mail->ClearAllRecipients();
+						$mail->AddAddress( $rA->fields["EMAIL"] );
+						$mail->Subject = utf8_decode(PATTERNS::getClubeDS( array("cl","nm") ) . " - Aviso de Conclusão");
+						$mail->MsgHTML( $message->getConclusao() );
 							
-						if ( $GLOBALS['mail']->Send() ):
+						if ( $mail->Send() ):
 							CONN::get()->Execute("UPDATE LOG_MENSAGEM SET DH_SEND = NOW() WHERE ID = ?", array( $logID ) );
 						endif;
 					endif;

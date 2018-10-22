@@ -1,11 +1,9 @@
 <?php
 @require_once("../include/functions.php");
-@require_once("../include/sendmail.php");
 @require_once("../include/_message.php");
 
-use MESSAGE;
-
 $today = getdate();
+$mail = MAIL::get();
 
 //******* INICIO DA ROTINA DIARIA
 CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.00-Iniciando rotina...')");
@@ -38,102 +36,101 @@ CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.01-An
 		$message = new MESSAGE( array( "np" => $a[0], "id" => $fA["IDADE_ANO"], "sx" => $fA["TP_SEXO"], "nd" => $nomeDiretor ) );
 		$bm = $message->getBirthday();
 
-		$GLOBALS['mail']->ClearAllRecipients();
-		$GLOBALS['mail']->AddAddress( $fA["EMAIL"] );
-		$GLOBALS['mail']->Subject = utf8_decode( $bm["sub"] );
-		$GLOBALS['mail']->MsgHTML( $bm["msg"] );
+		$mail->ClearAllRecipients();
+		$mail->AddAddress( $fA["EMAIL"] );
+		$mail->Subject = utf8_decode( $bm["sub"] );
+		$mail->MsgHTML( $bm["msg"] );
 
-		if ( $GLOBALS['mail']->Send() ):
+		if ( $mail->Send() ):
 			echo "parabens enviado para ". $fA["EMAIL"]."<br/>";
 		else:
 			echo "parabens não enviado para ". $fA["EMAIL"]."<br/>";
 		endif;
 	endforeach;
 
-
 //******* SECRETARIA - MESTRADOS
 CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.02-Analisando Mestrados Completados...')");
 
-    $rA = CONN::get()->Execute("SELECT * FROM CON_ATIVOS");
-    foreach ($rA as $lA => $fA):
+  $rA = CONN::get()->Execute("SELECT * FROM CON_ATIVOS");
+  foreach ($rA as $lA => $fA):
 
-        $a = explode(" ",titleCase($fA["NM"]));
+    $a = explode(" ",titleCase($fA["NM"]));
 
-        //LE REGRAS
-    	$rg = CONN::get()->Execute("
-    	    SELECT DISTINCT car.ID, car.CD_ITEM_INTERNO, car.CD_AREA_INTERNO, car.DS_ITEM, car.TP_ITEM, car.MIN_AREA
-    	      FROM CON_APR_REQ car
-    	     WHERE car.CD_AREA_INTERNO = 'ME'
-    	  ORDER BY car.CD_ITEM_INTERNO
-    	");
-    	foreach ($rg as $lg => $fg):
-            $min = $fg["MIN_AREA"];
+      //LE REGRAS
+    $rg = CONN::get()->Execute("
+        SELECT DISTINCT car.ID, car.CD_ITEM_INTERNO, car.CD_AREA_INTERNO, car.DS_ITEM, car.TP_ITEM, car.MIN_AREA
+          FROM CON_APR_REQ car
+          WHERE car.CD_AREA_INTERNO = 'ME'
+      ORDER BY car.CD_ITEM_INTERNO
+    ");
+    foreach ($rg as $lg => $fg):
+      $min = $fg["MIN_AREA"];
 
-            $feitas = 0;
-            //LE PARAMETRO MINIMO E HISTORICO PARA A REGRA
-    	    $rR = CONN::get()->Execute("
-                    SELECT tar.ID, tar.QT_MIN, COUNT(*) AS QT_FEITAS
-                      FROM TAB_APR_ITEM tar
-                INNER JOIN CON_APR_REQ car ON (car.ID_TAB_APR_ITEM = tar.ID AND car.TP_ITEM_RQ = 'ES')
-                INNER JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = car.ID_RQ AND ah.ID_CAD_PESSOA = ? AND ah.DT_CONCLUSAO IS NOT NULL)
-                     WHERE tar.ID_TAB_APREND = ?
-                  GROUP BY tar.ID, tar.QT_MIN
-        	", array($fA["ID_CAD_PESSOA"], $fg["ID"]) );
-    	    foreach($rR as $lR => $fR):
-                $feitas += min( $fR["QT_MIN"], $fR["QT_FEITAS"] );
-            endforeach;
+      $feitas = 0;
+      //LE PARAMETRO MINIMO E HISTORICO PARA A REGRA
+      $rR = CONN::get()->Execute("
+                SELECT tar.ID, tar.QT_MIN, COUNT(*) AS QT_FEITAS
+                  FROM TAB_APR_ITEM tar
+            INNER JOIN CON_APR_REQ car ON (car.ID_TAB_APR_ITEM = tar.ID AND car.TP_ITEM_RQ = 'ES')
+            INNER JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = car.ID_RQ AND ah.ID_CAD_PESSOA = ? AND ah.DT_CONCLUSAO IS NOT NULL)
+                  WHERE tar.ID_TAB_APREND = ?
+              GROUP BY tar.ID, tar.QT_MIN
+      ", array($fA["ID_CAD_PESSOA"], $fg["ID"]) );
+      foreach($rR as $lR => $fR):
+        $feitas += min( $fR["QT_MIN"], $fR["QT_FEITAS"] );
+      endforeach;
 
-    		$pct = floor( ( $feitas / $min ) * 100 );
+      $pct = floor( ( $feitas / $min ) * 100 );
 
-    		//VERIFICA SE COMPLETADO, MAS AINDA NÃO CONCLUIDO/AVALIADO/INVESTIDO
-    		if ( $pct >= 100 ):
-        	    $rI = CONN::get()->Execute("
-                    SELECT DT_CONCLUSAO
-                    FROM APR_HISTORICO
-                    WHERE ID_CAD_PESSOA = ?
-                      AND ID_TAB_APREND = ?
-        	    ", array( $fA["ID_CAD_PESSOA"], $fg["ID"] ) );
-        	    if ($rI->EOF || is_null($rI->fields["DT_CONCLUSAO"]) ):
+      //VERIFICA SE COMPLETADO, MAS AINDA NÃO CONCLUIDO/AVALIADO/INVESTIDO
+      if ( $pct >= 100 ):
+            $rI = CONN::get()->Execute("
+                  SELECT DT_CONCLUSAO
+                  FROM APR_HISTORICO
+                  WHERE ID_CAD_PESSOA = ?
+                    AND ID_TAB_APREND = ?
+            ", array( $fA["ID_CAD_PESSOA"], $fg["ID"] ) );
+            if ($rI->EOF || is_null($rI->fields["DT_CONCLUSAO"]) ):
 
-        	        //INSERE NOTIFICAÇOES SE NÃO EXISTIR.
-        	        CONN::get()->Execute("
-        				INSERT INTO LOG_MENSAGEM ( ID_ORIGEM, TP, ID_CAD_USUARIO, EMAIL, DH_GERA )
-        				SELECT ?, 'M', cu.ID, ca.EMAIL, NOW()
-        				  FROM CON_ATIVOS ca
-        			INNER JOIN CAD_USUARIO cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
-        				 WHERE ca.ID_CAD_PESSOA = ?
-        				   AND NOT EXISTS (SELECT 1 FROM LOG_MENSAGEM WHERE ID_ORIGEM = ? AND TP = 'M' AND ID_CAD_USUARIO = cu.ID)
-        			", array( $fg["ID"], $fA["ID_CAD_PESSOA"], $fg["ID"] ) );
+                //INSERE NOTIFICAÇOES SE NÃO EXISTIR.
+                CONN::get()->Execute("
+              INSERT INTO LOG_MENSAGEM ( ID_ORIGEM, TP, ID_CAD_USUARIO, EMAIL, DH_GERA )
+              SELECT ?, 'M', cu.ID, ca.EMAIL, NOW()
+                FROM CON_ATIVOS ca
+            INNER JOIN CAD_USUARIO cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
+                WHERE ca.ID_CAD_PESSOA = ?
+                  AND NOT EXISTS (SELECT 1 FROM LOG_MENSAGEM WHERE ID_ORIGEM = ? AND TP = 'M' AND ID_CAD_USUARIO = cu.ID)
+            ", array( $fg["ID"], $fA["ID_CAD_PESSOA"], $fg["ID"] ) );
 
-					if (!empty($fA["EMAIL"]) && $fA["ID_CAD_PESSOA"] != $rDIR->fields["ID_DIRETOR"] ):
-						$message = new MESSAGE( array( "np" => $a[0], "nm" => $fg["DS_ITEM"], "sx" => $fA["SEXO"], "nd" => $nomeDiretor ) );
+        if (!empty($fA["EMAIL"]) && $fA["ID_CAD_PESSOA"] != $rDIR->fields["ID_DIRETOR"] ):
+          $message = new MESSAGE( array( "np" => $a[0], "nm" => $fg["DS_ITEM"], "sx" => $fA["SEXO"], "nd" => $nomeDiretor ) );
 
-            			$GLOBALS['mail']->ClearAllRecipients();
-        				$GLOBALS['mail']->AddAddress( $fA["EMAIL"] );
-        				$GLOBALS['mail']->Subject = utf8_decode(PATTERNS::getClubeDS( array("cl","nm") ) . " - Aviso de Conclusão");
-        				$GLOBALS['mail']->MsgHTML( $message->getConclusao() );
+              $mail->ClearAllRecipients();
+              $mail->AddAddress( $fA["EMAIL"] );
+              $mail->Subject = utf8_decode(PATTERNS::getClubeDS( array("cl","nm") ) . " - Aviso de Conclusão");
+              $mail->MsgHTML( $message->getConclusao() );
 
-        				if ( $GLOBALS['mail']->Send() ):
-        					$nrEnviados++;
-        					//ATUALIZA ENVIO
-        					CONN::get()->Execute("
-        						UPDATE LOG_MENSAGEM
-        						   SET DH_SEND = NOW()
-        						 WHERE ID = ?
-        						   AND TP = ?
-        					", array( $l1["ID"], "M" ) );
-        					echo "email mestrado enviado para ". $fA["EMAIL"]."<br/>";
-        				else:
-        					echo "email mestrado não enviado para ". $fA["EMAIL"]."<br/>";
-        				endif;
-        			endif;
-        	    endif;
-    		endif;
-    	endforeach;
+              if ( $mail->Send() ):
+                $nrEnviados++;
+                //ATUALIZA ENVIO
+                CONN::get()->Execute("
+                  UPDATE LOG_MENSAGEM
+                      SET DH_SEND = NOW()
+                    WHERE ID = ?
+                      AND TP = ?
+                ", array( $l1["ID"], "M" ) );
+                echo "email mestrado enviado para ". $fA["EMAIL"]."<br/>";
+              else:
+                echo "email mestrado não enviado para ". $fA["EMAIL"]."<br/>";
+              endif;
+            endif;
+            endif;
+      endif;
+    endforeach;
 	endforeach;
 
 //*******  SECRETARIA - INATIVACAO DE MEMBROS COM PENDENCIAS CADASTRAIS
-CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('EMAILS','01.02.03-nalisando membros com pendências cadastrais...')");
+CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('EMAILS','01.02.03-Analisando membros com pendências cadastrais...')");
 $res = CONN::get()->Execute("
 	SELECT m.ID
 	FROM CAD_MEMBRO m
@@ -248,12 +245,12 @@ if ($today["mon"] == 1 && $today["mday"] == 1):
 		$message = new MESSAGE( array( "np" => $a[0], "id" => $fA["IDADE_ANO"], "sx" => $fA["TP_SEXO"], "nd" => $nomeDiretor ) );
 		$bm = $message->getNewYear();
 
-		$GLOBALS['mail']->ClearAllRecipients();
-		$GLOBALS['mail']->AddAddress( $fA["EMAIL"] );
-		$GLOBALS['mail']->Subject = utf8_decode( $bm["sub"] );
-		$GLOBALS['mail']->MsgHTML( $bm["msg"] );
+		$mail->ClearAllRecipients();
+		$mail->AddAddress( $fA["EMAIL"] );
+		$mail->Subject = utf8_decode( $bm["sub"] );
+		$mail->MsgHTML( $bm["msg"] );
 
-		if ( $GLOBALS['mail']->Send() ):
+		if ( $mail->Send() ):
 			echo "feliz ano novo enviado para ". $fA["EMAIL"]."<br/>";
 		else:
 			echo "feliz ano novo não enviado para ". $fA["EMAIL"]."<br/>";
@@ -276,12 +273,12 @@ elseif ($today["mon"] == 12 && $today["mday"] == 25):
 		$message = new MESSAGE( array( "np" => $a[0], "id" => $fA["IDADE_ANO"], "sx" => $fA["TP_SEXO"], "nd" => $nomeDiretor ) );
 		$bm = $message->getXMas();
 
-		$GLOBALS['mail']->ClearAllRecipients();
-		$GLOBALS['mail']->AddAddress( $fA["EMAIL"] );
-		$GLOBALS['mail']->Subject = utf8_decode( $bm["sub"] );
-		$GLOBALS['mail']->MsgHTML( $bm["msg"] );
+		$mail->ClearAllRecipients();
+		$mail->AddAddress( $fA["EMAIL"] );
+		$mail->Subject = utf8_decode( $bm["sub"] );
+		$mail->MsgHTML( $bm["msg"] );
 
-		if ( $GLOBALS['mail']->Send() ):
+		if ( $mail->Send() ):
 			echo "feliz natal enviado para ". $fA["EMAIL"]."<br/>";
 		else:
 			echo "feliz natal não enviado para ". $fA["EMAIL"]."<br/>";
