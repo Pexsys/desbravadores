@@ -62,7 +62,7 @@ function getQueryByFilter( $parameters ) {
 						elseif ( $value == "2" ):
 							$where .= (!$prim ? " OR " : "") ."ccp.FG_ENTREGUE = 'S'";
 						elseif ( $value == "3" ):
-							$where .= (!$prim ? " OR " : "") ."ccp.FG_ENTREGUE = 'N'";
+							$where .= (!$prim ? " OR " : "") ."ccp.FG_COMPRA = 'S' AND ccp.FG_ENTREGUE = 'N'";
 						elseif ( $value == "4" ):
 							$where .= (!$prim ? " OR " : "") ."ccp.FG_PREVISAO = 'S'";
 						elseif ( $value == "5" ):
