@@ -17,7 +17,7 @@ require_once("../include/_metaheader.php");
 <link href="<?php echo PATTERNS::getVD();?>include/_core/css/bootstrap-toggle.min.css" rel="stylesheet" type="text/css"/>
 <link href="<?php echo PATTERNS::getVD();?>include/_core/css/bootstrap-touchspin.min.css" rel="stylesheet" type="text/css"/>
 <link href="<?php echo PATTERNS::getVD();?>include/_core/css/bootstrap-select.min.css" rel="stylesheet" type="text/css"/>
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
 <link href="<?php echo PATTERNS::getVD();?>include/_core/css/metisMenu.min.css" rel="stylesheet"/>
 <link href="<?php echo PATTERNS::getVD();?>include/_core/css/bootstrap-datetimepicker.min.css?<?php echo microtime();?>" rel="stylesheet"/>
 <link href="<?php echo PATTERNS::getVD();?>include/_core/css/timeline.css" rel="stylesheet"/>

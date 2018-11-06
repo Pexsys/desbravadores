@@ -56,8 +56,8 @@ function getDomainFilter( $parameters ) {
 	//VEGETARIANO
 	elseif ( $type == "V" ):
 		$domain = array(
-			array( "id" => "S", "ds" => "SIM", "icon" => "fas fa-thumbs-o-up" ),
-			array( "id" => "N", "ds" => "NÃO", "icon" => "fas fa-thumbs-o-down" )
+			array( "id" => "S", "ds" => "SIM", "icon" => "fas fa-thumbs-up" ),
+			array( "id" => "N", "ds" => "NÃO", "icon" => "fas fa-thumbs-down" )
 		);
 
 	//SITUACAO
@@ -148,8 +148,8 @@ function getDomainFilter( $parameters ) {
 	elseif ( $type == "B" ):
 		$y = date("Y");
 		$domain = array(
-			array( "id" => "S", "ds" => "SIM", "icon" => "fas fa-thumbs-o-up" ),
-			array( "id" => "N", "ds" => "NÃO", "icon" => "fas fa-thumbs-o-down" ),
+			array( "id" => "S", "ds" => "SIM", "icon" => "fas fa-thumbs-up" ),
+			array( "id" => "N", "ds" => "NÃO", "icon" => "fas fa-thumbs-down" ),
 			array( "id" => $y, "ds" => "EM ". $y, "icon" => "fas fa-pause" ),
 			array( "id" => ($y-1), "ds" => "EM ". ($y-1), "icon" => "fas fa-play" ),
 			array( "id" => ($y-2), "ds" => "EM ". ($y-2), "icon" => "fas fa-step-backward" ),
@@ -157,11 +157,19 @@ function getDomainFilter( $parameters ) {
 			array( "id" => "A". ($y-3), "ds" => "ANTES DE ". ($y-3), "icon" => "fas fa-fast-backward" )
 		);
 
+	//TIPO DE MENSAGEM
+	elseif ( $type == "TM" ):
+		$domain = array(
+			array( "id" => "O", "ds" => "OCORRÊNCIAS", "icon" => "fas fa-exclamation-triangle" ),
+			array( "id" => "M", "ds" => "MESTRADOS", "icon" => "fas fa-check-circle" ),
+			array( "id" => "C", "ds" => "COMUNICADOS", "icon" => "fas fa-bullhorn" )
+    );
+    
 	//TIPO DE OCORRENCIA
 	elseif ( $type == "TO" ):
 		$domain = array(
-			array( "id" => "P", "ds" => "POSITIVA", "icon" => "fas fa-thumbs-o-up" ),
-			array( "id" => "N", "ds" => "NEGATIVA", "icon" => "fas fa-thumbs-o-down" )
+			array( "id" => "P", "ds" => "POSITIVA", "icon" => "fas fa-thumbs-up" ),
+			array( "id" => "N", "ds" => "NEGATIVA", "icon" => "fas fa-thumbs-down" )
 		);
 
 	//UNIDADE

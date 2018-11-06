@@ -85,7 +85,7 @@
 										</div>
 										<div class="form-group col-xs-2">
 											<label for="tpOcor" class="control-label">Tipo</label>
-											<input type="checkbox" name="tpOcor" id="tpOcor" field="tp" value-on="P" value-off="N" data-toggle="toggle" data-onstyle="success" data-offstyle="danger" data-on="<i class='far fa-thumbs-up'></i>&nbsp;<b>POSITIVA</b>" data-off="<i class='far fa-thumbs-down'></i>&nbsp;NEGATIVA" data-size="small" data-width="120"/>
+											<input type="checkbox" name="tpOcor" id="tpOcor" field="tp" value-on="P" value-off="N" data-toggle="toggle" data-onstyle="success" data-offstyle="danger" data-on="<i class='fas fa-thumbs-up'></i>&nbsp;<b>POSITIVA</b>" data-off="<i class='fas fa-thumbs-down'></i>&nbsp;NEGATIVA" data-size="small" data-width="120"/>
 										</div>
 										<div class="form-group col-xs-2">
 											<label for="fgPend" class="control-label">Status</label>
