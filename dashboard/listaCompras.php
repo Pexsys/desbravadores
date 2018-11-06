@@ -237,7 +237,7 @@ function filtroDatasAvaliacao(){
 			<div class="modal-content">
 				<div class="modal-header">
 					<button aria-hidden="true" data-dismiss="modal" class="close" type="button" id="btnX">&times;</button>
-				</div>			
+				</div>
 				<div class="modal-body">
 					<div class="panel panel-warning" id="divOQue" style="display:none">
 						<div class="panel-heading" style="padding:4px 10px 0px">
@@ -266,7 +266,20 @@ function filtroDatasAvaliacao(){
 									<input type="text" name="cmpl" id="cmpl" field="cmpl" class="form-control input-sm" placeholder="Digite aqui.."/>
 								</div>
 							</div>
-						</div>	
+						</div>
+					</div>
+          <div class="panel panel-warning" id="divTipoMaterial" style="display:none">
+						<div class="panel-heading" style="padding:4px 10px 0px">
+							<label>Material</label>
+						</div>
+						<div class="panel-body" style="padding:4px 10px 0px">
+              <div class="row">
+								<div class="form-group col-xs-12">
+									<div class="well well-sm" style="padding:4px;margin-bottom:0px;font-size:11px"><b>Tipo</b></div>
+									<select field="tp" name="cmTipoMaterial" id="cmTipoMaterial" opt-value="id" opt-label="ds" class="selectpicker form-control input-sm"  multiple data-actions-box="true" data-live-search="true" data-selected-text-format="count" data-container="body" data-width="100%" title="(NENHUM)"></select>
+								</div>
+							</div>
+            </div>
 					</div>
 					<div class="panel panel-warning" id="divParaQuem" style="display:none">
 						<div class="panel-heading" style="padding:4px 10px 0px">
