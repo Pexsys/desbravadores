@@ -268,8 +268,10 @@ $(document).ready(function(){
 			}
 		});
 		
-		$('#divItem').visible(false);
-		$('#divOQue').visible(true);
+    $('#divItem').visible(false);
+    $('#divCmpl').visible(false);
+    $('#divOQue').visible(false);
+    $('#divTipoMaterial').visible(false);
 		$('#divParaQuem').visible(true);
 		$('#divDataQuando').visible(false);
 		jsLIB.resetForm( $('#cadListaForm') );
@@ -279,7 +281,7 @@ $(document).ready(function(){
 
 	$('#btnEntrega').click(function(){
 		var parameter = {
-			domains : [ "nomesEntrega" ]
+			domains : [ "tiposEntrega", "nomesEntrega" ]
 		};
 		jsLIB.ajaxCall({
 			async: false,
@@ -287,15 +289,19 @@ $(document).ready(function(){
 			url: jsLIB.rootDir+"rules/listaCompras.php",
 			data: { MethodName : 'getData', data : parameter },
 			success: function(data){
+				jsLIB.populateOptions( $("#cmTipoMaterial"), data.tipos );
 				jsLIB.populateOptions( $("#cmNome"), data.nomes );
 			}
 		});
 
-		$('#divItem').visible(false);
-		$('#divOQue').visible(false);
+    $('#divItem').visible(false);
+    $('#divCmpl').visible(false);
+    $('#divOQue').visible(false);
+    $('#divTipoMaterial').visible(true);
 		$('#divParaQuem').visible(true);
 		$('#divDataQuando').visible(true);
-		jsLIB.resetForm( $('#cadListaForm') );
+    jsLIB.resetForm( $('#cadListaForm') );
+    $("#cmTipoMaterial").selectpicker('selectAll');
 		$('[field=dt_quando]').val( new Date().toFormattedDate() );
 		$("#listaModal").attr('action','SET').modal();
 	});
@@ -340,8 +346,10 @@ $(document).ready(function(){
 					jsLIB.populateOptions( $("#cmItem"), data.itens );
 				}
 			});
-		}
-		$('#divItem').visible(visible);
+    }
+    $('#divMaterial').visible(false);
+    $('#divItem').visible(visible);
+    $('#divCmpl').visible(false);
 		$('#cmItem').change();
 	});
 	

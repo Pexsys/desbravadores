@@ -87,8 +87,8 @@ function getQueryByFilter( $parameters ) {
 		endforeach;
 	endif;
 
-//echo $where;
-//exit;
+  //echo $where;
+  //exit;
 
 	$query = "
 		SELECT DISTINCT
@@ -198,6 +198,25 @@ function getData( $parameters ) {
 				SELECT DISTINCT TP
 				  FROM TAB_MATERIAIS
 				 ORDER BY TP");
+			foreach ($result as $k => $fields):
+				$tp = $fields['TP'];
+				$arr["tipos"][] = array(
+					"id" => $tp,
+					"ds" => $tp
+				);
+			endforeach;
+    endif;
+    if ( $f == "tiposEntrega" ):
+			$arr["tipos"] = array();
+			$qtdZeros = zeroSizeID();
+			$result = CONN::get()->Execute("
+				SELECT DISTINCT TP
+				  FROM CON_COMPRAS
+				 WHERE FG_COMPRA = 'S'
+				   AND FG_ENTREGUE = 'N'
+				   AND FG_PREVISAO = 'N'
+			  ORDER BY TP
+			");
 			foreach ($result as $k => $fields):
 				$tp = $fields['TP'];
 				$arr["tipos"][] = array(
@@ -326,7 +345,8 @@ function addCompras( $parameters ) {
 			$result = CONN::get()->Execute("
 				SELECT *
 				FROM CON_COMPRAS
-				WHERE FG_COMPRA = 'S'
+        WHERE FG_COMPRA = 'S'
+        AND TP IN ('". implode("','", $frm["tp"]) ."')
 				AND FG_ENTREGUE = 'N'
 				AND ID_CAD_MEMBRO = ?
 			", array($cadMembroID) );
@@ -336,7 +356,14 @@ function addCompras( $parameters ) {
 		endforeach;
 	endif;
 
-	return array("result" => true);
+	return array("result" => true, "query" => "
+  SELECT *
+  FROM CON_COMPRAS
+  WHERE FG_COMPRA = 'S'
+  AND TP IN (". implode("','", $frm["tp"]) .")
+  AND FG_ENTREGUE = 'N'
+  AND ID_CAD_MEMBRO = ?
+");
 }
 
 function batchInsert($compras, $qtItens, $cmpl, $cadMembroID, $id){
