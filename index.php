@@ -3,7 +3,6 @@
 fHeaderPage( array( PATTERNS::getVD()."include/_core/css/index.css" )
 		   , array( PATTERNS::getVD()."js/index.js") );
 
-
 function nextEvents(){
 ?>
  <div class="col-md-4">
