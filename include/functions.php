@@ -84,7 +84,7 @@ function fHeaderPage( $aCssFiles = NULL, $aJsFiles = NULL ){
 <link href="<?php echo PATTERNS::getVD();?>include/_core/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css"/>
 <link href="<?php echo PATTERNS::getVD();?>include/_core/css/bootstrap-select.min.css" rel="stylesheet" type="text/css"/>
 <link href="<?php echo PATTERNS::getVD();?>include/_core/css/modern-business.css" rel="stylesheet" type="text/css"/>
-<link href="<?php echo PATTERNS::getVD();?>include/_core/font-awesome/css/fontawesome-all.min.css" rel="stylesheet" type="text/css"/>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
 <?php
 if (isset($aCssFiles)):
 	foreach ($aCssFiles as &$file):

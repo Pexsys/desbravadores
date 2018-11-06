@@ -25,12 +25,12 @@ $(document).ready(function(){
 				type	: "GET",
 				url	: jsLIB.rootDir+"rules/aprendizadoHist.php",
 				data	: function (d) {
-						d.MethodName = "getAprHist",
-						d.data = { 
-								 filtro: 'T',
-								 filters: jsFilter.jSON()
-							}
-					},
+          d.MethodName = "getAprHist",
+          d.data = { 
+                filtro: 'T',
+                filters: jsFilter.jSON()
+            }
+				},
 				dataSrc: "aprhist"
 			},
 			order: [ 1, 'asc' ],

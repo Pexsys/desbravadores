@@ -11,8 +11,6 @@ function fComunicado( $parameters ) {
 	endif;
 	$op = isset($parameters["op"]) ? $parameters["op"] : "";
 
-	
-
 	//LEITURA DE SAIDA.
 	//ATUALIZACAO DE SAIDA
 	if ( $op == "UPDATE" ):
@@ -117,7 +115,6 @@ function getComunicados( $parameters ){
 	
 	$arr = array();
 	
-	
 	if ($parameters["filter"] == "N"):
 		$result = CONN::get()->Execute("
 			SELECT cc.ID, cc.CD, cc.DH, cc.FG_PEND, lc.DH_READ
@@ -162,8 +159,6 @@ function fSetRead( $parameters ){
 	$usuarioID = $_SESSION['USER']['id'];
 	$usuarioCD = $_SESSION['USER']['cd_usuario'];
 	
-	
-	
 	//ATUALIZA USUARIO ATUAL
 	CONN::get()->Execute("
 		UPDATE LOG_MENSAGEM SET
@@ -190,5 +185,75 @@ function fSetRead( $parameters ){
 	", array($usuarioCD,$comunicadoID,"C"));
 	
 	return array( "result" => true );
+}
+
+function getQueryByFilter( $parameters ) {
+	$where = "";
+	$aWhere = array();
+	if ( isset($parameters["filters"]) ):
+		$keyAnt = "";
+		foreach ($parameters["filters"] as $key => $v):
+			$not = false;
+			if ( isset($parameters["filters"][$key]["fg"]) ):
+				$not = strtolower($parameters["filters"][$key]["fg"]) == "true";
+			endif;
+			$notStr = ( $not ? "NOT " : "" );
+			if ( $key == "TM" ):
+				$where .= " AND lm.TP ".$notStr."IN";
+			else:
+				$where .= " AND";
+			endif;
+
+			$prim = true;
+			$where .= " (";
+			if ( is_array( $parameters["filters"][$key]["vl"] ) ):
+				foreach ($parameters["filters"][$key]["vl"] as $value):
+					if ( empty($value) ):
+						$aWhere[] = "NULL";
+						$where .= (!$prim ? "," : "" )."?";
+					else:
+						$aWhere[] = $value;
+						$where .= (!$prim ? "," : "" )."?";
+					endif;
+					$prim = false;
+				endforeach;
+			else:
+				$aWhere[] = "$notStr"."NULL";
+				$where .= "?";
+			endif;
+			$where .= ")";
+		endforeach;
+	endif;	
+
+  //echo $where;
+  //exit;
+
+	if (!empty($where)):
+    $query = "
+        SELECT lm.TP, cu.DS_USUARIO, lm.EMAIL, lm.DH_GERA, lm.DH_SEND, lm.DH_READ
+          FROM LOG_MENSAGEM lm
+    INNER JOIN CAD_USUARIO cu ON (cu.ID = lm.ID_CAD_USUARIO)
+         WHERE YEAR(lm.DH_GERA) = YEAR(NOW()) $where";
+		return CONN::get()->Execute( $query, $aWhere );
+	endif;
+	return null;
+}
+
+function getMensagens( $parameters ) {
+  $arr = array();
+  $result = getQueryByFilter( $parameters );
+	if (!is_null($result)):
+		foreach ($result as $k => $fields):
+      $arr[] = array(
+        "tp" => $fields['TP'],
+        "usu" => $fields['DS_USUARIO'],
+        "dst" => $fields['EMAIL'],
+        "dhg" => is_null($fields['DH_GERA']) ? "" : strtotime($fields['DH_GERA']),
+        "dhe" => is_null($fields['DH_SEND']) ? "" : strtotime($fields['DH_SEND']),
+        "dhr" => is_null($fields['DH_READ']) ? "" : strtotime($fields['DH_READ'])
+      );
+		endforeach;
+	endif;
+	return array( "result" => true, "mensag" => $arr );
 }
 ?>

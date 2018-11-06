@@ -79,8 +79,8 @@ function getQueryByFilter( $parameters ) {
 		endforeach;
 	endif;	
 
-//echo $where;
-//exit;
+  //echo $where;
+  //exit;
 
 	if (!empty($where)):
 		$query = "
@@ -112,11 +112,9 @@ function getQueryByFilter( $parameters ) {
 
 function getAprHist( $parameters ) {
 	$arr = array();
-	
-	
 	$qtdZeros = zeroSizeID();
 
-	$result = getQueryByFilter($parameters);
+	$result = getQueryByFilter( $parameters );
 	if (!is_null($result)):
 		foreach ($result as $k => $fields):
 			$ds = ($fields['DS_ITEM']) . ($fields['TP_ITEM'] == "ES" ? " - ".$fields['CD_ITEM_INTERNO'] : "");
