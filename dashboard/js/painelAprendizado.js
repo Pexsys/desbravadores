@@ -26,7 +26,7 @@ $(document).ready(function(){
 function dashboard(id, fData){
     var duration = 1000;
     function segColor(c){ return {low:"#ff0000", mid:"#eeee00",alm:"#42e2f4",full:"#41ab5d"}[c]; }
-    function segLegend(c){ return {low:"Até 50%", mid:"Até 80%",alm:"Até 99%",full:"Concluídas"}[c]; }
+    function segLegend(c){ return {low:"Até 50%", mid:"Até 80%",alm:"> 80%",full:"Concluídas"}[c]; }
     
     // compute total for each state.
     fData.forEach(function(d){d.total=d.freq.low+d.freq.mid+d.freq.alm+d.freq.full;});
