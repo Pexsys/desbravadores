@@ -32,8 +32,7 @@ function getItemAlert( $arr, $tp, $icon, $title, $url ){
 	if (!$result->EOF):
 		$qt = $result->fields["QT"];
 		if ( $qt > 0 ):
-			$arr[] = array(
-				"html" => "<li>
+			$arr["html"] = "<li>
 					<a href=\"$url\">
 						<div>
 						<i class=\"$icon fa-fw\"></i>&nbsp;$title&nbsp;
@@ -41,9 +40,8 @@ function getItemAlert( $arr, $tp, $icon, $title, $url ){
 						<span class=\"text-muted pull-right\">". strftime("%d/%m/%Y",strtotime($result->fields["DT"])) ."</span>
 						</div>
 					</a>
-				</li>",
-				"qt" => $qt
-			);
+				</li>";
+			$arr["qt"] = $qt;
 		endif;
 	endif;
 	
