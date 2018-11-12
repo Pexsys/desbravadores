@@ -27,7 +27,7 @@ function sendOcorrenciaByID($ocorrenciaID, $nrEnviados){
 		if ( !$rs1->EOF ):
 			foreach($rs1 as $k1 => $l1):
 				$mail->ClearAllRecipients();
-				$mail->AddAddress( $l1["EMAIL"] );
+				$mail->AddAddress($l1["EMAIL"]);
 				$mail->MsgHTML($l["TXT"]);
 					
         if ( $mail->Send() ):
@@ -36,9 +36,9 @@ function sendOcorrenciaByID($ocorrenciaID, $nrEnviados){
 						UPDATE LOG_MENSAGEM
 						   SET DH_SEND = NOW()
 						 WHERE ID = ?
-					", array($ocorrenciaID) );
+					", array($l1["ID"]) );
 				else:
-					echo "email não enviado para ". $l1["EMAIL"];
+					echo "email não enviado para ". $l1["EMAIL"]."<br/>";
 				endif;
 			
 			endforeach;
