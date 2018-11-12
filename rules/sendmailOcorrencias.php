@@ -1,6 +1,6 @@
 <?php
 $mail = MAIL::get();
-function sendOcorrenciaByID($ocorrenciaID){
+function sendOcorrenciaByID($ocorrenciaID, $nrEnviados){
 	$rs = CONN::get()->Execute("
 			SELECT DISTINCT co.ID, co.CD, co.DH, co.TXT
 			  FROM LOG_MENSAGEM lc
@@ -8,7 +8,7 @@ function sendOcorrenciaByID($ocorrenciaID){
 			 WHERE co.ID = ?
  			   AND co.FG_PEND = 'N'
 			   AND lc.DH_SEND IS NULL
-			   AND lc.EMAIL IS NOT NULL			
+			   AND lc.EMAIL IS NOT NULL
 		  ORDER BY 1
 	", array($ocorrenciaID) );
 	if (!$rs->EOF):
@@ -23,28 +23,27 @@ function sendOcorrenciaByID($ocorrenciaID){
 			   AND ID_ORIGEM = ?
 			   AND TP = ?
 	      ORDER BY ID
-		", array($l["ID"], "O") );
-		
+		", array($ocorrenciaID, "O") );
 		if ( !$rs1->EOF ):
-			foreach($rs1 as $l1):
+			foreach($rs1 as $k1 => $l1):
 				$mail->ClearAllRecipients();
 				$mail->AddAddress( $l1["EMAIL"] );
 				$mail->MsgHTML($l["TXT"]);
 					
-				if ( $mail->Send() ):
-					$nrEnviados++;
+        if ( $mail->Send() ):
+          ++$nrEnviados;
 					CONN::get()->Execute("
 						UPDATE LOG_MENSAGEM
 						   SET DH_SEND = NOW()
 						 WHERE ID = ?
-						   AND TP = ?
-					", array($l1["ID"], "O") );
+					", array($ocorrenciaID) );
 				else:
 					echo "email não enviado para ". $l1["EMAIL"];
 				endif;
 			
 			endforeach;
 		endif;
-	endif;
+  endif;
+  return $nrEnviados;
 }
 ?>

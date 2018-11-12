@@ -186,7 +186,7 @@ if ($today["mon"] == 1 && $today["mday"] == 1):
 	$result = CONN::get()->Execute("
 		SELECT *
 		  FROM CAD_COMPRAS
-		 WHERE FG_PREVISAO = 'N'
+		 WHERE FG_ENTREGUE = 'N'
 	  ORDER BY ID_CAD_MEMBRO, ID_TAB_MATERIAIS, COMPL
 	");
 	CONN::get()->Execute("TRUNCATE CAD_COMPRAS");
