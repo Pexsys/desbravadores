@@ -296,8 +296,8 @@ $(document).ready(function(){
 
     $('#divItem').visible(false);
     $('#divCmpl').visible(false);
-    $('#divOQue').visible(true);
-    $('#divTipoMaterial').visible(false);
+    $('#divOQue').visible(false);
+    $('#divTipoMaterial').visible(true);
 		$('#divParaQuem').visible(true);
 		$('#divDataQuando').visible(true);
     jsLIB.resetForm( $('#cadListaForm') );
