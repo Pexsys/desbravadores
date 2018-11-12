@@ -229,7 +229,7 @@ function addFilter( $parameters ){
 	endif;
 
 	$str  = "<div class=\"input-group input-group-sm col-xs-12 col-md-12 col-sm-12 col-lg-12\" id=\"divFilter$value\" style=\"padding-bottom:10px\">";
-	$str .= (!empty($icon) ? "<i class=\"pull-left $icon\"></i> " : "" ) ."<label for=\"optFilter$value\" class=\"pull-left\">$label:&nbsp;</label>";
+	$str .= (!empty($icon) ? "<i class=\"pull-left $icon\"></i> " : "" ) ."&nbsp;<label for=\"optFilter$value\">$label:&nbsp;</label>";
 	$str .= "<span class=\"label label-danger pull-right\" style=\"cursor:pointer\" onclick=\"jsFilter.removeFilter(this);\" filter-value=\"$value\" filter-label=\"$label\" filter-icon=\"$icon\"><i class=\"glyphicon glyphicon-remove\"></i>&nbsp;Remover</span>";
 	if ( count($filter["domain"]) > 5):
 		$str .= "<span class=\"pull-right\"><input type=\"checkbox\" id=\"notFilter$value\">&nbsp;<label for=\"notFilter$value\">N&atilde;o</label>&nbsp;</span>";

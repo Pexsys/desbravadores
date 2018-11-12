@@ -199,7 +199,9 @@ function getQueryByFilter( $parameters ) {
 			endif;
 			$notStr = ( $not ? "NOT " : "" );
 			if ( $key == "TM" ):
-				$where .= " AND lm.TP ".$notStr."IN";
+        $where .= " AND lm.TP ".$notStr."IN";
+      elseif ( $key == "M" ):
+        $where .= " AND ap.TP_ITEM = 'ES' AND ap.CD_AREA_INTERNO = 'ME' AND ap.ID ".$notStr."IN";
 			else:
 				$where .= " AND";
 			endif;
@@ -233,6 +235,7 @@ function getQueryByFilter( $parameters ) {
         SELECT lm.TP, cu.DS_USUARIO, lm.EMAIL, lm.DH_GERA, lm.DH_SEND, lm.DH_READ
           FROM LOG_MENSAGEM lm
     INNER JOIN CAD_USUARIO cu ON (cu.ID = lm.ID_CAD_USUARIO)
+     LEFT JOIN TAB_APRENDIZADO ap ON (ap.id = lm.ID_ORIGEM)
          WHERE YEAR(lm.DH_GERA) = YEAR(NOW()) $where";
 		return CONN::get()->Execute( $query, $aWhere );
 	endif;
