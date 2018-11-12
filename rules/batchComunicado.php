@@ -25,7 +25,8 @@ foreach($rs as $k => $l):
 		   AND TP = ?
       ORDER BY ID
 	", array($l["ID"], "C") );
-	if ( !$rs1->EOF ):
+  if ( !$rs1->EOF ):
+    
 		$mail->ClearAllRecipients();
 		foreach($rs1 as $k1 => $l1):
 			//$mail->AddAddress();
@@ -34,7 +35,8 @@ foreach($rs as $k => $l):
 		endforeach;
 
 		$mail->MsgHTML($l["TXT"]);
-		$mail->Send();
+    $mail->Send();
+    
 		//ATUALIZA ENVIO
 		CONN::get()->Execute("
 			UPDATE LOG_MENSAGEM
@@ -45,7 +47,6 @@ foreach($rs as $k => $l):
 				AND TP = ?
 		", array( $l["ID"], "C") );
 	endif;
-	
 endforeach;
 CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('EMAILS','01.99-Comunicados enviados com sucesso ($nrEnviados)...')");
 
@@ -63,8 +64,7 @@ $rs = CONN::get()->Execute("
 	  ORDER BY 1
 ");
 foreach ($rs as $l):
-	sendOcorrenciaByID($l["ID"]);
-	$nrEnviados++;
+	$nrEnviados = sendOcorrenciaByID($l["ID"], $nrEnviados);
 endforeach;
 CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('EMAILS','01.99-Ocorrencias enviados com sucesso ($nrEnviados)...')");
 
