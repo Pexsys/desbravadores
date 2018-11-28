@@ -270,7 +270,7 @@ $(document).ready(function(){
 		
     $('#divItem').visible(false);
     $('#divCmpl').visible(false);
-    $('#divOQue').visible(false);
+    $('#divOQue').visible(true);
     $('#divTipoMaterial').visible(false);
 		$('#divParaQuem').visible(true);
 		$('#divDataQuando').visible(false);

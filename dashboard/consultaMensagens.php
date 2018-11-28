@@ -13,7 +13,8 @@
 			"filterTo" => "#msgDataTable",
 			"filters" => 
 				array( 
-					array( "id" => "TM", "ds" => "Tipo", "icon" => "fas fa-mail-bulk" ),
+          array( "id" => "TM", "ds" => "Tipo", "icon" => "fas fa-mail-bulk" ),
+          array( "id" => "M", "ds" => "Mestrado", "icon" => "fas fa-check-circle" )
 				)
 		) 
 	);?>
