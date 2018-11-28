@@ -254,7 +254,7 @@ class ESPCR extends TCPDF {
 				INNER JOIN TAB_CARGO tc ON (tc.CD = ca.CD_CARGO)
 				WHERE cm.ID = ?
 				AND ca.NR_ANO = ?
-            ", array($this->line['ID_CAD_PESSOA'],$f["YEAR_INDEX"]));
+            ", array($this->line['ID'],$f["YEAR_INDEX"]));
             
      		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 8);
     		$this->SetFillColor(0,0,0);
