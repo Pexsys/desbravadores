@@ -29,7 +29,8 @@
 					array( "id" => "U", "ds" => "Unidade", "icon" => "fas fa-universal-access" ),
 					array( "id" => "A", "ds" => "Áreas", "icon" => "fas fa-bookmark" ),
 					array( "id" => "E", "ds" => "Especialidade", "icon" => "fas fa-check-circle" ),
-					array( "id" => "M", "ds" => "Mestrado", "icon" => "fas fa-check-circle" )
+					array( "id" => "M", "ds" => "Mestrado", "icon" => "fas fa-check-circle" ),
+					array( "id" => "IN", "ds" => "Méritos", "icon" => "fas fa-award" )
 				)
 		) 
 	);?>
