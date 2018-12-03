@@ -208,6 +208,10 @@ function getDomainFilter( $parameters ) {
 	elseif ( $type == "A" ):
 		$domain = getDomainAreasEspecialidades();
 
+	//INSIGNIAS
+	elseif ( $type == "IN" ):
+		$domain = getDomainMerito();
+
 	endif;
 
 	return array( "result" => true, "domain" => $domain );
