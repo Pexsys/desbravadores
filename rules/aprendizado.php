@@ -31,7 +31,9 @@ function getQueryByFilter( $parameters ) {
 				$where .= " AND ap.TP_ITEM = 'ES' AND ap.CD_AREA_INTERNO <> 'ME' AND ap.ID ".$notStr."IN";
 			elseif ( $key == "M" ):
 				$where .= " AND ap.TP_ITEM = 'ES' AND ap.CD_AREA_INTERNO = 'ME' AND ap.ID ".$notStr."IN";
-			elseif ( $key == "A" ):
+      elseif ( $key == "IN" ):
+        $where .= " AND ap.TP_ITEM = 'MT' AND ap.CD_AREA_INTERNO = 'TEMPO' AND ap.ID ".$notStr."IN";
+        elseif ( $key == "A" ):
 				$where .= " AND ap.CD_AREA_INTERNO ".$notStr."IN";
 			else:
 				$where .= " AND";
@@ -94,8 +96,7 @@ function getQueryByFilter( $parameters ) {
 		endforeach;
 	endif;
 
-//echo $where;
-//exit;
+
 
 	$query = "
 		SELECT DISTINCT
@@ -110,7 +111,7 @@ function getQueryByFilter( $parameters ) {
 		FROM CON_ATIVOS ca
 		INNER JOIN APR_HISTORICO ah ON (ah.ID_CAD_PESSOA = ca.ID_CAD_PESSOA AND ah.DT_INVESTIDURA IS NULL)
 		INNER JOIN TAB_APRENDIZADO ap ON (ap.id = ah.id_tab_aprend)
-		INNER JOIN TAB_TP_APRENDIZADO ta ON (ta.id = ap.tp_item)
+		 LEFT JOIN TAB_TP_APRENDIZADO ta ON (ta.id = ap.tp_item)
 		 LEFT JOIN CON_COMPRAS cc ON (cc.ID_CAD_PESSOA = ah.ID_CAD_PESSOA AND cc.id_tab_aprend = ah.id_tab_aprend)
 		WHERE 1=1 $where
 	 ORDER BY ca.NM, ap.CD_ITEM_INTERNO, ah.DT_INICIO

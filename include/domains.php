@@ -210,6 +210,24 @@ function getDomainAreasEspecialidades(){
 	return $arr;
 }
 
+function getDomainMerito(){
+	$arr = array();
+	$result = CONN::get()->Execute("
+		SELECT ID, CD_ITEM_INTERNO, DS_ITEM
+		  FROM TAB_APRENDIZADO
+		 WHERE TP_ITEM = ?
+	  ORDER BY CD_ITEM_INTERNO", array( "MT" ) );
+    foreach ($result as $k => $f):
+		$arr[] = array(
+			"id" => $f["ID"], 
+			"ds" => $f["DS_ITEM"],
+			"sb" => $f['CD_ITEM_INTERNO'],
+			"icon" => $f['CD_ITEM_INTERNO'] == "ETS" ? "far fa-star" : "fas fa-award"
+		);
+	endforeach;
+	return $arr;
+}
+
 function getMesAniversario(){
 	$result = CONN::get()->Execute("
 		SELECT DISTINCT DATE_FORMAT(DT_NASC,'%m') AS MES

@@ -23,7 +23,8 @@
 					array( "id" => "T", "ds" => "Membros Ativos", "icon" => "fas fa-toggle-on" ),
 					array( "id" => "I", "ds" => "Membros Inativos", "icon" => "fas fa-toggle-off" ),
 					array( "id" => "E", "ds" => "Especialidade", "icon" => "fas fa-check-circle" ),
-					array( "id" => "M", "ds" => "Mestrado", "icon" => "fas fa-check-circle" )
+					array( "id" => "M", "ds" => "Mestrado", "icon" => "fas fa-check-circle" ),
+					array( "id" => "IN", "ds" => "Méritos", "icon" => "fas fa-award" )
 				)
 		) 
 	);?>
