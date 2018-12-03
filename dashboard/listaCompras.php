@@ -99,7 +99,8 @@ function filtroDatasAvaliacao(){
 								<div class="row">
 									<div class="form-group col-xs-12">
 										<select name="cmLista" id="cmLista" opt-value="cd" opt-label="ds" class="selectpicker form-control input-sm" data-container="body" data-width="100%">
-										    <option value=""></option>
+										  <option value=""></option>
+											<option value="geraListaTirasNome.php?">LISTA DE COMPRAS - TIRAS DE NOME</option>
 											<option value="geraListaComprasMaterial.php?" show="divMaterial">LISTA DE COMPRAS - POR TIPO DE MATERIAL</option>
 											<option value="geraListaComprasAlmArea.php?fc=N" show="divLista">LISTA DE COMPRAS - ALMOXARIFADO DA ASSOCIA&Ccedil;&Atilde;O - POR &Aacute;REA</option>
 											<option value="geraListaComprasAlmGaveta.php" show="divLista">LISTA DE COMPRAS - ALMOXARIFADO DA ASSOCIA&Ccedil;&Atilde;O - POR GAVETA</option>
