@@ -370,7 +370,7 @@ function batchInsert($compras, $qtItens, $cmpl, $cadMembroID, $id){
 	for ($qtd=1;$qtd<=$qtItens;$qtd++):
 		$cm = $cmpl;
 		if ($qtItens>1):
-			$cm = (is_null($cmpl) ? "" : $cmpl) ."$qtd/$qtItens";
+			$cm = (is_null($cmpl) ? "" : mb_strtoupper(trim($cmpl))) ."$qtd/$qtItens";
 		endif;
 		$compras->forceInsert(
 			array(

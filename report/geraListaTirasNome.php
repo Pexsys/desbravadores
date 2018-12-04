@@ -12,10 +12,12 @@ class LISTACOMPRASNOMES extends TCPDF {
 	private $lineAlt;
 	private $dsItemAtu;
 	private $dsNomeAnt;
-	private $seq;
 	private $titleColor;
 	private $widthColumn;
 	private $heightHeader;
+  private $fundoAtu;
+  private $fundoAnt;
+	private $sum;
 	
 	function __construct() {
 		parent::__construct(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
@@ -47,12 +49,12 @@ class LISTACOMPRASNOMES extends TCPDF {
 		$this->setImageScale(PDF_IMAGE_SCALE_RATIO);
 		$this->heightHeader = 25;
 		$this->SetMargins(5, $this->heightHeader, 5);
-		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 6);
+		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 8);
 		$this->SetAutoPageBreak(true, 10);
 		
-        $this->titleColor = "#33A0FF";
-        $this->dsNomeAnt = null;
-        $this->finalHTML = "";
+    $this->dsNomeAnt = null;
+    $this->sum = 0;
+    $this->finalHTML = "";
 		$this->lineAlt = false;
 	}
 
@@ -77,15 +79,8 @@ class LISTACOMPRASNOMES extends TCPDF {
 		$this->Cell(185, 9, "Listagem de Compras - Tiras de Nome", 0, false, 'C', false, false, true, false, 'T', 'M');
 		$this->setXY(20,15);
 		$this->SetTextColor(80,80,80);
-		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 9);
+		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 12);
 		$this->Cell(185, 5, PATTERNS::getCDS(), 0, false, 'C', false, false, false, false, false, false, 'T', 'M');
-	}
-	
-	private function getFundo($fundo){
-    if ( !is_null($fundo) && !empty($fundo) ):
-      return $fundo == "BR" ? "BRANCO" : "CAQUI";
-    endif;
-    return "";
 	}
 	
 	public function add($str){
@@ -94,14 +89,16 @@ class LISTACOMPRASNOMES extends TCPDF {
 	
 	public function writeGroupFooter(){
     if (!empty($this->finalHTML)):
-          $this->add("
-                  <tr>
-                      <td style=\"border-top:1px solid black;\">&nbsp;</td>
-                      <td style=\"border-top:1px solid black;\">&nbsp;</td>
-                      <td style=\"border-top:1px solid black;\">&nbsp;</td>
-                  </tr>
-              </table>
-          ");
+        $cb = $this->fundoAnt == "BRANCO" ? "#FFFFFF" : "#DFC38A";
+        $this->add("
+              <tr>
+                  <td colspan=\"2\" style=\"border:1px solid black;text-align:center;font-size:10px;font-weight:bold;color:#000000;background-color:$cb\">".$this->dsNomeAnt. ": ". $this->sum ."</td>
+              </tr>
+              <tr>
+                  <td colspan=\"2\">&nbsp;</td>
+              </tr>
+          </table>
+        ");
       endif;
 	}
 	
@@ -136,87 +133,59 @@ class LISTACOMPRASNOMES extends TCPDF {
 		endif;
         $this->lineAlt = false;
         $this->finalHTML = "";
+        $this->sum = 0;
 	}
 	
-	public function addGroupHeader(){
+	public function addGroupHeader($f){
         if ($this->dsItemAtu !== $this->dsNomeAnt):
             if (!is_null($this->dsNomeAnt)):
                 $this->writeGroupTable();
             endif;
-            $this->seq = 0;
+            $cb = $this->fundoAtu == "BRANCO" ? "#FFFFFF" : "#DFC38A";
             $this->add("
                 <table cellpadding=\"3\" border=\"0\" cellspacing=\"0\">
                     <tr>
-                        <td width=\"100%\" colspan=\"4\" style=\"border:1px solid black;font-size:12px;font-weight:bold;color:#FFFFFF;background-color:".$this->titleColor."\">". $this->dsItemAtu ."</td>
+                        <td width=\"100%\" colspan=\"2\" style=\"border:1px solid black;font-size:16px;text-align:center;font-weight:bold;color:#000000;background-color:$cb\">". $this->dsItemAtu ."</td>
                     </tr>
                     <tr>
-                        <td width=\"7%\" style=\"border-left:1px solid black;border-bottom:1px solid black;text-align:center;font-weight:bold;color:#000000;background-color:#C2C2C2\">Qtd.</td>
-                        <td width=\"23%\" style=\"border-left:1px solid black;border-bottom:1px solid black;color:#000000;font-weight:bold;background-color:#C2C2C2\">Bordar</td>
-                        <td width=\"63%\" style=\"border-left:1px solid black;border-bottom:1px solid black;color:#000000;font-weight:bold;background-color:#C2C2C2\">Nome</td>
-                        <td width=\"7%\" style=\"border-left:1px solid black;border-bottom:1px solid black;border-right:1px solid black;text-align:center;font-weight:bold;color:#000000;background-color:#C2C2C2\">Seq.</td>
+                        <td width=\"15%\" style=\"border-left:1px solid black;border-bottom:1px solid black;text-align:center;font-weight:bold;color:#000000;background-color:#C2C2C2\">Qtd.</td>
+                        <td width=\"85%\" style=\"border-left:1px solid black;border-bottom:1px solid black;color:#000000;border-right:1px solid black;font-weight:bold;background-color:#C2C2C2\">Bordar</td>
                     </tr>
             ");
             
             $this->dsNomeAnt = $this->dsItemAtu;
-        endif;	    
+            $this->fundoAnt = $this->fundoAtu;
+        endif;
 	}
 
 	private function descItem($f){
-		$fundo = $this->getFundo($f["FUNDO"]);
-	    if ($f["TP_ITEM"] == "ES"):
-	    	return $f["CD_ITEM_INTERNO"] ." - ". $f["DS_ITEM"];
-      else:
-        return ($f["TP"] ." DE ". $f["DS"]. ($f["CMPL"] == "S" && $f["FG_IM"] =="N" ? " - ".$f["DS_ITEM"] : "") . ( !empty($fundo) ? " - FUNDO $fundo" : "" ));
-      endif;
+    $this->fundoAtu = ($f["FUNDO"] == "BR") ? "BRANCO" : "CAQUI";
+    if ($f["TP_ITEM"] == "ES"):
+      return $f["CD_ITEM_INTERNO"] ." - ". $f["DS_ITEM"];
+    else:
+        return $f["TP"] ." DE ". $f["DS"]. ($f["CMPL"] == "S" && $f["FG_IM"] =="N" ? " - ".$f["DS_ITEM"] : "") . " - FUNDO ".$this->fundoAtu;
+    endif;
 	}
 	
 	public function addTableDetail($f){
-        $color = "#ffffff";
+    $color = "#ffffff";
 		if ($this->lineAlt):
 			$color = "#f0f0f0";
 		endif;
 	    $this->add("
             <tr>
-                <td style=\"border-left:1px solid black;text-align:center;color:#000000;background-color:$color\">".$f["QT_ITENS"]."</td>
-                <td style=\"border-left:1px solid black;color:#000000;background-color:$color\">".$f["CM"]."</td>
-                <td style=\"border-left:1px solid black;text-align:right;color:#000000;background-color:$color\">".$f["NM"]."</td>
-                <td style=\"border-left:1px solid black;border-right:1px solid black;text-align:center;color:#000000;background-color:$color\">".(++$this->seq)."</td>
+                <td style=\"border-left:1px solid black;font-size:14px;text-align:center;color:#000000;background-color:$color\">".$f["QT_ITENS"]."</td>
+                <td style=\"border-left:1px solid black;border-right:1px solid black;font-size:14px;color:#000000;background-color:$color\">".$f["CM"]."</td>
             </tr>	        
 	    ");
-	    $this->lineAlt = !$this->lineAlt;	    
+	    $this->sum += $f["QT_ITENS"];
+	    $this->lineAlt = !$this->lineAlt;
 	}
 
 	public function addLine($f){
-	    $this->dsItemAtu = $this->descItem($f);
-      $this->addGroupHeader();
-      $this->addTableDetail($f);
-	}
-
-	public function addLineSum($f){
-		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 8);
-		$this->setCellPaddings(1,1,1,1);
-		if ($this->lineAlt):
-			$this->SetFillColor(240,240,240);
-		else:
-			$this->SetFillColor(255,255,255);
-		endif;
-		$this->setXY(5, $this->posY);
-		$this->Cell(165, 6, $this->descItem($f), 0, false, 'L', true, false, 1);
-		$this->setX(170);
-		$this->Cell(35, 6, $f["QT_ITENS"], 0, false, 'C', true, false, 1);
-		$this->posY+=6;
-		$this->lineAlt = !$this->lineAlt;
-	}
-
-	public function addLineTotGrp($tp, $sum){
-		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 9);
-		$this->SetTextColor(255,255,255);
-		$this->SetFillColor(127,163,195);
-		$this->setCellPaddings(1,0,1,0);
-		$this->setXY(5, $this->posY);
-		$this->Cell(200, 6, "Quantidade [ $tp ]: $sum", 0, false, 'C', true);
-		$this->posY+=8;
-		$this->SetTextColor(0,0,0);
+	  $this->dsItemAtu = $this->descItem($f);
+    $this->addGroupHeader($f);
+    $this->addTableDetail($f);
 	}
 	
 	public function newPage($col=true) {
@@ -249,74 +218,24 @@ class LISTACOMPRASNOMES extends TCPDF {
 	}
 }
 
-function linhaGrupo($pdf,$ant,$sum){
-	if (!empty($ant)):
-		$pdf->startTransaction();
-		$start_page = $pdf->getPage();
-		$pdf->addLineTotGrp($ant, $sum);
-		if  ($pdf->getNumPages() != $start_page):
-			$pdf->rollbackTransaction(true);
-			$pdf->newPage(false);
-			$pdf->addLineTotGrp($ant, $sum);
-		else:
-			$pdf->commitTransaction();
-		endif;
-	endif;
-}
-
 $pdf = new LISTACOMPRASNOMES();
 $pdf->newPage();
 
 //QUERY DETALHE
 $result = CONN::get()->Execute("
-    SELECT cc.NM, cc.TP_ITEM, cc.CD, cc.DS_ITEM, cc.TP, cc.DS, cc.FUNDO, cc.FG_IM, cc.CD_AREA_INTERNO, cc.CD_ITEM_INTERNO, cc.CM, COUNT(*) AS QT_ITENS
+    SELECT cc.CM, cc.TP_ITEM, cc.CD, cc.DS_ITEM, cc.TP, cc.DS, cc.FUNDO, cc.FG_IM, cc.CD_AREA_INTERNO, cc.CD_ITEM_INTERNO, COUNT(*) AS QT_ITENS
     FROM CON_COMPRAS cc
     WHERE cc.FG_COMPRA = 'N'
       AND cc.FG_ENTREGUE = 'N'
 	  AND cc.FG_PREVISAO = 'N'
 	  AND cc.CD LIKE '05-05%'
-    GROUP BY cc.NM, cc.TP_ITEM, cc.CD, cc.DS_ITEM, cc.TP, cc.DS, cc.FUNDO, cc.FG_IM, cc.CD_AREA_INTERNO, cc.CD_ITEM_INTERNO, cc.CM
+    GROUP BY cc.CM, cc.TP_ITEM, cc.CD, cc.DS_ITEM, cc.TP, cc.DS, cc.FUNDO, cc.FG_IM, cc.CD_AREA_INTERNO, cc.CD_ITEM_INTERNO
     ORDER BY 3, 2, 9, 1, 4
 ");
 foreach ( $result as $ra => $f ):
 	$pdf->addLine($f);
 endforeach;
 $pdf->writeGroupTable();
-
-//QUERY RESUMO
-$pdf->newPage(false);
-$result = CONN::get()->Execute("
-	SELECT cc.TP_ITEM, cc.CD, cc.DS_ITEM, cc.TP, cc.DS, cc.FUNDO, cc.FG_IM, cc.CD_AREA_INTERNO, cc.CD_ITEM_INTERNO, COUNT(*) AS QT_ITENS
-    FROM CON_COMPRAS cc
-    WHERE cc.FG_COMPRA = 'N'
-      AND cc.FG_ENTREGUE = 'N'
-	  AND cc.FG_PREVISAO = 'N'
-	  AND cc.CD LIKE '05-05%'
-    GROUP BY cc.TP_ITEM, cc.CD, cc.DS_ITEM, cc.TP, cc.DS, cc.FUNDO, cc.FG_IM, cc.CD_AREA_INTERNO, cc.CD_ITEM_INTERNO
-    ORDER BY 2, 8, 1, 3
-");
-$ant = "";
-$sum = 0;
-
-foreach ( $result as $ra => $f ):
-	if ($ant != $f["TP"]):
-		linhaGrupo($pdf,$ant,$sum);
-		$sum = 0;
-		$ant = $f["TP"];
-	endif;
-	$pdf->startTransaction();
-	$start_page = $pdf->getPage();
-	$pdf->addLineSum($f);
-	if  ($pdf->getNumPages() != $start_page):
-		$pdf->rollbackTransaction(true);
-		$pdf->newPage(false);
-		$pdf->addLineSum($f);
-	else:
-		$pdf->commitTransaction();
-	endif;
-	$sum += $f["QT_ITENS"];
-endforeach;
-linhaGrupo($pdf,$ant,$sum);
 $pdf->download();
 exit;
 ?>
