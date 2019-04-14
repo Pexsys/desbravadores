@@ -87,8 +87,8 @@ function getQueryByFilter( $parameters ) {
 		endforeach;
 	endif;
 
-  //echo $where;
-  //exit;
+  // echo $where;
+  // exit;
 
 	$query = "
 		SELECT DISTINCT
@@ -97,7 +97,8 @@ function getQueryByFilter( $parameters ) {
 			ccp.TP AS TP_INCL,
 			ccp.FG_COMPRA,
 			ccp.FG_ENTREGUE,
-			ccp.FG_PREVISAO,
+      ccp.FG_PREVISAO,
+      tm.CD,
 			tm.TP,
 			tm.DS,
 			tm.FUNDO,
@@ -112,14 +113,14 @@ function getQueryByFilter( $parameters ) {
 		 LEFT JOIN TAB_APRENDIZADO ap ON (ap.id = tm.id_tab_aprend)
 		WHERE 1=1 $where
 	 ORDER BY ca.NM, tm.CD, ccp.COMPL
-	";
+  ";
 
 	return CONN::get()->Execute( $query, $aWhere );
 }
 
 function getLista( $parameters ) {
 	$arr = array();
-	$result = getQueryByFilter( $parameters );
+  $result = getQueryByFilter( $parameters );
 
 	foreach ($result as $k => $fields):
 		$ds = $fields['TP'] ." DE ". $fields['DS'];
