@@ -74,8 +74,58 @@ $(document).ready(function(){
 				$(nRow.cells[3]).css('color', aData.ccg ).css('font-weight', 'bold');
 				$(nRow.cells[4]).css('color', aData.cc ).css('font-weight', 'bold');
 			}
+   }
+  }).order( [ 5, 'desc' ], [ 1, 'asc' ], [ 3, 'asc' ] );
+  
+  $('#comDataTable tbody').on('click', 'tr', function () {
+		rowSelected = this;
+		populateUnidade( comDataTable.row( rowSelected ).data().id );
+  });
 
-        	}
-	}).order( [ 5, 'desc' ], [ 1, 'asc' ], [ 3, 'asc' ] );
+  $("#cadComForm")
+		.on('err.field.fv', function(e, data) {
+			$('#btnGravar').visible(false);
+		})
+		.submit( function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+		})
+	;
+  
+  $("#nrIdade").TouchSpin({
+		verticalbuttons: true,
+		verticalupclass: 'glyphicon glyphicon-plus',
+		verticaldownclass: 'glyphicon glyphicon-minus'
+	});
 
 });
+
+$('#btnGravar').click(function(){
+  var parameter = {
+		op: "UPDATE",
+		frm: jsLIB.getJSONFields( $('#cadComForm') )
+	};
+	jsLIB.ajaxCall({
+		waiting : true,
+		url: jsLIB.rootDir+"rules/tabelas.php",
+		data: { MethodName : 'fUnidade', data : parameter },
+		success: function(tb){
+      comDataTable.ajax.reload();
+      $("#comModal").modal('hide');
+		}
+	});
+});
+
+function populateUnidade( id ) {
+	jsLIB.ajaxCall({
+		waiting : true,
+		type: "GET",
+		url: jsLIB.rootDir+"rules/tabelas.php",
+		data: { MethodName : 'fUnidade', data : { id } },
+		success: function(tb){
+      if (tb.unidade.fg_edit !== 'S') return
+      jsLIB.populateForm( $("#cadComForm"), tb.unidade );
+      $("#comModal").modal(); 
+		}
+	});
+}

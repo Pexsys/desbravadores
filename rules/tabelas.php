@@ -67,6 +67,54 @@ function getUnidades(){
 	return array( "result" => true, "source" => $arr );
 }
 
+function fUnidade( $parameters ) {
+	$out = array();
+	$frm = null;
+
+	if ( isset($parameters["frm"]) ):
+		$frm = $parameters["frm"];
+	endif;
+	$op = isset($parameters["op"]) ? $parameters["op"] : "";
+
+	//LEITURA DE SAIDA.
+	//ATUALIZACAO DE SAIDA
+	if ( $op == "UPDATE" ):
+		$id = $frm["id"];
+		
+		$arr = array();
+		//INSERT DE NOVO COMUNICADO
+		if ( !is_null($id) && is_numeric($id) ):
+			$arr = array(
+				fReturnStringNull($frm["idade"]),
+				fReturnStringNull($frm["fg_ativa"]),
+				$id
+			);
+			CONN::get()->Execute("
+				UPDATE TAB_UNIDADE SET
+					IDADE = ?,
+					FG_ATIVA = ?
+				WHERE ID = ?
+			",$arr);
+		endif;
+		$out["success"] = true;
+
+	//GET UNIDADE
+	else:
+    $result = CONN::get()->Execute("SELECT * FROM TAB_UNIDADE WHERE ID = ?", array( $parameters["id"] ) );
+    if (!$result->EOF):
+      $out["success"] = true;
+      $out["unidade"] = array(
+        "id" => $result->fields['ID'],
+        "ds" => $result->fields['DS'],
+        "idade" => $result->fields['IDADE'],
+        "fg_edit" => $result->fields['FG_EDIT'],
+        "fg_ativa" => $result->fields['FG_ATIVA']
+      );
+    endif;
+	endif;
+	return $out;
+}
+
 function getUFs(){
 	$arr = array();
 	
