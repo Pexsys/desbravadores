@@ -5,7 +5,7 @@ class CONNECTION_FACTORY {
 
 	public function __construct(){
 		if (!isset(self::$connection)) {
-			$config = parse_ini_file(__DIR__ ."/../dbconnect/{$_SERVER["HTTP_X_USERNAME"]}_{$_SERVER["SERVER_NAME"]}.ini");
+			$config = parse_ini_file(__DIR__ ."/../dbconnect/_{$_SERVER["SERVER_NAME"]}.ini");
 			self::$connection = ADONewConnection($config['Type']);
 			self::$connection->SetCharSet('utf8');
 			self::$connection->Connect($config['Host'],$config['User'],$config['Password'],$config['Database']);
