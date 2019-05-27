@@ -25,17 +25,17 @@ function events( $parameters ) {
 		$query .= " WHERE e.ID_EVENTO = ?";
 		$aBind = array($parameters["id"]);
 	else:
-		$query .= " WHERE e.DTHORA_EVENTO_INI >= ?
-			     AND e.DTHORA_EVENTO_FIM <= ?
+		$query .= " WHERE (e.DTHORA_EVENTO_INI >= ? AND e.DTHORA_EVENTO_FIM <= ?) 
+			     OR (e.DTHORA_EVENTO_INI >= ? AND e.DTHORA_EVENTO_FIM < ?)
 			ORDER BY e.DTHORA_EVENTO_INI ";
-		$aBind = array( $parameters["from"], $parameters["to"] );
+		$aBind = array( $parameters["from"], $parameters["to"], $parameters["from"], $parameters["from"] );
 	endif;
 	$result = CONN::get()->Execute( $query, $aBind );
 	
 	while (!$result->EOF):
 	
 		$dh_ini = $result->fields['DTHORA_EVENTO_INI'];
-		$dh_fim = $result->fields['DTHORA_EVENTO_FIM'];
+		$dh_fim = ($result->fields['DTHORA_EVENTO_FIM'] < $result->fields['DTHORA_EVENTO_INI'] ? $result->fields['DTHORA_EVENTO_INI'] : $result->fields['DTHORA_EVENTO_FIM']);
 	
 		$dt_hora_eve = fDtHoraEvento( $dh_ini, $dh_fim, "%d/%m" );
 		
@@ -95,8 +95,6 @@ function fEvent( $parameters ) {
 	$out = array();
 	$out["success"] = false;
 
-	
-
 	$frm = $parameters["frm"];
 	$op = $parameters["op"];
 	$id = 0;
@@ -104,6 +102,11 @@ function fEvent( $parameters ) {
 	//LEITURA DE EVENTO.
 	//ATUALIZACAO DE EVENTO
 	if ( $op == "UPDATE" ):
+	    $dh_ini = fStrToDate($frm["dh_ini"]);
+		$dh_fim = fStrToDate($frm["dh_fim"]);
+		if ($dh_fim < $dh_ini):
+		    $dh_fim = $dh_ini;
+		endif;
 		
 		$arr = array();
 		//INSERT DE NOVO EVENTO
@@ -126,8 +129,8 @@ function fEvent( $parameters ) {
 				FLAG_PUBLICACAO = ?
 			WHERE ID_EVENTO = ? ";
 			$arr = array(
-				fStrToDate($frm["dh_ini"]),
-				fStrToDate($frm["dh_fim"]),
+				$dh_ini,
+				$dh_fim,
 				fReturnStringNull($frm["ds_local"]),
 				fReturnStringNull($frm["ds_logra"]),
 				fReturnStringNull($frm["nr_logra"]),
@@ -162,8 +165,8 @@ function fEvent( $parameters ) {
 			) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 			$arr = array(
-				fStrToDate($frm["dh_ini"]),
-				fStrToDate($frm["dh_fim"]),
+				$dh_ini,
+				$dh_fim,
 				fReturnStringNull($frm["ds_local"]),
 				fReturnStringNull($frm["ds_logra"]),
 				fReturnStringNull($frm["nr_logra"]),

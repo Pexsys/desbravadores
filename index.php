@@ -16,8 +16,8 @@ function nextEvents(){
 				    FROM CAD_EVENTOS e
 			       LEFT JOIN RGR_CHAMADA c ON (c.ID_EVENTO = e.ID_EVENTO)
 			       LEFT JOIN TAB_TP_UNIFORME t ON (t.ID = c.ID_TAB_TP_UNIFORME)
-				   WHERE e.FLAG_PUBLICACAO = 'S' AND
-					( e.DTHORA_EVENTO_INI >= ? OR ( e.DTHORA_EVENTO_FIM IS NOT NULL AND e.DTHORA_EVENTO_FIM >= ? ) )
+				   WHERE e.FLAG_PUBLICACAO = 'S' 
+             AND ( e.DTHORA_EVENTO_INI >= ? OR ( e.DTHORA_EVENTO_FIM IS NOT NULL AND e.DTHORA_EVENTO_FIM >= ? ) )
 				ORDER BY e.DTHORA_EVENTO_INI 
 				   LIMIT 0, 3 ";
 			$result = CONN::get()->Execute( $query, Array( $DATA_NOW, $DATA_NOW ) );
