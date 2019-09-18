@@ -36,7 +36,7 @@ function sendOcorrenciaByID($ocorrenciaID, $nrEnviados){
 						UPDATE LOG_MENSAGEM
 						   SET DH_SEND = NOW()
 						 WHERE ID = ?
-					", array($l1["ID"]) );
+					", array($ocorrenciaID) );
 				else:
 					echo "email não enviado para ". $l1["EMAIL"]."<br/>";
 				endif;
