@@ -172,8 +172,8 @@ $query = "
 			cp.LOGRADOURO, cp.NR_LOGR, cp.COMPLEMENTO, cp.BAIRRO, cp.CIDADE, cp.UF, cp.CEP,
 			ta.CD_COR_GENERO
 	   FROM CON_PESSOA cp
-  LEFT JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = cp.ID_CAD_PESSOA)
-  LEFT JOIN TAB_UNIDADE ta ON (ta.ID = ca.ID_UNIDADE)
+  INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = cp.ID_CAD_PESSOA)
+  INNER JOIN TAB_UNIDADE ta ON (ta.ID = ca.ID_UNIDADE)
 	  WHERE ";
 if ($pdf->tipoBatismo == "S"):
 	$query .= "cp.DT_BAT IS NOT NULL";
