@@ -178,7 +178,7 @@ class LISTACOMPRASALM extends TCPDF {
             <tr>
                 <td style=\"border-left:1px solid black;text-align:center;color:#000000;background-color:$color\">".$f["QT_ITENS"]."</td>
                 <td style=\"border-left:1px solid black;color:#000000;background-color:$color\">$desc</td>
-                <td style=\"border-left:1px solid black;border-right:1px solid black;text-align:center;color:#000000;background-color:$color\">".$f["NR_GAVETA_APS"]."</td>
+                <td style=\"border-left:1px solid black;border-right:1px solid black;text-align:center;color:#000000;background-color:$color\">".$f["NR_GAVETA_ALM"]."</td>
             </tr>	        
 	    ");
 	    $this->lineAlt = !$this->lineAlt;	    
@@ -222,13 +222,13 @@ $pdf->newPage();
 $pdf->SetTitle($pdf->reportTitle);
 $result = CONN::get()->Execute("
 	SELECT * FROM (
-		SELECT cp.ID_TAB_MATERIAIS, cp.TP_GRP, cp.DS_GRP, cp.CD_ITEM_INTERNO, cp.CD_AREA_INTERNO, ta.DS_ITEM AS DS_GRP_ESP, cp.NR_GAVETA_APS, cp.TP_ITEM, cp.DS, cp.DS_ITEM, cp.FUNDO, (COUNT(*)-cp.QT_EST) AS QT_ITENS
+		SELECT cp.ID_TAB_MATERIAIS, cp.TP_GRP, cp.DS_GRP, cp.CD_ITEM_INTERNO, cp.CD_AREA_INTERNO, ta.DS_ITEM AS DS_GRP_ESP, cp.NR_GAVETA_ALM, cp.TP_ITEM, cp.DS, cp.DS_ITEM, cp.FUNDO, (COUNT(*)-cp.QT_EST) AS QT_ITENS
 		 FROM CON_COMPRAS cp
 	LEFT JOIN TAB_APRENDIZADO ta ON (ta.CD_AREA_INTERNO = cp.CD_AREA_INTERNO AND ta.CD_ITEM_INTERNO IS NULL)
 		WHERE cp.FG_ALMOX = 'S'
 		  AND cp.FG_COMPRA = ?
 		". ($tpPrevisao == "T" || $fgCompra == "S" ? "" : ($tpPrevisao == "P" ? " AND cp.FG_PREVISAO = 'S'" : " AND cp.FG_PREVISAO = 'N'" ) ) ."
-		GROUP BY cp.TP_GRP, cp.DS_GRP, cp.CD_ITEM_INTERNO, cp.CD_AREA_INTERNO, ta.DS_ITEM, cp.NR_GAVETA_APS, cp.TP_ITEM, cp.DS, cp.DS_ITEM, cp.FUNDO
+		GROUP BY cp.TP_GRP, cp.DS_GRP, cp.CD_ITEM_INTERNO, cp.CD_AREA_INTERNO, ta.DS_ITEM, cp.NR_GAVETA_ALM, cp.TP_ITEM, cp.DS, cp.DS_ITEM, cp.FUNDO
 		) X WHERE X.QT_ITENS > 0
 	
 	GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
