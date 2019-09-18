@@ -184,7 +184,7 @@ class LISTACOMPRASALM extends TCPDF {
 	}
 
 	public function addLine($f){
-	    $this->getGaveta($f["NR_GAVETA_APS"]);
+	    $this->getGaveta($f["NR_GAVETA_ALM"]);
         $this->addGroupHeader();
         $this->addTableDetail($f);
 	}
@@ -216,25 +216,25 @@ $pdf->newPage();
 $result = CONN::get()->Execute("
 	
 	SELECT * FROM (
-		SELECT cc.NR_GAVETA_APS, cc.TP_ITEM, cc.TP, cc.DS, cc.DS_ITEM, cc.FUNDO, cc.CMPL, cc.FG_IM, (COUNT(*)-QT_EST) AS QT_ITENS
+		SELECT cc.NR_GAVETA_ALM, cc.TP_ITEM, cc.TP, cc.DS, cc.DS_ITEM, cc.FUNDO, cc.CMPL, cc.FG_IM, (COUNT(*)-QT_EST) AS QT_ITENS
 		 FROM CON_COMPRAS cc
 		WHERE cc.FG_ALMOX = 'S'
 		  AND cc.FG_COMPRA = 'N'
 		  ". ($tpPrevisao == "T" ? "" : ($tpPrevisao == "P" ? " AND cc.FG_PREVISAO = 'S'" : " AND cc.FG_PREVISAO = 'N'" ) ) ."
-		GROUP BY cc.NR_GAVETA_APS, cc.TP_ITEM, cc.TP, cc.DS, cc.DS_ITEM, cc.FUNDO, cc.CMPL, cc.FG_IM
+		GROUP BY cc.NR_GAVETA_ALM, cc.TP_ITEM, cc.TP, cc.DS, cc.DS_ITEM, cc.FUNDO, cc.CMPL, cc.FG_IM
 		) X WHERE X.QT_ITENS > 0
 		
 	UNION ALL
 	
-	SELECT 9999 AS NR_GAVETA_APS, NULL AS TP_ITEM, TP_GRP AS TP, DS_GRP AS DS, NULL AS DS_ITEM, NULL AS FUNDO, NULL AS CMPL, NULL AS FG_IM, SUM(QT_ITENS) AS QT_ITENS
+	SELECT 9999 AS NR_GAVETA_ALM, NULL AS TP_ITEM, TP_GRP AS TP, DS_GRP AS DS, NULL AS DS_ITEM, NULL AS FUNDO, NULL AS CMPL, NULL AS FG_IM, SUM(QT_ITENS) AS QT_ITENS
 	FROM (
 		SELECT * FROM (
-			SELECT cc.NR_GAVETA_APS, cc.TP_ITEM, cc.TP_GRP, cc.DS_GRP, cc.DS_ITEM, cc.FUNDO, cc.CMPL, cc.FG_IM, (COUNT(*)-QT_EST) AS QT_ITENS
+			SELECT cc.NR_GAVETA_ALM, cc.TP_ITEM, cc.TP_GRP, cc.DS_GRP, cc.DS_ITEM, cc.FUNDO, cc.CMPL, cc.FG_IM, (COUNT(*)-QT_EST) AS QT_ITENS
 			 FROM CON_COMPRAS cc
 			WHERE cc.FG_ALMOX = 'S'
 			  AND cc.FG_COMPRA = 'N'
 			  ". ($tpPrevisao == "T" ? "" : ($tpPrevisao == "P" ? " AND cc.FG_PREVISAO = 'S'" : " AND cc.FG_PREVISAO = 'N'" ) ) ."
-			GROUP BY cc.NR_GAVETA_APS, cc.TP_ITEM, cc.TP, cc.DS, cc.DS_ITEM, cc.FUNDO, cc.CMPL, cc.FG_IM
+			GROUP BY cc.NR_GAVETA_ALM, cc.TP_ITEM, cc.TP, cc.DS, cc.DS_ITEM, cc.FUNDO, cc.CMPL, cc.FG_IM
 			) X WHERE X.QT_ITENS > 0
 		) Y 
 	GROUP BY 1, 2, 3, 4, 5, 6
