@@ -26,7 +26,7 @@ function login( $parameters ) {
 					);
 
 		
-    $result = checkUser($usr, $pag);
+		$result = checkUser($usr, $pag);
 
 		//SE NAO ENCONTROU E O CODIGO TEM OS CARACTERES MINIMOS PARA USUARIO DO CLUBE
 		if ($result->EOF && $usrClube):
@@ -76,15 +76,15 @@ function login( $parameters ) {
 		
 				$resp = verificaRespByCPF($usr);
 				if ( !is_null($resp) && existeMenorByRespID($resp["ID_CAD_PESSOA"]) ):
-          $psw = sha1(str_replace("-","",str_replace(".","",$usr)));
-          
-          fInsertUser( $usr, $resp["NM"], $psw, $resp["ID_CAD_PESSOA"] );
+					$psw = sha1(str_replace("-","",str_replace(".","",$usr)));
+					
+					fInsertUser( $usr, $resp["NM"], $psw, $resp["ID_CAD_PESSOA"] );
 
 					PROFILE::apply(
 						$resp["ID_CAD_PESSOA"],
 						array( "respLeg" => true ) 
 					);
-					
+
 					return login( array(
 						"page"		=> $pag,
 						"username"	=> $usr,

@@ -690,7 +690,7 @@ function array_msort($array, $cols){
 
 function titleCase($string,
 			$delimiters = array(" ", "-", ".", "'", "O'", "Mc"),
-			$exceptions = array("a", "e", "da", "de", "do", "na", "no", "em", "das", "dos", "ao", "aos", "com", "I", "II", "III", "IV", "V", "VI") ){
+			$exceptions = array("a", "e", "da", "de", "do", "na", "no", "em", "das", "dos", "ao", "aos", "com", "OU", "GPS", "COU", "APS", "P", "PP", "G", "GG", "M", "GGX", "3G", "I", "II", "III", "IV", "V", "VI") ){
 	$string = mb_convert_case(($string), MB_CASE_TITLE, "UTF-8");
 	foreach ($delimiters as $dlnr => $delimiter):
 		$words = explode($delimiter, $string);
