@@ -196,7 +196,7 @@ function updateHistorico( $barpessoaid, $barfnid, $paramDates, $compras = null )
 	endif;
 
 	if (!is_null($paramDates["dt_investidura"]) && $paramDates["dt_investidura"] != "N"):
-		$compras->deleteItemPessoaEntregue( $barpessoaid, $id );
+		//$compras->deleteItemPessoaEntregue( $barpessoaid, $barfnid );
 	endif;
 	
 	//VERIFICA SE ITEM É UMA ESPECIALIDADE E SE EXISTE ALGUM MESTRADO COMPLETADO COM A CONCLUSAO DESSA ESPECIALIDADE.

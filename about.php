@@ -199,7 +199,7 @@ fHeaderPage();
                 <div class="thumbnail">
                     <img class="img-responsive" src="img/history.jpg" width="450px" height="450px"/>
                     <div class="caption">
-                        <h4>Zangão - <small>1980</small></h4>
+                        <h4>Zangão - <small>1974</small></h4>
                         <p>Caminhonete doada para o clube,<br/>em desfile no Parque do Ibirapuera</p>
                     </div>
                 </div>
