@@ -33,7 +33,7 @@ function drawBoxesArea($title,$result,$boxClass = NULL){
 					"classPanel" => $class,
 					"leftIcon" => $icon, 
 					"value" => $value, 
-					"title" => titleCase( $fields["DS_ITEM"], array(" "), array("OU", "COU", "APS", "II", "III", "IV") ), 
+					"title" => titleCase( $fields["DS_ITEM"] ), 
 					"strBL" => titleCase( $area ), 
 					"strBR" => strftime("%d/%m/%Y",strtotime($fields["DT"])), 
 					"hint" => $fields["BOX_HINT"]
@@ -87,8 +87,8 @@ if (!$result->EOF):
 			echo fItemAprendizado(array(
 				"classPanel" => "panel-red",
 				"leftIcon" => $icon, 
-				"value" => $area, 
-				"title" => titleCase( $ds, array(" "), array("OU", "COU", "APS", "P", "PP", "G", "GG", "M", "GGX", "3G") )
+				"value" => titleCase( $area ), 
+				"title" => titleCase( $ds )
 			));
 		endforeach;
 		?>
@@ -134,7 +134,7 @@ if (!$result->EOF):
 				"classPanel" => "panel-warning",
 				"leftIcon" => $icon, 
 				"value" => $area, 
-				"title" => titleCase( $ds, array(" "), array("OU", "COU", "APS", "P", "PP", "G", "GG", "M", "GGX", "3G") )
+				"title" => titleCase( $ds )
 			));
 		endforeach;
 		?>

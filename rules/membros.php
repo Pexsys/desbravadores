@@ -389,7 +389,7 @@ function fMergeResp( $arr, $fields ){
 		$arr["cad_resp_legal-nr_doc"]	= $fields['NR_DOC'];
 		$arr["cad_resp_legal-nr_cpf"]	= fCPF($fields['NR_CPF']);
 		$arr["cad_resp_legal-fone_cel"]	= $fields['FONE_CEL'];
-		$arr["cad_resp_legal-email"]	= strtolower(trim($fields['EMAIL']));
+		$arr["cad_resp_legal-email"]	= trim($fields['EMAIL']);
 	endif;
 	return $arr;
 }
@@ -532,7 +532,7 @@ function getMember( $parameters ) {
 			"cad_pessoa-id"			    => $result->fields['ID_CAD_PESSOA'],
 			"cad_pessoa-bc"			    => $barCODE,
 			"cad_pessoa-nm"			    => trim($result->fields['NM']),
-			"cad_pessoa-email"		    => strtolower(trim($result->fields['EMAIL'])),
+			"cad_pessoa-email"		    => trim($result->fields['EMAIL']),
 			"cad_pessoa-nm_escola"		=> trim($result->fields['NM_ESCOLA']),
 			"cad_pessoa-ds_relig"		=> trim($result->fields['DS_RELIG']),
 			"cad_pessoa-dt_bat"		    => is_null($result->fields['DT_BAT']) ? "" : date( 'd/m/Y', strtotime($result->fields['DT_BAT']) ),

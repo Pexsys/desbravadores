@@ -1,6 +1,6 @@
 <?php
 @require_once("../include/functions.php");
-@require_once("../include/compras.php");
+@require_once("../include/historico.php");
 @require_once("../include/materiais.php");
 responseMethod();
 
@@ -346,25 +346,26 @@ function addCompras( $parameters ) {
 			$result = CONN::get()->Execute("
 				SELECT *
 				FROM CON_COMPRAS
-        WHERE FG_COMPRA = 'S'
-        AND TP IN ('". implode("','", $frm["tp"]) ."')
+                WHERE FG_COMPRA = 'S'
+                AND TP IN ('". implode("','", $frm["tp"]) ."')
 				AND FG_ENTREGUE = 'N'
 				AND ID_CAD_MEMBRO = ?
 			", array($cadMembroID) );
 			foreach ($result as $k => $ln):
 				updateEstoque( $ln, "fg_entregue", "S", $quando );
+			    updateHistorico($ln["ID_CAD_PESSOA"], $ln["ID_TAB_APREND"], 
+						array(
+							"dt_inicio"			=> "N",
+							"dt_conclusao"		=> "N",
+							"dt_avaliacao"		=> "N",
+							"dt_investidura"	=> $quando
+							), 
+						$compras );				
 			endforeach;
 		endforeach;
 	endif;
 
-	return array("result" => true, "query" => "
-  SELECT *
-  FROM CON_COMPRAS
-  WHERE FG_COMPRA = 'S'
-  AND TP IN (". implode("','", $frm["tp"]) .")
-  AND FG_ENTREGUE = 'N'
-  AND ID_CAD_MEMBRO = ?
-");
+	return array("result" => true);
 }
 
 function batchInsert($compras, $qtItens, $cmpl, $cadMembroID, $id){
@@ -495,7 +496,7 @@ function updateEstoque( $ln, $fd, $vl, $date = null ){
 			endif; 
 		else:
 			updateCADCompras( $fd, array( $vl, $ln["ID"] ) );
-    endif;
+        endif;
 	endif;
 	return $arr;
 }
