@@ -30,8 +30,7 @@ fHeaderPage();
         $result = CONN::get()->Execute( "
         	  SELECT *
         	    FROM TAB_UNIDADE 
-        	   WHERE FG_ATIVA = 'S'
-        	     AND TP IN ('F','M')
+        	   WHERE TP IN ('F','M')
 		");
         
         $a = array();
@@ -54,7 +53,7 @@ fHeaderPage();
             endif;
             ?>
             <div class="col-md-2 img-portfolio">
-                <a href="<?php echo ( $i[1] ? "unidade.php?id=".$i[0] : "#"); ?>">
+                <a href="<?php echo "unidade.php?id=".$i[0];?>">
                     <img class="img-responsive img-hover" src="report/img/unidade/<?php echo $i[0];?>_E.png" alt="">
                 </a>
             </div>
