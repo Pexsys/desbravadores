@@ -1,7 +1,6 @@
 <?php 
 @require_once("include/functions.php");
 
-
 $result = CONN::get()->Execute( "
   SELECT *
     FROM TAB_UNIDADE 
@@ -15,9 +14,8 @@ endif;
 fHeaderPage();
 ?>
 <body>
-
     <!-- Navigation -->
-	<?php @include_once("include/navbar.php");?>
+    <?php @include_once("include/navbar.php");?>
 
     <!-- Page Content -->
     <div class="container">

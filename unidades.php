@@ -1,7 +1,6 @@
 <?php 
 @require_once("include/functions.php");
 fHeaderPage();
-
 ?>
 <body>
 
@@ -31,8 +30,7 @@ fHeaderPage();
         	  SELECT *
         	    FROM TAB_UNIDADE 
         	   WHERE TP IN ('F','M')
-		");
-        
+        ");
         $a = array();
         foreach ($result as $ln):
             $a[] = array( $ln["ID"], !is_null($ln["DESCRIPTION"]) );
