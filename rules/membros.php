@@ -311,7 +311,7 @@ function updateMember( $parameters ) {
 
 		    //CALCULAR E INCLUIR ESTRELAS
 		    $rs = CONN::get()->Execute("
-        		SELECT (YEAR(NOW())-ANO_DIR) AS CALC_ATUAL, ESTR_DEVOL, QT_UNIFORMES
+        		SELECT (YEAR(NOW())-ANO_DIR+1) AS CALC_ATUAL, ESTR_DEVOL, QT_UNIFORMES
         		  FROM CON_ATIVOS
         		 WHERE ANO_DIR IS NOT NULL
         		   AND QT_UNIFORMES > 0
@@ -322,13 +322,13 @@ function updateMember( $parameters ) {
                 if ( $calcAtual > max( 1, $rs->fields["ESTR_DEVOL"]) ):
                     $compras = new COMPRAS();
 
-                    $code = "03-01-".fStrZero($calcAtual+1, 2);
+                    $code = "03-01-".fStrZero($calcAtual, 2);
                     $qtItens = $rs->fields["QT_UNIFORMES"];
                     for ($qtd=1;$qtd<=$qtItens;$qtd++):
 						if ($qtItens>1):
 							$compl = "$qtd/$qtItens";
 						endif;
-						$compras->insertItemCompra( $code, $id, "A", $compl );
+						$compras->insertItemCompra( $code, $id, "M", $compl );
 					endfor;
                 endif;
 			endif;
