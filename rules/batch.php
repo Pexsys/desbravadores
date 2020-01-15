@@ -230,6 +230,13 @@ if ($today["mon"] == 1 && $today["mday"] == 1):
 			$f["DT_ASSINATURA"]
 		));
 	endforeach;
+	
+	
+	//ALTERANDO IDADE DAS UNIDADES
+	CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.09-Alterando idades das unidades...')");
+	CONN::get()->Execute("UPDATE TAB_UNIDADE SET IDADE = 9 WHERE IDADE = 15");
+	CONN::get()->Execute("UPDATE TAB_UNIDADE SET IDADE = (IDADE+1) WHERE IDADE < 16");
+
 
 	//MENSAGEM DE FELIZ ANO NOVO
 	CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.07-Felicitando pelo novo ano...')");

@@ -17,6 +17,9 @@ fHeaderDashboard();
 </div>
 <script language="javascript">
 	$(document).ready(function(){
+	    $("#myChangeMyPass").click(function(){
+			window.location.replace( jsLIB.rootDir+'dashboard/index.php?id=68')
+		});
 		$("#myBtnLogout").click(function(){
 			jsLIB.ajaxCall({
 				waiting : true,

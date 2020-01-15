@@ -246,6 +246,22 @@ function checkUser($cdUser, $pag){
 		 WHERE cu.CD_USUARIO = ?
 	", array( $cdUser, $cdUser ) );
 }
+
+function changePassword($parameters){
+    session_start();
+    $id = $parameters['id'] ? $parameters['id'] : $_SESSION['USER']['id'];
+    setUserPassword($id, $parameters['password']);
+    return array('changed' => true);
+}
+
+function setUserPassword($usr, $pass) {
+    CONN::get()->Execute("
+		UPDATE CAD_USUARIO SET 
+			DS_SENHA = ?
+		WHERE ID = ?
+	", array( $pass, $usr ) );
+}
+
 //28550424889
 function logout() {
 	session_start();
