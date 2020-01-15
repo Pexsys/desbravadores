@@ -1,6 +1,6 @@
 $(document).ready(function(){
 	//FORM
-	$("#login-form")
+	$("#change-password")
         .on('init.field.fv', function(e, data) {
             // data.fv      --> The FormValidation instance
             // data.field   --> The field name
@@ -24,22 +24,6 @@ $(document).ready(function(){
 				validating: 'glyphicon glyphicon-refresh'
 			},
 			fields: {
-				usr: {
-					validators: {
-						notEmpty: {
-							message: 'O c&oacute;digo do usu&aacute;rio &eacute; obrigat&oacute;rio'
-						},
-						stringLength: {
-							min: 7,
-							max: 30,
-							message: 'O c&oacute;digo do usu&aacute;rio deve ter entre 7 e 30 caracteres'
-						},
-						regexp: {
-							regexp: new RegExp("^[a-zA-Z0-9.]+$"),
-							message: 'O c&oacute;digo do usu&aacute;rio s&oacute; pode conter letras, o ponto, e n&uacute;meros'
-						}
-					}
-				},
 				psw: {
 					validators: {
 						notEmpty: {
@@ -48,8 +32,24 @@ $(document).ready(function(){
 						stringLength: {
 							min: 7,
 							max: 30,
-							message: 'A senha deve conter 7 e 30 caracteres'
+							message: 'Sua senha deve conter 7 e 30 caracteres'
 						}
+					}
+				},
+				repeat: {
+					validators: {
+						notEmpty: {
+							message: 'A senha &eacute; obrigat&oacute;ria'
+						},
+						stringLength: {
+							min: 7,
+							max: 30,
+							message: 'Sua senha deve conter 7 e 30 caracteres'
+						},
+                        identical: {
+                            field: 'psw',
+                            message: 'A confirmação está diferente da senha'
+                        }
 					}
 				}
 			}
@@ -62,46 +62,33 @@ $(document).ready(function(){
 	
 		.submit( function() {
 			var parameter = {
-				page: jQuery('#page').val(),
-				username: jQuery('#usr').val(),
+			    ...($("#btnChangePass").attr("id-item") !== '' ? { id: $("#btnChangePass").attr("id-item") } : {}),
 				password: $.sha1(jQuery('#psw').val().toLowerCase())
 			};
 			jsLIB.ajaxCall({
 				waiting : true,
 				url: jsLIB.rootDir+'rules/login.php',
-				data: { MethodName : 'login', data : parameter },
+				data: { MethodName : 'changePassword', data : parameter },
 				success: function(data){
-					if ( data.login == true ) {
-						window.location.replace(data.page);
+					if ( data.changed == true ) {
+						changeError('Senha alterada com Sucesso!', { type: BootstrapDialog.TYPE_SUCCESS, title: 'Ok', cssClass: 'btn-success' });
 					} else {
-						loginError();
+				    changeError('Erro', { type: BootstrapDialog.TYPE_DANGER, title: 'Erro', cssClass: 'btn-danger' });
 					}
 				},
-				error: loginError 
+				error: function(data){
+				    changeError('Erro', { type: BootstrapDialog.TYPE_DANGER, title: 'Erro', cssClass: 'btn-danger' });
+				},
 			});
 		});
-	
-	$("#myBtnLogin").click(function(){
-		$("#myLoginModal").modal();
-	});
-	
-	$("#myBtnLogout").click(function(){
-		jsLIB.ajaxCall({
-			waiting : true,
-			url: jsLIB.rootDir+'rules/login.php',
-			data: { MethodName : 'logout' },
-			success: function(dt){
-				window.location.replace( jsLIB.rootDir+'index.php' );
-			}
-		});
-	});
+
 });
 
-function loginError( jqxhr, errorMessage ){
+function changeError(message, { type = BootstrapDialog.TYPE_DANGER, title = 'Erro', cssClass = 'btn-danger' }){
 	BootstrapDialog.show({
-		title: 'Erro',
-		message: 'Acesso negado!',
-		type: BootstrapDialog.TYPE_DANGER,
+		title,
+		message,
+		type,
 		size: BootstrapDialog.SIZE_SMALL,
 		draggable: true,
 		closable: true,
@@ -109,9 +96,10 @@ function loginError( jqxhr, errorMessage ){
 		closeByKeyboard: false,
 		buttons: [{
 			label: 'Fechar',
-			cssClass: 'btn-danger',
+			cssClass,
 			action: function(dialogRef){
 				dialogRef.close();
+				$("#comModal").modal('hide');
 			}
 		}]	
 	});	
