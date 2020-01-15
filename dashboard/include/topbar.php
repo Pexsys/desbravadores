@@ -25,6 +25,7 @@
 				</span>
 			</a>
 			<ul class="dropdown-menu">
+			    <li><a href="#" id="myChangeMyPass"><i class="fas fa-key fa-fw"></i>&nbsp;Trocar Senha</a></li>
 				<li><a href="#" id="myBtnLogout"><i class="fas fa-sign-out-alt fa-fw"></i>&nbsp;Sair</a></li>
 			</ul>
 		</li>
