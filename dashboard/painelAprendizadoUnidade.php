@@ -1,4 +1,5 @@
 <?php
+@require_once("../include/filters.php");
 $cadMembroID = $_SESSION['USER']['id_cad_membro'];
 $unidade = "";
 $result = CONN::get()->Execute("
@@ -35,37 +36,35 @@ endif;
 	</div>
 </div>
 <div class="row">
-<?php
-$result = CONN::get()->Execute("
-	SELECT COUNT(*) as QTD
-	  FROM CON_ATIVOS ca 
-	 WHERE ($where)
-");
-if (!$result->EOF):
-	echo fItemAprendizado(array(
-		"classPanel" => "panel-green",
-		"leftIcon" => "fas fa-child fa-4x", 
-		"value" => $result->fields["QTD"], 
-		"strBL" => "Ativos", 
-		"strBR" => "Unidade"
-	));
-endif;
-$result = CONN::get()->Execute("
-	SELECT COUNT(*) as QTD
-	  FROM CON_ATIVOS ca
-	 WHERE ($where) 
-	   AND ca.DT_BAT IS NOT NULL
-");
-if (!$result->EOF):
-	echo fItemAprendizado(array(
-		"classPanel" => "panel-primary",
-		"leftIcon" => "fas fa-thumbs-up fa-4x", 
-		"value" => $result->fields["QTD"], 
-		"strBL" => "Batizados", 
-		"strBR" => "Unidade"
-	));
-endif;
-?>
+  <div class="col-lg-12">
+	<?php fDataFilters( 
+		array( 
+			"filterTo" => "#members",
+			"filters" => 
+				array( 
+          array( "id" => "B", "ds" => "Batizado", "icon" => "fas fa-bath" ),
+          array( "id" => "C", "ds" => "Classe", "icon" => "fas fa-graduation-cap" ),
+          array( "id" => "MA", "ds" => "Mês de Aniversário", "icon" => "far fa-calendar-alt" ),
+					array( "id" => "V", "ds" => "Vegetariano", "icon" => "fas fa-utensils" )
+				)
+		) 
+	);?>
+	</div>
+	<div class="col-lg-12">
+		<table class="compact row-border hover stripe display" style="cursor: pointer;" cellspacing="0" width="100%" id="members">
+			<thead>
+				<tr>
+					<th></th>
+					<th>Nome Completo</th>
+          <th>Cargo</th>
+					<th>Contato</th>
+					<th>Aniversário</th>
+					<th>Idade</th>
+				</tr>
+			</thead>
+		</table>
+		<br/>
+	</div>
 </div>
 <?php
 $result = CONN::get()->Execute("
@@ -97,7 +96,6 @@ if (!$result->EOF):
 	endforeach;
 	echo "</div>";
 endif;
-
 $result = CONN::get()->Execute("
 	SELECT ta.ID, ta.TP_ITEM, ta.CD_ITEM_INTERNO, ta.CD_AREA_INTERNO, ta.CD_COR, ta.DS_ITEM, COUNT(*) as QTD
 	  FROM APR_HISTORICO ah

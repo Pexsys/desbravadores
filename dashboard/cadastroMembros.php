@@ -14,7 +14,8 @@
 			"filterTo" => "#membrosDatatable",
 			"filters" => 
 				array( 
-					array( "id" => "G", "ds" => "Grupo", "icon" => "fas fa-object-group" ),
+          array( "id" => "G", "ds" => "Grupo", "icon" => "fas fa-object-group" ),
+          array( "id" => "C", "ds" => "Classe", "icon" => "fas fa-graduation-cap" ),
 					array( "id" => "X", "ds" => "Sexo", "icon" => "fas fa-venus-mars" ),
 					array( "id" => "B", "ds" => "Batizado", "icon" => "fas fa-bath" ),
 					array( "id" => "U", "ds" => "Unidade", "icon" => "fas fa-universal-access" ),
