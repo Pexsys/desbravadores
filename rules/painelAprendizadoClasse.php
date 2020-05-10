@@ -10,8 +10,6 @@ function getGraphData() {
 	$cadMembroID = $_SESSION['USER']['id_cad_membro'];
 
 	$arr = array();
-	
-
 	$arr["cls"] = array();
 
 	$like = "";
