@@ -162,13 +162,14 @@ class PROFILE {
 			elseif ( $param["cargo"] == "2-01-01" || $param["cargo2"] == "2-01-01" || fStrStartWith($param["cargo"],"2-05") || fStrStartWith($param["cargo2"],"2-05") ):
 				$arr[] = 4;
 
-			//SECRETARIA
-			elseif ( $param["cargo"] == "2-02-00" || $param["cargo2"] == "2-02-00" ):
+	        //SECRETARIA
+	        //elseif ( $param["cargo"] == "2-02-00" || $param["cargo2"] == "2-02-00" ):
+			elseif ( fStrStartWith($param["cargo"],"2-02") || fStrStartWith($param["cargo2"],"2-02") ):
 				$arr[] = 5;
 
 			//SECRETARIA ASSOCIADA
-			elseif ( $param["cargo"] == "2-02-01" || $param["cargo2"] == "2-02-01" ):
-				$arr[] = 6;
+			//elseif ( $param["cargo"] == "2-02-01" || $param["cargo2"] == "2-02-01" ):
+			//	$arr[] = 6;
 
 			//TESOURARIA
 			elseif ( fStrStartWith($param["cargo"],"2-03") || fStrStartWith($param["cargo2"],"2-03") ):
