@@ -8,7 +8,9 @@ mb_http_output('UTF-8');
 mb_http_input('UTF-8');
 
 @require_once("_core/lib/adodb5/adodb.inc.php");
-@require_once("_core/lib/phpmailer/PHPMailerAutoload.php");
+@require_once("_core/lib/PHPMailer/src/Exception.php");
+@require_once("_core/lib/PHPMailer/src/PHPMailer.php");
+@require_once("_core/lib/PHPMailer/src/SMTP.php");
 
 @require_once("classes/patterns.php");
 @require_once("classes/profile.php");

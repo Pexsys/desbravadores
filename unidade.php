@@ -92,7 +92,14 @@ fHeaderPage();
                     endif;
                     $strmembros .= (empty($strmembros)?"":", ");
                     $a = explode(" ",$f["NM"]);
-                    $strmembros .= (fStrStartWith($f["CD_CARGO"],"2")?"<u>".titleCase($a[0])."</u>":titleCase($a[0]));
+                    
+                    if (fStrStartWith($f["CD_CARGO"],"1-01")):
+                        $strmembros .= "<b>".titleCase($a[0])."</b>";
+                    elseif (fStrStartWith($f["CD_CARGO"],"2")):
+                        $strmembros .= "<u>".titleCase($a[0])."</u>";
+                    else:
+                        $strmembros .= titleCase($a[0]);
+                    endif;
                 endforeach;
                 echo "$strmembros</li>";
                 ?>

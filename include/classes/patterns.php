@@ -214,7 +214,7 @@ class PATTERNS {
     }
 
     public static function getMail(){
-        return "desbravadores@iasd-capaoredondo.com.br";
+        return "desbravadores@iasdcapao.com.br";
     }
 
     public static function getBars(){
