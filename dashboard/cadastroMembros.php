@@ -19,7 +19,8 @@
 					array( "id" => "X", "ds" => "Sexo", "icon" => "fas fa-venus-mars" ),
 					array( "id" => "B", "ds" => "Batizado", "icon" => "fas fa-bath" ),
 					array( "id" => "U", "ds" => "Unidade", "icon" => "fas fa-universal-access" ),
-					array( "id" => "V", "ds" => "Vegetariano", "icon" => "fas fa-utensils" ),
+					array( "id" => "RG", "ds" => "Regime Alimentar", "icon" => "fas fa-utensils" ),
+          array( "id" => "RE", "ds" => "Restrição Alimentar", "icon" => "fas fa-utensils" ),
 					array( "id" => "PC", "ds" => "Pend&ecirc;ncia Cadastral", "icon" => "fas fa-exclamation-triangle" )
 				)
 		) 
@@ -104,11 +105,21 @@
 										<label for="nrCPF" class="control-label">CPF</label>
 										<input type="text" name="nrCPF" id="nrCPF" field="cad_pessoa-nr_cpf" class="form-control input-sm cpf" placeholder="CPF" style="padding-right:0px"/>
 									</div>
-									<div class="form-group col-xs-3">
-										<label for="tpRegime" class="control-label">Vegetariano</label>
-										<input type="checkbox" name="tpRegime" id="tpRegime" field="cad_pessoa-tp_regime" value-on="S" value-off="N" data-toggle="toggle" data-width="80" data-onstyle="warning" data-offstyle="default" data-size="small" data-on="SIM" data-off="NÃO" data-width="110" />
-									</div>
 								</div>
+                <div class="row">
+                  <div class="form-group col-xs-5">
+										<label for="cmTabRegAlim" class="control-label">Regime Alimentar</label>
+										<select field="cad_pessoa-id_tab_tp_reg_alim" name="cmTabRegAlim" id="cmTabRegAlim" class="form-control input-sm">
+                    <?php fDomainStatic( array( "table" => "TAB_TP_REG_ALIM", "id" => "ID", "order" => "ID" ) );?>
+                    </select>
+									</div>
+                  <div class="form-group col-xs-5">
+										<label for="cmTabRestAlim" class="control-label">Restrição Alimentar</label>
+										<select field="cad_pessoa-id_tab_tp_rest_alim" name="cmTabRestAlim" id="cmTabRestAlim" class="form-control input-sm">
+                    <?php fDomainStatic( array( "table" => "TAB_TP_REST_ALIM", "id" => "ID", "order" => "ID" ) );?>
+                    </select>
+									</div>
+                <div class="row">
 							</div>
 							<div id="Ender" class="col-lg-12 tab-pane fade">
 								<div class="row">

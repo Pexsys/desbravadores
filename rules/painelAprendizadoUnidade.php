@@ -30,9 +30,11 @@ function getQueryByFilter( $parameters ) {
 			if ( $key == "MA" ):
 				$where .= " AND DATE_FORMAT(p.DT_NASC,'%m') ".$notStr."IN";
 			elseif ( $key == "C" ):
-				$where .= " AND cap.TP_ITEM = 'CL' AND cap.ID_TAB_APREND ".$notStr."IN";
-			elseif ( $key == "V" ):
-				$where .= " AND p.TP_REGIME ".$notStr."IN";
+				$where .= " AND cap.tp_item = 'CL' AND cap.id_tab_aprend ".$notStr."IN";
+			elseif ( $key == "RG" ):
+				$where .= " AND p.id_tab_tp_reg_alim ".$notStr."IN";
+      elseif ( $key == "RE" ):
+        $where .= " AND p.id_tab_tp_rest_alim ".$notStr."IN";
 			else:
 				$where .= " AND";
 			endif;
