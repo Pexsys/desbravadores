@@ -26,8 +26,10 @@ function getQueryByFilter( $parameters ) {
 				$where .= " AND a.id_unidade ".$notStr."IN";
 			elseif ( $key == "C" ):
 				$where .= " AND cap.TP_ITEM = 'CL' AND cap.ID_TAB_APREND ".$notStr."IN";
-			elseif ( $key == "V" ):
-				$where .= " AND p.TP_REGIME ".$notStr."IN";
+			elseif ( $key == "RG" ):
+				$where .= " AND a.id_tab_tp_reg_alim ".$notStr."IN";
+      elseif ( $key == "RE" ):
+        $where .= " AND a.id_tab_tp_rest_alim ".$notStr."IN";
 			else:
 				$where .= " AND";
 			endif;
@@ -497,7 +499,8 @@ function getMember( $parameters ) {
 				p.CEP,
 				p.FONE_RES,
 				p.FONE_CEL,
-				p.TP_REGIME,
+				p.ID_TAB_TP_REG_ALIM,
+        p.ID_TAB_TP_REST_ALIM,
 				p.ID_PESSOA_RESP,
 				m.ID_CAD_PESSOA,
 				m.ID_MEMBRO,
@@ -527,41 +530,42 @@ function getMember( $parameters ) {
 		));
 
 		$arr["membro"] = array(
-			"cad_membro-id"			    => $id,
-			"cad_membro-id_membro"	    => fStrZero($result->fields['ID_MEMBRO'], $qtdZeros),
-			"cad_pessoa-id"			    => $result->fields['ID_CAD_PESSOA'],
-			"cad_pessoa-bc"			    => $barCODE,
-			"cad_pessoa-nm"			    => trim($result->fields['NM']),
-			"cad_pessoa-email"		    => trim($result->fields['EMAIL']),
-			"cad_pessoa-nm_escola"		=> trim($result->fields['NM_ESCOLA']),
-			"cad_pessoa-ds_relig"		=> trim($result->fields['DS_RELIG']),
-			"cad_pessoa-dt_bat"		    => is_null($result->fields['DT_BAT']) ? "" : date( 'd/m/Y', strtotime($result->fields['DT_BAT']) ),
-			"cad_pessoa-tp_sexo"		=> $result->fields['TP_SEXO'],
-			"cad_pessoa-dt_nasc"		=> is_null($result->fields['DT_NASC']) ? "" : date( 'd/m/Y', strtotime($result->fields['DT_NASC']) ),
-			"cad_pessoa-nr_doc"		    => trim($result->fields['NR_DOC']),
-			"cad_pessoa-nr_cpf"		    => fCPF($result->fields['NR_CPF']),
-			"cad_pessoa-logradouro"		=> trim($result->fields['LOGRADOURO']),
-			"cad_pessoa-nr_logr"		=> trim($result->fields['NR_LOGR']),
-			"cad_pessoa-complemento"	=> trim($result->fields['COMPLEMENTO']),
-			"cad_pessoa-bairro"		    => trim($result->fields['BAIRRO']),
-			"cad_pessoa-cidade"		    => trim($result->fields['CIDADE']),
-			"cad_pessoa-uf"			    => $result->fields['UF'],
-			"cad_pessoa-cep"		    => $result->fields['CEP'],
-			"cad_pessoa-fone_res"		=> $result->fields['FONE_RES'],
-			"cad_pessoa-fone_cel"		=> $result->fields['FONE_CEL'],
-			"cad_pessoa-tp_regime"		=> $result->fields['TP_REGIME'],
-			"cad_membro-ano_dir"		=> $result->fields['ANO_DIR'],
-			"cad_membro-estr_devol"		=> $result->fields['ESTR_DEVOL'],
-			"cad_membro-qt_uniformes"	=> $result->fields['QT_UNIFORMES'],
-			"cad_ativos-id_unidade"		=> $result->fields['ID_UNIDADE'],
-			"cad_ativos-cd_cargo"		=> $result->fields['CD_CARGO'],
-			"cad_ativos-cd_cargo2"		=> $result->fields['CD_CARGO2'],
-			"cad_ativos-tp_camiseta"	=> $result->fields['TP_CAMISETA'],
-			"cad_ativos-tp_agasalho"	=> $result->fields['TP_AGASALHO'],
-			"cad_ativos-cd_fanfarra"	=> $result->fields['CD_FANFARRA'],
-			"cad_ativos-fg_reu_sem"		=> $result->fields['FG_REU_SEM'],
-			"nr_idade"			        => $idadeAtual,
-			"fg_ativo"                  => isset($result->fields['ID_ATIVO']) ? "S" : "N"
+			"cad_ativos-cd_cargo" => $result->fields['CD_CARGO'],
+			"cad_ativos-cd_cargo2" => $result->fields['CD_CARGO2'],
+			"cad_ativos-cd_fanfarra" => $result->fields['CD_FANFARRA'],
+			"cad_ativos-fg_reu_sem" => $result->fields['FG_REU_SEM'],
+			"cad_ativos-id_unidade" => $result->fields['ID_UNIDADE'],
+			"cad_ativos-tp_agasalho" => $result->fields['TP_AGASALHO'],
+			"cad_ativos-tp_camiseta" => $result->fields['TP_CAMISETA'],
+			"cad_membro-ano_dir" => $result->fields['ANO_DIR'],
+			"cad_membro-estr_devol" => $result->fields['ESTR_DEVOL'],
+			"cad_membro-id_membro" => fStrZero($result->fields['ID_MEMBRO'], $qtdZeros),
+			"cad_membro-id" => $id,
+			"cad_membro-qt_uniformes" => $result->fields['QT_UNIFORMES'],
+			"cad_pessoa-bairro" => trim($result->fields['BAIRRO']),
+			"cad_pessoa-bc" => $barCODE,
+			"cad_pessoa-cep" => $result->fields['CEP'],
+			"cad_pessoa-cidade" => trim($result->fields['CIDADE']),
+			"cad_pessoa-complemento" => trim($result->fields['COMPLEMENTO']),
+			"cad_pessoa-ds_relig" => trim($result->fields['DS_RELIG']),
+			"cad_pessoa-dt_bat" => is_null($result->fields['DT_BAT']) ? "" : date( 'd/m/Y', strtotime($result->fields['DT_BAT']) ),
+			"cad_pessoa-dt_nasc" => is_null($result->fields['DT_NASC']) ? "" : date( 'd/m/Y', strtotime($result->fields['DT_NASC']) ),
+			"cad_pessoa-email" => trim($result->fields['EMAIL']),
+			"cad_pessoa-fone_cel" => $result->fields['FONE_CEL'],
+			"cad_pessoa-fone_res" => $result->fields['FONE_RES'],
+			"cad_pessoa-id_tab_tp_reg_alim" => $result->fields['id_tab_tp_reg_alim'],
+			"cad_pessoa-id" => $result->fields['ID_CAD_PESSOA'],
+			"cad_pessoa-logradouro" => trim($result->fields['LOGRADOURO']),
+			"cad_pessoa-nm_escola" => trim($result->fields['NM_ESCOLA']),
+			"cad_pessoa-nm" => trim($result->fields['NM']),
+			"cad_pessoa-nr_cpf" => fCPF($result->fields['NR_CPF']),
+			"cad_pessoa-nr_doc" => trim($result->fields['NR_DOC']),
+			"cad_pessoa-nr_logr" => trim($result->fields['NR_LOGR']),
+			"cad_pessoa-tp_sexo" => $result->fields['TP_SEXO'],
+			"cad_pessoa-uf" => $result->fields['UF'],
+      "cad_pessoa-id_tab_tp_rest_alim" => $result->fields['id_tab_tp_rest_alim'],
+			"nr_idade" => $idadeAtual,
+			"fg_ativo" => isset($result->fields['ID_ATIVO']) ? "S" : "N"
 		);
 
 		if ($idadeAtual < 18):

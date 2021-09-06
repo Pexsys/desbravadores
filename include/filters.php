@@ -53,13 +53,6 @@ function getDomainFilter( $parameters ) {
 			array( "id" => "M", "ds" => "MASCULINO", "icon" => "fas fa-mars" )
 		);
 
-	//VEGETARIANO
-	elseif ( $type == "V" ):
-		$domain = array(
-			array( "id" => "S", "ds" => "SIM", "icon" => "fas fa-thumbs-up" ),
-			array( "id" => "N", "ds" => "NÃO", "icon" => "fas fa-thumbs-down" )
-		);
-
 	//SITUACAO
 	elseif ( $type == "S" ):
 		$domain = array(
@@ -171,6 +164,14 @@ function getDomainFilter( $parameters ) {
 			array( "id" => "P", "ds" => "POSITIVA", "icon" => "fas fa-thumbs-up" ),
 			array( "id" => "N", "ds" => "NEGATIVA", "icon" => "fas fa-thumbs-down" )
 		);
+
+	//REGIME ALIMENTAR
+	elseif ( $type == "RG" ):
+		$domain = getDomainRegimeAlimentar();
+
+	//RESTRICAO ALIMENTAR
+	elseif ( $type == "RE" ):
+		$domain = getDomainRestricaoAlimentar();
 
 	//UNIDADE
 	elseif ( $type == "EV" ):
