@@ -23,13 +23,13 @@ function getQueryByFilter( $parameters ) {
 			elseif ( $key == "MA" ):
 				$where .= " AND DATE_FORMAT(p.DT_NASC,'%m') ".$notStr."IN";
 			elseif ( $key == "U" ):
-				$where .= " AND a.id_unidade ".$notStr."IN";
+				$where .= " AND a.ID_UNIDADE ".$notStr."IN";
 			elseif ( $key == "C" ):
 				$where .= " AND cap.TP_ITEM = 'CL' AND cap.ID_TAB_APREND ".$notStr."IN";
 			elseif ( $key == "RG" ):
-				$where .= " AND a.id_tab_tp_reg_alim ".$notStr."IN";
+				$where .= " AND p.ID_TAB_TP_REG_ALIM ".$notStr."IN";
       elseif ( $key == "RE" ):
-        $where .= " AND a.id_tab_tp_rest_alim ".$notStr."IN";
+        $where .= " AND p.ID_TAB_TP_REST_ALIM ".$notStr."IN";
 			else:
 				$where .= " AND";
 			endif;
@@ -40,13 +40,13 @@ function getQueryByFilter( $parameters ) {
 				foreach ($parameters["filters"][$key]["vl"] as $value):
 					if ( $key == "B" ):
 						if ($value == "S"):
-							$where .= (!$prim ? " OR " : "") ."p.dt_bat IS ". ( $value == "S" && !$not ? "NOT NULL" : "NULL");
+							$where .= (!$prim ? " OR " : "") ."p.DT_BAT IS ". ( $value == "S" && !$not ? "NOT NULL" : "NULL");
 						elseif ($value == "N"):
-							$where .= (!$prim ? " OR " : "") ."p.dt_bat IS ". ( $value == "N" && !$not ? "NULL" : "NOT NULL");
+							$where .= (!$prim ? " OR " : "") ."p.DT_BAT IS ". ( $value == "N" && !$not ? "NULL" : "NOT NULL");
 						elseif (fStrStartWith($value,"A")):
-							$where .= (!$prim ? " OR " : "") ."YEAR(p.dt_bat) ". ( !$not ? " < " : " >= ") . substr($value,1,4);
+							$where .= (!$prim ? " OR " : "") ."YEAR(p.DT_BAT) ". ( !$not ? " < " : " >= ") . substr($value,1,4);
 						else:
-							$where .= (!$prim ? " OR " : "") ."YEAR(p.dt_bat) ". ( !$not ? " = " : " <> ") . $value;
+							$where .= (!$prim ? " OR " : "") ."YEAR(p.DT_BAT) ". ( !$not ? " = " : " <> ") . $value;
 						endif;
 					elseif ( $key == "PC" ):
 						if ( $value == "NC5" ):
@@ -114,8 +114,9 @@ function getQueryByFilter( $parameters ) {
 		endif;
 	endif;
 
-//echo $where;
-//exit;
+  // echo print_r($aWhere);
+  // echo $where;
+  // exit;
 
 	return CONN::get()->Execute("
 	  SELECT DISTINCT
@@ -302,7 +303,7 @@ function updateMember( $parameters ) {
 			$str .= " ID = ?";
 		endif;
 
-		//$arr["query"] = array( $str, $aUpdate);
+		$arr["query"] = array( $str, $aUpdate);
 		CONN::get()->Execute( $str, $aUpdate );
 
 		//REGRA PARA CALCULO DA ESTRELA DE TEMPO DE SERVICO
@@ -548,12 +549,12 @@ function getMember( $parameters ) {
 			"cad_pessoa-cidade" => trim($result->fields['CIDADE']),
 			"cad_pessoa-complemento" => trim($result->fields['COMPLEMENTO']),
 			"cad_pessoa-ds_relig" => trim($result->fields['DS_RELIG']),
-			"cad_pessoa-dt_bat" => is_null($result->fields['DT_BAT']) ? "" : date( 'd/m/Y', strtotime($result->fields['DT_BAT']) ),
+			"cad_pessoa-DT_BAT" => is_null($result->fields['DT_BAT']) ? "" : date( 'd/m/Y', strtotime($result->fields['DT_BAT']) ),
 			"cad_pessoa-dt_nasc" => is_null($result->fields['DT_NASC']) ? "" : date( 'd/m/Y', strtotime($result->fields['DT_NASC']) ),
 			"cad_pessoa-email" => trim($result->fields['EMAIL']),
 			"cad_pessoa-fone_cel" => $result->fields['FONE_CEL'],
 			"cad_pessoa-fone_res" => $result->fields['FONE_RES'],
-			"cad_pessoa-id_tab_tp_reg_alim" => $result->fields['id_tab_tp_reg_alim'],
+			"cad_pessoa-id_tab_tp_reg_alim" => $result->fields['ID_TAB_TP_REG_ALIM'],
 			"cad_pessoa-id" => $result->fields['ID_CAD_PESSOA'],
 			"cad_pessoa-logradouro" => trim($result->fields['LOGRADOURO']),
 			"cad_pessoa-nm_escola" => trim($result->fields['NM_ESCOLA']),
@@ -563,7 +564,7 @@ function getMember( $parameters ) {
 			"cad_pessoa-nr_logr" => trim($result->fields['NR_LOGR']),
 			"cad_pessoa-tp_sexo" => $result->fields['TP_SEXO'],
 			"cad_pessoa-uf" => $result->fields['UF'],
-      "cad_pessoa-id_tab_tp_rest_alim" => $result->fields['id_tab_tp_rest_alim'],
+      "cad_pessoa-id_tab_tp_rest_alim" => $result->fields['ID_TAB_TP_REST_ALIM'],
 			"nr_idade" => $idadeAtual,
 			"fg_ativo" => isset($result->fields['ID_ATIVO']) ? "S" : "N"
 		);

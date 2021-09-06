@@ -204,8 +204,6 @@ $pdf->setTipoUniforme(fRequest("filter"));
 $eventoID = fRequest("eve");
 $pdf->setEventoID($eventoID);
 
-
-
 if (!empty($eventoID)):
 	$str = "
 		SELECT ca.NM, ". ($pdf->tipoUniforme == "C" ? " at.TP_CAMISETA" : "at.TP_AGASALHO") ." AS TP,

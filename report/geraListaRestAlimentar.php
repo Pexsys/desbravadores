@@ -9,7 +9,7 @@ class LISTAATIVOSALFA extends TCPDF {
 	private $stLine2;
 	private $posY;
 	private $lineAlt;
-	public $tipoRegime;
+	public $tipoRestricao;
 	public $title;
 	public $count;
 	
@@ -37,11 +37,10 @@ class LISTAATIVOSALFA extends TCPDF {
 
 		$this->SetCreator(PDF_CREATOR);
 		
-		$this->SetTitle('Listagem de Membros por Restrição Alimentar');
+		$this->SetTitle('Listagem de Membros - Restrição Alimentar');
 		$this->SetSubject(PATTERNS::getClubeDS(array("cl","nm")));
 		$this->SetKeywords('Restrição Alimentar, ' . str_replace(" ", ", ", PATTERNS::getClubeDS( array("db","nm","ibd") ) ));
 		$this->setImageScale(PDF_IMAGE_SCALE_RATIO);
-		$this->title = "";
 	}
 
 	public function Footer() {
@@ -74,9 +73,11 @@ class LISTAATIVOSALFA extends TCPDF {
 		$this->SetFillColor(155,120,208);
 		$this->setCellPaddings(1,0,1,0);
 		$this->setXY(5, 22);
-		$this->Cell(85, 6, "Nome Completo", 0, false, 'L', true);
-		$this->setXY(90, 22);
-		$this->Cell(50, 6, "Cargo", 0, false, 'L', true);
+		$this->Cell(70, 6, "Nome Completo", 0, false, 'L', true);
+		$this->setXY(75, 22);
+		$this->Cell(25, 6, "Restrição", 0, false, 'L', true);
+		$this->setXY(100, 22);
+		$this->Cell(40, 6, "Cargo", 0, false, 'L', true);
 		$this->setXY(140, 22);
 		$this->Cell(30, 6, "Idade/Nasc.", 0, false, 'C', true);
 		$this->setXY(170, 22);
@@ -93,19 +94,21 @@ class LISTAATIVOSALFA extends TCPDF {
 			$this->SetFillColor(255,255,255);
 		endif;
 		$this->setXY(5, $this->posY);
-		$this->Cell(85, 5, $f["NM"], 0, false, 'L', true, false, 1);
-		$this->setX(90);
+		$this->Cell(70, 5, $f["NM"], 0, false, 'L', true, false, 1);
+		$this->setX(75);
+		$this->Cell(25, 5, $f["DS_TAB_TP_REST_ALIM"], 0, false, 'L', true, false, 1);
+		$this->setX(100);
 
 		$colorR = base_convert(substr($f["CD_COR_GENERO"],1,2),16,10);
 		$colorG = base_convert(substr($f["CD_COR_GENERO"],3,2),16,10);
 		$colorB = base_convert(substr($f["CD_COR_GENERO"],5,2),16,10);
 		$this->SetTextColor($colorR,$colorG,$colorB);
 
-		$this->Cell(56, 5, $f["DS_CARGO"], 0, false, 'L', true, false, 1);
-		$this->setX(146);
+		$this->Cell(40, 5, $f["DS_CARGO"], 0, false, 'L', true, false, 1);
+		$this->setX(140);
 		$this->Cell(5, 5, $f["IDADE_HOJE"], 0, false, 'L', true, false, 1);
 		$this->SetTextColor(0,0,0);
-		$this->setX(150);
+		$this->setX(146);
 		$this->Cell(20, 5, strftime("%d/%m/%Y",strtotime($f["DT_NASC"])), 0, false, 'L', true, false, 1);
 		$this->setX(170);
 		$this->Cell(35, 5, trim($f["FONE_RES"]."   ".$f["FONE_CEL"]), 0, false, 'L', true, false, 1);
@@ -121,6 +124,40 @@ class LISTAATIVOSALFA extends TCPDF {
 		$this->setCellPaddings(1,0,1,0);
 		$this->setXY(5, $this->posY);
 		$this->Cell(200, 6, $this->count .": " .$result->RecordCount(), 0, false, 'C', true);
+    $this->posY+=6;
+  }
+
+	public function addLineResumo($f){
+		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 10);
+		$this->setCellPaddings(1,0,1,0);
+		if ($this->lineAlt):
+			$this->SetFillColor(240,240,240);
+		else:
+			$this->SetFillColor(255,255,255);
+		endif;
+		$this->SetTextColor(0,0,0);
+		$this->setXY(80, $this->posY);
+		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 12);
+		$this->Cell(30, 8, is_null($f["DS_TAB_TP_REST_ALIM"]) ? "-" : $f["DS_TAB_TP_REST_ALIM"], 0, false, 'L', true, false, 1);
+		$this->setX(110);
+		$this->Cell(25, 8, $f["QTD"], 0, false, 'C', true, false, 1);
+		$this->posY+=9;
+		$this->lineAlt = !$this->lineAlt;
+	}
+
+	public function geraResumo(){
+    $result = CONN::get()->Execute("
+          SELECT cp.DS_TAB_TP_REST_ALIM, COUNT(*) AS QTD
+          FROM CON_PESSOA cp
+    INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = cp.ID_CAD_PESSOA)
+          ".$this->where."
+          GROUP BY cp.DS_TAB_TP_REST_ALIM
+    ");
+    if ($result->RecordCount() > 1):
+      foreach ($result as $ra => $f):
+        $this->addLineResumo($f);
+      endforeach;
+    endif;
 	}
 	
 	public function newPage() {
@@ -132,29 +169,33 @@ class LISTAATIVOSALFA extends TCPDF {
 
 	public function download() {
 		$this->lastPage();
-		$this->Output("ListagemRestAlimentar_".date('Y-m-d_H:i:s').".pdf", "I");
+		$this->Output("ListagemRegAlimentar_".date('Y-m-d_H:i:s').".pdf", "I");
 	}
 }
 
 $pdf = new LISTAATIVOSALFA();
 $pdf->tipoRestricao = fRequest("filter");
+$pdf->count = "Total de Membros - Restrição Alimentar";
 
 $query = "
 	 SELECT cp.NM, ca.CD_CARGO, ca.DS_CARGO, cp.DT_NASC, cp.FONE_RES, cp.FONE_CEL, cp.IDADE_HOJE, ta.CD_COR_GENERO, cp.DS_TAB_TP_REST_ALIM
 	   FROM CON_PESSOA cp
   INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = cp.ID_CAD_PESSOA)
-  LEFT JOIN TAB_UNIDADE ta ON (ta.ID = ca.ID_UNIDADE)
-	  WHERE cp.ID_TAB_TP_REST_ALIM IN (".$pdf->tipoRestricao.")";
-if (!is_null($pdf->tipoRestricao)):
-	$query .= "cp.ID_TAB_TP_REST_ALIM IS NOT NULL";
-	$pdf->title = "Listagem de Membros com Restrição alimentar";
-	$pdf->count = "Total de Membros com Restrição alimentar";
+  LEFT JOIN TAB_UNIDADE ta ON (ta.ID = ca.ID_UNIDADE)";
+if ($pdf->tipoRestricao == "null"):
+  $pdf->where = "";
 else:
-	$query .= "cp.ID_TAB_TP_REG_ALIM IS NULL";
-	$pdf->title = "Listagem de Membros com Restrição alimentar indefinido";
-	$pdf->count = "Total de Membros com Restrição alimentar indefinido";
+  $pdf->where = "WHERE (";
+  $inWhere = preg_replace("/^,/", '', $pdf->tipoRestricao);
+  if (!empty($inWhere)):
+    $pdf->where .= "cp.ID_TAB_TP_REST_ALIM IN ($inWhere)";
+  endif;
+  if (substr($pdf->tipoRestricao, 0, 1) === "," || empty($pdf->tipoRestricao)):
+    $pdf->where .= (!empty($inWhere) ? " OR " : "")."cp.ID_TAB_TP_REST_ALIM IS NULL";
+  endif;
+  $pdf->where .= ")";
 endif;
-$query .= " ORDER BY ca.NM";
+$query .= $pdf->where." ORDER BY ca.NM";
 
 $pdf->newPage();
 
@@ -180,7 +221,19 @@ if  ($pdf->getNumPages() != $start_page):
 	$pdf->newPage();
 	$pdf->addLineCount($result);
 else:
-	$pdf->commitTransaction();     
+	$pdf->commitTransaction();
+endif;
+
+//RESUMO GERAL
+$pdf->startTransaction();
+$start_page = $pdf->getPage();
+$pdf->geraResumo($eventoID);
+if  ($pdf->getNumPages() != $start_page):
+  $pdf->rollbackTransaction(true);
+  $pdf->newPage();
+  $pdf->geraResumo($eventoID);
+else:
+  $pdf->commitTransaction();
 endif;
 
 $pdf->download();
