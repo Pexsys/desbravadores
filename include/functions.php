@@ -545,10 +545,10 @@ function fDomain($a){
 	return $arr;
 }
 
-function fDomainStatic($a,$lWrite = true){
+function fDomainStatic($a, $lWrite = true, $nullId = ""){
 	$arr = fDomain($a);
-	if ( $lWrite ):
-		$strDomain = "<option value=\"\">(NENHUM)</option>";
+	if ($lWrite):
+		$strDomain = "<option value=\"$nullId\">(NENHUM)</option>";
 		foreach ($arr as $key => $value):
 			$strDomain .= "<option value=\"".$value["id"]."\">".$value["ds"]."</option>";
 		endforeach;

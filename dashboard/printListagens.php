@@ -24,8 +24,10 @@ $classes = getDomainFilter( array( "type" => "C" ) );
 			<option data-icon="fas fa-music" show="divFanfarra" value="geraListaFanfarra.php?filter=">LISTAGEM DE MEMBROS - FANFARRA</option>
 			<option data-icon="fas fa-user-circle" show="divUniformes" value="geraListaUniformes.php?filter=">LISTAGEM DE MEMBROS - UNIFORMES</option>
 			<option data-icon="fas fa-utensils" show="divRegAlimentar" value="geraListaRegAlimentar.php?filter=">LISTAGEM DE MEMBROS - REGIME ALIMENTAR</option>
-      <option data-icon="fas fa-utensils" show="divRestrAlimentar" value="geraListaRestAlimentar.php?filter=">LISTAGEM DE MEMBROS - RESTRIÇAO ALIMENTAR</option>
+      <option data-icon="fas fa-utensils" show="divRestrAlimentar" value="geraListaRestAlimentar.php?filter=">LISTAGEM DE MEMBROS - RESTRIÇÃO ALIMENTAR</option>
 			<option data-divider="true"></option>
+      <option data-icon="fas fa-syringe"show="divRegistroMenor" value="geraInfoRespVacina.php?filter=">TERMO DE RESPONSABILIDADE - NÃO IMUNIZAÇÃO DE MENOR</option>
+      <option data-divider="true"></option>
 			<option data-icon="far fa-hand-point-up" value="geraListaPresencaPais.php?">LISTAGEM DE PRESEN&Ccedil;A - REUNI&Atilde;O DE PAIS</option>
 			<option data-divider="true"></option>
 			<option data-icon="fas fa-star" value="geraListaEstrelas.php?">REQUISI&Ccedil;&Atilde;O DE ESTRELAS DE TEMPO DE SERVI&Ccedil;O</option>
@@ -34,7 +36,7 @@ $classes = getDomainFilter( array( "type" => "C" ) );
 			<option data-icon="fas fa-list" show="divEventos" value="geraListaEventoAutoriz.php?eve=">LISTAGEM DE SA&Iacute;DA - CONTROLE DE AUTORIZA&Ccedil;&Otilde;ES - GERAL</option>
 			<option data-icon="fas fa-venus-mars" show="divEventos" value="geraListaEventoAutorizGen.php?eve=">LISTAGEM DE SA&Iacute;DA - CONTROLE DE AUTORIZA&Ccedil;&Otilde;ES - G&Ecirc;NERO</option>
 			<option data-icon="fab fa-leanpub" show="divEventos" value="geraListaDispensaEscola.php?eve=">LISTAGEM DE SA&Iacute;DA - DISPENSA ESCOLAR</option>
-			<option data-icon="fas fa-syringe"show="divRegistroMenor" value="geraInfoRespVacina.php?filter=">TERMO DE RESPONSABILIDADE - NÃO IMUNIZAÇÃO DE MENOR</option>
+
 			<option data-icon="glyphicon glyphicon-tent" show="divEventos" value="geraListaEventoTent.php?eve=">LISTAGEM DE SA&Iacute;DA - BARRACAS</option>
 			<option data-icon="fas fa-utensils" show="divEventos" value="geraListaEventoKitchen.php?eve=">LISTAGEM DE SA&Iacute;DA - COZINHA</option>
 			<option data-icon="fas fa-bus" show="divEventos" value="geraListaEventoBus.php?eve=">LISTAGEM DE SA&Iacute;DA - PASSAGEIROS</option>
@@ -45,16 +47,16 @@ $classes = getDomainFilter( array( "type" => "C" ) );
 </div>
 <br/>
 <div class="row">
-	<div class="col-lg-8" name="rowFilter" id="divRestrAlimentar" style="display:none;">
-		<label for="cb" class="control-label">Restrição Alimentar:</label>
-		<select name="cb" id="cb" class="selectpicker form-control input-sm" title="Escolha o tipo de Restrição Alimentar" data-width="100%" data-container="body" data-actions-box="false">
-    <?php fDomainStatic( array( "table" => "TAB_TP_REST_ALIM", "id" => "ID", "order" => "ID" ) );?>
+<div class="col-lg-8" name="rowFilter" id="divRegAlimentar" style="display:none;">
+		<label for="cbRegime" class="control-label">Regime Alimentar:</label>
+		<select name="cbRegime" id="cbRegime" class="selectpicker form-control input-sm" title="Escolha um ou mais tipos de Regime Alimentar" multiple data-selected-text-format="count > 4" data-width="100%" data-container="body" data-actions-box="true">
+    <?php fDomainStatic( array( "table" => "TAB_TP_REG_ALIM", "id" => "ID", "ds" => "DS", "order" => "DS" ) );?>
 		</select>
   </div>
-	<div class="col-lg-8" name="rowFilter" id="divRegAlimentar" style="display:none;">
-		<label for="cb" class="control-label">Regime Alimentar:</label>
-		<select name="cb" id="cb" class="selectpicker form-control input-sm" title="Escolha o tipo de Regime Alimentar" data-width="100%" data-container="body" data-actions-box="false">
-    <?php fDomainStatic( array( "table" => "TAB_TP_REG_ALIM", "id" => "ID", "order" => "ID" ) );?>
+	<div class="col-lg-8" name="rowFilter" id="divRestrAlimentar" style="display:none;">
+		<label for="cbRestricao" class="control-label">Restrição Alimentar:</label>
+		<select name="cbRestricao" id="cbRestricao" class="selectpicker form-control input-sm" title="Escolha um ou mais tipos de Restrição Alimentar" multiple data-selected-text-format="count > 4" data-width="100%" data-container="body" data-actions-box="true">
+    <?php fDomainStatic( array( "table" => "TAB_TP_REST_ALIM", "id" => "ID", "ds" => "DS", "order" => "DS" ) );?>
 		</select>
   </div>
 	<div class="col-lg-8" name="rowFilter" id="divUniformes" style="display:none;">

@@ -245,20 +245,22 @@ $(document).ready(function(){
 						message: 'Data de batismo inv&aacute;lida!'
 					}
 				}},
-				tpSexo:			{validators: {}},
-				dsComp:			{validators: {}},
-				fgReuniao:		{validators: {}},
-				nrFoneRes:		{validators: {}},
-				nrFoneCel:		{validators: {}},
-				tpSexoResp:		{validators: {}},
-				cmCargo2:		{validators: {}},
-				cmFanfarra:		{validators: {}},
-				cmAnoDir:		{validators: {}},
-				nrUltEstrela:	{validators: {}},
-				nrUniformes:	{validators: {}},
-				dsReligiao:		{validators: {}},
-				tpRegime:		{validators: {}},
-				cbAtivo:		{validators: {}}
+				tpSexo: {validators: {}},
+				dsComp: {validators: {}},
+				fgReuniao: {validators: {}},
+				nrFoneRes: {validators: {}},
+				nrFoneCel: {validators: {}},
+				tpSexoResp: {validators: {}},
+				cmCargo2: {validators: {}},
+				cmFanfarra: {validators: {}},
+				cmAnoDir: {validators: {}},
+				nrUltEstrela: {validators: {}},
+				nrUniformes: {validators: {}},
+				dsReligiao: {validators: {}},
+				tpRegime: {validators: {}},
+				cmTabRegAlim: {validators: {}},
+				cmTabRestAlim: {validators: {}},
+				cbAtivo: {validators: {}}
 			}
 		})
 		.on("change", "[field]", function(e) {
