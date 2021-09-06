@@ -107,19 +107,19 @@
 									</div>
 								</div>
                 <div class="row">
-                  <div class="form-group col-xs-5">
+                  <div class="form-group col-xs-6">
 										<label for="cmTabRegAlim" class="control-label">Regime Alimentar</label>
 										<select field="cad_pessoa-id_tab_tp_reg_alim" name="cmTabRegAlim" id="cmTabRegAlim" class="form-control input-sm">
-                    <?php fDomainStatic( array( "table" => "TAB_TP_REG_ALIM", "id" => "ID", "order" => "ID" ) );?>
+                    <?php fDomainStatic( array( "table" => "TAB_TP_REG_ALIM", "id" => "ID", "ds" => "DS", "order" => "DS" ) );?>
                     </select>
 									</div>
-                  <div class="form-group col-xs-5">
+                  <div class="form-group col-xs-6">
 										<label for="cmTabRestAlim" class="control-label">Restrição Alimentar</label>
 										<select field="cad_pessoa-id_tab_tp_rest_alim" name="cmTabRestAlim" id="cmTabRestAlim" class="form-control input-sm">
-                    <?php fDomainStatic( array( "table" => "TAB_TP_REST_ALIM", "id" => "ID", "order" => "ID" ) );?>
+                    <?php fDomainStatic( array( "table" => "TAB_TP_REST_ALIM", "id" => "ID", "ds" => "DS", "order" => "DS" ) );?>
                     </select>
 									</div>
-                <div class="row">
+                </div>
 							</div>
 							<div id="Ender" class="col-lg-12 tab-pane fade">
 								<div class="row">

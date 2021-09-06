@@ -168,7 +168,7 @@ $result = CONN::get()->Execute("
 	SELECT
 			es.ID, es.DS, es.DS_TEMA, es.DS_ORG, es.DS_DEST,
 			esp.ID AS ID_EVE_PESSOA,
-			ca.NM, at.CD_CARGO, IF(ca.TP_SEXO='F',cg.DSF,cg.DSM) AS DS_CARGO, ca.DT_NASC, ca.FONE_RES, ca.FONE_CEL, ca.IDADE_HOJE, ca.ID_TAB_TP_REG_ALIM, ca.DS_TP_TAB_REG_ALIM,
+			ca.NM, at.CD_CARGO, IF(ca.TP_SEXO='F',cg.DSF,cg.DSM) AS DS_CARGO, ca.DT_NASC, ca.FONE_RES, ca.FONE_CEL, ca.IDADE_HOJE, ca.ID_TAB_TP_REG_ALIM, ca.DS_TAB_TP_REG_ALIM,
 			YEAR(es.DH_R)-YEAR(ca.DT_NASC) - IF(DATE_FORMAT(ca.DT_NASC,'%m%d')>DATE_FORMAT(es.DH_R,'%m%d'),1,0) AS IDADE_EVENTO_FIM,
 			esp.FG_AUTORIZ
 	FROM EVE_SAIDA es

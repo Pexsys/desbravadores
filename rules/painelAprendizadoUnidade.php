@@ -30,11 +30,11 @@ function getQueryByFilter( $parameters ) {
 			if ( $key == "MA" ):
 				$where .= " AND DATE_FORMAT(p.DT_NASC,'%m') ".$notStr."IN";
 			elseif ( $key == "C" ):
-				$where .= " AND cap.tp_item = 'CL' AND cap.id_tab_aprend ".$notStr."IN";
+				$where .= " AND cap.TP_ITEM = 'CL' AND cap.ID_TAB_APREND ".$notStr."IN";
 			elseif ( $key == "RG" ):
-				$where .= " AND p.id_tab_tp_reg_alim ".$notStr."IN";
+				$where .= " AND p.ID_TAB_TP_REG_ALIM ".$notStr."IN";
       elseif ( $key == "RE" ):
-        $where .= " AND p.id_tab_tp_rest_alim ".$notStr."IN";
+        $where .= " AND p.ID_TAB_TP_REST_ALIM ".$notStr."IN";
 			else:
 				$where .= " AND";
 			endif;
@@ -45,13 +45,13 @@ function getQueryByFilter( $parameters ) {
 				foreach ($parameters["filters"][$key]["vl"] as $value):
 					if ( $key == "B" ):
 						if ($value == "S"):
-							$where .= (!$prim ? " OR " : "") ."p.dt_bat IS ". ( $value == "S" && !$not ? "NOT NULL" : "NULL");
+							$where .= (!$prim ? " OR " : "") ."p.DT_BAT IS ". ( $value == "S" && !$not ? "NOT NULL" : "NULL");
 						elseif ($value == "N"):
-							$where .= (!$prim ? " OR " : "") ."p.dt_bat IS ". ( $value == "N" && !$not ? "NULL" : "NOT NULL");
+							$where .= (!$prim ? " OR " : "") ."p.DT_BAT IS ". ( $value == "N" && !$not ? "NULL" : "NOT NULL");
 						elseif (fStrStartWith($value,"A")):
-							$where .= (!$prim ? " OR " : "") ."YEAR(p.dt_bat) ". ( !$not ? " < " : " >= ") . substr($value,1,4);
+							$where .= (!$prim ? " OR " : "") ."YEAR(p.DT_BAT) ". ( !$not ? " < " : " >= ") . substr($value,1,4);
 						else:
-							$where .= (!$prim ? " OR " : "") ."YEAR(p.dt_bat) ". ( !$not ? " = " : " <> ") . $value;
+							$where .= (!$prim ? " OR " : "") ."YEAR(p.DT_BAT) ". ( !$not ? " = " : " <> ") . $value;
 						endif;
 					elseif ( empty($value) ):
 						$aWhere[] = "NULL";
