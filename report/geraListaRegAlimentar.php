@@ -2,18 +2,20 @@
 @require_once('../include/functions.php');
 @require_once('../include/_core/lib/tcpdf/tcpdf.php');
 
-class LISTAEVENTOALFA extends TCPDF {
-
+class LISTAATIVOSALFA extends TCPDF {
+	
 	//lines styles
 	private $stLine;
 	private $stLine2;
 	private $posY;
 	private $lineAlt;
-	private $header;
-
+	public $tipoRegime;
+	public $title;
+	public $count;
+	
 	function __construct() {
 		parent::__construct(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-
+		
 		$this->stLine = array('width' => 1, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0));
 		$this->stLine2 = array('width' => 0.3, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0));
 		$this->stLine3 = array(
@@ -34,11 +36,12 @@ class LISTAEVENTOALFA extends TCPDF {
 		);
 
 		$this->SetCreator(PDF_CREATOR);
-
-		$this->SetTitle('Listagem de Participantes do Evento');
+		
+		$this->SetTitle('Listagem de Membros por Regime Alimentar');
 		$this->SetSubject(PATTERNS::getClubeDS(array("cl","nm")));
-		$this->SetKeywords('Eventos, ' . str_replace(" ", ", ", PATTERNS::getClubeDS( array("db","nm","ibd") ) ));
+		$this->SetKeywords('Regime Alimentar, ' . str_replace(" ", ", ", PATTERNS::getClubeDS( array("db","nm","ibd") ) ));
 		$this->setImageScale(PDF_IMAGE_SCALE_RATIO);
+		$this->title = "";
 	}
 
 	public function Footer() {
@@ -52,46 +55,33 @@ class LISTAEVENTOALFA extends TCPDF {
 		$this->SetX(172);
 		$this->Cell(40, 3, "Página ". $this->getAliasNumPage() ." de ". $this->getAliasNbPages(), 0, false, 'R');
 	}
-
+	
  	public function Header() {
 		$this->setXY(0,0);
 		$this->Image("img/logo.jpg", 5, 5, 14, 16, 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
-		$this->posY = 5;
-
-		$this->setXY(20,$this->posY);
-		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 16);
-		$this->Cell(185, 6, "LISTAGEM ALFABÉTICA DE PARTICIPANTES", 0, false, 'C', false, false, false, false, 'T', 'M');
-		$this->posY += 8;
-
-		$this->setXY(20,$this->posY);
+		
+		$this->setXY(20,5);
+		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 22);
+		
+		$this->Cell(185, 9, $this->title, 0, false, 'C', false, false, false, false, 'T', 'M');
+		$this->setXY(20,15);
 		$this->SetTextColor(80,80,80);
-		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 8);
+		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 7);
 		$this->Cell(185, 5, PATTERNS::getCDS(), 0, false, 'C', false, false, false, false, false, false, 'T', 'M');
-		$this->posY += 5;
-
-		$this->setXY(20,$this->posY);
-		$this->SetTextColor(0,0,0);
-		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 9);
-		$this->Cell(185, 5, $this->header["DS"] . (!is_null($this->header["DS_TEMA"]) ? " - ".$this->header["DS_TEMA"] : "")  ." - ". $this->header["DS_DEST"], 0, false, 'C', false, false, false, false, 'T', 'M');
-		$this->posY += 5;
 
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 8);
 		$this->SetTextColor(255,255,255);
-		$this->SetFillColor(235,192,22);
+		$this->SetFillColor(155,120,208);
 		$this->setCellPaddings(1,0,1,0);
-		$this->setXY(5,$this->posY);
+		$this->setXY(5, 22);
 		$this->Cell(85, 6, "Nome Completo", 0, false, 'L', true);
-		$this->setX(90);
+		$this->setXY(90, 22);
 		$this->Cell(50, 6, "Cargo", 0, false, 'L', true);
-		$this->setX(140);
+		$this->setXY(140, 22);
 		$this->Cell(30, 6, "Idade/Nasc.", 0, false, 'C', true);
-		$this->setX(170);
+		$this->setXY(170, 22);
 		$this->Cell(35, 6, "Telefones", 0, false, 'L', true);
-		$this->posY += 6;
-	}
-
-	public function setHeaderFields($header){
-		$this->header = $header;
+		$this->posY = 28;
 	}
 
 	public function addLine($f){
@@ -103,7 +93,7 @@ class LISTAEVENTOALFA extends TCPDF {
 			$this->SetFillColor(255,255,255);
 		endif;
 		$this->setXY(5, $this->posY);
-		$this->Cell(85, 5, (!is_null($f["ID_TAB_TP_REG_ALIM"]) ? "* " : "") . $f["NM"], 0, false, 'L', true, false, 1);
+		$this->Cell(85, 5, $f["NM"], 0, false, 'L', true, false, 1);
 		$this->setX(90);
 
 		$colorR = base_convert(substr($f["CD_COR_GENERO"],1,2),16,10);
@@ -122,32 +112,17 @@ class LISTAEVENTOALFA extends TCPDF {
 		$this->posY+=5;
 		$this->lineAlt = !$this->lineAlt;
 	}
-
-	public function addLineCount($result,$eveID){
+	
+	public function addLineCount($result){
 		$this->posY+=2;
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'B', 9);
 		$this->SetTextColor(255,255,255);
-		$this->SetFillColor(235,192,22);
+		$this->SetFillColor(155,120,208);
 		$this->setCellPaddings(1,0,1,0);
 		$this->setXY(5, $this->posY);
-		$this->Cell(200, 6, "Total de Membros no Evento: ".$result->RecordCount(), 0, false, 'L', true);
-
-		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 9);
-		$result = CONN::get()->Execute("
-			SELECT ca.DS_TAB_TP_REG_ALIM, COUNT(*) AS QTD
-			FROM EVE_SAIDA es
-			INNER JOIN EVE_SAIDA_MEMBRO esp on (esp.ID_EVE_SAIDA = es.ID)
-			INNER JOIN CAD_MEMBRO cm on (cm.ID = esp.ID_CAD_MEMBRO)
-			INNER JOIN CON_PESSOA ca on (ca.ID_CAD_PESSOA = cm.ID_CAD_PESSOA)
-			WHERE es.ID = ?
-      GROUP BY ca.DS_TAB_TP_REG_ALIM
-		", array($eveID) );
-    foreach ( $result as $ra => $f ):
-      $this->setXY(150, $this->posY);
-			$this->Cell(55, 6, $result->fields["DS_TAB_TP_REG_ALIM"].": ".$result->fields["QTD"], 0, false, 'R', true);
-    endforeach;
+		$this->Cell(200, 6, $this->count .": " .$result->RecordCount(), 0, false, 'C', true);
 	}
-
+	
 	public function newPage() {
 		$this->AddPage();
 		$this->setCellPaddings(0,0,0,0);
@@ -157,58 +132,57 @@ class LISTAEVENTOALFA extends TCPDF {
 
 	public function download() {
 		$this->lastPage();
-		$this->Output("ListagemParticipantesEvento_".date('Y-m-d_H:i:s').".pdf", "I");
+		$this->Output("ListagemRegAlimentar_".date('Y-m-d_H:i:s').".pdf", "I");
 	}
 }
 
-$eveID = fRequest("eve");
-$pdf = new LISTAEVENTOALFA();
+$pdf = new LISTAATIVOSALFA();
+$pdf->tipoRegime = fRequest("filter");
 
-$result = CONN::get()->Execute("
-	SELECT
-			es.ID, es.DS, es.DS_TEMA, es.DS_ORG, es.DS_DEST,
-			esp.ID AS ID_EVE_PESSOA,
-			ca.NM, at.CD_CARGO, IF(ca.TP_SEXO='F',cg.DSF,cg.DSM) AS DS_CARGO, ca.DT_NASC, ca.FONE_RES, ca.FONE_CEL, ca.IDADE_HOJE, ca.ID_TAB_TP_REG_ALIM, ca.DS_TP_TAB_REG_ALIM,
-			YEAR(es.DH_R)-YEAR(ca.DT_NASC) - IF(DATE_FORMAT(ca.DT_NASC,'%m%d')>DATE_FORMAT(es.DH_R,'%m%d'),1,0) AS IDADE_EVENTO_FIM,
-			esp.FG_AUTORIZ
-	FROM EVE_SAIDA es
-	INNER JOIN EVE_SAIDA_MEMBRO esp on (esp.ID_EVE_SAIDA = es.ID)
-	INNER JOIN CAD_MEMBRO cm on (cm.ID = esp.ID_CAD_MEMBRO)
-	INNER JOIN CAD_ATIVOS at on (at.ID_CAD_MEMBRO = esp.ID_CAD_MEMBRO AND at.NR_ANO = YEAR(es.DH_R))
-	INNER JOIN TAB_CARGO cg ON (cg.CD = at.CD_CARGO)
-	INNER JOIN CON_PESSOA ca on (ca.ID_CAD_PESSOA = cm.ID_CAD_PESSOA)
-    WHERE es.ID = ?
-	ORDER BY ca.NM
-", array($eveID) );
-if (!$result->EOF):
-	$pdf->setHeaderFields($result->fields);
+$query = "
+	 SELECT cp.NM, ca.CD_CARGO, ca.DS_CARGO, cp.DT_NASC, cp.FONE_RES, cp.FONE_CEL, cp.IDADE_HOJE, ta.CD_COR_GENERO, cp.DS_TAB_TP_REG_ALIM
+	   FROM CON_PESSOA cp
+  INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = cp.ID_CAD_PESSOA)
+  LEFT JOIN TAB_UNIDADE ta ON (ta.ID = ca.ID_UNIDADE)
+	  WHERE cp.ID_TAB_TP_REG_ALIM IN (".$pdf->tipoRegime.")";
+if (!is_null($pdf->tipoRegime)):
+	$query .= "cp.ID_TAB_TP_REG_ALIM IS NOT NULL";
+	$pdf->title = "Listagem de Membros com Regime alimentar";
+	$pdf->count = "Total de Membros com Regime alimentar";
+else:
+	$query .= "cp.ID_TAB_TP_REG_ALIM IS NULL";
+	$pdf->title = "Listagem de Membros com Regime alimentar indefinido";
+	$pdf->count = "Total de Membros com Regime alimentar indefinido";
+endif;
+$query .= " ORDER BY ca.NM";
 
-	$pdf->newPage();
-	foreach ( $result as $ra => $f ):
-		$pdf->startTransaction();
-		$start_page = $pdf->getPage();
-		$pdf->addLine($f);
-		if  ($pdf->getNumPages() != $start_page):
-			$pdf->rollbackTransaction(true);
-			$pdf->newPage();
-			$pdf->addLine($f);
-		else:
-			$pdf->commitTransaction();
-		endif;
-	endforeach;
+$pdf->newPage();
 
+$result = CONN::get()->Execute($query);
+foreach ( $result as $ra => $f ):
 	$pdf->startTransaction();
 	$start_page = $pdf->getPage();
-	$pdf->addLineCount($result,$eveID);
+	$pdf->addLine($f);
 	if  ($pdf->getNumPages() != $start_page):
 		$pdf->rollbackTransaction(true);
 		$pdf->newPage();
-		$pdf->addLineCount($result,$eveID);
+		$pdf->addLine($f);
 	else:
-		$pdf->commitTransaction();
+		$pdf->commitTransaction();     
 	endif;
+endforeach;
 
-	$pdf->download();
+$pdf->startTransaction();
+$start_page = $pdf->getPage();
+$pdf->addLineCount($result);
+if  ($pdf->getNumPages() != $start_page):
+	$pdf->rollbackTransaction(true);
+	$pdf->newPage();
+	$pdf->addLineCount($result);
+else:
+	$pdf->commitTransaction();
 endif;
+
+$pdf->download();
 exit;
 ?>

@@ -30,7 +30,6 @@ function getTamanhos( $tp ){
 function getCargos(){
 	$arr = array();
 	
-	
 	$result = CONN::get()->Execute("
 		SELECT CD, DSM, DSF
 		  FROM TAB_CARGO
@@ -45,9 +44,24 @@ function getCargos(){
 	return array( "result" => true, "source" => $arr );
 }
 
-function getUnidades(){
+function getRestricaoAlimentar(){
 	$arr = array();
 	
+	$result = CONN::get()->Execute("
+		SELECT ID, DS
+		  FROM TAB_TP_REST_ALIM
+	  ORDER BY DS");
+	foreach ($result as $k => $fields):
+		$arr[] = array(
+			"id" => $fields['ID'],
+			"ds" => ($fields['DS'])
+		);
+	endforeach;
+	return array( "result" => true, "source" => $arr );
+}
+
+function getUnidades(){
+	$arr = array();
 	
 	$result = CONN::get()->Execute("
 		SELECT *

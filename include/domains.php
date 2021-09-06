@@ -96,6 +96,30 @@ function getDomainUnidades($fAtivo = false){
 	return $arr;
 }
 
+function getDomainRegimeAlimentar($fAtivo = false){
+	$arr = array();
+	$result = CONN::get()->Execute("SELECT ID, DS FROM TAB_TP_REG_ALIM ORDER BY DS");
+	foreach ($result as $k => $f):
+		$arr[] = array( 
+			"id"	=> $f['ID'],
+			"ds"	=> $f['DS'],
+		);
+	endforeach;
+	return $arr;
+}
+
+function getDomainRestricaoAlimentar($fAtivo = false){
+	$arr = array();
+	$result = CONN::get()->Execute("SELECT ID, DS FROM TAB_TP_REST_ALIM ORDER BY DS");
+	foreach ($result as $k => $f):
+		$arr[] = array( 
+			"id"	=> $f['ID'],
+			"ds"	=> $f['DS'],
+		);
+	endforeach;
+	return $arr;
+}
+
 function getTipoAprendizado(){
 	$arr = array();
 	

@@ -23,7 +23,8 @@ $classes = getDomainFilter( array( "type" => "C" ) );
 			<option data-icon="fas fa-universal-access" show="divUnidades" value="geraListaUnidade.php?filter=">LISTAGEM DE MEMBROS - UNIDADE</option>
 			<option data-icon="fas fa-music" show="divFanfarra" value="geraListaFanfarra.php?filter=">LISTAGEM DE MEMBROS - FANFARRA</option>
 			<option data-icon="fas fa-user-circle" show="divUniformes" value="geraListaUniformes.php?filter=">LISTAGEM DE MEMBROS - UNIFORMES</option>
-			<option data-icon="fas fa-utensils" show="divVegetariano" value="geraListaVegetarianos.php?filter=">LISTAGEM DE MEMBROS - VEGETARIANOS</option>
+			<option data-icon="fas fa-utensils" show="divRegAlimentar" value="geraListaRegAlimentar.php?filter=">LISTAGEM DE MEMBROS - REGIME ALIMENTAR</option>
+      <option data-icon="fas fa-utensils" show="divRestrAlimentar" value="geraListaRestAlimentar.php?filter=">LISTAGEM DE MEMBROS - RESTRIÇAO ALIMENTAR</option>
 			<option data-divider="true"></option>
 			<option data-icon="far fa-hand-point-up" value="geraListaPresencaPais.php?">LISTAGEM DE PRESEN&Ccedil;A - REUNI&Atilde;O DE PAIS</option>
 			<option data-divider="true"></option>
@@ -44,13 +45,18 @@ $classes = getDomainFilter( array( "type" => "C" ) );
 </div>
 <br/>
 <div class="row">
-	<div class="col-lg-8" name="rowFilter" id="divVegetariano" style="display:none;">
-		<label for="cbVegetariano" class="control-label">Vegetariano:</label>
-		<select name="cbVegetariano" id="cbVegetariano" class="selectpicker form-control input-sm" title="Vegetariano?" data-width="100%" data-container="body" data-actions-box="false">
-			<option value="S">SIM</option>
-			<option value="N">NÃO</option>
+	<div class="col-lg-8" name="rowFilter" id="divRestrAlimentar" style="display:none;">
+		<label for="cb" class="control-label">Restrição Alimentar:</label>
+		<select name="cb" id="cb" class="selectpicker form-control input-sm" title="Escolha o tipo de Restrição Alimentar" data-width="100%" data-container="body" data-actions-box="false">
+    <?php fDomainStatic( array( "table" => "TAB_TP_REST_ALIM", "id" => "ID", "order" => "ID" ) );?>
 		</select>
-    </div>
+  </div>
+	<div class="col-lg-8" name="rowFilter" id="divRegAlimentar" style="display:none;">
+		<label for="cb" class="control-label">Regime Alimentar:</label>
+		<select name="cb" id="cb" class="selectpicker form-control input-sm" title="Escolha o tipo de Regime Alimentar" data-width="100%" data-container="body" data-actions-box="false">
+    <?php fDomainStatic( array( "table" => "TAB_TP_REG_ALIM", "id" => "ID", "order" => "ID" ) );?>
+		</select>
+  </div>
 	<div class="col-lg-8" name="rowFilter" id="divUniformes" style="display:none;">
 	    	<label for="cbUniformes" class="control-label">Uniforme:</label>
 	    	<select name="cbUniformes" id="cbUniformes" class="selectpicker form-control input-sm" title="Escolha o tipo de Uniforme" data-width="100%" data-container="body" data-actions-box="false">

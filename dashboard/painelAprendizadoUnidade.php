@@ -45,7 +45,8 @@ endif;
           array( "id" => "B", "ds" => "Batizado", "icon" => "fas fa-bath" ),
           array( "id" => "C", "ds" => "Classe", "icon" => "fas fa-graduation-cap" ),
           array( "id" => "MA", "ds" => "Mês de Aniversário", "icon" => "far fa-calendar-alt" ),
-					array( "id" => "V", "ds" => "Vegetariano", "icon" => "fas fa-utensils" )
+					array( "id" => "RG", "ds" => "Regime Alimentar", "icon" => "fas fa-utensils" ),
+          array( "id" => "RE", "ds" => "Restrição Alimentar", "icon" => "fas fa-utensils" ),
 				)
 		) 
 	);?>

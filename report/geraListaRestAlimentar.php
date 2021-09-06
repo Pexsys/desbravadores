@@ -37,9 +37,9 @@ class LISTAATIVOSALFA extends TCPDF {
 
 		$this->SetCreator(PDF_CREATOR);
 		
-		$this->SetTitle('Listagem de Membros Vegetarianos');
+		$this->SetTitle('Listagem de Membros por Restrição Alimentar');
 		$this->SetSubject(PATTERNS::getClubeDS(array("cl","nm")));
-		$this->SetKeywords('Vegetarianos, ' . str_replace(" ", ", ", PATTERNS::getClubeDS( array("db","nm","ibd") ) ));
+		$this->SetKeywords('Restrição Alimentar, ' . str_replace(" ", ", ", PATTERNS::getClubeDS( array("db","nm","ibd") ) ));
 		$this->setImageScale(PDF_IMAGE_SCALE_RATIO);
 		$this->title = "";
 	}
@@ -132,27 +132,27 @@ class LISTAATIVOSALFA extends TCPDF {
 
 	public function download() {
 		$this->lastPage();
-		$this->Output("ListagemVegetarianos_".date('Y-m-d_H:i:s').".pdf", "I");
+		$this->Output("ListagemRestAlimentar_".date('Y-m-d_H:i:s').".pdf", "I");
 	}
 }
 
 $pdf = new LISTAATIVOSALFA();
-$pdf->tipoRegime = fRequest("filter");
+$pdf->tipoRestricao = fRequest("filter");
 
 $query = "
-	 SELECT cp.NM, ca.CD_CARGO, ca.DS_CARGO, cp.DT_NASC, cp.FONE_RES, cp.FONE_CEL, cp.IDADE_HOJE, ta.CD_COR_GENERO
+	 SELECT cp.NM, ca.CD_CARGO, ca.DS_CARGO, cp.DT_NASC, cp.FONE_RES, cp.FONE_CEL, cp.IDADE_HOJE, ta.CD_COR_GENERO, cp.DS_TAB_TP_REST_ALIM
 	   FROM CON_PESSOA cp
   INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = cp.ID_CAD_PESSOA)
   LEFT JOIN TAB_UNIDADE ta ON (ta.ID = ca.ID_UNIDADE)
-	  WHERE ";
-if ($pdf->tipoRegime == "S"):
-	$query .= "cp.TP_REGIME = 'S'";
-	$pdf->title = "Listagem de Membros Vegetarianos";
-	$pdf->count = "Total de Membros Vegetarianos";
+	  WHERE cp.ID_TAB_TP_REST_ALIM IN (".$pdf->tipoRestricao.")";
+if (!is_null($pdf->tipoRestricao)):
+	$query .= "cp.ID_TAB_TP_REST_ALIM IS NOT NULL";
+	$pdf->title = "Listagem de Membros com Restrição alimentar";
+	$pdf->count = "Total de Membros com Restrição alimentar";
 else:
-	$query .= "(cp.TP_REGIME = 'N' OR cp.TP_REGIME IS NULL)";
-	$pdf->title = "Listagem de Membros Não Vegetarianos";
-	$pdf->count = "Total de Membros Não Vegetarianos";
+	$query .= "cp.ID_TAB_TP_REG_ALIM IS NULL";
+	$pdf->title = "Listagem de Membros com Restrição alimentar indefinido";
+	$pdf->count = "Total de Membros com Restrição alimentar indefinido";
 endif;
 $query .= " ORDER BY ca.NM";
 
