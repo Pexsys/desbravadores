@@ -127,7 +127,7 @@ CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('DIÁRIA','01.02.02-An
             endif;
       endif;
     endforeach;
-	endforeach;
+  endforeach;
 
 //*******  SECRETARIA - INATIVACAO DE MEMBROS COM PENDENCIAS CADASTRAIS
 CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('EMAILS','01.02.03-Analisando membros com pendências cadastrais...')");

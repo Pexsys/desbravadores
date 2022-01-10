@@ -32,8 +32,6 @@ function getName( $parameters ) {
 function getNames(){
 	$arr = array();	
 
-	
-
 	session_start();
 	$usuarioID = $_SESSION['USER']['id'];
 	$qtdZeros = zeroSizeID();
@@ -142,7 +140,6 @@ function getUnionByClasses($aQuery, $pessoaID, $cadMembroID){
 function getEspecialidades() {
 	$arr = array();
 
-	
 	$result = CONN::get()->Execute("
 	SELECT
 		A.DS_ITEM AS DS_AREA,

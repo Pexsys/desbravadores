@@ -7,7 +7,7 @@ responseMethod();
  ****************************/
 function getGraphData() {
 	session_start();
-	$membroID = $_SESSION['USER']['id_cad_pessoa'];
+	$pessoaID = $_SESSION['USER']['id_cad_pessoa'];
 
 	$arr = array();
 	
@@ -70,7 +70,7 @@ function getGraphData() {
 		   AND YEAR(DT_INICIO) = YEAR(NOW())
 		   AND DT_CONCLUSAO IS NULL
 	  ORDER BY CD_ITEM_INTERNO
-	", array($membroID) );
+	", array($pessoaID) );
 	if (!$rsCls->EOF):
 		$arr["checkbox"] = array();
 
@@ -86,7 +86,7 @@ function getGraphData() {
 				   AND YEAR(X.DT_INICIO) = YEAR(NOW())
 				  GROUP BY X.DT_ASSINATURA, Y.QTD
 				  ORDER BY X.DT_ASSINATURA
-			", array($membroID, $lnc["ID_TAB_APREND"]) );
+			", array($pessoaID, $lnc["ID_TAB_APREND"]) );
 			if (!$result->EOF):
 				$qtDt = 0;
 
@@ -147,16 +147,15 @@ function getPainelMestrado( $parameters ){
 	return getPainelMestradoPessoa( $parameters["ruleID"], $parameters["id"] );
 }
 
-function getPainelMestradoPessoa( $ruleID, $membroID ){
-	
-	
+function getPainelMestradoPessoa( $ruleID, $pessoaID ){
 	//LE REGRAS
 	$rg = CONN::get()->Execute("
-	 	SELECT DISTINCT car.CD_ITEM_INTERNO, car.CD_AREA_INTERNO, car.DS_ITEM, car.TP_ITEM, car.MIN_AREA, ah.DT_CONCLUSAO
+	 	SELECT DISTINCT car.CD_ITEM_INTERNO, car.CD_AREA_INTERNO, car.DS_ITEM, car.TP_ITEM, car.MIN_AREA, ah.DT_CONCLUSAO, ca.ID_CAD_MEMBRO
 	 	  FROM CON_APR_REQ car
 	 LEFT JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = car.ID AND ah.ID_CAD_PESSOA = ?)
+	 LEFT JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = ?)
 	 	WHERE car.ID = ?
-	 ", array( $membroID, $ruleID ) );
+	 ", array( $pessoaID, $pessoaID, $ruleID ) );
 	$fg = $rg->fields;
 	 
 	$min = $fg["MIN_AREA"];
@@ -170,7 +169,7 @@ function getPainelMestradoPessoa( $ruleID, $membroID ){
 		 INNER JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = car.ID_RQ AND ah.ID_CAD_PESSOA = ? AND ah.DT_CONCLUSAO IS NOT NULL)
 		 WHERE tar.ID_TAB_APREND = ?
 		 GROUP BY tar.ID, tar.QT_MIN
-	", array( $membroID, $ruleID ) );
+	", array( $pessoaID, $ruleID ) );
 	foreach($rR as $lR => $fR):
 	 	$feitas += min( $fR["QT_MIN"], $fR["QT_FEITAS"] );
 	endforeach;
@@ -203,7 +202,7 @@ function getPainelMestradoPessoa( $ruleID, $membroID ){
 			 FROM APR_HISTORICO
 			 WHERE ID_CAD_PESSOA = ?
 			 AND ID_TAB_APREND = ?
-		 ", array( $membroID, $ruleID ) );
+		 ", array( $pessoaID, $ruleID ) );
 		 if ($rI->EOF || is_null($rI->fields["DT_CONCLUSAO"]) ):
 		 	$class = array( "panel" => "panel-green", "title" => "type-success" );
 		 	$sizeClass = "col-md-4 col-xs-12 col-sm-6 col-xl-3 col-lg-4 blink";
@@ -216,12 +215,13 @@ function getPainelMestradoPessoa( $ruleID, $membroID ){
 				 INNER JOIN CAD_USUARIO cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
 				 WHERE ca.ID = ?
 				 AND NOT EXISTS (SELECT 1 FROM LOG_MENSAGEM WHERE ID_ORIGEM = ? AND TP = 'M' AND ID_CAD_USUARIO = cu.ID)
-			 ", array( $fg["ID"], $membroID, $ruleID ) );
+			 ", array( $fg["ID"], $pessoaID, $ruleID ) );
 			
 			 $fields = array(
 				 "name" => "print",
 				 "what" => "capa",
-				 "id-pess" => $membroID,
+				 "id-pess" => $pessoaID,
+				 "id-membro" => $fg["ID_CAD_MEMBRO"],
 				 "cd-item" => $fg["CD_ITEM_INTERNO"]
 			 );
 		endif;

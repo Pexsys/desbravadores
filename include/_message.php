@@ -1,5 +1,5 @@
 <?php
-@include_once("_patterns.php");
+@include_once("classes/patterns.php");
 
 class MESSAGE {
 
@@ -298,7 +298,7 @@ class MESSAGE {
                 "msg" => "<p>Querid".$this->_oa." amig".$this->_oa." ".$this->_np.",<br/>
                 <br/>
                 Dentro, fora, perto ou longe do nosso ".
-                PATTERNS::getClubeDS( array( "cl" => true, "nm" => true ) )
+                PATTERNS::getClubeDS( array( "cl", "nm" ) )
                 .", que seus dias deste novo ano possam ser mais alegres, e suas conquistas mais plenas e belas, juntamente com a bênção de Deus.<br/>
                 <br/>
                 Ano novo, novas metas, desafios e conquistas, e meu desejo é que você e eu possamos realizar cada um deles com muito amor e entrega.<br/>
