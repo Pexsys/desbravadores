@@ -196,7 +196,7 @@ class PATTERNS {
       $str .= in_array("sp",$p) && in_array("cnpj",$p) && !empty($str) ? "- " : "";
       $str .= in_array("cnpj",$p) ? "CNPJ 43.586.122/0121-20 " : "";  
       $str .= in_array("sp",$p) && in_array("rg",$p) && !empty($str) ? "- " : "";
-      $str .= in_array("rg",$p) ? "6ª Região " : "";
+      $str .= in_array("rg",$p) ? "1ª Região " : "";
       $str .= in_array("sp",$p) && in_array("as",$p) && !empty($str) ? "- " : "";
       $str .= in_array("as",$p) ? "Associação Paulista Sul " : "";
       $str .= in_array("sp",$p) && in_array("ab",$p) && !empty($str) ? "- " : "";

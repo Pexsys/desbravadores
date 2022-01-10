@@ -6,6 +6,7 @@ $mail = MAIL::get();
 
 //SECRETARIA - COMUNICADOS - EMAILS NAO ENVIADOS
 $nrEnviados = 0;
+$mail->ClearAllRecipients();
 CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('EMAILS','01.01-Analisando comunicados não enviados...')");
 $rs = CONN::get()->Execute("
 		SELECT DISTINCT cc.ID, cc.CD, cc.DH, cc.TXT
@@ -26,16 +27,26 @@ foreach($rs as $k => $l):
 		   AND ID_ORIGEM = ?
 		   AND TP = ?
       ORDER BY ID
-	", array($l["ID"], "C") );
-    if ( !$rs1->EOF ):
-		$mail->ClearAllRecipients();
+	", array($l["ID"], "C"));
+    if (!$rs1->EOF):
+	
+		$mail->MsgHTML($l["TXT"]);
+		$nrControle = 10;
 		foreach($rs1 as $k1 => $l1):
 			$mail->addBCC($l1["EMAIL"]);
 			$nrEnviados++;
+			$nrControle++;
+		    if ($nrControle == 10):
+		        $mail->Send();
+		        $mail->ClearAllRecipients();
+		        $nrControle = 0;
+		    endif;
 		endforeach;
-		$mail->MsgHTML($l["TXT"]);
-        $mail->Send();
-    
+		if ($nrControle > 0):
+		    $mail->Send();
+		    $mail->ClearAllRecipients();
+		 endif;
+		    
 		//ATUALIZA ENVIO
 		CONN::get()->Execute("
 			UPDATE LOG_MENSAGEM
@@ -44,11 +55,10 @@ foreach($rs as $k => $l):
 			AND EMAIL IS NOT NULL
 			AND ID_ORIGEM = ?
 			AND TP = ?
-		", array( $l["ID"], "C") );
+		", array($l["ID"], "C"));
 	endif;
 endforeach;
 CONN::get()->Execute("INSERT INTO LOG_BATCH(TP,DS) VALUES('EMAILS','01.02-Comunicados enviados com sucesso ($nrEnviados)...')");
-
 
 //SECRETARIA - OCORRENCIAS - EMAILS NAO ENVIADOS
 $nrEnviados = 0;

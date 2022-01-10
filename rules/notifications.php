@@ -117,19 +117,20 @@ function getMestrMembros($arr){
 	", array($_SESSION['USER']['id']) );
 	if (!$can->EOF):
 		$rs = CONN::get()->Execute("
-			SELECT lm.ID_ORIGEM, ah.ID_TAB_APREND, cu.ID_CAD_PESSOA, cu.DS_USUARIO, ta.DS_ITEM, ta.TP_ITEM, ta.CD_AREA_INTERNO
+			SELECT lm.ID_ORIGEM, ah.ID_TAB_APREND, cu.ID_CAD_PESSOA, cu.DS_USUARIO, ta.DS_ITEM, ta.TP_ITEM, ta.CD_AREA_INTERNO, ta.CD_ITEM_INTERNO, ca.ID_CAD_MEMBRO
 			FROM LOG_MENSAGEM lm
 			INNER JOIN CAD_USUARIO cu ON (cu.ID = lm.ID_CAD_USUARIO)
 			INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = cu.ID_CAD_PESSOA)
 			INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = lm.ID_ORIGEM)
 			LEFT JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = ta.ID AND ah.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
 			WHERE lm.TP = 'M'
+			  AND cu.ID_CAD_PESSOA != ?
 			AND ah.DT_CONCLUSAO IS NULL
-		");
+		", array($can->fields["ID_CAD_PESSOA"]));
 		foreach ($rs as $ks2 => $det):
-			$arr["html"] .= "<li>";
+			$arr["html"] .= "<li onclick=\"javascript:window.open('".PATTERNS::getVD()."report/geraCapa.php?nome=".$det["ID_CAD_MEMBRO"]."|&list=".$det["CD_ITEM_INTERNO"]."','_blank','top=50,left=50,height=750,width=550,menubar=no,status=no,titlebar=no',true);\">";
 			$arr["html"] .= "<div class=\"col-lg-12\">";
-			$arr["html"] .= "<label class=\"control-label\" style=\"text-align:center\"><i class=\"".getIconAprendizado( $det["TP_ITEM"], $det["CD_AREA_INTERNO"] )."\"></i>&nbsp;".titleCase($det["DS_ITEM"])."</label>";
+			$arr["html"] .= "<label class=\"control-label\" style=\"text-align:center\"><i class=\"".getIconAprendizado($det["TP_ITEM"], $det["CD_AREA_INTERNO"] )."\"></i>&nbsp;".titleCase($det["DS_ITEM"])."</label>";
 			$arr["html"] .= "<div class=\"progress progress-striped active\">";
 			$arr["html"] .= "<div class=\"progress-bar progress-bar-warning\" role=\"progressbar\" style=\"width:100%;color:#404040\">". titleCase($det["DS_USUARIO"]) ."</div>";
 			$arr["html"] .= "</div></li>";
