@@ -4,8 +4,6 @@ var previousPoint = null, previousLabel = null;
 
 $(document).ready(function(){
     
-    $("[name=detail]").on('click',mapDetail);
-    
 	jsLIB.ajaxCall({
 		type: "GET",
 		url: jsLIB.rootDir+"rules/meuAprendizado.php",
@@ -30,7 +28,6 @@ $(document).ready(function(){
 		url: jsLIB.rootDir+"rules/meuAprendizado.php",
 		data: { MethodName : 'getMestrados' },
 		success: function(data){
-			var pessoaID = 
 			$.each(data.rules, (k,v) => {
 				var parameter = { id : data.id, ruleID : v };
 				$("#painelMestrados").append("<div id-rule=\""+v+"\"></div>");
@@ -41,7 +38,8 @@ $(document).ready(function(){
 					data: { MethodName : 'getPainelMestrado', data : parameter },
 					success: function(data){
 						var obj = $(data);
-						obj.find("[name=detail]").on('click',mapDetail);
+						obj.find("[name=detail]").on('click', mapDetail);
+						mapPrint();
 						$("div[id-rule=\""+v+"\"]").replaceWith(obj);
 					}
 				})
@@ -73,7 +71,7 @@ const mapDetail = function(){
 					closeByBackdrop: true,
 					closeByKeyboard: true,
 					onshown: function(dialogRef){
-						mapPrint();
+						//mapPrint();
 					},
 					buttons: [
 						{ label: 'Fechar',

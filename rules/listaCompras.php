@@ -183,7 +183,6 @@ function getData( $parameters ) {
 			$result = CONN::get()->Execute("
 				SELECT DISTINCT TP
 				  FROM TAB_MATERIAIS
-				 WHERE FG_IM = 'S'
 				 ORDER BY TP");
 			foreach ($result as $k => $fields):
 				$tp = $fields['TP'];
