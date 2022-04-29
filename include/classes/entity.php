@@ -6,10 +6,10 @@ class CONNECTION_FACTORY {
 	public function __construct(){
 		if (!isset(self::$connection)) {
 			$config = parse_ini_file(__DIR__ ."/../dbconnect/_{$_SERVER["SERVER_NAME"]}.ini");
-			self::$connection = ADONewConnection($config['Type']);
-			self::$connection->SetCharSet('utf8');
-			self::$connection->Connect($config['Host'],$config['User'],$config['Password'],$config['Database']);
-			self::$connection->SetFetchMode(ADODB_FETCH_ASSOC);
+			self::$connection = adoNewConnection($config['Type']);
+			self::$connection->setCharset('utf8');
+			self::$connection->connect($config['Host'],$config['User'],$config['Password'],$config['Database']);
+			self::$connection->setFetchMode(ADODB_FETCH_ASSOC);
 		}
 		if (self::$connection === false) {
 			exit("Erro ao connectar ao banco de dados");
@@ -39,13 +39,13 @@ class ENTITY extends CONNECTION_FACTORY {
 	}
 
 	public function select(){
-		return self::$connection->Execute("SELECT * FROM {$this->entity} ORDER BY 1");
+		return self::$connection->execute("SELECT * FROM {$this->entity} ORDER BY 1");
 	}
 
 	public function insert($data){
 		$fields = implode(",",array_keys($data));
 		$binds = preg_replace( "/\w+/i", "?", $fields);
-		self::$connection->Execute("INSERT INTO {$this->entity} ($fields) VALUES ($binds)", array_values($data) );
+		self::$connection->execute("INSERT INTO {$this->entity} ($fields) VALUES ($binds)", array_values($data) );
 		return self;
 	}
 
@@ -54,7 +54,7 @@ class ENTITY extends CONNECTION_FACTORY {
 	}
 
 	public function delete($id){
-		self::$connection->Execute("DELETE FROM {$this->entity} WHERE id = ?", Array( $id ) );
+		self::$connection->execute("DELETE FROM {$this->entity} WHERE id = ?", Array( $id ) );
 		return self;
 	}
 
@@ -62,7 +62,7 @@ class ENTITY extends CONNECTION_FACTORY {
 		$binds = preg_replace( array('/(\w+)/'), array('\1 = ?'), implode(",",array_keys($data)));
 		$values = array_values($data);
 		array_push($values, $id);
-		self::$connection->Execute("UPDATE {$this->entity} SET $binds WHERE id = ?", $values);
+		self::$connection->execute("UPDATE {$this->entity} SET $binds WHERE id = ?", $values);
 		return self;
 	}
 

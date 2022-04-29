@@ -2,7 +2,7 @@
 @require_once("include/functions.php");
 
 
-$result = CONN::get()->Execute( "
+$result = CONN::get()->execute( "
   SELECT *
     FROM TAB_UNIDADE 
    WHERE ID = ?
@@ -72,7 +72,7 @@ fHeaderPage();
                 <?php
                 $anoAnt = "";
                 $strmembros = "";
-                $anos = CONN::get()->Execute("
+                $anos = CONN::get()->execute("
                     SELECT ca.NR_ANO, ca.CD_CARGO, cp.NM
                 	  FROM CAD_ATIVOS ca
                       INNER JOIN CAD_MEMBRO cm ON (ca.ID_CAD_MEMBRO = cm.ID)
@@ -115,7 +115,7 @@ fHeaderPage();
             </div>
             
             <?php
-            $result = CONN::get()->Execute( "
+            $result = CONN::get()->execute( "
         	  SELECT *
         	    FROM TAB_UNIDADE 
         	   WHERE TP IN ('F','M')

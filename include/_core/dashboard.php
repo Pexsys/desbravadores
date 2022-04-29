@@ -45,7 +45,7 @@ $idParam = fRequest("id");
 		<div class="col-sm-9">
 			<?php
 				$DATA_NOW = date('Y-m-d H:i:s');
-				$result = CONN::get()->Execute("
+				$result = CONN::get()->execute("
 				SELECT *
 				FROM CAD_EVENTOS 
 				WHERE ( DTHORA_EVENTO_INI >= '$DATA_NOW' OR 

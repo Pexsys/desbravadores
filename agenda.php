@@ -35,7 +35,7 @@ fHeaderPage();
 		   WHERE e.FLAG_PUBLICACAO = 'S' AND
 			( e.DTHORA_EVENTO_INI >= ? OR ( e.DTHORA_EVENTO_FIM IS NOT NULL AND e.DTHORA_EVENTO_FIM >= ? ) )
 		ORDER BY e.DTHORA_EVENTO_INI ";
-	$result = CONN::get()->Execute( $query, Array( $DATA_NOW, $DATA_NOW ) );
+	$result = CONN::get()->execute( $query, Array( $DATA_NOW, $DATA_NOW ) );
 
 	$MES_ANT = "";
 	while (!$result->EOF):

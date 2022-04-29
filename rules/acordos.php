@@ -60,7 +60,7 @@ function getQueryByFilter( $parameters ) {
 		WHERE fa.NR_ANO = YEAR(NOW()) $where
 	 ORDER BY fa.TP
 	";
-	return CONN::get()->Execute( $query, $aWhere );
+	return CONN::get()->execute( $query, $aWhere );
 }
 
 function acordos( $parameters ) {
@@ -83,7 +83,7 @@ function acordos( $parameters ) {
 function custos(){
 	$arr = array();
 
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 	SELECT fc.ID AS ID_CUSTO, fc.DS as DS_CUSTO, fc.TP, fc.GRP, 
 		fci.ID AS ID_CUSTO_ITEM, fci.DS as DS_CUSTO_ITEM, fci.ID_FIN_CST_ITM_PAI, fci.VL
 	FROM FIN_CUSTO fc
@@ -120,7 +120,7 @@ function getObjectResult($f){
 function pessoas($query,$aWhere){
 	$arr = array();
 
-	$result = CONN::get()->Execute($query,$aWhere);
+	$result = CONN::get()->execute($query,$aWhere);
 	foreach ($result as $k => $f):
 		$arr[] = getObjectResult($f);
 	endforeach;

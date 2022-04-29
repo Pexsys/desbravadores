@@ -124,7 +124,7 @@ $eveID = fRequest("eve");
 $pdf = new LISTAEVENTOKITCHEN();
 
 
-$result = CONN::get()->Execute("
+$result = CONN::get()->execute("
 		SELECT es.DS, es.DS_TEMA, es.DS_ORG, es.DS_DEST, ca.NM, esp.KITCHEN
 	      FROM EVE_SAIDA es
 		  INNER JOIN EVE_SAIDA_MEMBRO esp on (esp.ID_EVE_SAIDA = es.ID AND esp.KITCHEN IS NOT NULL)

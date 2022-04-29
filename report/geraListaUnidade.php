@@ -80,7 +80,7 @@ class LISTAUNIDADE extends TCPDF {
 	}
 	
 	private function addUnidadeTitle($af) {
-		$rsM = CONN::get()->Execute("
+		$rsM = CONN::get()->execute("
 			SELECT ID_CAD_MEMBRO, NM, CD_CARGO, DS_CARGO, DT_NASC, FONE_RES, FONE_CEL,
 			       LOGRADOURO, NR_LOGR, COMPLEMENTO, BAIRRO, CIDADE, UF, CEP
 			FROM CON_ATIVOS
@@ -213,7 +213,7 @@ $pdf = new LISTAUNIDADE();
 
 
 $pdf->newPage();
-$result = CONN::get()->Execute("
+$result = CONN::get()->execute("
 	SELECT *
 	FROM TAB_UNIDADE
 	WHERE FG_ATIVA = ?

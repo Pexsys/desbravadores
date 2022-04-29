@@ -36,7 +36,7 @@ function barcode( $parameters ) {
 		
 		else:
 
-			$rp = CONN::get()->Execute("SELECT * FROM CON_ATIVOS WHERE ID_MEMBRO = ?", array( $barDecode["ni"] ) );
+			$rp = CONN::get()->execute("SELECT * FROM CON_ATIVOS WHERE ID_MEMBRO = ?", array( $barDecode["ni"] ) );
 			$ip = $rp->fields["ID_CAD_PESSOA"];
 		
 			if ( $op == "CHAMADA" ):
@@ -91,7 +91,7 @@ function setAprendizado( $parm ){
 			$str = $arrRetorno["ap"] ."<br/>". $arrRetorno["nm"];
 			
 			if ($arrRetorno["ar"] == "REGULAR"):
-				$rs = CONN::get()->Execute("
+				$rs = CONN::get()->execute("
 					SELECT ID, DS_ITEM
 					  FROM TAB_APRENDIZADO
 					 WHERE CD_ITEM_INTERNO = '". substr($arrRetorno["cd"],0,-3) ."-01'
@@ -136,35 +136,35 @@ function setChamada( $parm ) {
 		$aParam[] = $parm["id"];
 	endif;
 
-	$result = CONN::get()->Execute( $sQPadrao, $aParam );
+	$result = CONN::get()->execute( $sQPadrao, $aParam );
 
 	if (!$result->EOF):
 		$dsFuncao = mb_strtoupper($result->fields['ds']);
 		$dsEvento = mb_strtoupper($result->fields['info_adic']);
 		$idRegra  = $result->fields['id'];
 		
-		$rp = CONN::get()->Execute("SELECT * FROM CON_ATIVOS WHERE ID_MEMBRO = ?", array( $barDecode["ni"] ) );
+		$rp = CONN::get()->execute("SELECT * FROM CON_ATIVOS WHERE ID_MEMBRO = ?", array( $barDecode["ni"] ) );
 		$ip = $rp->fields["ID_CAD_PESSOA"];
 		$nmPessoa = mb_strtoupper($rs->fields['NM']);
 		
 		$dsItem = "";
 		//A-CARTAO, B-CADERNO, C-PASTA
 		if ($parm["id"] == 10 || $parm["id"] == 11 || $parm["id"] == 12):
-			$rs = CONN::get()->Execute("SELECT ds_item FROM TAB_APRENDIZADO WHERE id = ?", Array( $parm["fi"] ) );
+			$rs = CONN::get()->execute("SELECT ds_item FROM TAB_APRENDIZADO WHERE id = ?", Array( $parm["fi"] ) );
 			if (!$rs->EOF):
 				$dsItem = mb_strtoupper($rs->fields['ds_item']);
 			endif;
 		
 		//D-AUTOTIZACAO DE SAIDA COMUM, 15-AUTORIZACAO ESPECIAL
 		elseif ($parm["id"] == 13 || $parm["id"] == 15):
-			$rs = CONN::get()->Execute("SELECT ds FROM CAD_EVENTOS_SAIDA WHERE id = ?", Array( $parm["fi"] ) );
+			$rs = CONN::get()->execute("SELECT ds FROM CAD_EVENTOS_SAIDA WHERE id = ?", Array( $parm["fi"] ) );
 			if (!$rs->EOF):
 				$dsItem = mb_strtoupper($rs->fields['ds']);
 				$dsEvento = "";
 			endif;
 		endif;
 		
-		$rs = CONN::get()->Execute("
+		$rs = CONN::get()->execute("
 			SELECT u.cd_usuario, l.dh 
 			  FROM LOG_CHAMADA l 
 		INNER JOIN CAD_USUARIO u ON (u.ID = l.ID_CAD_USUARIO) 
@@ -175,7 +175,7 @@ function setChamada( $parm ) {
 			$arr['result'] = ("Apontamento j&aacute; realizado por ".mb_strtoupper($rs->fields['cd_usuario'])." em ".strftime("%d/%m/%Y &agrave;s %H:%M:%S", strtotime($rs->fields['dh'])));
 		
 		else:
-			CONN::get()->Execute("
+			CONN::get()->execute("
 				INSERT INTO LOG_CHAMADA (
 					id_cad_pessoa, id_rgr_chamada, dh, ID_CAD_USUARIO
 				) VALUES (

@@ -3,7 +3,7 @@ function getDomainMembrosAtivos(){
 	$arr = array();
 	
 	$qtdZeros = zeroSizeID();
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT ID_CAD_MEMBRO, ID_MEMBRO, NM, IDADE_HOJE
 		FROM CON_ATIVOS 
 		ORDER BY NM
@@ -27,7 +27,7 @@ function getDomainMembrosInativos(){
 	$arr = array();
 	
 	$qtdZeros = zeroSizeID();
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT cm.ID, cm.ID_MEMBRO, cp.NM, cp.IDADE_HOJE
 		FROM CAD_MEMBRO cm
 		INNER JOIN CON_PESSOA cp ON (cp.ID_CAD_PESSOA = cm.ID_CAD_PESSOA)
@@ -52,7 +52,7 @@ function getDomainMembrosInativos(){
 function getDomainEventos(){
 	$arr = array();
 	
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT ID, DS, DH_S 
 		FROM EVE_SAIDA 
 		ORDER BY DH_S DESC
@@ -84,7 +84,7 @@ function getDomainUnidades($fAtivo = false){
 			ORDER BY ca.DS_UNIDADE";
 	endif;
 	
-	$result = CONN::get()->Execute($query);
+	$result = CONN::get()->execute($query);
 	foreach ($result as $k => $f):
 		$arr[] = array( 
 			"id"	=> $f['ID'],
@@ -98,7 +98,7 @@ function getDomainUnidades($fAtivo = false){
 
 function getDomainRegimeAlimentar($fAtivo = false){
 	$arr = array();
-	$result = CONN::get()->Execute("SELECT ID, DS FROM TAB_TP_REG_ALIM ORDER BY DS");
+	$result = CONN::get()->execute("SELECT ID, DS FROM TAB_TP_REG_ALIM ORDER BY DS");
 	foreach ($result as $k => $f):
 		$arr[] = array( 
 			"id"	=> $f['ID'],
@@ -110,7 +110,7 @@ function getDomainRegimeAlimentar($fAtivo = false){
 
 function getDomainRestricaoAlimentar($fAtivo = false){
 	$arr = array();
-	$result = CONN::get()->Execute("SELECT ID, DS FROM TAB_TP_REST_ALIM ORDER BY DS");
+	$result = CONN::get()->execute("SELECT ID, DS FROM TAB_TP_REST_ALIM ORDER BY DS");
 	foreach ($result as $k => $f):
 		$arr[] = array( 
 			"id"	=> $f['ID'],
@@ -123,7 +123,7 @@ function getDomainRestricaoAlimentar($fAtivo = false){
 function getTipoAprendizado(){
 	$arr = array();
 	
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT ID, DS, ICON
 		  FROM TAB_TP_APRENDIZADO
 		  ORDER BY ID");
@@ -140,7 +140,7 @@ function getTipoAprendizado(){
 function getTipoMateriais(){
 	$arr = array();
 	
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT DISTINCT TP
 		  FROM TAB_MATERIAIS
 		  ORDER BY TP");
@@ -156,7 +156,7 @@ function getTipoMateriais(){
 function getDomainClasses(){
 	$arr = array();
 	
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT ID, DS_ITEM, CD_AREA_INTERNO
 		  FROM TAB_APRENDIZADO
 		WHERE TP_ITEM = 'CL'
@@ -175,7 +175,7 @@ function getDomainClasses(){
 function getDomainMestrados(){
 	$arr = array();
 	
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT ID, DS_ITEM, CD_ITEM_INTERNO
 		  FROM TAB_APRENDIZADO
 		WHERE TP_ITEM = 'ES'
@@ -196,7 +196,7 @@ function getDomainMestrados(){
 function getDomainEspecialidades(){
 	$arr = array();
 	
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT ID, DS_ITEM, CD_ITEM_INTERNO
 		  FROM TAB_APRENDIZADO
 		WHERE TP_ITEM = 'ES'
@@ -217,7 +217,7 @@ function getDomainEspecialidades(){
 function getDomainAreasEspecialidades(){
 	$arr = array();
 	
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT CD_AREA_INTERNO, DS_ITEM, CD_ITEM_INTERNO
 		  FROM TAB_APRENDIZADO
 		WHERE TP_ITEM = 'ES'
@@ -236,7 +236,7 @@ function getDomainAreasEspecialidades(){
 
 function getDomainMerito(){
 	$arr = array();
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT ID, CD_ITEM_INTERNO, DS_ITEM
 		  FROM TAB_APRENDIZADO
 		 WHERE TP_ITEM = ?
@@ -253,7 +253,7 @@ function getDomainMerito(){
 }
 
 function getMesAniversario(){
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT DISTINCT DATE_FORMAT(DT_NASC,'%m') AS MES
 		  FROM CON_ATIVOS
 	  ORDER BY 1

@@ -115,7 +115,7 @@ function getQueryByFilter( $parameters ) {
 	 ORDER BY ca.NM, tm.CD, ccp.COMPL
   ";
 
-	return CONN::get()->Execute( $query, $aWhere );
+	return CONN::get()->execute( $query, $aWhere );
 }
 
 function getLista( $parameters ) {
@@ -155,7 +155,7 @@ function process(){
 	$compras = new COMPRAS();
 
 	//SELECIONA PESSOAS POR ORDEM ALFABETICA
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		    SELECT DISTINCT ca.ID_CAD_MEMBRO
 		      FROM APR_HISTORICO ah
 		INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = ah.ID_CAD_PESSOA)
@@ -180,7 +180,7 @@ function getData( $parameters ) {
 	foreach ($parameters["domains"] as $y => $f):
 		if ( $f == "tipos" ):
 			$arr["tipos"] = array();
-			$result = CONN::get()->Execute("
+			$result = CONN::get()->execute("
 				SELECT DISTINCT TP
 				  FROM TAB_MATERIAIS
 				 ORDER BY TP");
@@ -194,7 +194,7 @@ function getData( $parameters ) {
 		endif;
 		if ( $f == "tiposEst" ):
 			$arr["tipos"] = array();
-			$result = CONN::get()->Execute("
+			$result = CONN::get()->execute("
 				SELECT DISTINCT TP
 				  FROM TAB_MATERIAIS
 				 ORDER BY TP");
@@ -209,7 +209,7 @@ function getData( $parameters ) {
     if ( $f == "tiposEntrega" ):
 			$arr["tipos"] = array();
 			$qtdZeros = zeroSizeID();
-			$result = CONN::get()->Execute("
+			$result = CONN::get()->execute("
 				SELECT DISTINCT TP
 				  FROM CON_COMPRAS
 				 WHERE FG_COMPRA = 'S'
@@ -228,7 +228,7 @@ function getData( $parameters ) {
 		if ( $f == "nomes" ):
 			$arr["nomes"] = array();
 			$qtdZeros = zeroSizeID();
-			$result = CONN::get()->Execute("SELECT ID_CAD_MEMBRO, ID_MEMBRO, NM FROM CON_ATIVOS ORDER BY NM");
+			$result = CONN::get()->execute("SELECT ID_CAD_MEMBRO, ID_MEMBRO, NM FROM CON_ATIVOS ORDER BY NM");
 			foreach ($result as $k => $fields):
 				$arr["nomes"][] = array(
 					"id" => $fields['ID_CAD_MEMBRO'],
@@ -239,7 +239,7 @@ function getData( $parameters ) {
 		endif;
 		if ( $f == "itens" ):
 			$arr["itens"] = array();
-			$result = CONN::get()->Execute("
+			$result = CONN::get()->execute("
 				SELECT ID, DS, CMPL, FUNDO
 				  FROM TAB_MATERIAIS
 				 WHERE FG_IM = 'S' AND TP = ?
@@ -256,7 +256,7 @@ function getData( $parameters ) {
 		endif;
 		if ( $f == "itensEst" ):
 			$arr["itens"] = array();
-			$result = CONN::get()->Execute("
+			$result = CONN::get()->execute("
 				SELECT tm.ID, tm.DS, tm.CMPL, tm.FUNDO, ta.TP_ITEM, ta.CD_ITEM_INTERNO, ta.DS_ITEM
 				  FROM TAB_MATERIAIS tm
 			 LEFT JOIN TAB_APRENDIZADO ta ON (ta.ID = tm.ID_TAB_APREND)
@@ -287,7 +287,7 @@ function getData( $parameters ) {
 		if ( $f == "nomesEntrega" ):
 			$arr["nomes"] = array();
 			$qtdZeros = zeroSizeID();
-			$result = CONN::get()->Execute("
+			$result = CONN::get()->execute("
 				SELECT DISTINCT ID_CAD_MEMBRO, ID_MEMBRO, NM
 				  FROM CON_COMPRAS
 				 WHERE FG_COMPRA = 'S'
@@ -342,7 +342,7 @@ function addCompras( $parameters ) {
 		$quando = getDateNull($frm["dt_quando"]);
 		
 		foreach ($frm["id_cad_membro"] as $k => $cadMembroID):
-			$result = CONN::get()->Execute("
+			$result = CONN::get()->execute("
 				SELECT *
 				FROM CON_COMPRAS
                 WHERE FG_COMPRA = 'S'
@@ -389,7 +389,7 @@ function batchInsert($compras, $qtItens, $cmpl, $cadMembroID, $id){
 function getAttrPerm( $parameters ) {
 	$id = $parameters["id"];
 
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT 1
 		FROM CON_COMPRAS
 		WHERE ID = ?
@@ -407,7 +407,7 @@ function getAttr( $parameters ) {
 		"fg_entregue" => "N"
 	);
 
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT FG_COMPRA, FG_ENTREGUE, QT_EST
 		FROM CON_COMPRAS
 		WHERE ID = ?
@@ -427,7 +427,7 @@ function setAttr( $parameters ) {
 	$vl = $parameters["vl"];
 	$qt = array( "qt" => 0 );
 
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT *
 		  FROM CON_COMPRAS
 		WHERE ID = ?
@@ -451,7 +451,7 @@ function updateEstoque( $ln, $fd, $vl, $date = null ){
 		//VERIFICA ATUAL
 		$movEstoque = $ln["FG_COMPRA"] == "S" ? +1 : -1;
 
-		$re = CONN::get()->Execute("
+		$re = CONN::get()->execute("
 			SELECT QT_EST
 			  FROM CON_COMPRAS
 			 WHERE ID = ?
@@ -466,7 +466,7 @@ function updateEstoque( $ln, $fd, $vl, $date = null ){
 
 		//PARA ITENS COM ESTOQUE / COMPRAS NO ALMOXARIFADO
 		elseif ($arr["qt"] > 0 || $movEstoque > 0):
-			CONN::get()->Execute("UPDATE TAB_MATERIAIS SET QT_EST = ? WHERE ID = ?
+			CONN::get()->execute("UPDATE TAB_MATERIAIS SET QT_EST = ? WHERE ID = ?
 			", array( $arr["qt"] + $movEstoque, $ln["ID_TAB_MATERIAIS"] ) );
 			$arr["qt"] += $movEstoque;
 			$update = true;
@@ -481,7 +481,7 @@ function updateEstoque( $ln, $fd, $vl, $date = null ){
 
 			//EXCLUI SE INCLUSAO MANUAL.
 			if ($ln["TP_INCL"] == "M"):
-				CONN::get()->Execute("DELETE FROM CAD_COMPRAS WHERE ID = ?", array( $ln["ID"] ) );
+				CONN::get()->execute("DELETE FROM CAD_COMPRAS WHERE ID = ?", array( $ln["ID"] ) );
 
 			else:
 				updateCADCompras( $fd, array( $vl, $ln["ID"] ) );
@@ -507,12 +507,12 @@ function updateCADCompras($fd, $arr){
     ". ($fd == "fg_compra" && $arr[0] == "S" ? ", FG_PREVISAO = 'N'" : "") ."
     WHERE ID = ?
   ";
-	CONN::get()->Execute($query, $arr );
+	CONN::get()->execute($query, $arr );
 }
 
 function distribuirEstoque(){
 	//MOVIMENTAR ITENS COMPRADOS E NAO ENTREGUES PARA O ESTOQUE
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT ID_TAB_MATERIAIS, COUNT(*) AS QT_ATTR
 		  FROM CON_COMPRAS
 		WHERE FG_COMPRA = 'S'
@@ -522,10 +522,10 @@ function distribuirEstoque(){
 	foreach ($result as $k => $ln):
 		$matID = $ln["ID_TAB_MATERIAIS"];
 
-		CONN::get()->Execute("UPDATE TAB_MATERIAIS SET QT_EST = QT_EST + ? WHERE ID = ?
+		CONN::get()->execute("UPDATE TAB_MATERIAIS SET QT_EST = QT_EST + ? WHERE ID = ?
 			", array( $ln["QT_ATTR"], $matID ) );
 
-		CONN::get()->Execute("
+		CONN::get()->execute("
 			UPDATE CAD_COMPRAS
 			  SET FG_COMPRA = 'N'
 			 WHERE ID_TAB_MATERIAIS = ?
@@ -535,7 +535,7 @@ function distribuirEstoque(){
 	endforeach;
 
 	//DISTRIBUIR ITENS DO ESTOQUE
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT *
 		  FROM CON_COMPRAS
 		 WHERE QT_EST > 0

@@ -2,7 +2,7 @@
 @require_once("../include/filters.php");
 
 function filtroDatasAvaliacao(){
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT DISTINCT ah.DT_AVALIACAO
 		FROM APR_HISTORICO ah
 		INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = ah.ID_CAD_PESSOA)

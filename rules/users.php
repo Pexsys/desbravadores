@@ -12,7 +12,7 @@ function getQueryByFilter( $parameters ) {
         INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = cu.ID_CAD_PESSOA)
         ORDER BY DH_ATUALIZACAO DESC
 	";
-	return CONN::get()->Execute( $query );
+	return CONN::get()->execute( $query );
 }
 
 function getUsers( $parameters ) {
@@ -35,7 +35,7 @@ function getUsers( $parameters ) {
 function delete( $parameters ) {
 	$ids = $parameters["ids"];
 	foreach ($ids as $k => $id):
-		CONN::get()->Execute("DELETE FROM CAD_USUARIO WHERE ID = ?", array($id) );
+		CONN::get()->execute("DELETE FROM CAD_USUARIO WHERE ID = ?", array($id) );
 	endforeach;
 	return array( "result" => true );
 }

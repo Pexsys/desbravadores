@@ -27,7 +27,7 @@ fHeaderPage();
         <!-- /.row -->
         
         <?php
-        $result = CONN::get()->Execute( "
+        $result = CONN::get()->execute( "
         	  SELECT *
         	    FROM TAB_UNIDADE 
         	   WHERE TP IN ('F','M')

@@ -12,7 +12,7 @@ function getQueryByFilter( $parameters ) {
 	$cadMembroID = $_SESSION['USER']['id_cad_membro'];
 
 	$where = "";
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT CD_CARGO, CD_CARGO2
 		  FROM CON_ATIVOS
 		 WHERE ID_CAD_MEMBRO = ?
@@ -114,7 +114,7 @@ function getQueryByFilter( $parameters ) {
 		ORDER BY ca.NM, ah.DT_INICIO, cai.CD_ITEM_INTERNO
 	";
 
-	return CONN::get()->Execute( $query, $aWhere );
+	return CONN::get()->execute( $query, $aWhere );
 }
 
 function getData( $parameters ) {
@@ -161,7 +161,7 @@ function setRequisito( $parameters ) {
 		if (fStrStartWith($f,"dt-req-")):
 			$reqID = substr($f, 7);
 			
-			$rs = CONN::get()->Execute( "SELECT ID_TAB_APREND FROM TAB_APR_ITEM WHERE ID = ?", $reqID );
+			$rs = CONN::get()->execute( "SELECT ID_TAB_APREND FROM TAB_APR_ITEM WHERE ID = ?", $reqID );
 			if (!$rs->EOF):
 				$uh = updateHistorico(
 					$ip, 

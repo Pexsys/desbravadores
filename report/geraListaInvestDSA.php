@@ -197,7 +197,7 @@ $filter = implode(",",array_map("fArrayStr", explode(",",$request)));
 $innerJoinDA = ($request == "null" || empty($request) || empty($filter) ? "" : " AND ah.DT_AVALIACAO IN ($filter)");
 
 
-$result = CONN::get()->Execute("
+$result = CONN::get()->execute("
 	SELECT DISTINCT
 		1 AS ORD,
 		ta.CD_ITEM_INTERNO AS X,

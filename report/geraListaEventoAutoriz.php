@@ -143,7 +143,7 @@ $eveID = fRequest("eve");
 $pdf = new LISTAEVENTOALFA();
 
 
-$result = CONN::get()->Execute("
+$result = CONN::get()->execute("
 	SELECT 
 			es.DS, es.DS_TEMA, es.DS_ORG, es.DS_DEST,
 			esp.ID AS ID_EVE_PESSOA, 

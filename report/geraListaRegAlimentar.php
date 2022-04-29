@@ -146,7 +146,7 @@ class LISTAATIVOSALFA extends TCPDF {
 	}
 
 	public function geraResumo(){
-    $result = CONN::get()->Execute("
+    $result = CONN::get()->execute("
           SELECT cp.DS_TAB_TP_REG_ALIM, COUNT(*) AS QTD
           FROM CON_PESSOA cp
     INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = cp.ID_CAD_PESSOA)
@@ -199,7 +199,7 @@ $query .= $pdf->where." ORDER BY ca.NM";
 
 $pdf->newPage();
 
-$result = CONN::get()->Execute($query);
+$result = CONN::get()->execute($query);
 foreach ( $result as $ra => $f ):
 	$pdf->startTransaction();
 	$start_page = $pdf->getPage();

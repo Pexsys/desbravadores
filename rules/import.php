@@ -6,7 +6,7 @@
 //ANALISE/IMPORTACAO DE HISTORICO DSA/UCB
 $i = 0;
 $u = 0;
-$result = CONN::get()->Execute("
+$result = CONN::get()->execute("
     SELECT t.ID, t.ID_CAD_PESSOA, t.TP_ITEM, t.CD_AREA_INTERNO, t.CD_ITEM_INTERNO, a.DS_ITEM, t.DT_INICIO, t.DT_CONCLUSAO, t.DT_AVALIACAO, t.DT_INVESTIDURA, a.ID AS ID_TAB_APREND
       FROM TMP_HIST_DSA t
 INNER JOIN TAB_APRENDIZADO a ON (a.CD_ITEM_INTERNO = t.CD_ITEM_INTERNO)
@@ -40,9 +40,9 @@ foreach ($result as $k => $ls):
 		++$u;
 		echo ",UPDATED";
 	endif;
-	CONN::get()->Execute("COMMIT");
+	CONN::get()->execute("COMMIT");
 	
-	CONN::get()->Execute("UPDATE TMP_HIST_DSA SET FG_INTEGRADO = 'S' WHERE ID = ?", array($ls["ID"]) );
+	CONN::get()->execute("UPDATE TMP_HIST_DSA SET FG_INTEGRADO = 'S' WHERE ID = ?", array($ls["ID"]) );
 	echo ",INTEGRATED<br/>";
 endforeach;
 echo "Terminou: $i registros inseridos.<br/>";
@@ -54,7 +54,7 @@ echo "<br/>";
 $l = 0;
 $x = 0;
 $esp = 0;
-$result = CONN::get()->Execute("SELECT * FROM TMP");
+$result = CONN::get()->execute("SELECT * FROM TMP");
 while (!$result->EOF):
 	++$l;
 	$req			= str_replace("--","-",$result->fields['REQ']);
@@ -65,13 +65,13 @@ while (!$result->EOF):
 	$mr = marcaRequisito( $barDecode["ni"], $barDecode["fi"], $req, $dtAssinat );
 	if (!is_null($mr["idreq"])):
 		//ATUALIZADA TEMPORARIO COM PESSOA RECUPERADA + APRENDIZADO.
-		CONN::get()->Execute("
+		CONN::get()->execute("
 			UPDATE TMP SET 
 				ID_CAD_PESSOA = ?, 
 				ID_TAB_APREND = ? 
 			WHERE ID = ?
 		", array( $pessoaID, $mr["idreq"], $result->fields['ID']) );
-		CONN::get()->Execute("COMMIT");
+		CONN::get()->execute("COMMIT");
 	endif;
 	
 	//ANALISAR ESPECIALIDADES E INSERIR NO HISTORICO
@@ -79,7 +79,7 @@ while (!$result->EOF):
 	if ( count($aEspec) > 0 ):
 		foreach ($aEspec as $value):
 			if (!empty($value)):
-				$rs = CONN::get()->Execute("SELECT ID_TAB_APREND FROM TAB_APRENDIZADO WHERE CD_ITEM_INTERNO = ?", array( $value ) );
+				$rs = CONN::get()->execute("SELECT ID_TAB_APREND FROM TAB_APRENDIZADO WHERE CD_ITEM_INTERNO = ?", array( $value ) );
 				echo "ESPEC[$value],PESSOA[".$barDecode["ni"]."],ASSINAT[$dtAssinat]";
 				
 				if (!$rs->EOF):
@@ -113,12 +113,12 @@ while (!$result->EOF):
 	$result->MoveNext();
 endwhile;
 
-CONN::get()->Execute("
+CONN::get()->execute("
 INSERT INTO TMP_ORIG (BAR,REQ,DT_ASSINAT,ESPEC,ID_TAB_APREND,ID_CAD_PESSOA)
 SELECT BAR,REQ,DT_ASSINAT,ESPEC,ID_TAB_APREND,ID_CAD_PESSOA FROM TMP WHERE ID_TAB_APREND IS NOT NULL AND ID_CAD_PESSOA IS NOT NULL
 ");
-CONN::get()->Execute("DELETE FROM TMP WHERE ID_TAB_APREND IS NOT NULL AND ID_CAD_PESSOA IS NOT NULL");
-CONN::get()->Execute("COMMIT");
+CONN::get()->execute("DELETE FROM TMP WHERE ID_TAB_APREND IS NOT NULL AND ID_CAD_PESSOA IS NOT NULL");
+CONN::get()->execute("COMMIT");
 
 echo "Terminou: $x/$l registros alterados.<br/>";
 echo "Terminou: $esp especialidades inseridas.<br/>";
@@ -130,7 +130,7 @@ $analisados = 0;
 $incluidos = 0;
 $alterados = 0;
 $deletados = 0;
-$rs = CONN::get()->Execute("
+$rs = CONN::get()->execute("
 	SELECT DISTINCT at.NM, at.ID
 	  FROM APR_HISTORICO ah
     INNER JOIN CON_ATIVOS at ON (at.ID_CAD_PESSOA = ah.ID_CAD_PESSOA)

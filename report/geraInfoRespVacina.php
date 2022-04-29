@@ -81,7 +81,7 @@ if ( !isset($filter) || empty($filter) || is_null($filter) || strlen($filter) ==
 	exit("MENOR N&Atilde;O ENCONTRADA!");
 endif;
 
-$result = CONN::get()->Execute("
+$result = CONN::get()->execute("
 	SELECT * FROM CON_ATIVOS ca
     WHERE ca.ID_MEMBRO IN ($filter)
 	ORDER BY ca.NM

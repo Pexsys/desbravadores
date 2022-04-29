@@ -4,7 +4,7 @@ function fDashBoard( $panelClass, $iconLeft, $query, $showZero, $titulo, $urlDet
 	$mostra = true;
 	$qtd = 0;
 	
-	$result = CONN::get()->Execute($query);
+	$result = CONN::get()->execute($query);
 	if (!$result->EOF):
 		$qtd = $result->fields['qtd'];
 	endif;
@@ -30,7 +30,7 @@ function fDashBoard( $panelClass, $iconLeft, $query, $showZero, $titulo, $urlDet
 				</div>";
 	
 		
-		$rs = CONN::get()->Execute("
+		$rs = CONN::get()->execute("
 			SELECT 1
 			  FROM CAD_USUARIO cu
 		  INNER JOIN CON_ATIVOS cp ON (cp.ID_CAD_PESSOA = cu.ID_CAD_PESSOA)

@@ -20,7 +20,7 @@ function getNotifications(){
 }
 
 function getItemAlert( $arr, $tp, $icon, $title, $url ){
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT MIN(DH_GERA) AS DT, COUNT(*) AS QT
 		  FROM LOG_MENSAGEM
 		 WHERE YEAR(DH_GERA) = YEAR(NOW())
@@ -69,7 +69,7 @@ function getItemAlert( $arr, $tp, $icon, $title, $url ){
 	return $arr;
 }
 function getClassPend($arr){
-	$rs = CONN::get()->Execute("
+	$rs = CONN::get()->execute("
 		SELECT ID_CAD_PESSOA, ID_TAB_APREND, TP_ITEM, CD_AREA_INTERNO, CD_ITEM_INTERNO, DS_ITEM, DT_INICIO, COUNT(*) AS QT_REQ
 		FROM CON_APR_PESSOA
 		WHERE ID_CAD_PESSOA = ? AND DT_CONCLUSAO IS NULL
@@ -81,7 +81,7 @@ function getClassPend($arr){
 		$tabAprID = $det["ID_TAB_APREND"];
 		$pct = 0;
 		$qtd = 0;
-		$rc = CONN::get()->Execute("
+		$rc = CONN::get()->execute("
 			SELECT COUNT(*) AS QT_COMPL
 			FROM CON_APR_PESSOA
 			WHERE ID_CAD_PESSOA = ?
@@ -107,7 +107,7 @@ function getClassPend($arr){
 	return $arr;
 }
 function getMestrMembros($arr){
-	$can = CONN::get()->Execute("
+	$can = CONN::get()->execute("
 		SELECT *
 		FROM CAD_USUARIO cu
 		INNER JOIN CAD_USU_PERFIL cuf ON (cuf.ID_CAD_USUARIO = cu.ID)
@@ -116,7 +116,7 @@ function getMestrMembros($arr){
 		AND cu.ID = ?
 	", array($_SESSION['USER']['id']) );
 	if (!$can->EOF):
-		$rs = CONN::get()->Execute("
+		$rs = CONN::get()->execute("
 			SELECT lm.ID_ORIGEM, ah.ID_TAB_APREND, cu.ID_CAD_PESSOA, cu.DS_USUARIO, ta.DS_ITEM, ta.TP_ITEM, ta.CD_AREA_INTERNO, ta.CD_ITEM_INTERNO, ca.ID_CAD_MEMBRO
 			FROM LOG_MENSAGEM lm
 			INNER JOIN CAD_USUARIO cu ON (cu.ID = lm.ID_CAD_USUARIO)

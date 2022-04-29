@@ -180,7 +180,7 @@ class LISTAMATERIAIS extends TCPDF {
 			";
 			$bind[] = $this->tipoUniforme;
 		endif;
-		$result = CONN::get()->Execute($str,$bind);
+		$result = CONN::get()->execute($str,$bind);
 		foreach ( $result as $ra => $f ):
 			$this->addLineUniforme($f);
 		endforeach;
@@ -223,7 +223,7 @@ else:
 	";
 endif;
 
-$result = CONN::get()->Execute($str);
+$result = CONN::get()->execute($str);
 if (!$result->EOF):
 	$pdf->setHeaderFields($result->fields);
 

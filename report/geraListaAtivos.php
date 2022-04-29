@@ -146,7 +146,7 @@ $pdf = new LISTAATIVOSALFA();
 
 
 $pdf->newPage();
-$result = CONN::get()->Execute("
+$result = CONN::get()->execute("
 	SELECT ca.NM, ca.CD_CARGO, ca.DS_CARGO, ca.DT_NASC, ca.FONE_RES, ca.FONE_CEL, ca.IDADE_HOJE, ta.CD_COR_GENERO
 	FROM CON_ATIVOS ca
  INNER JOIN TAB_UNIDADE ta ON (ta.ID = ca.ID_UNIDADE)

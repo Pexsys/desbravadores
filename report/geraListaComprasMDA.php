@@ -208,7 +208,7 @@ elseif ($tpInves == "N"):
 endif;
 
 
-$result = CONN::get()->Execute("
+$result = CONN::get()->execute("
 	SELECT DISTINCT
 		at.NM,
 		ta.TP_ITEM,

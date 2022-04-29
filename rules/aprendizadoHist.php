@@ -107,7 +107,7 @@ function getQueryByFilter( $parameters ) {
 		";
 		//echo $query;
 		//print_r($aWhere);
-		return CONN::get()->Execute( $query, $aWhere );
+		return CONN::get()->execute( $query, $aWhere );
 	endif;
 	return null;
 }
