@@ -73,7 +73,7 @@ function getQueryByFilter( $parameters ) {
 		 ORDER BY ca.NM, cmh.TP
 		";
 		//echo $query;
-		return CONN::get()->Execute( $query, $aWhere );
+		return CONN::get()->execute( $query, $aWhere );
 	endif;
 	return null;
 }

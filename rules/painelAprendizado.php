@@ -11,7 +11,7 @@ function getGraphData() {
 	$arr = array();
 	/*
 	$qtdRegulares = 0;
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT COUNT(*) AS QT
 		  FROM TAB_APRENDIZADO 
 		 WHERE CD_ITEM_INTERNO LIKE '01%00'
@@ -22,7 +22,7 @@ function getGraphData() {
 	endif;
 
 	$qtdAvancadas = 0;
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT COUNT(*) AS QT
 		  FROM TAB_APRENDIZADO 
 		 WHERE CD_ITEM_INTERNO LIKE '01%01'
@@ -34,7 +34,7 @@ function getGraphData() {
 
 	//ANALISE GRAFICA DAS CLASSES COMPLETADAS
 	$arr["clsC"] = array();
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT a.TP_ITEM, a.CD_AREA_INTERNO, a.CD_ITEM_INTERNO, a.DS_ITEM, a.CD_COR, COUNT(*) AS QTD
 		FROM APR_HISTORICO h
 		INNER JOIN TAB_APRENDIZADO a ON (a.ID = h.ID_TAB_APREND)
@@ -56,7 +56,7 @@ function getGraphData() {
 
 	//CLASSES REGULARES A COMPLETAR
 	$aCompletar = 0;
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT COUNT(*) AS QT_RG
 		  FROM CON_ATIVOS at
 	 LEFT JOIN (SELECT ah.ID_CAD_PESSOA, COUNT(*) AS QT
@@ -75,7 +75,7 @@ function getGraphData() {
 
 	//CLASSES REGULARES COMPLETADAS
 	$aCompletadas = 0;
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT COUNT(*) AS QT_RG_OK
 		  FROM CON_ATIVOS at
 	 LEFT JOIN (SELECT ah.ID_CAD_PESSOA, COUNT(*) AS QT
@@ -107,7 +107,7 @@ function getGraphData() {
 
 	//CLASSES AVANCADAS A COMPLETAR
 	$aCompletar = 0;
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT COUNT(*) AS QT_AV
 		  FROM CON_ATIVOS at
 	 LEFT JOIN (SELECT ah.ID_CAD_PESSOA, COUNT(*) AS QT
@@ -126,7 +126,7 @@ function getGraphData() {
 
 	//CLASSES AVANCADAS COMPLETADAS
 	$aCompletadas = 0;
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT COUNT(*) AS QT_AV_OK
 		  FROM CON_ATIVOS at
 	 LEFT JOIN (SELECT ah.ID_CAD_PESSOA, COUNT(*) AS QT
@@ -161,7 +161,7 @@ function getGraphData() {
 	$a2 = 80;
 	$a3 = 99;
 
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT ta.ID, ta.CD_COR,
 
 				(SELECT COUNT(*)
@@ -273,7 +273,7 @@ function getClasses( $parameters ) {
 	$str .= "<div class=\"col-lg-12\">";
 	
 	//CLASSES EM ANDAMENTO
-	$rs = CONN::get()->Execute("
+	$rs = CONN::get()->execute("
 		  SELECT ta.ID_TAB_APREND, ta.TP_ITEM, ta.CD_AREA_INTERNO, ta.CD_ITEM_INTERNO, ta.DS_ITEM, COUNT(*) AS QT_REQ
 			FROM CON_APR_PESSOA ta
 		   WHERE ta.ID_CAD_PESSOA = ? AND ta.TP_ITEM = 'CL' AND ta.DT_CONCLUSAO IS NULL $where
@@ -291,7 +291,7 @@ function getClasses( $parameters ) {
 			$tabAprID = $det["ID_TAB_APREND"];
 			$pct = 0;
 			$qtd = 0;
-			$rc = CONN::get()->Execute("
+			$rc = CONN::get()->execute("
 				SELECT COUNT(*) AS QT_COMPL
 				  FROM CON_APR_PESSOA
 				 WHERE ID_CAD_PESSOA = ?
@@ -324,7 +324,7 @@ function getClasses( $parameters ) {
 	endif;
 	
 	//CLASSES PENDENTES DE AVALIACAO
-	$rs = CONN::get()->Execute("
+	$rs = CONN::get()->execute("
 		  SELECT ta.ID_TAB_APREND, ta.TP_ITEM, ta.CD_AREA_INTERNO, ta.CD_ITEM_INTERNO, ta.DS_ITEM, COUNT(*) AS QT_REQ
 			FROM CON_APR_PESSOA ta
 		   WHERE ta.ID_CAD_PESSOA = ? AND ta.TP_ITEM = 'CL'
@@ -350,7 +350,7 @@ function getClasses( $parameters ) {
 	endif;	
 
 	//CLASSES A RECEBER
-	$rs = CONN::get()->Execute("
+	$rs = CONN::get()->execute("
 			SELECT DISTINCT ta.ID_TAB_APREND, ta.TP_ITEM, ta.CD_AREA_INTERNO, ta.CD_ITEM_INTERNO, ta.DS_ITEM,
 				IF(cc.FG_COMPRA = 'S' OR ccag.ID IS NOT NULL,'OK','NOK') AS TP_BUY
 			FROM CON_APR_PESSOA ta
@@ -381,7 +381,7 @@ function getClasses( $parameters ) {
 	endif;
 	
 	//ESPECIALIDADES PENDENTES DE AVALIACAO
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT a.CD_AREA_INTERNO, ae.DS_ITEM AS DS_ITEM_AREA, a.CD_ITEM_INTERNO, a.DS_ITEM
 		  FROM APR_HISTORICO h
 	    INNER JOIN TAB_APRENDIZADO a ON (a.ID = h.ID_TAB_APREND)
@@ -396,7 +396,7 @@ function getClasses( $parameters ) {
 	$str .= fGetDetailEspClass("panel-warning","Especialidades Pendentes de Avaliação Regional",$result);
 	
 	//ESPECIALIDADES A RECEBER
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT a.CD_AREA_INTERNO, ae.DS_ITEM AS DS_ITEM_AREA, a.CD_ITEM_INTERNO, a.DS_ITEM,
 				IF(cc.FG_COMPRA = 'S' OR cc.ID IS NOT NULL,'OK','NOK') AS TP_BUY
 		  FROM APR_HISTORICO h
@@ -413,7 +413,7 @@ function getClasses( $parameters ) {
 	$str .= fGetDetailEspClass("panel-success","Especialidades Pendentes de Investidura",$result);
 
 	//ITENS INVESTIDOS
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT ta.ID_TAB_APREND, ta.TP_ITEM, ta.CD_AREA_INTERNO, ta.CD_ITEM_INTERNO, ta.DS_ITEM, COUNT(*) AS QT_REQ
 			FROM CON_APR_PESSOA ta
 		WHERE ta.ID_CAD_PESSOA = ? AND YEAR(ta.DT_INVESTIDURA) = YEAR(NOW())
@@ -483,7 +483,7 @@ function getPendentes( $parameters ) {
 	$arr = array();
 	$str = "";
 
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT CD_REQ_INTERNO, CD_AP_AREA, DS_AP_AREA, DS
 		FROM CON_APR_PESSOA
 		WHERE ID_CAD_PESSOA = ?
@@ -494,7 +494,7 @@ function getPendentes( $parameters ) {
 	", array( $parameters["id"], $parameters["req"] ) );
 	$str .= fGetDetailClass("panel-danger","Itens Pendentes","fa-frown-o",$result);
 
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT CD_REQ_INTERNO, CD_AP_AREA, DS_AP_AREA, DS
 		  FROM CON_APR_PESSOA
 		 WHERE ID_CAD_PESSOA = ?
@@ -514,7 +514,7 @@ function getEspec( $parameters ) {
 	$arr = array();
 
 	$str = "";
-	$rs = CONN::get()->Execute("
+	$rs = CONN::get()->execute("
 		SELECT ta.CD_ITEM_INTERNO, ta.DS_ITEM, COUNT(*) AS QTD
 		  FROM APR_HISTORICO h
 	INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = h.ID_TAB_APREND)
@@ -549,7 +549,7 @@ function getEspecPeople( $parameters ) {
 	$arr = array();
 
 	$str = "";
-	$rs = CONN::get()->Execute("
+	$rs = CONN::get()->execute("
 		SELECT a.NM
 		  FROM APR_HISTORICO h
 	INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = h.ID_TAB_APREND)

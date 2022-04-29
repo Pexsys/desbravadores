@@ -9,7 +9,7 @@ function getPerfis(){
 	$arr = array();
 	
 	
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT ID, DS
 		  FROM TAB_PERFIL
 	  ORDER BY DS");

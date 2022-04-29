@@ -9,7 +9,7 @@ function getFuncoes(){
 	$arr = array();
 	
 	
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT ID, DS_URL
 		  FROM TAB_FUNCTION
 	  ORDER BY DS_URL");

@@ -13,7 +13,7 @@ function getGraphData() {
 	$arr["cls"] = array();
 
 	$like = "";
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT CD_CARGO, CD_CARGO2
 		  FROM CON_ATIVOS
 		 WHERE ID_CAD_MEMBRO = ?
@@ -28,7 +28,7 @@ function getGraphData() {
 	if ($cargo != "2-04-00" && fStrStartWith($cargo,"2-04")):
 		$like = "01-".substr($cargo,-2);
 	endif;
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT a.CD_ITEM_INTERNO, a.CD_COR, a.DS_ITEM, cai.QTD, AVG(a.QTD) AS QT_MD
 		FROM (
 			SELECT cap.ID_CAD_PESSOA, cap.CD_COR, cap.DS_ITEM, cap.ID_TAB_APREND, cap.CD_ITEM_INTERNO, COUNT(*) AS QTD 

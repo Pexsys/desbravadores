@@ -98,7 +98,7 @@ function getQueryByFilter( $parameters ) {
 	endif;
 	$query .= " $where ORDER BY ca.NM";
 
-	return CONN::get()->Execute( $query, $aWhere );
+	return CONN::get()->execute( $query, $aWhere );
 }
 
 function getTags( $parameters ) {
@@ -106,7 +106,7 @@ function getTags( $parameters ) {
 	$arr = array();
 
 
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT DISTINCT pt.ID,
 				pt.TP,
 				pt.MD,
@@ -198,7 +198,7 @@ function getClasse( $parameters ){
 		//endif;
 	endforeach;
 
-	$result = CONN::get()->Execute("$query ORDER BY CD_ITEM_INTERNO");
+	$result = CONN::get()->execute("$query ORDER BY CD_ITEM_INTERNO");
 	foreach ($result as $k => $line):
 		$arr[] = array(
 			"id"	=> $line['ID'],

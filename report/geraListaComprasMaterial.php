@@ -270,7 +270,7 @@ $filter = implode(",",array_map("fArrayStr", explode(",",$request)));
 $innerJoinDA = ($request == "null" || empty($request) || empty($filter) ? "" : " AND cc.TP IN ($filter)");
 
 //QUERY DETALHE
-$result = CONN::get()->Execute("
+$result = CONN::get()->execute("
     SELECT cc.NM, cc.TP_ITEM, cc.CD, cc.DS_ITEM, cc.TP, cc.DS, cc.FUNDO, cc.FG_IM, cc.CD_AREA_INTERNO, cc.CD_ITEM_INTERNO, COUNT(*) AS QT_ITENS
     FROM CON_COMPRAS cc
     WHERE cc.FG_COMPRA = 'N'
@@ -287,7 +287,7 @@ $pdf->writeGroupTable();
 
 //QUERY RESUMO
 $pdf->newPage(false);
-$result = CONN::get()->Execute("
+$result = CONN::get()->execute("
 	SELECT cc.TP_ITEM, cc.CD, cc.DS_ITEM, cc.TP, cc.DS, cc.FUNDO, cc.FG_IM, cc.CD_AREA_INTERNO, cc.CD_ITEM_INTERNO, COUNT(*) AS QT_ITENS
     FROM CON_COMPRAS cc
     WHERE cc.FG_COMPRA = 'N'

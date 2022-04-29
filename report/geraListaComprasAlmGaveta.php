@@ -213,7 +213,7 @@ $pdf->newPage();
 
 
 
-$result = CONN::get()->Execute("
+$result = CONN::get()->execute("
 	
 	SELECT * FROM (
 		SELECT cc.NR_GAVETA_ALM, cc.TP_ITEM, cc.TP, cc.DS, cc.DS_ITEM, cc.FUNDO, cc.CMPL, cc.FG_IM, (COUNT(*)-QT_EST) AS QT_ITENS

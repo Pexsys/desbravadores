@@ -115,7 +115,7 @@ if (isset($ip) && !empty($ip)):
 endif;
 
 $pdf = new OCORRENCIAS();
-$result = CONN::get()->Execute("
+$result = CONN::get()->execute("
  	 SELECT co.*, cu.DS_USUARIO, cp.NM
 	   FROM CAD_OCORRENCIA co
  INNER JOIN CAD_USUARIO cu ON (cu.ID = co.ID_CAD_USUARIO)

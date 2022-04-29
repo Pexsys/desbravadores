@@ -99,7 +99,7 @@ function login( $parameters ) {
 		if ($usrClube && $result->EOF):
 
 			//VERIFICA SE ESTÁ ATIVO
-			$rsHA = CONN::get()->Execute("SELECT ID_CAD_PESSOA, NM FROM CON_ATIVOS WHERE ID_CLUBE = ? AND ID_MEMBRO = ?", array( $barDecode["ci"], $barDecode["ni"] ) );
+			$rsHA = CONN::get()->execute("SELECT ID_CAD_PESSOA, NM FROM CON_ATIVOS WHERE ID_CLUBE = ? AND ID_MEMBRO = ?", array( $barDecode["ci"], $barDecode["ni"] ) );
 			if (!$rsHA->EOF):
 				fInsertUser( $usr, $rsHA->fields['NM'], $psw, $rsHA->fields['ID_CAD_PESSOA'] );
 
@@ -118,7 +118,7 @@ function login( $parameters ) {
 		elseif (!$result->EOF):
 			if ($usrClube):
 				//VERIFICA SE ESTÁ ATIVO
-				$rsHA = CONN::get()->Execute("SELECT CD_CARGO, CD_CARGO2 FROM CON_ATIVOS WHERE ID_CLUBE = ? AND ID_MEMBRO = ?", array( $barDecode["ci"], $barDecode["ni"] ) );
+				$rsHA = CONN::get()->execute("SELECT CD_CARGO, CD_CARGO2 FROM CON_ATIVOS WHERE ID_CLUBE = ? AND ID_MEMBRO = ?", array( $barDecode["ci"], $barDecode["ni"] ) );
 				if ($rsHA->EOF):
 					$psw = null;
 				endif;
@@ -148,7 +148,7 @@ function login( $parameters ) {
 			if ($password == $psw):
 				PROFILE::fSetSessionLogin($result);
 
-				CONN::get()->Execute("
+				CONN::get()->execute("
 					UPDATE CAD_USUARIO SET 
 						DH_ATUALIZACAO = NOW()
 					WHERE ID = ?
@@ -169,7 +169,7 @@ function login( $parameters ) {
 }
 
 function fInsertUser( $usr, $nm, $psw, $pessoaID ){
-	CONN::get()->Execute("
+	CONN::get()->execute("
 			INSERT INTO CAD_USUARIO(
 				CD_USUARIO,
 				DS_USUARIO,
@@ -181,14 +181,14 @@ function fInsertUser( $usr, $nm, $psw, $pessoaID ){
 }
 
 function fInsertUserProfile( $userID, $profileID ){
-	$rs = CONN::get()->Execute("
+	$rs = CONN::get()->execute("
 		SELECT 1 
 		  FROM CAD_USU_PERFIL
 		 WHERE ID_CAD_USUARIO = ?
 		   AND ID_PERFIL = ?
 	", array( $userID, $profileID ) );
 	if ($rs->EOF):
-		CONN::get()->Execute("
+		CONN::get()->execute("
 			INSERT INTO CAD_USU_PERFIL(
 				ID_CAD_USUARIO,
 				ID_PERFIL
@@ -198,20 +198,20 @@ function fInsertUserProfile( $userID, $profileID ){
 }
 
 function fDeleteUserAndProfile( $userID, $profileID ){
-	CONN::get()->Execute("
+	CONN::get()->execute("
 		DELETE FROM CAD_USU_PERFIL
 		 WHERE ID_CAD_USUARIO = ?
 		   AND ID_PERFIL = ?
 	", array( $userID, $profileID ) );
 	
-	CONN::get()->Execute("
+	CONN::get()->execute("
 		DELETE FROM CAD_USUARIO
 		 WHERE ID = ?
 	", array( $userID ) );
 }
 
 function checkMemberByCPF($cpf){
-	return CONN::get()->Execute("
+	return CONN::get()->execute("
 		SELECT cu.ID, cu.CD_USUARIO, cu.DS_USUARIO, cu.DS_SENHA, 
 			   ca.ID_CAD_PESSOA, ca.TP_SEXO, ca.CD_CARGO, ca.CD_CARGO2, ca.NM, ca.ID_MEMBRO
 		  FROM CON_ATIVOS ca
@@ -223,7 +223,7 @@ function checkMemberByCPF($cpf){
 function checkUser($cdUser, $pag){
 
 	//VERIFICA SE PRECISA ATUALIZAR USUARIO
-	$rs = CONN::get()->Execute("
+	$rs = CONN::get()->execute("
 		SELECT cu.ID, cp.ID AS ID_CAD_PESSOA
 		FROM CAD_USUARIO cu
 		INNER JOIN CAD_PESSOA cp ON (cp.NR_CPF = cu.CD_USUARIO)
@@ -231,12 +231,12 @@ function checkUser($cdUser, $pag){
 		  AND cu.ID_CAD_PESSOA IS NULL
 	", array($cdUser) );
 	if (!$rs->EOF):
-		CONN::get()->Execute("
+		CONN::get()->execute("
 			UPDATE CAD_USUARIO SET ID_CAD_PESSOA = ? WHERE ID = ?
 		", array( $rs->fields["ID_CAD_PESSOA"], $rs->fields["ID"] ) );
 	endif;
 
-	return CONN::get()->Execute("
+	return CONN::get()->execute("
 		SELECT cu.ID, cu.CD_USUARIO, cu.DS_USUARIO, cu.DS_SENHA, 
 			   cm.ID_CAD_PESSOA, cp.TP_SEXO, cm.ID AS ID_CAD_MEMBRO, cm.ID_CLUBE, cm.ID_MEMBRO
 		  FROM CAD_USUARIO cu
@@ -255,7 +255,7 @@ function changePassword($parameters){
 }
 
 function setUserPassword($usr, $pass) {
-    CONN::get()->Execute("
+    CONN::get()->execute("
 		UPDATE CAD_USUARIO SET 
 			DS_SENHA = ?
 		WHERE ID = ?

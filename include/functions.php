@@ -21,7 +21,7 @@ mb_http_input('UTF-8');
 function zeroSizeID(){
 	if (!isset($_SESSION['USER']['sizeID'])):
 		session_start();
-		$rs = CONN::get()->Execute("SELECT COUNT(*) AS qtd FROM CAD_MEMBRO WHERE ID_CLUBE = ?", array( PATTERNS::getBars()->getClubeID() ) );
+		$rs = CONN::get()->execute("SELECT COUNT(*) AS qtd FROM CAD_MEMBRO WHERE ID_CLUBE = ?", array( PATTERNS::getBars()->getClubeID() ) );
 		if (!$rs->EOF):
 			$_SESSION['USER']['sizeID'] = strlen($rs->fields['qtd']);
 		endif;
@@ -537,7 +537,7 @@ function fDomain($a){
 	$query .= " FROM ".$a['table'];
 	$query .= isset( $a['where'] ) ? " WHERE ".$a['where'] : "";
 	$query .= isset( $a['order'] ) ? " ORDER BY ".$a['order'] : "";
-	$dom = CONN::get()->Execute($query);
+	$dom = CONN::get()->execute($query);
 	while (!$dom->EOF):
 		$arr[] = array("id" => $dom->fields[$id], "ds" => $dom->fields[$ds]);
 		$dom->MoveNext();

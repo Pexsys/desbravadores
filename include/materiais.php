@@ -5,7 +5,7 @@
 class MATERIAIS {
 	
 	public function forceInsert( $arr ){
-		CONN::get()->Execute("
+		CONN::get()->execute("
 			INSERT INTO MAT_HISTORICO(
 				ID_CAD_MEMBRO,
 				ID_TAB_MATERIAIS,
@@ -17,7 +17,7 @@ class MATERIAIS {
 
 	public function addItemEstoque( $matID, $qtd ){
 		if ( $qtd > 0 ):
-			CONN::get()->Execute("
+			CONN::get()->execute("
 				UPDATE TAB_MATERIAIS 
 				SET QT_EST = QT_EST + ?
 				WHERE ID = ?
@@ -26,7 +26,7 @@ class MATERIAIS {
 	}
 	
 	public function setQtdEstoque( $matID, $qtd ){
-		CONN::get()->Execute("
+		CONN::get()->execute("
 			UPDATE TAB_MATERIAIS
 			SET QT_EST = ?
 			WHERE ID = ?

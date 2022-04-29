@@ -13,7 +13,7 @@ function marcaRequisito( $pessoaID, $itemID, $reqCD, $assDT ) {
 	endif;
 	
 	//RECUPERA O ID DO ITEM_APRENDIZADO, BASEADO NO CODIGO DE BARRAS E REQUISITO APONTADO.
-	$rs = CONN::get()->Execute("
+	$rs = CONN::get()->execute("
 		SELECT tai.ID
 		FROM TAB_APR_ITEM tai
 	  INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = tai.ID_TAB_APREND)
@@ -68,7 +68,7 @@ function fGetClassAcomp( $cap, $param ){
 	$strC = "";
 
 	//SELECIONA ITENS PENDENTES
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		   SELECT taa.CD AS CD_AP_AREA, taa.DS AS DS_AP_AREA, 
 				  ta.TP_ITEM, ta.CD_COR, ta.CD_ITEM_INTERNO, ta.CD_AREA_INTERNO, ta.DS_ITEM, 
 				  tai.ID, tai.CD_REQ_INTERNO, tai.DS, tai.QT_MIN,
@@ -86,7 +86,7 @@ function fGetClassAcomp( $cap, $param ){
 	$strC .= fGetDetailAcomp("panel-danger","Itens Pendentes","fa-frown-o",$result);	
 	
 	//SELECIONA ITENS CONCLUIDOS
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		   SELECT taa.CD AS CD_AP_AREA, taa.DS AS DS_AP_AREA, 
 				  ta.TP_ITEM, ta.CD_COR, ta.CD_ITEM_INTERNO, ta.CD_AREA_INTERNO, ta.DS_ITEM, 
 				  tai.ID, tai.CD_REQ_INTERNO, tai.DS, tai.QT_MIN,

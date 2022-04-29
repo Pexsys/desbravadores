@@ -98,7 +98,7 @@ class LISTAEVENTOAUTORIZGENERO extends TCPDF {
 		$this->setHeaderFields($g);
 		$this->newPage();
 		
-		$rsM = CONN::get()->Execute("
+		$rsM = CONN::get()->execute("
 			SELECT ca.NM, at.CD_CARGO, IF(ca.TP_SEXO='F',cg.DSF,cg.DSM) AS DS_CARGO, ca.DT_NASC, ca.FONE_RES, ca.FONE_CEL, ca.IDADE_HOJE
 			FROM EVE_SAIDA es
 			INNER JOIN EVE_SAIDA_MEMBRO esp on (esp.ID_EVE_SAIDA = es.ID AND esp.FG_AUTORIZ = 'S')
@@ -184,7 +184,7 @@ $eveID = fRequest("eve");
 $pdf = new LISTAEVENTOAUTORIZGENERO();
 
 
-$result = CONN::get()->Execute("
+$result = CONN::get()->execute("
 	SELECT DISTINCT es.DS, es.DS_TEMA, es.DS_ORG, es.DS_DEST, 
 					esp.ID_EVE_SAIDA, ca.TP_SEXO 
    	FROM EVE_SAIDA es

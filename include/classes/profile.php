@@ -15,7 +15,7 @@ class PROFILE {
 			$query .= " AND LENGTH(td.cd) = 2";
 		endif;
 		$query .= " ORDER BY td.cd";
-		$result = CONN::get()->Execute($query, array($_SESSION['USER']['id']) );
+		$result = CONN::get()->execute($query, array($_SESSION['USER']['id']) );
 		while (!$result->EOF):
 			$child = PROFILE::fGetProfiles( $result->fields['cd'] );
 			$arr[ $result->fields['id'] ] = array(
@@ -56,7 +56,7 @@ class PROFILE {
 	}
 
 	public static function deleteAllByUserID( $userID ) {
-		CONN::get()->Execute("
+		CONN::get()->execute("
 			DELETE FROM CAD_USU_PERFIL
 			 WHERE ID_CAD_USUARIO = ? 
 			   AND ID_PERFIL <> 1
@@ -64,7 +64,7 @@ class PROFILE {
 	}
 
 	public static function deleteAllByPessoaID( $pessoaID ){
-		$rs = CONN::get()->Execute("
+		$rs = CONN::get()->execute("
 			SELECT ID 
 			FROM CAD_USUARIO
 			WHERE ID_CAD_PESSOA = ?
@@ -75,7 +75,7 @@ class PROFILE {
 	}
 
 	public static function deleteByUserID( $userID, $profileID ) {
-		CONN::get()->Execute("
+		CONN::get()->execute("
 			DELETE FROM CAD_USU_PERFIL
 			 WHERE ID_CAD_USUARIO = ? 
 			   AND ID_PERFIL = ? 
@@ -83,7 +83,7 @@ class PROFILE {
 	}
 
 	 public static function deleteByPessoaID( $pessoaID, $profileID ){
-		$rs = CONN::get()->Execute("
+		$rs = CONN::get()->execute("
 			SELECT ID
 			FROM CAD_USUARIO
 			WHERE ID_CAD_PESSOA = ? 
@@ -94,7 +94,7 @@ class PROFILE {
 	}
 
 	 public static function insertByPessoaID( $pessoaID, $profileID ) {
-		$rs = CONN::get()->Execute("
+		$rs = CONN::get()->execute("
 			SELECT ID
 			  FROM CAD_USUARIO
 			 WHERE ID_CAD_PESSOA = ? 
@@ -105,13 +105,13 @@ class PROFILE {
 	}
 
 	 public static function insert( $userID, $profileID ) {
-		$rs = CONN::get()->Execute("
+		$rs = CONN::get()->execute("
 			SELECT 1 FROM CAD_USU_PERFIL
 			WHERE ID_CAD_USUARIO = ? 
 			  AND ID_PERFIL = ?
 		", array( $userID, $profileID ) );
 		if ($rs->EOF):
-			CONN::get()->Execute("
+			CONN::get()->execute("
 				INSERT INTO CAD_USU_PERFIL (
 					ID_CAD_USUARIO,
 					ID_PERFIL

@@ -27,7 +27,7 @@ function fComunicado( $parameters ) {
 				fReturnStringNull($fg_pend),
 				$id
 			);
-			CONN::get()->Execute("
+			CONN::get()->execute("
 				UPDATE CAD_COMUNICADO SET
 					DH = ?,
 					TXT = ?,
@@ -42,7 +42,7 @@ function fComunicado( $parameters ) {
 				fReturnStringNull(trim($frm["cd"])),
 				fReturnStringNull($fg_pend)
 			);
-			CONN::get()->Execute("
+			CONN::get()->execute("
 				INSERT INTO CAD_COMUNICADO(
 					DH,
 					TXT,
@@ -55,7 +55,7 @@ function fComunicado( $parameters ) {
 		
 		//GRAVACAO DEFINITIVA, ENVIO POR EMAIL
 		if ($fg_pend == "N"):
-			CONN::get()->Execute("
+			CONN::get()->execute("
 				INSERT INTO LOG_MENSAGEM (ID_ORIGEM, TP, ID_CAD_USUARIO, EMAIL, DH_GERA)
 				SELECT $id, 'C',  cu.ID, ca.EMAIL, NOW() 
 				  FROM CON_ATIVOS ca
@@ -77,14 +77,14 @@ function fComunicado( $parameters ) {
 
 	//EXCLUSAO DE COMUNICADO
 	elseif ( $op == "DELETE" ):
-		CONN::get()->Execute("DELETE FROM LOG_MENSAGEM WHERE ID_ORIGEM = ? AND TP = ?", Array( $parameters["id"], "C" ) );
-		CONN::get()->Execute("DELETE FROM CAD_COMUNICADO WHERE ID = ?", Array( $parameters["id"] ) );
+		CONN::get()->execute("DELETE FROM LOG_MENSAGEM WHERE ID_ORIGEM = ? AND TP = ?", Array( $parameters["id"], "C" ) );
+		CONN::get()->execute("DELETE FROM CAD_COMUNICADO WHERE ID = ?", Array( $parameters["id"] ) );
 		$out["success"] = true;
 
 	//GET COMUNICADO
 	else:
 		if ( $parameters["id"] == "Novo" ):
-			$result = CONN::get()->Execute("SELECT YEAR(NOW()) AS ANO, COUNT(*)+1 AS CD FROM CAD_COMUNICADO WHERE YEAR(DH) = YEAR(NOW())" );
+			$result = CONN::get()->execute("SELECT YEAR(NOW()) AS ANO, COUNT(*)+1 AS CD FROM CAD_COMUNICADO WHERE YEAR(DH) = YEAR(NOW())" );
 			$out["success"] = true;
 			$out["comunicado"] = array(
 				"id" => $parameters["id"],
@@ -93,7 +93,7 @@ function fComunicado( $parameters ) {
 			);
 			
 		else:
-			$result = CONN::get()->Execute("SELECT * FROM CAD_COMUNICADO WHERE ID = ?", array( $parameters["id"] ) );
+			$result = CONN::get()->execute("SELECT * FROM CAD_COMUNICADO WHERE ID = ?", array( $parameters["id"] ) );
 			if (!$result->EOF):
 				$out["success"] = true;
 				$out["comunicado"] = array(
@@ -116,7 +116,7 @@ function getComunicados( $parameters ){
 	$arr = array();
 	
 	if ($parameters["filter"] == "N"):
-		$result = CONN::get()->Execute("
+		$result = CONN::get()->execute("
 			SELECT cc.ID, cc.CD, cc.DH, cc.FG_PEND, lc.DH_READ
 			  FROM CAD_COMUNICADO cc
 		INNER JOIN LOG_MENSAGEM lc ON (lc.ID_ORIGEM = cc.ID AND lc.TP = 'C')
@@ -126,7 +126,7 @@ function getComunicados( $parameters ){
 		  ORDER BY ID DESC
 		", array( $usuarioID ) );
 	else:
-		$result = CONN::get()->Execute("SELECT ID, CD, DH, FG_PEND
+		$result = CONN::get()->execute("SELECT ID, CD, DH, FG_PEND
 				   FROM CAD_COMUNICADO 
 				  WHERE YEAR(DH) = YEAR(NOW())
 			   ORDER BY ID DESC");
@@ -160,7 +160,7 @@ function fSetRead( $parameters ){
 	$usuarioCD = $_SESSION['USER']['cd_usuario'];
 	
 	//ATUALIZA USUARIO ATUAL
-	CONN::get()->Execute("
+	CONN::get()->execute("
 		UPDATE LOG_MENSAGEM SET
 			DH_READ = NOW()
 		WHERE ID_CAD_USUARIO = ?
@@ -169,7 +169,7 @@ function fSetRead( $parameters ){
 	", array($usuarioID,$comunicadoID,"C"));
 	
 	//VERIFICA SE USUARIO ATUAL EH RESPONSAVEL POR OUTRO.
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		UPDATE LOG_MENSAGEM SET
 			  DH_READ = NOW()
 		WHERE ID_CAD_USUARIO IN (
@@ -237,7 +237,7 @@ function getQueryByFilter( $parameters ) {
     INNER JOIN CAD_USUARIO cu ON (cu.ID = lm.ID_CAD_USUARIO)
      LEFT JOIN TAB_APRENDIZADO ap ON (ap.id = lm.ID_ORIGEM)
          WHERE YEAR(lm.DH_GERA) = YEAR(NOW()) $where";
-		return CONN::get()->Execute( $query, $aWhere );
+		return CONN::get()->execute( $query, $aWhere );
 	endif;
 	return null;
 }

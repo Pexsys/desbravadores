@@ -1,6 +1,6 @@
 <?php
 function responsavelAtivo($pessoaRespID) {
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT 1
 		  FROM CON_ATIVOS 
 		 WHERE ID_CAD_PESSOA = ?
@@ -9,7 +9,7 @@ function responsavelAtivo($pessoaRespID) {
 }
 
 function verificaRespByCPF( $cpf ) {
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT DISTINCT cp.*, rl.DS_TP
 		  FROM CON_PESSOA cp
 	 LEFT JOIN CAD_RESP_LEGAL rl ON (rl.ID_PESSOA_RESP = cp.ID_CAD_PESSOA)
@@ -23,7 +23,7 @@ function verificaRespByCPF( $cpf ) {
 }
 
 function verificaRespByID( $pessoaRespID, $pessoaID ) {
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT 
 			cp.ID AS ID_CAD_PESSOA,
 			rl.DS_TP,
@@ -44,7 +44,7 @@ function verificaRespByID( $pessoaRespID, $pessoaID ) {
 }
 
 function existeMenorByRespID( $pessoaRespID ) {
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT *
 		  FROM CON_ATIVOS
 		 WHERE ID_PESSOA_RESP = ?

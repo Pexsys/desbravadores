@@ -199,7 +199,7 @@ $query .= " ORDER BY ca.CEP, ca.NR_LOGR, ca.NM";
 
 $pdf->newPage();
 
-$result = CONN::get()->Execute($query);
+$result = CONN::get()->execute($query);
 foreach ( $result as $ra => $f ):
 	$pdf->startTransaction();
 	$start_page = $pdf->getPage();

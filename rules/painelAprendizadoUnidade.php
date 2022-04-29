@@ -9,7 +9,7 @@ function getQueryByFilter( $parameters ) {
 	session_start();
 	$cadMembroID = $_SESSION['USER']['id_cad_membro'];
 
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT ID_UNIDADE, CD_CARGO
 		  FROM CAD_ATIVOS 
 		 WHERE NR_ANO = YEAR(NOW()) 
@@ -73,7 +73,7 @@ function getQueryByFilter( $parameters ) {
 //echo $where;
 //exit;
 
-	return CONN::get()->Execute("
+	return CONN::get()->execute("
 	  SELECT DISTINCT
 			m.ID,
 			m.ID_MEMBRO,
@@ -136,7 +136,7 @@ function getGraphData() {
 	$arr = array();
 	$arr["cls"] = array();
 
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT ID_UNIDADE, CD_CARGO
 		  FROM CAD_ATIVOS 
 		 WHERE NR_ANO = YEAR(NOW()) 
@@ -153,7 +153,7 @@ function getGraphData() {
 		$where .= " OR ca.CD_CARGO LIKE '2-07%'";	
 	endif;
 
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT a.CD_ITEM_INTERNO, a.CD_COR, a.DS_ITEM, cai.QTD, AVG(a.QTD) AS QT_MD
 		FROM (
 			SELECT cap.ID_CAD_PESSOA, cap.CD_COR, cap.DS_ITEM, cap.ID_TAB_APREND, cap.CD_ITEM_INTERNO, COUNT(*) AS QTD 

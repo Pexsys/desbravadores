@@ -354,7 +354,7 @@ $query = "
 	 ORDER BY 1
 ";
 $arr = array( fRequest("md") );
-$result = CONN::get()->Execute($query, $arr);
+$result = CONN::get()->execute($query, $arr);
 if ($result->EOF):
 	echo "Fila de impress&atilde;o de identifica&ccedil;&atilde;o n&atilde;o encontrada para esta sele&ccedil;&atilde;o!";
 	exit;
@@ -377,7 +377,7 @@ foreach ($result as $k => $l):
 		$aPage = $aPageParam;
 	endif;
 	
-	$rs = CONN::get()->Execute("
+	$rs = CONN::get()->execute("
 		SELECT DISTINCT 
 				pt.TP,
 				pt.BC,

@@ -8,7 +8,7 @@ function getQueryByFilter( $parameters ) {
 	$usuarioID = $_SESSION['USER']['id'];
 	
 	if ($parameters["filter"] == "N"):
-		return CONN::get()->Execute("
+		return CONN::get()->execute("
 				SELECT o.ID, a.NM, o.TP, o.CD, o.DH, o.FG_PEND, l.DH_READ
 				  FROM CAD_OCORRENCIA o
 			INNER JOIN CON_ATIVOS a ON (a.ID_CAD_PESSOA = o.ID_CAD_PESSOA)
@@ -56,7 +56,7 @@ function getQueryByFilter( $parameters ) {
 			endforeach;
 		endif;
 		
-		return CONN::get()->Execute("
+		return CONN::get()->execute("
 				SELECT o.ID, a.NM, o.TP, o.CD, o.DH, o.FG_PEND
 				  FROM CAD_OCORRENCIA o
 			INNER JOIN CON_ATIVOS a ON (a.ID_CAD_PESSOA = o.ID_CAD_PESSOA)
@@ -70,7 +70,7 @@ function fGetMembros(){
 	$arr = array();
 	
 	$qtdZeros = zeroSizeID();
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT o.ID_CAD_PESSOA, a.NM
 		  FROM CAD_OCORRENCIA o
 	INNER JOIN CON_ATIVOS a ON (a.ID_CAD_PESSOA = o.ID_CAD_PESSOA)
@@ -98,7 +98,7 @@ function fOcorrencia( $parameters ) {
 	$frm = null;
 	
 	$like = "";
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT CD_CARGO, CD_CARGO2
 		  FROM CON_ATIVOS
 		 WHERE ID_CAD_PESSOA = ?
@@ -135,7 +135,7 @@ function fOcorrencia( $parameters ) {
 				fReturnStringNull($fg_pend),
 				$id
 			);
-			CONN::get()->Execute("
+			CONN::get()->execute("
 				UPDATE CAD_OCORRENCIA SET
 					DH = ?,
 					TXT = ?,
@@ -155,7 +155,7 @@ function fOcorrencia( $parameters ) {
 				fReturnStringNull($fg_pend),
 				$userID
 			);
-			CONN::get()->Execute("
+			CONN::get()->execute("
 				INSERT INTO CAD_OCORRENCIA(
 					DH,
 					TXT,
@@ -171,7 +171,7 @@ function fOcorrencia( $parameters ) {
 		
 		//GRAVACAO DEFINITIVA PARA O RESPONSAVEL, ENVIO POR EMAIL
 		if ($fg_pend == "N"):
-			CONN::get()->Execute("
+			CONN::get()->execute("
 				INSERT INTO LOG_MENSAGEM (ID_ORIGEM, TP, ID_CAD_USUARIO, EMAIL, DH_GERA)
 				SELECT $id, 'O', cu.ID, ca.EMAIL, NOW() 
 				  FROM CON_ATIVOS ca
@@ -197,14 +197,14 @@ function fOcorrencia( $parameters ) {
 
 	//EXCLUSAO DE SAIDA
 	elseif ( $op == "DELETE" ):
-		CONN::get()->Execute("DELETE FROM LOG_MENSAGEM WHERE ID_ORIGEM = ? AND TP = ?", Array( $parameters["id"], "O" ) );
-		CONN::get()->Execute("DELETE FROM CAD_OCORRENCIA WHERE ID = ?", Array( $parameters["id"] ) );
+		CONN::get()->execute("DELETE FROM LOG_MENSAGEM WHERE ID_ORIGEM = ? AND TP = ?", Array( $parameters["id"], "O" ) );
+		CONN::get()->execute("DELETE FROM CAD_OCORRENCIA WHERE ID = ?", Array( $parameters["id"] ) );
 		$out["success"] = true;
 
 	//GET SAIDA
 	else:
 		if ( $parameters["id"] == "Novo" ):
-			$result = CONN::get()->Execute("SELECT YEAR(NOW()) AS ANO, COUNT(*)+1 AS CD FROM CAD_OCORRENCIA WHERE YEAR(DH) = YEAR(NOW())" );
+			$result = CONN::get()->execute("SELECT YEAR(NOW()) AS ANO, COUNT(*)+1 AS CD FROM CAD_OCORRENCIA WHERE YEAR(DH) = YEAR(NOW())" );
 			$out["success"] = true;
 			$out["ocorrencia"] = array(
 				"id" => $parameters["id"],
@@ -212,7 +212,7 @@ function fOcorrencia( $parameters ) {
 				"cd" => $result->fields['ANO']."-".fStrZero($result->fields['CD'], 2)
 			);
 		else:
-			$result = CONN::get()->Execute("
+			$result = CONN::get()->execute("
 				SELECT co.*, ca.NM, cu.DS_USUARIO
 				  FROM CAD_OCORRENCIA co
 			INNER JOIN CON_ATIVOS ca ON (ca.id_cad_pessoa = co.id_cad_pessoa)
@@ -242,7 +242,7 @@ function fOcorrencia( $parameters ) {
 					"nm" => "(NENHUM)"
 			);
 			$qtdZeros = zeroSizeID();
-			$result = CONN::get()->Execute("
+			$result = CONN::get()->execute("
 				  SELECT DISTINCT ca.NM, ca.ID
 					FROM APR_HISTORICO ah
 			  INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = ah.ID_CAD_PESSOA)
@@ -306,7 +306,7 @@ function fSetRead( $parameters ){
 	
 	
 	//ATUALIZA USUARIO ATUAL
-	CONN::get()->Execute("
+	CONN::get()->execute("
 		UPDATE LOG_MENSAGEM SET
 			DH_READ = NOW()
 		WHERE ID_CAD_USUARIO = ?
@@ -315,7 +315,7 @@ function fSetRead( $parameters ){
 	", array($usuarioID,$comunicadoID,"O"));
 	
 	//VERIFICA SE USUARIO ATUAL EH RESPONSAVEL POR OUTRO.
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		UPDATE LOG_MENSAGEM SET
 			  DH_READ = NOW()
 		WHERE ID_CAD_USUARIO IN (

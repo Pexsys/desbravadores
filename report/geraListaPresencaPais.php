@@ -128,7 +128,7 @@ $pdf->setTipoUniforme(fRequest("filter"));
 
 
 $pdf->newPage();
-$result = CONN::get()->Execute("
+$result = CONN::get()->execute("
 	SELECT *
 	FROM CON_ATIVOS
 	WHERE IDADE_HOJE < 18
