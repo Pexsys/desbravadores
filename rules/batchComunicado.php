@@ -43,9 +43,13 @@ foreach($rs as $k => $l):
 		    endif;
 		endforeach;
 		if ($nrControle > 0):
-		    $mail->Send();
+		    try {
+            $mail->Send();
+        } catch (Exception $e) {
+            echo 'Exceção capturada: ',  $e->getMessage(), "\n";
+        }
 		    $mail->ClearAllRecipients();
-		 endif;
+		endif;
 		    
 		//ATUALIZA ENVIO
 		CONN::get()->execute("
