@@ -133,7 +133,7 @@ class LISTAEVENTOALFA extends TCPDF {
 		$this->Cell(200, 6, "Total de Membros no Evento: ".$result->RecordCount(), 0, false, 'L', true);
 
 		$this->SetFont(PDF_FONT_NAME_MAIN, 'N', 9);
-		$result = CONN::get()->Execute("
+		$result = CONN::get()->execute("
 			SELECT ca.DS_TAB_TP_REG_ALIM, COUNT(*) AS QTD
 			FROM EVE_SAIDA es
 			INNER JOIN EVE_SAIDA_MEMBRO esp on (esp.ID_EVE_SAIDA = es.ID)
@@ -164,7 +164,7 @@ class LISTAEVENTOALFA extends TCPDF {
 $eveID = fRequest("eve");
 $pdf = new LISTAEVENTOALFA();
 
-$result = CONN::get()->Execute("
+$result = CONN::get()->execute("
 	SELECT
 			es.ID, es.DS, es.DS_TEMA, es.DS_ORG, es.DS_DEST,
 			esp.ID AS ID_EVE_PESSOA,

@@ -10,7 +10,7 @@ function getDomains(){
 	
 	
 	$ma = array();
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT DISTINCT DATE_FORMAT(ce.DTHORA_EVENTO_INI,'%Y-%m') AS ANO_MES
 		  FROM CAD_EVENTOS ce
 	INNER JOIN RGR_CHAMADA rc ON (rc.ID_EVENTO = ce.ID_EVENTO)

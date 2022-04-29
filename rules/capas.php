@@ -13,7 +13,7 @@ function getName( $parameters ) {
 	//Verificacao de Usuario/Senha
 	if ( isset($barDecode["ni"]) && !empty($barDecode["ni"]) ):
 		
-		$result = CONN::get()->Execute("
+		$result = CONN::get()->execute("
 			SELECT cm.ID, cp.NM
 			  FROM CAD_MEMBRO cm
 		INNER JOIN CAD_PESSOA cp ON (cp.ID = cm.ID_CAD_PESSOA)
@@ -41,7 +41,7 @@ function getNames(){
 	$cargo		= null;
 
 	//MEMBRO ATIVO LOGADO
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT cu.ID_CAD_PESSOA, ca.ID_UNIDADE, ca.CD_CARGO, ca.CD_CARGO2, ca.NM, ca.ID_MEMBRO, ca.ID_CAD_MEMBRO
 		  FROM CON_ATIVOS ca
 	INNER JOIN CAD_USUARIO cu ON (cu.ID_CAD_PESSOA = ca.ID_CAD_PESSOA)
@@ -90,7 +90,7 @@ function getNames(){
 	endif;
 
 	//TRATAMENTO MEUS DEPENDENTES, SUAS UNIDADES OU SUAS CLASSES
-	$rd = CONN::get()->Execute("
+	$rd = CONN::get()->execute("
 		SELECT ca.ID_CAD_PESSOA, ca.ID_UNIDADE
 		FROM CAD_USUARIO cu
 		INNER JOIN CON_ATIVOS ca ON (ca.ID_PESSOA_RESP = cu.ID_CAD_PESSOA)
@@ -102,7 +102,7 @@ function getNames(){
 	endforeach;
 	
 	if (!empty($aQuery["query"])):
-		$rs = CONN::get()->Execute( substr($aQuery["query"], 7)." ORDER BY 3", $aQuery["binds"] );
+		$rs = CONN::get()->execute( substr($aQuery["query"], 7)." ORDER BY 3", $aQuery["binds"] );
 		foreach ($rs as $k => $line):
 			$id = $line["ID_CAD_MEMBRO"];
 			$nm = $line["NM"];
@@ -140,7 +140,7 @@ function getUnionByClasses($aQuery, $pessoaID, $cadMembroID){
 function getEspecialidades() {
 	$arr = array();
 
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 	SELECT
 		A.DS_ITEM AS DS_AREA,
 		E.CD_ITEM_INTERNO AS CD_ITEM,

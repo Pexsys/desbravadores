@@ -120,7 +120,7 @@ if (isset($it) && !empty($it)):
 endif;
 
 $pdf = new DIARIO();
-$result = CONN::get()->Execute("
+$result = CONN::get()->execute("
 		SELECT cd.ID, cd.SQ, ta.DS_ITEM, taa.CD AS CD_AREA, taa.DS AS DS_AREA, tap.CD_REQ_INTERNO, tap.DS, cd.DH, cd.FG_PEND, cd.TXT
 		FROM CAD_DIARIO cd
 	INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = cd.ID_TAB_APREND)

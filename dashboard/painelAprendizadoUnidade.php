@@ -2,7 +2,7 @@
 @require_once("../include/filters.php");
 $cadMembroID = $_SESSION['USER']['id_cad_membro'];
 $unidade = "";
-$result = CONN::get()->Execute("
+$result = CONN::get()->execute("
 	SELECT TP_SEXO, CD_CARGO, ID_UNIDADE, DS_UNIDADE
 	  FROM CON_ATIVOS 
 	 WHERE NR_ANO = YEAR(NOW()) 
@@ -21,7 +21,7 @@ if (!fStrStartWith($cargo,"2-07")):
 	$where .= " OR ca.CD_CARGO LIKE '2-07%'";	
 	$classGraphs = "col-md-12 col-sm-12 col-lg-12";
 endif;
-$rc = CONN::get()->Execute("
+$rc = CONN::get()->execute("
     SELECT DSF, DSM
       FROM TAB_CARGO
      WHERE CD = ?
@@ -68,7 +68,7 @@ endif;
 	</div>
 </div>
 <?php
-$result = CONN::get()->Execute("
+$result = CONN::get()->execute("
 	SELECT ta.TP_ITEM, ta.CD_AREA_INTERNO, COUNT(*) as QTD
 	  FROM APR_HISTORICO ah
 	INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = ah.ID_CAD_PESSOA)
@@ -97,7 +97,7 @@ if (!$result->EOF):
 	endforeach;
 	echo "</div>";
 endif;
-$result = CONN::get()->Execute("
+$result = CONN::get()->execute("
 	SELECT ta.ID, ta.TP_ITEM, ta.CD_ITEM_INTERNO, ta.CD_AREA_INTERNO, ta.CD_COR, ta.DS_ITEM, COUNT(*) as QTD
 	  FROM APR_HISTORICO ah
 	INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = ah.ID_CAD_PESSOA)
@@ -150,7 +150,7 @@ endif;
 	</div>
 </div>
 <?php
-$result = CONN::get()->Execute("
+$result = CONN::get()->execute("
 	SELECT DISTINCT ca.NM, ca.ID_CAD_PESSOA, ca.ID_MEMBRO
 	  FROM APR_HISTORICO ah
 	INNER JOIN CON_ATIVOS ca ON (ca.ID_CAD_PESSOA = ah.ID_CAD_PESSOA)

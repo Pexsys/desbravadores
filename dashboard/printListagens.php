@@ -123,7 +123,7 @@ $classes = getDomainFilter( array( "type" => "C" ) );
 		<select name="cbMembros" id="cbMembros" class="selectpicker form-control input-sm" title="Escolha um ou mais membros" data-live-search="true" multiple data-selected-text-format="count > 2" data-width="100%" data-container="body" data-actions-box="true">
 		<?php
 		$qtdZeros = zeroSizeID();
-        	$result = CONN::get()->Execute("
+        	$result = CONN::get()->execute("
 				SELECT DISTINCT cm.ID, cp.NM
 				FROM CAD_MEMBRO cm
 				INNER JOIN CAD_PESSOA cp ON (cp.ID = cm.ID_CAD_PESSOA)
@@ -143,7 +143,7 @@ $classes = getDomainFilter( array( "type" => "C" ) );
 		<select name="cmMenor" id="cmMenor" class="selectpicker form-control input-sm" title="Escolha um ou mais membros" data-live-search="true" multiple data-selected-text-format="count > 2" data-width="100%" data-container="body" data-actions-box="true">
 		<?php
 		$qtdZeros = zeroSizeID();
-		$result = CONN::get()->Execute("
+		$result = CONN::get()->execute("
 			SELECT ca.ID_MEMBRO AS ID, ca.NM
 			FROM CON_ATIVOS ca
 		WHERE ca.IDADE_HOJE < 18

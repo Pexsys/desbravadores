@@ -76,7 +76,7 @@ class ESPCR extends TCPDF {
 		$membroID = null;
 		
 		if (!empty($cadMembroID)):
-		    $result = CONN::get()->Execute("
+		    $result = CONN::get()->execute("
     			SELECT *
     			  FROM CON_ATIVOS
     			 WHERE ID_CAD_MEMBRO = ?
@@ -88,7 +88,7 @@ class ESPCR extends TCPDF {
             endif;
 		endif;
 		
-		$result = CONN::get()->Execute("
+		$result = CONN::get()->execute("
 			SELECT ta.ID, ta.DS_ITEM, ta.CD_AREA_INTERNO, tm.NR_PG_ASS
 			  FROM TAB_APRENDIZADO ta
 		INNER JOIN TAB_MATERIAIS tm ON (tm.ID_TAB_APREND = ta.ID)
@@ -211,7 +211,7 @@ class ESPCR extends TCPDF {
 		    $arr = array();
 		    
             //LE PARAMETRO MINIMO E HISTORICO PARA A REGRA
-			$rR = CONN::get()->Execute("
+			$rR = CONN::get()->execute("
 					SELECT tar.ID, tar.QT_MIN, COUNT(*) AS QT_FEITAS
 						FROM TAB_APR_ITEM tar
 				INNER JOIN CON_APR_REQ car ON (car.ID_TAB_APR_ITEM = tar.ID AND car.TP_ITEM_RQ = 'ES')
@@ -233,7 +233,7 @@ class ESPCR extends TCPDF {
 					
 				//ADICIONAR REGRA E SELECAO DA REGRA.
 				//LE PARAMETRO MINIMO E HISTORICO PARA A REGRA
-				$rS = CONN::get()->Execute("
+				$rS = CONN::get()->execute("
 					SELECT car.ID_RQ, car.CD_AREA_INTERNO_RQ, car.CD_ITEM_INTERNO_RQ, car.DS_ITEM_RQ, 
 							tm.NR_PG_ASS, 
 							ah.DT_INICIO, ah.DT_CONCLUSAO
@@ -288,7 +288,7 @@ class ESPCR extends TCPDF {
 			endif;
 			
 			//REMOVE NOTIFICACAO PARA O MESTRADO
-			CONN::get()->Execute("
+			CONN::get()->execute("
 				UPDATE LOG_MENSAGEM SET DH_READ = NOW()
 				WHERE ID_ORIGEM = ? 
 				AND TP = ? 
@@ -375,7 +375,7 @@ $pdf = new ESPCR();
 
 $arrNome = array();
 if ($nome == "ALL"):
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT *
 		  FROM CON_ATIVOS 
 		 ORDER BY NM");

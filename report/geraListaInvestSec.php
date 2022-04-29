@@ -213,7 +213,7 @@ $filter = implode(",",array_map("fArrayStr", explode(",",$request)));
 $innerJoinDA = ($request == "null" || empty($request) || empty($filter) ? "" : "INNER JOIN APR_HISTORICO ah ON (ah.ID_TAB_APREND = cc.ID_TAB_APREND AND ah.ID_CAD_PESSOA = cc.ID_CAD_PESSOA AND ah.DT_AVALIACAO IN ($filter))");
 
 
-$result = CONN::get()->Execute("
+$result = CONN::get()->execute("
     SELECT cc.NM, cc.TP_ITEM, cc.CD, cc.DS_ITEM, cc.TP, cc.DS, cc.FUNDO, cc.FG_IM, cc.CD_AREA_INTERNO, cc.CD_ITEM_INTERNO, COUNT(*) AS QT_ITENS
     FROM CON_COMPRAS cc
 	$innerJoinDA 

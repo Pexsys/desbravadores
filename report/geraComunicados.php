@@ -105,7 +105,7 @@ $qtd = fRequest("q");
 
 
 $pdf = new COMUNICADO();
-$result = CONN::get()->Execute("
+$result = CONN::get()->execute("
 	SELECT * 
 	  FROM CAD_COMUNICADO
 	 WHERE ID = ?

@@ -144,7 +144,7 @@
         </div>
       </div>
       <?php
-      $result = CONN::get()->Execute("
+      $result = CONN::get()->execute("
         SELECT ID, DS, TP, GRP
         FROM FIN_CUSTO
         WHERE ANO = YEAR(NOW()) 

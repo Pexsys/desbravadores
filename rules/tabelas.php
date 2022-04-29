@@ -14,7 +14,7 @@ function getTamanhos( $tp ){
 	$arr = array();
 	
 	
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT CD
 		  FROM TAB_TAMANHOS
 		 WHERE TP = ?
@@ -30,7 +30,7 @@ function getTamanhos( $tp ){
 function getCargos(){
 	$arr = array();
 	
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT CD, DSM, DSF
 		  FROM TAB_CARGO
 	  ORDER BY CD");
@@ -47,7 +47,7 @@ function getCargos(){
 function getRestricaoAlimentar(){
 	$arr = array();
 	
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT ID, DS
 		  FROM TAB_TP_REST_ALIM
 	  ORDER BY DS");
@@ -63,7 +63,7 @@ function getRestricaoAlimentar(){
 function getUnidades(){
 	$arr = array();
 	
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT *
 		  FROM TAB_UNIDADE
 	  ORDER BY DS");
@@ -103,7 +103,7 @@ function fUnidade( $parameters ) {
 				fReturnStringNull($frm["fg_ativa"]),
 				$id
 			);
-			CONN::get()->Execute("
+			CONN::get()->execute("
 				UPDATE TAB_UNIDADE SET
 					IDADE = ?,
 					FG_ATIVA = ?
@@ -114,7 +114,7 @@ function fUnidade( $parameters ) {
 
 	//GET UNIDADE
 	else:
-    $result = CONN::get()->Execute("SELECT * FROM TAB_UNIDADE WHERE ID = ?", array( $parameters["id"] ) );
+    $result = CONN::get()->execute("SELECT * FROM TAB_UNIDADE WHERE ID = ?", array( $parameters["id"] ) );
     if (!$result->EOF):
       $out["success"] = true;
       $out["unidade"] = array(
@@ -133,7 +133,7 @@ function getUFs(){
 	$arr = array();
 	
 	
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT ID
 		  FROM TAB_UF
 	  ORDER BY ID");

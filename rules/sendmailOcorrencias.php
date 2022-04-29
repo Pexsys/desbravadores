@@ -1,6 +1,6 @@
 <?php
 function sendOcorrenciaByID($ocorrenciaID, $nrEnviados){
-	$rs = CONN::get()->Execute("
+	$rs = CONN::get()->execute("
 		SELECT DISTINCT co.CD, co.DH, co.TXT, lc.ID, lc.EMAIL
 		  FROM LOG_MENSAGEM lc
 	INNER JOIN CAD_OCORRENCIA co ON (co.ID = lc.ID_ORIGEM AND lc.TP = 'O')
@@ -19,7 +19,7 @@ function sendOcorrenciaByID($ocorrenciaID, $nrEnviados){
 			$mail->MsgHTML($l["TXT"]);
             $mail->Send();
             ++$nrEnviados;
-			CONN::get()->Execute("UPDATE LOG_MENSAGEM SET DH_SEND = NOW() WHERE ID = ?", array($l["ID"]) );
+			CONN::get()->execute("UPDATE LOG_MENSAGEM SET DH_SEND = NOW() WHERE ID = ?", array($l["ID"]) );
 	    endforeach;
   endif;
 

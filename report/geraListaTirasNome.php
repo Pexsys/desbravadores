@@ -222,7 +222,7 @@ $pdf = new LISTACOMPRASNOMES();
 $pdf->newPage();
 
 //QUERY DETALHE
-$result = CONN::get()->Execute("
+$result = CONN::get()->execute("
     SELECT cc.CM, cc.TP_ITEM, cc.CD, cc.DS_ITEM, cc.TP, cc.DS, cc.FUNDO, cc.FG_IM, cc.CD_AREA_INTERNO, cc.CD_ITEM_INTERNO, COUNT(*) AS QT_ITENS
     FROM CON_COMPRAS cc
     WHERE cc.FG_COMPRA = 'N'

@@ -4,15 +4,15 @@
 class TAGS {
 	
 	public function deleteFila() {
-		CONN::get()->Execute("TRUNCATE TABLE TMP_PRINT_TAGS");
+		CONN::get()->execute("TRUNCATE TABLE TMP_PRINT_TAGS");
 	}
 	
 	public function deleteFilaIDS( $ids ) {
-		CONN::get()->Execute("DELETE FROM TMP_PRINT_TAGS WHERE ID IN ($ids)");
+		CONN::get()->execute("DELETE FROM TMP_PRINT_TAGS WHERE ID IN ($ids)");
 	}
 	
 	public function forceInsert( $arr ){
-		CONN::get()->Execute("
+		CONN::get()->execute("
 			INSERT INTO TMP_PRINT_TAGS (
 				ID_CAD_MEMBRO,
 				TP,
@@ -28,7 +28,7 @@ class TAGS {
 
 		//SE NAO APONTADO APRENDIZADO, PROCURA MAIOR APRENDIZADO AVALIADO
 		if (empty($aprendID) || is_null($aprendID)):
-			$r = CONN::get()->Execute("
+			$r = CONN::get()->execute("
 			SELECT * FROM (
 				SELECT '1', MAX(ta.ID) AS ID_TAB_APREND
 				  FROM CAD_MEMBRO cm
@@ -64,7 +64,7 @@ class TAGS {
 			$arr[] = $aprendID;
 		endif;
 
-		$r = CONN::get()->Execute("
+		$r = CONN::get()->execute("
 			SELECT 1
 			  FROM TMP_PRINT_TAGS
 			 WHERE TP = ?
@@ -73,7 +73,7 @@ class TAGS {
 			   AND ID_TAB_APREND ". (!is_null($aprendID) ? "= ?" : "IS NULL") ."
 		", $arr );
 		if ($r->EOF):
-			$r = CONN::get()->Execute("SELECT ID_MEMBRO FROM CAD_MEMBRO WHERE ID = ?", $cadMembroID );
+			$r = CONN::get()->execute("SELECT ID_MEMBRO FROM CAD_MEMBRO WHERE ID = ?", $cadMembroID );
 
 			$barCODE = PATTERNS::getBars()->encode(array(
 				"id" => $tp,

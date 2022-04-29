@@ -62,7 +62,7 @@ function getQueryByFilter( $parameters ) {
 	 ORDER BY tm.TP, tm.DS
 	";
 	//echo $query;
-	return CONN::get()->Execute( $query, $aWhere );
+	return CONN::get()->execute( $query, $aWhere );
 }
 
 function getEstoque( $parameters ) {
@@ -112,7 +112,7 @@ function getItem( $parameters ){
 	$arr["id"] = $id;
 
 	
-	$result = CONN::get()->Execute("
+	$result = CONN::get()->execute("
 		SELECT TP, QT_EST
 		FROM TAB_MATERIAIS
 		WHERE ID = ?

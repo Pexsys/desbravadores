@@ -68,7 +68,7 @@ function fGetType($strTipoEvento){
         <!-- /.row -->
         
 	<?php
-	$result = CONN::get()->Execute( "
+	$result = CONN::get()->execute( "
 	  SELECT TP, COUNT(*) AS QT
 	    FROM CAD_FORNECEDORES 
 	   WHERE FG_ATIVO = ?
@@ -84,7 +84,7 @@ function fGetType($strTipoEvento){
 	  </div>
 	  <div class="panel-body">
 	  	<?php
-	  	$rs = CONN::get()->Execute( "
+	  	$rs = CONN::get()->execute( "
 		  SELECT * 
 		    FROM CAD_FORNECEDORES 
 		   WHERE FG_ATIVO = ?

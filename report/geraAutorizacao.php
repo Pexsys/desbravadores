@@ -282,7 +282,7 @@ endif;
 
 //SE EVENTO NULO, E PESSOA NAO NULA, SETA TODOS OS EVENTOS DA PESSOA.
 if ( (!isset($eventoID) || empty($eventoID)) && (isset($pID) || !empty($pID)) ):
-   $result = CONN::get()->Execute("
+   $result = CONN::get()->execute("
         SELECT es.ID
     	  FROM EVE_SAIDA es
     INNER JOIN EVE_SAIDA_MEMBRO esp ON (esp.ID_EVE_SAIDA = es.ID AND esp.FG_AUTORIZ = 'S')
@@ -340,7 +340,7 @@ $query = "
 
     	 ORDER BY esp.ID_EVE_SAIDA, ca.NM
 ";
-$result = CONN::get()->Execute($query);
+$result = CONN::get()->execute($query);
 $i = 0;
 $ant = $result->fields["ID_EVE_SAIDA"];
 foreach ($result as $k => $line):
@@ -394,7 +394,7 @@ $query = "
 		
 	 ORDER BY ca.NM
 ";
-$result = CONN::get()->Execute($query);
+$result = CONN::get()->execute($query);
 if (!$result->EOF):
 	foreach ($result as $k => $line):
 	    $pdf->setLine( $line );

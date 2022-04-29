@@ -51,7 +51,7 @@ function drawBoxesArea($title,$result,$boxClass = NULL){
 	</div>
 </div>
 <?php
-$result = CONN::get()->Execute("
+$result = CONN::get()->execute("
 SELECT TP, CM, DS, CMPL, FG_IM, DS_ITEM, FUNDO
   FROM CON_COMPRAS cc 
  WHERE cc.TP_INCL = 'M'
@@ -96,7 +96,7 @@ if (!$result->EOF):
 	<?php
 endif;
 
-$result = CONN::get()->Execute("
+$result = CONN::get()->execute("
 	SELECT TP, CM, DS, CMPL, FG_IM, DS_ITEM, FUNDO
 	FROM CON_COMPRAS cc 
 	WHERE cc.TP_INCL = 'M'
@@ -171,7 +171,7 @@ echo fItemAprendizado(array(
 echo "</div>";
 */
 
-$result = CONN::get()->Execute("
+$result = CONN::get()->execute("
 	SELECT ID_CAD_PESSOA, ID_TAB_APREND, TP_ITEM, CD_AREA_INTERNO, CD_ITEM_INTERNO, DS_ITEM, DT_INICIO, COUNT(*) AS QT_REQ
 	FROM CON_APR_PESSOA
 	WHERE ID_CAD_PESSOA = ? AND DT_CONCLUSAO IS NULL
@@ -205,7 +205,7 @@ if (!$result->EOF):
 				
 				$pct = 0;
 				$qtd = 0;
-				$rs = CONN::get()->Execute("
+				$rs = CONN::get()->execute("
 					SELECT COUNT(*) AS QT_COMPL
 					FROM CON_APR_PESSOA
 					WHERE ID_CAD_PESSOA = ?
@@ -239,7 +239,7 @@ if (!$result->EOF):
 	<?php
 endif;
 
-$result = CONN::get()->Execute("
+$result = CONN::get()->execute("
    SELECT ta.TP_ITEM, ta.CD_ITEM_INTERNO, ta.DS_ITEM, ta.CD_AREA_INTERNO, ah.DT_CONCLUSAO AS DT
 	 FROM APR_HISTORICO ah
 INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
@@ -250,7 +250,7 @@ INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
 ", array($pessoaID) );
 drawBoxesArea("Itens não avaliados pelo regional",$result,"panel-yellow");
 
-$result = CONN::get()->Execute("
+$result = CONN::get()->execute("
    SELECT DISTINCT ta.TP_ITEM, ta.CD_ITEM_INTERNO, ta.DS_ITEM, ta.CD_AREA_INTERNO, ah.DT_AVALIACAO AS DT, 
 			 IF(cc.FG_COMPRA = 'S' OR ccag.ID IS NOT NULL,'panel-success','panel-warning') AS BOX_CLASS, 
 			 IF(cc.FG_COMPRA = 'S' OR ccag.ID IS NOT NULL,'Item comprado','Item ainda não comprado') AS BOX_HINT
@@ -267,7 +267,7 @@ INNER JOIN TAB_MATERIAIS tm ON (tm.ID_TAB_APREND = ta.ID)
 ", array($pessoaID) );
 drawBoxesArea("Itens a receber na próxima investidura",$result);
 
-$result = CONN::get()->Execute("
+$result = CONN::get()->execute("
    SELECT ta.TP_ITEM, ta.CD_ITEM_INTERNO, ta.DS_ITEM, ta.CD_AREA_INTERNO, ah.DT_INVESTIDURA AS DT
 	 FROM APR_HISTORICO ah
 INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
@@ -277,7 +277,7 @@ INNER JOIN TAB_APRENDIZADO ta ON (ta.ID = ah.ID_TAB_APREND)
 ", array($pessoaID) );
 drawBoxesArea("Itens recebidos em ".date("Y"),$result,"panel-green");
 
-$matAnteriores = CONN::get()->Execute("
+$matAnteriores = CONN::get()->execute("
 	SELECT COMPL, DT_ENTREGA, TP, DS, FUNDO, CMPL, FG_ALMOX, FG_IM
 	FROM CON_MAT_HISTORICO
 	WHERE ID_CAD_MEMBRO = ?
@@ -285,7 +285,7 @@ $matAnteriores = CONN::get()->Execute("
 	ORDER BY TP, DT_ENTREGA DESC
 ", array($cadMembroID) );
 
-$matAno = CONN::get()->Execute("
+$matAno = CONN::get()->execute("
 	SELECT COMPL, DT_ENTREGA, TP, DS, FUNDO, CMPL, FG_ALMOX, FG_IM
 	FROM CON_MAT_HISTORICO
 	WHERE ID_CAD_MEMBRO = ?

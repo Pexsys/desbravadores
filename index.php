@@ -20,7 +20,7 @@ function nextEvents(){
 					( e.DTHORA_EVENTO_INI >= ? OR ( e.DTHORA_EVENTO_FIM IS NOT NULL AND e.DTHORA_EVENTO_FIM >= ? ) )
 				ORDER BY e.DTHORA_EVENTO_INI 
 				   LIMIT 0, 3 ";
-			$result = CONN::get()->Execute( $query, Array( $DATA_NOW, $DATA_NOW ) );
+			$result = CONN::get()->execute( $query, Array( $DATA_NOW, $DATA_NOW ) );
 
 			$MES_ANT = "";
 			while (!$result->EOF):
@@ -99,7 +99,7 @@ function myUnit(){
     		<div class="panel-heading"><h4><i class="fas fa-bullhorn"></i>&nbsp;Conheça a Unidade</h4></div>
     		<div class="panel-body">
     		<?php
-                $result = CONN::get()->Execute( "
+                $result = CONN::get()->execute( "
             	  SELECT ID
             	    FROM TAB_UNIDADE 
             	   WHERE FG_ATIVA = 'S'

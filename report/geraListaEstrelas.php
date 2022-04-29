@@ -95,7 +95,7 @@ $pdf = new LISTAESTRELAS();
 
 $pdf->newPage();
 
-$result = CONN::get()->Execute("SELECT NM_PASTOR, NOW() AS DH FROM CON_PASTOR");
+$result = CONN::get()->execute("SELECT NM_PASTOR, NOW() AS DH FROM CON_PASTOR");
 $nmPastor = titleCase($result->fields["NM_PASTOR"]);
 
 $pdf->posY += 5;
@@ -117,7 +117,7 @@ $html = "<p align=\"justify\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n
 $pdf->setCellHeightRatio(2);
 $pdf->writeHTMLCell(0,0,20,$pdf->posY,$html,0,0,false,true,"",false);
 
-$result = CONN::get()->Execute("
+$result = CONN::get()->execute("
 	SELECT CD, NM, COUNT(*) AS QTD
 	  FROM CON_COMPRAS
 	 WHERE CD LIKE '03-01-%'
