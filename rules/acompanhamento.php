@@ -124,7 +124,12 @@ function getData( $parameters ) {
 	$result = getQueryByFilter( $parameters );
 	foreach ($result as $k => $fields):
 
-		$perc = floor(($fields['QTD'] / max(1,$fields['QT_TOTAL']))*100);		
+		$perc = 0;
+		if (is_null($fields['DT_CONCLUSAO'])):
+		    $perc = floor(($fields['QTD'] / max(1,$fields['QT_TOTAL']))*100);	
+		else:
+		    $perc = 100;	
+		endif;
 		
 		if ($perc < 51):
 			$cl = 'danger';
@@ -154,8 +159,6 @@ function setRequisito( $parameters ) {
 	
 	$bc = $frm["cd_bar"];
 	$ip = $frm["id_cad_pessoa"];
-	
-	
 	
 	foreach ($frm as $f => $v):
 		if (fStrStartWith($f,"dt-req-")):
