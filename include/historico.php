@@ -52,7 +52,7 @@ function marcaRequisitoID( $assDT, $histID, $reqID ) {
 				UPDATE APR_PESSOA_REQ
 					SET DT_ASSINATURA = ?
 					WHERE ID_HISTORICO = ?
-					AND ID_TAB_APR_ITEM ?
+					AND ID_TAB_APR_ITEM = ?
 					AND DT_ASSINATURA <> ?
 			", array( $assDT, $histID, $reqID, $assDT ) );
 		endif;
@@ -196,7 +196,7 @@ function updateHistorico( $barpessoaid, $barfnid, $paramDates, $compras = null )
 	endif;
 
 	if (!is_null($paramDates["dt_investidura"]) && $paramDates["dt_investidura"] != "N"):
-		//$compras->deleteItemPessoaEntregue( $barpessoaid, $barfnid );
+		$compras->deleteItemPessoaEntregue( $barpessoaid, $barfnid );
 	endif;
 	
 	//VERIFICA SE ITEM É UMA ESPECIALIDADE E SE EXISTE ALGUM MESTRADO COMPLETADO COM A CONCLUSAO DESSA ESPECIALIDADE.
@@ -238,6 +238,7 @@ function regraRequisitoEspecialidade($barfnid, $barpessoaid, $dtInicio, $dtConcl
 		 WHERE ID_RQ = ? 
 	  ORDER BY CD_ITEM_INTERNO
 	", array($barfnid) );
+	
 	foreach ($rg as $lg => $fg):
 
 		//NOT EXISTS (SELECT 1 FROM CON_APR_REQ WHERE ID_RQ = car.ID_RQ AND ID = car.ID AND ID_TAB_APR_ITEM != car.ID_TAB_APR_ITEM)
@@ -311,21 +312,21 @@ function regraRequisitoEspecialidade($barfnid, $barpessoaid, $dtInicio, $dtConcl
 					$rA = CONN::get()->execute("SELECT * FROM CON_ATIVOS WHERE ID_CAD_PESSOA = ?",array($barpessoaid));
 					$a = explode(" ",titleCase($rA->fields["NM"]));
 						
-          if (!empty($rA->fields["EMAIL"])):
-            $mail = MAIL::get();
-						$rD = CONN::get()->execute("SELECT * FROM CON_DIRETOR");
-						$nomeDiretor = titleCase($rD->fields["NOME_DIRETOR"]);
-
-						$message = new MESSAGE( array( "np" => $a[0], "nm" => $fg["DS_ITEM"], "sx" => $rA->fields["SEXO"], "nd" => $nomeDiretor ) );
-					
-						$mail->ClearAllRecipients();
-						$mail->AddAddress( $rA->fields["EMAIL"] );
-						$mail->Subject = utf8_decode(PATTERNS::getClubeDS( array("cl","nm") ) . " - Aviso de Conclusão");
-						$mail->MsgHTML( $message->getConclusao() );
-							
-						if ( $mail->Send() ):
-							CONN::get()->execute("UPDATE LOG_MENSAGEM SET DH_SEND = NOW() WHERE ID = ?", array( $logID ) );
-						endif;
+                      if (!empty($rA->fields["EMAIL"])):
+                        $mail = MAIL::get();
+    					$rD = CONN::get()->execute("SELECT * FROM CON_DIRETOR");
+    					$nomeDiretor = titleCase($rD->fields["NOME_DIRETOR"]);
+    
+    					$message = new MESSAGE( array( "np" => $a[0], "nm" => $fg["DS_ITEM"], "sx" => $rA->fields["SEXO"], "nd" => $nomeDiretor ) );
+    				
+    					$mail->ClearAllRecipients();
+    					$mail->AddAddress( $rA->fields["EMAIL"] );
+    					$mail->Subject = utf8_decode(PATTERNS::getClubeDS( array("cl","nm") ) . " - Aviso de Conclusão");
+    					$mail->MsgHTML( $message->getConclusao() );
+    						
+    					if ( $mail->Send() ):
+    						CONN::get()->execute("UPDATE LOG_MENSAGEM SET DH_SEND = NOW() WHERE ID = ?", array( $logID ) );
+    					endif;
 					endif;
 				endif;
 			endif;

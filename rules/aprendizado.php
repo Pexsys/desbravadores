@@ -110,9 +110,9 @@ function getQueryByFilter( $parameters ) {
 			ap.DS_ITEM
 		FROM CON_ATIVOS ca
 		INNER JOIN APR_HISTORICO ah ON (ah.ID_CAD_PESSOA = ca.ID_CAD_PESSOA AND ah.DT_INVESTIDURA IS NULL)
-		INNER JOIN TAB_APRENDIZADO ap ON (ap.id = ah.id_tab_aprend)
-		 LEFT JOIN TAB_TP_APRENDIZADO ta ON (ta.id = ap.tp_item)
-		 LEFT JOIN CON_COMPRAS cc ON (cc.ID_CAD_PESSOA = ah.ID_CAD_PESSOA AND cc.id_tab_aprend = ah.id_tab_aprend)
+		INNER JOIN TAB_APRENDIZADO ap ON (ap.ID = ah.ID_TAB_APREND)
+		 LEFT JOIN TAB_TP_APRENDIZADO ta ON (ta.ID = ap.TP_ITEM)
+		 LEFT JOIN CON_COMPRAS cc ON (cc.ID_CAD_PESSOA = ah.ID_CAD_PESSOA AND cc.ID_TAB_APREND = ah.ID_TAB_APREND)
 		WHERE 1=1 $where
 	 ORDER BY ca.NM, ap.CD_ITEM_INTERNO, ah.DT_INICIO
 	";
