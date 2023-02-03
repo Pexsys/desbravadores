@@ -431,6 +431,57 @@ $(document).ready(function(){
 		}
 	});
 
+  $("#dsInstEns").typeahead({
+		hint: true,
+		minLength: 3,
+		source: (query,callback) => jsLIB.ajaxCall({
+			async: false,
+			type: "GET",
+			url: jsLIB.rootDir+"rules/membros.php",
+			data: { MethodName : 'getEscolas', data : { query } },
+			success: function(data){
+				callback(data.source);
+			}
+		}),
+		displayText: item => item.ne,
+		afterSelect: item => item.ne,
+		autoSelect: true
+	});
+
+  $("#dsReligiao").typeahead({
+		hint: true,
+		minLength: 3,
+		source: (query,callback) => jsLIB.ajaxCall({
+			async: false,
+			type: "GET",
+			url: jsLIB.rootDir+"rules/membros.php",
+			data: { MethodName : 'getReligioes', data : { query } },
+			success: function(data){
+				callback(data.source);
+			}
+		}),
+		displayText: item => item.dr,
+		afterSelect: item => item.dr,
+		autoSelect: true
+	});
+
+  $("#dsParentesco").typeahead({
+		hint: true,
+		minLength: 2,
+		source: (query,callback) => jsLIB.ajaxCall({
+			async: false,
+			type: "GET",
+			url: jsLIB.rootDir+"rules/membros.php",
+			data: { MethodName : 'getParentesco', data : { query } },
+			success: function(data){
+				callback(data.source);
+			}
+		}),
+		displayText: item => item.dt,
+		afterSelect: item => item.dt,
+		autoSelect: true
+	});
+
 	$('.date').mask('00/00/0000');
 	$('.cpf').mask('000.000.000-00');
 	$('.cep').mask('00000-000');
@@ -507,7 +558,7 @@ function getMember( membroID ) {
 		url: jsLIB.rootDir+"rules/membros.php",
 		data: { MethodName : 'getMember', data : parameters }
 	});
-}
+};
 
 function populateMember( mb ) {
 	formPopulated = false;
@@ -526,7 +577,7 @@ function populateMember( mb ) {
 	fMostraAba( mb.membro.fg_ativo == 'S', $("#abaAtribuicoes") )
 	fMostraAba( mb.membro.nr_idade < 18, $("#abaResponsavel"), $("#Resp") );
 	formPopulated = true;
-}
+};
 
 function ruleButtonSelection( filtro ){
 	if ( filtro == 'A' && !$('#btnAtivos').hasClass("btn-primary") ) {
@@ -536,7 +587,7 @@ function ruleButtonSelection( filtro ){
 		$('#btnTodos').removeClass("btn-primary-outline").addClass("btn-primary");
 		$('#btnAtivos').removeClass("btn-primary").addClass("btn-primary-outline");
 	}
-}
+};
 
 function switchSelecion( filtro ) {
 	tpFiltro = filtro;
@@ -544,11 +595,11 @@ function switchSelecion( filtro ) {
 	dataTable.ajax.reload( function(){
 		ruleBtnNovo();
 	});
-}
+};
 
 function ruleBtnNovo(){
 	$("#btnNovo").visible( tpFiltro == 'T' && dataTable.page.info().recordsDisplay == 0 );
-}
+};
 
 function closeCollapseAll() {
 	$('#membrosModal .collapse').collapse('hide');
@@ -556,17 +607,17 @@ function closeCollapseAll() {
 		$(this).removeClass('panel-collapsed');
 		$(this).find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
 	});
-}
+};
 
 function fAbaFirstFocus(){
 	$('.nav-pills a[href="#Pessoal"]').tab('show');
-}
+};
 
 function fMostraDiretoria(){
 	var cargo = $("#cmCargo").val();
 	$("#divDiretoria").visible(cargo && cargo.startsWith("2-"));
 	$("#divCargo2").visible(cargo && cargo.startsWith("2-07"));
-}
+};
 
 function fMostraAba(lMostra,objAba,objFields){
 	if (lMostra){
@@ -580,4 +631,4 @@ function fMostraAba(lMostra,objAba,objFields){
 			objFields.find("input[type=text], select").val("").change();
 		}
 	}
-}
+};
