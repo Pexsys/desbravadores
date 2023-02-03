@@ -71,7 +71,7 @@ const mapDetail = function(){
 					closeByBackdrop: true,
 					closeByKeyboard: true,
 					onshown: function(dialogRef){
-						//mapPrint();
+						mapPrint();
 					},
 					buttons: [
 						{ label: 'Fechar',

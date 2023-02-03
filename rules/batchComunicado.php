@@ -37,17 +37,21 @@ foreach($rs as $k => $l):
 			$nrEnviados++;
 			$nrControle++;
 		    if ($nrControle == 10):
-		        $mail->Send();
-		        $mail->ClearAllRecipients();
+    		    try {
+                   $mail->Send();
+                } catch (Exception $e) {
+                    echo 'Exceção capturada: ',  $e->getMessage(), "\n";
+                }
+    		    $mail->ClearAllRecipients();
 		        $nrControle = 0;
 		    endif;
 		endforeach;
 		if ($nrControle > 0):
 		    try {
-            $mail->Send();
-        } catch (Exception $e) {
-            echo 'Exceção capturada: ',  $e->getMessage(), "\n";
-        }
+               $mail->Send();
+            } catch (Exception $e) {
+                echo 'Exceção capturada: ',  $e->getMessage(), "\n";
+            }
 		    $mail->ClearAllRecipients();
 		endif;
 		    
