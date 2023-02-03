@@ -738,4 +738,82 @@ function getAniversariantes( $parameters ){
 
 	return array( "result" => true, "membros" => $arr );
 }
+
+function getEscolas($parameters){
+	$arr = array();
+
+	$where = "cp.NM_ESCOLA IS NOT NULL";
+	$aWhere = array(PATTERNS::getBars()->getClubeID());
+
+	if ( isset($parameters["query"]) ):
+		$nome = mb_strtoupper($parameters["query"]);
+		$where .= " AND cp.NM_ESCOLA LIKE '%$nome%'";
+	endif;
+
+  $arr = array();
+	$result = CONN::get()->execute("
+  SELECT DISTINCT cp.NM_ESCOLA
+    FROM CON_PESSOA cp
+  LEFT JOIN CAD_MEMBRO cm ON (cm.ID_CAD_PESSOA = cp.ID_CAD_PESSOA AND cm.ID_CLUBE = ?)
+  LEFT JOIN CAD_ATIVOS ca ON (ca.ID_CAD_MEMBRO = cm.ID)
+    WHERE $where
+  ORDER BY cp.NM_ESCOLA
+  ", $aWhere);
+	foreach ($result as $k => $f):
+		$arr[] = array("ne" => $f['NM_ESCOLA']);
+	endforeach;
+	return array( "result" => true, "source" => $arr );
+}
+
+function getReligioes($parameters){
+	$arr = array();
+
+	$where = "cp.DS_RELIG IS NOT NULL";
+	$aWhere = array(PATTERNS::getBars()->getClubeID());
+
+	if ( isset($parameters["query"]) ):
+		$nome = mb_strtoupper($parameters["query"]);
+		$where .= " AND cp.DS_RELIG LIKE '%$nome%'";
+	endif;
+
+  $arr = array();
+	$result = CONN::get()->execute("
+  SELECT DISTINCT cp.DS_RELIG
+    FROM CON_PESSOA cp
+  LEFT JOIN CAD_MEMBRO cm ON (cm.ID_CAD_PESSOA = cp.ID_CAD_PESSOA AND cm.ID_CLUBE = ?)
+  LEFT JOIN CAD_ATIVOS ca ON (ca.ID_CAD_MEMBRO = cm.ID)
+    WHERE $where
+  ORDER BY cp.DS_RELIG
+  ", $aWhere);
+	foreach ($result as $k => $f):
+		$arr[] = array("dr" => $f['DS_RELIG']);
+	endforeach;
+	return array( "result" => true, "source" => $arr );
+}
+
+function getParentesco($parameters){
+	$arr = array();
+
+	$where = "cp.DS_TP IS NOT NULL";
+	$aWhere = array(PATTERNS::getBars()->getClubeID());
+
+	if ( isset($parameters["query"]) ):
+		$nome = mb_strtoupper($parameters["query"]);
+		$where .= " AND cp.DS_TP LIKE '%$nome%'";
+	endif;
+
+  $arr = array();
+	$result = CONN::get()->execute("
+  SELECT DISTINCT cp.DS_TP
+    FROM CON_PESSOA cp
+  LEFT JOIN CAD_MEMBRO cm ON (cm.ID_CAD_PESSOA = cp.ID_CAD_PESSOA AND cm.ID_CLUBE = ?)
+  LEFT JOIN CAD_ATIVOS ca ON (ca.ID_CAD_MEMBRO = cm.ID)
+    WHERE $where
+  ORDER BY cp.DS_TP
+  ", $aWhere);
+	foreach ($result as $k => $f):
+		$arr[] = array("dt" => $f['DS_TP']);
+	endforeach;
+	return array( "result" => true, "source" => $arr );
+}
 ?>

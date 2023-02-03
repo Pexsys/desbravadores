@@ -133,7 +133,7 @@
 									</div>
 									<div class="form-group col-xs-2">
 										<label for="nrLog" class="control-label">N&ordm;</label>
-										<input type="text" name="nrLog" id="nrLog" field="cad_pessoa-nr_logr" class="form-control input-sm" placeholder="N&ordm;" style="padding-right:0px; uppercase"/>
+										<input type="text" name="nrLog" id="nrLog" field="cad_pessoa-nr_logr" class="form-control input-sm" placeholder="N&ordm;" style="padding-right:0px; text-transform: uppercase"/>
 									</div>
 								</div>
 								<div class="row">
