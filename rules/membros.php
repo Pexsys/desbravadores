@@ -549,7 +549,7 @@ function getMember( $parameters ) {
 			"cad_pessoa-cidade" => trim($result->fields['CIDADE']),
 			"cad_pessoa-complemento" => trim($result->fields['COMPLEMENTO']),
 			"cad_pessoa-ds_relig" => trim($result->fields['DS_RELIG']),
-			"cad_pessoa-DT_BAT" => is_null($result->fields['DT_BAT']) ? "" : date( 'd/m/Y', strtotime($result->fields['DT_BAT']) ),
+			"cad_pessoa-dt_bat" => is_null($result->fields['DT_BAT']) ? "" : date( 'd/m/Y', strtotime($result->fields['DT_BAT']) ),
 			"cad_pessoa-dt_nasc" => is_null($result->fields['DT_NASC']) ? "" : date( 'd/m/Y', strtotime($result->fields['DT_NASC']) ),
 			"cad_pessoa-email" => trim($result->fields['EMAIL']),
 			"cad_pessoa-fone_cel" => $result->fields['FONE_CEL'],
