@@ -323,12 +323,12 @@ function addCompras( $parameters ) {
 	$frm = $parameters["frm"];
 	$cmpl = $frm["cmpl"];
 	$qtItens = max( $frm["qt_itens"], 1 );
+  
+  $compras = new COMPRAS();
 
 	//ADICIONA ITENS
 	if ( $act == "ADD" && isset($frm["id"]) ):
 		
-		$compras = new COMPRAS();
-
 		if ( isset($frm["id_cad_membro"]) ):
 			foreach ($frm["id_cad_membro"] as $k => $cadMembroID):
 				batchInsert($compras, $qtItens, $cmpl, $cadMembroID, $frm["id"]);
@@ -359,7 +359,7 @@ function addCompras( $parameters ) {
 							"dt_avaliacao"		=> "N",
 							"dt_investidura"	=> $quando
 							), 
-						$compras );				
+						$compras);
 			endforeach;
 		endforeach;
 	endif;
@@ -549,4 +549,3 @@ function distribuirEstoque(){
 
 	return array( "result" => true );
 }
-?>

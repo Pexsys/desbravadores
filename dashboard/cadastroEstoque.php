@@ -38,11 +38,11 @@
 
 <div class="modal fade" id="listaModal" role="dialog" data-backdrop="static">
 	<form method="post" id="cadListaForm">
-		<div class="modal-dialog"> <!---->
+		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button aria-hidden="true" data-dismiss="modal" class="close" type="button" id="btnX">&times;</button>
-				</div>			
+				</div>
 				<div class="modal-body">
 					<div class="panel panel-warning">
 						<div class="panel-heading" style="padding:4px 10px 0px">
